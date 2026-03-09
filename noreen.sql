@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Generation Time: 09 مارس 2026 الساعة 06:30
--- إصدار الخادم: 9.1.0
--- PHP Version: 8.3.14
+-- Host: 127.0.0.1
+-- Generation Time: 09 مارس 2026 الساعة 18:37
+-- إصدار الخادم: 10.4.32-MariaDB
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -27,13 +27,10 @@ SET time_zone = "+00:00";
 -- بنية الجدول `admin`
 --
 
-DROP TABLE IF EXISTS `admin`;
-CREATE TABLE IF NOT EXISTS `admin` (
-  `admin_id` int NOT NULL,
-  `admin_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  PRIMARY KEY (`admin_id`),
-  UNIQUE KEY `admin_name` (`admin_name`)
+CREATE TABLE `admin` (
+  `admin_id` int(11) NOT NULL,
+  `admin_name` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -42,19 +39,30 @@ CREATE TABLE IF NOT EXISTS `admin` (
 -- بنية الجدول `admission_request`
 --
 
-DROP TABLE IF EXISTS `admission_request`;
-CREATE TABLE IF NOT EXISTS `admission_request` (
-  `request_id` int NOT NULL AUTO_INCREMENT,
-  `bnf_id` int NOT NULL,
-  `office_id` int NOT NULL,
+CREATE TABLE `admission_request` (
+  `request_id` int(11) NOT NULL,
+  `bnf_id` int(11) NOT NULL,
+  `office_id` int(11) NOT NULL,
   `major_name` varchar(100) NOT NULL,
   `univ_name` varchar(100) NOT NULL,
   `Submit_date` date NOT NULL,
   `result_notes` text NOT NULL,
-  `Result_status` enum('في انتظار الاصدار','أصدرت') NOT NULL,
-  PRIMARY KEY (`request_id`),
-  KEY `office_id` (`office_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `Result_status` enum('في انتظار الاصدار','أصدرت') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- بنية الجدول `admission_request_documents`
+--
+
+CREATE TABLE `admission_request_documents` (
+  `doc_id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `doc_type` enum('CV','High School Certificate','University Degree Certificate','Academic Certificates','Academic Transcript','Language Certificate','Passport','Recommendation Letters','Statement of Purpose','Letter of Intent','Research Proposal','Acceptance Letter','Other Certificates') NOT NULL,
+  `file_name` varchar(255) NOT NULL,
+  `file` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -62,12 +70,10 @@ CREATE TABLE IF NOT EXISTS `admission_request` (
 -- بنية الجدول `bnf_inv_msg`
 --
 
-DROP TABLE IF EXISTS `bnf_inv_msg`;
-CREATE TABLE IF NOT EXISTS `bnf_inv_msg` (
-  `msg_id` int NOT NULL,
-  `msg_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `msg_text` text COLLATE utf8mb4_general_ci NOT NULL,
-  PRIMARY KEY (`msg_id`)
+CREATE TABLE `bnf_inv_msg` (
+  `msg_id` int(11) NOT NULL,
+  `msg_time` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `msg_text` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -76,12 +82,27 @@ CREATE TABLE IF NOT EXISTS `bnf_inv_msg` (
 -- بنية الجدول `bnf_off_msg`
 --
 
-DROP TABLE IF EXISTS `bnf_off_msg`;
-CREATE TABLE IF NOT EXISTS `bnf_off_msg` (
-  `msg_id` int NOT NULL AUTO_INCREMENT,
-  `msg_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `msg_text` text COLLATE utf8mb4_general_ci NOT NULL,
-  PRIMARY KEY (`msg_id`)
+CREATE TABLE `bnf_off_msg` (
+  `msg_id` int(11) NOT NULL,
+  `msg_time` datetime NOT NULL DEFAULT current_timestamp(),
+  `msg_text` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- بنية الجدول `complaints_inquiries`
+--
+
+CREATE TABLE `complaints_inquiries` (
+  `ticket_id` int(11) NOT NULL,
+  `sender_id` int(11) NOT NULL,
+  `sender_role` enum('Beneficiary','Investor','Office') NOT NULL,
+  `submission_date` datetime DEFAULT current_timestamp(),
+  `subject` text NOT NULL,
+  `message` text NOT NULL,
+  `status` enum('بانتظار الرد','تم الرد عليها') DEFAULT 'بانتظار الرد',
+  `admin_reply` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -90,22 +111,18 @@ CREATE TABLE IF NOT EXISTS `bnf_off_msg` (
 -- بنية الجدول `consulting_office`
 --
 
-DROP TABLE IF EXISTS `consulting_office`;
-CREATE TABLE IF NOT EXISTS `consulting_office` (
-  `office_id` int NOT NULL AUTO_INCREMENT,
+CREATE TABLE `consulting_office` (
+  `office_id` int(11) NOT NULL,
   `office_name` varchar(255) NOT NULL,
   `office_description` text NOT NULL,
-  `Bachelor_fee` int NOT NULL,
-  `Masters_fee` int NOT NULL,
-  `Phd_fee` int NOT NULL,
+  `Bachelor_fee` int(11) NOT NULL,
+  `Masters_fee` int(11) NOT NULL,
+  `Phd_fee` int(11) NOT NULL,
   `ccr_number` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `phone` varchar(255) NOT NULL,
-  PRIMARY KEY (`office_id`),
-  UNIQUE KEY `ccr_number` (`ccr_number`),
-  UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `phone` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -113,15 +130,13 @@ CREATE TABLE IF NOT EXISTS `consulting_office` (
 -- بنية الجدول `e_contract`
 --
 
-DROP TABLE IF EXISTS `e_contract`;
-CREATE TABLE IF NOT EXISTS `e_contract` (
-  `contract_id` int NOT NULL AUTO_INCREMENT,
-  `payments_count` int NOT NULL,
-  `funding_duration` int NOT NULL,
-  `ctr_status` enum('نشط','ملغي') COLLATE utf8mb4_general_ci NOT NULL,
-  `terms` text COLLATE utf8mb4_general_ci NOT NULL,
-  `amount` decimal(10,2) NOT NULL,
-  PRIMARY KEY (`contract_id`)
+CREATE TABLE `e_contract` (
+  `contract_id` int(11) NOT NULL,
+  `payments_count` int(11) NOT NULL,
+  `funding_duration` int(11) NOT NULL,
+  `ctr_status` enum('نشط','ملغي') NOT NULL,
+  `terms` text NOT NULL,
+  `amount` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -130,16 +145,12 @@ CREATE TABLE IF NOT EXISTS `e_contract` (
 -- بنية الجدول `investor`
 --
 
-DROP TABLE IF EXISTS `investor`;
-CREATE TABLE IF NOT EXISTS `investor` (
-  `inv_id` int NOT NULL,
-  `inv_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `ccr_number` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  PRIMARY KEY (`inv_id`),
-  UNIQUE KEY `ccr_number` (`ccr_number`),
-  UNIQUE KEY `email` (`email`)
+CREATE TABLE `investor` (
+  `inv_id` int(11) NOT NULL,
+  `inv_name` varchar(255) NOT NULL,
+  `ccr_number` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -148,14 +159,11 @@ CREATE TABLE IF NOT EXISTS `investor` (
 -- بنية الجدول `office_country`
 --
 
-DROP TABLE IF EXISTS `office_country`;
-CREATE TABLE IF NOT EXISTS `office_country` (
-  `con_id` int NOT NULL AUTO_INCREMENT,
-  `office_id` int NOT NULL,
-  `con_name` varchar(100) NOT NULL,
-  PRIMARY KEY (`con_id`),
-  KEY `office_id` (`office_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `office_country` (
+  `con_id` int(11) NOT NULL,
+  `office_id` int(11) NOT NULL,
+  `con_name` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -163,14 +171,26 @@ CREATE TABLE IF NOT EXISTS `office_country` (
 -- بنية الجدول `payments`
 --
 
-DROP TABLE IF EXISTS `payments`;
-CREATE TABLE IF NOT EXISTS `payments` (
-  `payment_id` int NOT NULL,
-  `installment_number` int NOT NULL,
-  `payment_amount` int NOT NULL,
-  `payment_status` enum('تم الدفع','بانتظار الدفع','','') COLLATE utf8mb4_general_ci NOT NULL,
-  `payment_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`payment_id`)
+CREATE TABLE `payments` (
+  `payment_id` int(11) NOT NULL,
+  `installment_number` int(11) NOT NULL,
+  `payment_amount` int(11) NOT NULL,
+  `payment_status` enum('تم الدفع','بانتظار الدفع','','') NOT NULL,
+  `payment_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- بنية الجدول `rating`
+--
+
+CREATE TABLE `rating` (
+  `rating_id` int(11) NOT NULL,
+  `bnf_id` int(11) NOT NULL,
+  `office_id` int(11) NOT NULL,
+  `rating_date` datetime DEFAULT current_timestamp(),
+  `comment_text` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -179,18 +199,14 @@ CREATE TABLE IF NOT EXISTS `payments` (
 -- بنية الجدول `scholarship_opps`
 --
 
-DROP TABLE IF EXISTS `scholarship_opps`;
-CREATE TABLE IF NOT EXISTS `scholarship_opps` (
-  `scholarship_id` int NOT NULL AUTO_INCREMENT,
-  `sch_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `sch_field` enum('تقني وحوسبي','علوم طبيعية','صناعي وتشغيلي','ادراي','قانوني','اجتماعي وانساني','تصميمي','اقتصادي','إعلامي','بيئي','لوجيستي','صحي') COLLATE utf8mb4_general_ci NOT NULL,
-  `requirements` text COLLATE utf8mb4_general_ci NOT NULL,
-  `study_level` enum('بكالوريوس','ماجستير','دكاوراه') COLLATE utf8mb4_general_ci NOT NULL,
-  `Specializations` text COLLATE utf8mb4_general_ci NOT NULL,
-  `app_deadline` datetime NOT NULL,
-  PRIMARY KEY (`scholarship_id`),
-  UNIQUE KEY `scholarship_id` (`scholarship_id`),
-  KEY `field_filter` (`sch_field`)
+CREATE TABLE `scholarship_opps` (
+  `scholarship_id` int(11) NOT NULL,
+  `sch_name` varchar(100) NOT NULL,
+  `sch_field` enum('تقني وحوسبي','علوم طبيعية','صناعي وتشغيلي','ادراي','قانوني','اجتماعي وانساني','تصميمي','اقتصادي','إعلامي','بيئي','لوجيستي','صحي') NOT NULL,
+  `requirements` text NOT NULL,
+  `study_level` enum('بكالوريوس','ماجستير','دكاوراه') NOT NULL,
+  `Specializations` text NOT NULL,
+  `app_deadline` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -199,18 +215,177 @@ CREATE TABLE IF NOT EXISTS `scholarship_opps` (
 -- بنية الجدول `scholarship_requests`
 --
 
-DROP TABLE IF EXISTS `scholarship_requests`;
-CREATE TABLE IF NOT EXISTS `scholarship_requests` (
-  `request_id` int NOT NULL AUTO_INCREMENT,
-  `bnf_id` int NOT NULL,
-  `scholarship_id` int NOT NULL,
+CREATE TABLE `scholarship_requests` (
+  `request_id` int(11) NOT NULL,
+  `bnf_id` int(11) NOT NULL,
+  `scholarship_id` int(11) NOT NULL,
   `Submit_date` date NOT NULL,
   `request_status` enum('مفبول','مرفوض','','') NOT NULL,
   `major_name` varchar(100) NOT NULL,
-  `univ_name` varchar(100) NOT NULL,
-  PRIMARY KEY (`request_id`),
-  KEY `scholarship_id` (`scholarship_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `univ_name` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `admin`
+--
+ALTER TABLE `admin`
+  ADD PRIMARY KEY (`admin_id`),
+  ADD UNIQUE KEY `admin_name` (`admin_name`);
+
+--
+-- Indexes for table `admission_request`
+--
+ALTER TABLE `admission_request`
+  ADD PRIMARY KEY (`request_id`),
+  ADD KEY `office_id` (`office_id`);
+
+--
+-- Indexes for table `admission_request_documents`
+--
+ALTER TABLE `admission_request_documents`
+  ADD PRIMARY KEY (`doc_id`);
+
+--
+-- Indexes for table `bnf_inv_msg`
+--
+ALTER TABLE `bnf_inv_msg`
+  ADD PRIMARY KEY (`msg_id`);
+
+--
+-- Indexes for table `bnf_off_msg`
+--
+ALTER TABLE `bnf_off_msg`
+  ADD PRIMARY KEY (`msg_id`);
+
+--
+-- Indexes for table `complaints_inquiries`
+--
+ALTER TABLE `complaints_inquiries`
+  ADD PRIMARY KEY (`ticket_id`);
+
+--
+-- Indexes for table `consulting_office`
+--
+ALTER TABLE `consulting_office`
+  ADD PRIMARY KEY (`office_id`),
+  ADD UNIQUE KEY `ccr_number` (`ccr_number`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Indexes for table `e_contract`
+--
+ALTER TABLE `e_contract`
+  ADD PRIMARY KEY (`contract_id`);
+
+--
+-- Indexes for table `investor`
+--
+ALTER TABLE `investor`
+  ADD PRIMARY KEY (`inv_id`),
+  ADD UNIQUE KEY `ccr_number` (`ccr_number`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Indexes for table `office_country`
+--
+ALTER TABLE `office_country`
+  ADD PRIMARY KEY (`con_id`),
+  ADD KEY `office_id` (`office_id`);
+
+--
+-- Indexes for table `payments`
+--
+ALTER TABLE `payments`
+  ADD PRIMARY KEY (`payment_id`);
+
+--
+-- Indexes for table `rating`
+--
+ALTER TABLE `rating`
+  ADD PRIMARY KEY (`rating_id`);
+
+--
+-- Indexes for table `scholarship_opps`
+--
+ALTER TABLE `scholarship_opps`
+  ADD PRIMARY KEY (`scholarship_id`),
+  ADD UNIQUE KEY `scholarship_id` (`scholarship_id`),
+  ADD KEY `field_filter` (`sch_field`);
+
+--
+-- Indexes for table `scholarship_requests`
+--
+ALTER TABLE `scholarship_requests`
+  ADD PRIMARY KEY (`request_id`),
+  ADD KEY `scholarship_id` (`scholarship_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `admission_request`
+--
+ALTER TABLE `admission_request`
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `admission_request_documents`
+--
+ALTER TABLE `admission_request_documents`
+  MODIFY `doc_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `bnf_off_msg`
+--
+ALTER TABLE `bnf_off_msg`
+  MODIFY `msg_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `complaints_inquiries`
+--
+ALTER TABLE `complaints_inquiries`
+  MODIFY `ticket_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `consulting_office`
+--
+ALTER TABLE `consulting_office`
+  MODIFY `office_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `e_contract`
+--
+ALTER TABLE `e_contract`
+  MODIFY `contract_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `office_country`
+--
+ALTER TABLE `office_country`
+  MODIFY `con_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `rating`
+--
+ALTER TABLE `rating`
+  MODIFY `rating_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `scholarship_opps`
+--
+ALTER TABLE `scholarship_opps`
+  MODIFY `scholarship_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `scholarship_requests`
+--
+ALTER TABLE `scholarship_requests`
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- قيود الجداول المُلقاة.
@@ -220,19 +395,19 @@ CREATE TABLE IF NOT EXISTS `scholarship_requests` (
 -- قيود الجداول `admission_request`
 --
 ALTER TABLE `admission_request`
-  ADD CONSTRAINT `admission_request_ibfk_1` FOREIGN KEY (`office_id`) REFERENCES `consulting_office` (`office_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `admission_request_ibfk_1` FOREIGN KEY (`office_id`) REFERENCES `consulting_office` (`office_id`);
 
 --
 -- قيود الجداول `office_country`
 --
 ALTER TABLE `office_country`
-  ADD CONSTRAINT `office_country_ibfk_1` FOREIGN KEY (`office_id`) REFERENCES `consulting_office` (`office_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `office_country_ibfk_1` FOREIGN KEY (`office_id`) REFERENCES `consulting_office` (`office_id`);
 
 --
 -- قيود الجداول `scholarship_requests`
 --
 ALTER TABLE `scholarship_requests`
-  ADD CONSTRAINT `scholarship_requests_ibfk_1` FOREIGN KEY (`scholarship_id`) REFERENCES `scholarship_opps` (`scholarship_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `scholarship_requests_ibfk_1` FOREIGN KEY (`scholarship_id`) REFERENCES `scholarship_opps` (`scholarship_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
