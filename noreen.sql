@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 09 مارس 2026 الساعة 18:37
--- إصدار الخادم: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- Generation Time: Mar 09, 2026 at 09:43 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,22 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- بنية الجدول `admin`
+-- Table structure for table `academic_report`
+--
+
+CREATE TABLE `academic_report` (
+  `report_id` int(11) NOT NULL,
+  `report_file` varchar(255) NOT NULL,
+  `report_upload` enum('مرفوع','غير مرفوع','','') NOT NULL,
+  `installment_num` int(11) NOT NULL,
+  `submit_date` date NOT NULL,
+  `report_appoval` enum('معتمد','غير معتمد','','') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admin`
 --
 
 CREATE TABLE `admin` (
@@ -36,7 +51,7 @@ CREATE TABLE `admin` (
 -- --------------------------------------------------------
 
 --
--- بنية الجدول `admission_request`
+-- Table structure for table `admission_request`
 --
 
 CREATE TABLE `admission_request` (
@@ -53,7 +68,7 @@ CREATE TABLE `admission_request` (
 -- --------------------------------------------------------
 
 --
--- بنية الجدول `admission_request_documents`
+-- Table structure for table `admission_request_documents`
 --
 
 CREATE TABLE `admission_request_documents` (
@@ -67,7 +82,24 @@ CREATE TABLE `admission_request_documents` (
 -- --------------------------------------------------------
 
 --
--- بنية الجدول `bnf_inv_msg`
+-- Table structure for table `beneficiary`
+--
+
+CREATE TABLE `beneficiary` (
+  `bnf_id` int(11) NOT NULL,
+  `f_name` varchar(50) NOT NULL,
+  `l_name` varchar(50) NOT NULL,
+  `phone_num` varchar(15) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `field` enum('صناعي','صحي','اداري','') NOT NULL,
+  `degree_level` enum('ثانوي','بكالريوس','ماجستير','') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bnf_inv_msg`
 --
 
 CREATE TABLE `bnf_inv_msg` (
@@ -79,7 +111,7 @@ CREATE TABLE `bnf_inv_msg` (
 -- --------------------------------------------------------
 
 --
--- بنية الجدول `bnf_off_msg`
+-- Table structure for table `bnf_off_msg`
 --
 
 CREATE TABLE `bnf_off_msg` (
@@ -91,7 +123,7 @@ CREATE TABLE `bnf_off_msg` (
 -- --------------------------------------------------------
 
 --
--- بنية الجدول `complaints_inquiries`
+-- Table structure for table `complaints_inquiries`
 --
 
 CREATE TABLE `complaints_inquiries` (
@@ -108,7 +140,7 @@ CREATE TABLE `complaints_inquiries` (
 -- --------------------------------------------------------
 
 --
--- بنية الجدول `consulting_office`
+-- Table structure for table `consulting_office`
 --
 
 CREATE TABLE `consulting_office` (
@@ -127,7 +159,7 @@ CREATE TABLE `consulting_office` (
 -- --------------------------------------------------------
 
 --
--- بنية الجدول `e_contract`
+-- Table structure for table `e_contract`
 --
 
 CREATE TABLE `e_contract` (
@@ -142,7 +174,7 @@ CREATE TABLE `e_contract` (
 -- --------------------------------------------------------
 
 --
--- بنية الجدول `investor`
+-- Table structure for table `investor`
 --
 
 CREATE TABLE `investor` (
@@ -156,7 +188,7 @@ CREATE TABLE `investor` (
 -- --------------------------------------------------------
 
 --
--- بنية الجدول `office_country`
+-- Table structure for table `office_country`
 --
 
 CREATE TABLE `office_country` (
@@ -168,7 +200,7 @@ CREATE TABLE `office_country` (
 -- --------------------------------------------------------
 
 --
--- بنية الجدول `payments`
+-- Table structure for table `payments`
 --
 
 CREATE TABLE `payments` (
@@ -182,7 +214,7 @@ CREATE TABLE `payments` (
 -- --------------------------------------------------------
 
 --
--- بنية الجدول `rating`
+-- Table structure for table `rating`
 --
 
 CREATE TABLE `rating` (
@@ -196,7 +228,7 @@ CREATE TABLE `rating` (
 -- --------------------------------------------------------
 
 --
--- بنية الجدول `scholarship_opps`
+-- Table structure for table `scholarship_opps`
 --
 
 CREATE TABLE `scholarship_opps` (
@@ -212,7 +244,7 @@ CREATE TABLE `scholarship_opps` (
 -- --------------------------------------------------------
 
 --
--- بنية الجدول `scholarship_requests`
+-- Table structure for table `scholarship_requests`
 --
 
 CREATE TABLE `scholarship_requests` (
@@ -225,9 +257,28 @@ CREATE TABLE `scholarship_requests` (
   `univ_name` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `scholarship_request_documents`
+--
+
+CREATE TABLE `scholarship_request_documents` (
+  `doc_id` int(11) NOT NULL,
+  `doc_type` enum('CV','LastDegreeCertificate','RecommendationLetter','AcceptanceLetter') NOT NULL,
+  `file _name` varchar(150) NOT NULL,
+  `file` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `academic_report`
+--
+ALTER TABLE `academic_report`
+  ADD PRIMARY KEY (`report_id`);
 
 --
 -- Indexes for table `admin`
@@ -248,6 +299,13 @@ ALTER TABLE `admission_request`
 --
 ALTER TABLE `admission_request_documents`
   ADD PRIMARY KEY (`doc_id`);
+
+--
+-- Indexes for table `beneficiary`
+--
+ALTER TABLE `beneficiary`
+  ADD PRIMARY KEY (`bnf_id`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- Indexes for table `bnf_inv_msg`
@@ -324,8 +382,20 @@ ALTER TABLE `scholarship_requests`
   ADD KEY `scholarship_id` (`scholarship_id`);
 
 --
+-- Indexes for table `scholarship_request_documents`
+--
+ALTER TABLE `scholarship_request_documents`
+  ADD PRIMARY KEY (`doc_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `academic_report`
+--
+ALTER TABLE `academic_report`
+  MODIFY `report_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `admission_request`
@@ -338,6 +408,12 @@ ALTER TABLE `admission_request`
 --
 ALTER TABLE `admission_request_documents`
   MODIFY `doc_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `beneficiary`
+--
+ALTER TABLE `beneficiary`
+  MODIFY `bnf_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `bnf_off_msg`
@@ -388,23 +464,29 @@ ALTER TABLE `scholarship_requests`
   MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- قيود الجداول المُلقاة.
+-- AUTO_INCREMENT for table `scholarship_request_documents`
+--
+ALTER TABLE `scholarship_request_documents`
+  MODIFY `doc_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
 --
 
 --
--- قيود الجداول `admission_request`
+-- Constraints for table `admission_request`
 --
 ALTER TABLE `admission_request`
   ADD CONSTRAINT `admission_request_ibfk_1` FOREIGN KEY (`office_id`) REFERENCES `consulting_office` (`office_id`);
 
 --
--- قيود الجداول `office_country`
+-- Constraints for table `office_country`
 --
 ALTER TABLE `office_country`
   ADD CONSTRAINT `office_country_ibfk_1` FOREIGN KEY (`office_id`) REFERENCES `consulting_office` (`office_id`);
 
 --
--- قيود الجداول `scholarship_requests`
+-- Constraints for table `scholarship_requests`
 --
 ALTER TABLE `scholarship_requests`
   ADD CONSTRAINT `scholarship_requests_ibfk_1` FOREIGN KEY (`scholarship_id`) REFERENCES `scholarship_opps` (`scholarship_id`);
