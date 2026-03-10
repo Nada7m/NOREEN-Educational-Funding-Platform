@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 09 مارس 2026 الساعة 23:54
+-- Generation Time: 10 مارس 2026 الساعة 07:51
 -- إصدار الخادم: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -29,13 +29,13 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `academic_report` (
   `report_id` int(11) NOT NULL,
+  `bnf_id` int(11) NOT NULL,
+  `contract_id` int(11) NOT NULL,
   `report_file` varchar(255) NOT NULL,
   `report_upload` enum('مرفوع','غير مرفوع','','') NOT NULL,
   `installment_num` int(11) NOT NULL,
   `submit_date` date NOT NULL,
-  `report_appoval` enum('معتمد','غير معتمد','','') NOT NULL,
-  `bnf_id` int(11) NOT NULL,
-  `contract_id` int(11) NOT NULL
+  `report_appoval` enum('معتمد','غير معتمد','','') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -106,10 +106,10 @@ CREATE TABLE `beneficiary` (
 
 CREATE TABLE `bnf_inv_msg` (
   `msg_id` int(11) NOT NULL,
-  `msg_time` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `msg_text` text NOT NULL,
   `bnf_id` int(11) NOT NULL,
-  `inv_id` int(11) NOT NULL
+  `inv_id` int(11) NOT NULL,
+  `msg_time` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `msg_text` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -120,10 +120,10 @@ CREATE TABLE `bnf_inv_msg` (
 
 CREATE TABLE `bnf_off_msg` (
   `msg_id` int(11) NOT NULL,
-  `msg_time` datetime NOT NULL DEFAULT current_timestamp(),
-  `msg_text` text NOT NULL,
   `bnf_id` int(11) NOT NULL,
-  `office_id` int(11) NOT NULL
+  `office_id` int(11) NOT NULL,
+  `msg_time` datetime NOT NULL DEFAULT current_timestamp(),
+  `msg_text` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -170,12 +170,12 @@ CREATE TABLE `consulting_office` (
 
 CREATE TABLE `e_contract` (
   `contract_id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
   `payments_count` int(11) NOT NULL,
   `funding_duration` int(11) NOT NULL,
   `ctr_status` enum('نشط','ملغي') NOT NULL,
   `terms` text NOT NULL,
-  `amount` decimal(10,2) NOT NULL,
-  `request_id` int(11) NOT NULL
+  `amount` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -212,11 +212,11 @@ CREATE TABLE `office_country` (
 
 CREATE TABLE `payments` (
   `payment_id` int(11) NOT NULL,
+  `contract_id` int(11) NOT NULL,
   `installment_number` int(11) NOT NULL,
   `payment_amount` int(11) NOT NULL,
   `payment_status` enum('تم الدفع','بانتظار الدفع','','') NOT NULL,
-  `payment_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `contract_id` int(11) NOT NULL
+  `payment_date` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -240,14 +240,14 @@ CREATE TABLE `rating` (
 --
 
 CREATE TABLE `scholarship_opps` (
-  `scholarship_id` int(11) NOT NULL,
+  `scholarship_id` int(50) NOT NULL,
+  `inv_id` int(20) NOT NULL,
   `sch_name` varchar(100) NOT NULL,
   `sch_field` enum('تقني وحوسبي','علوم طبيعية','صناعي وتشغيلي','ادراي','قانوني','اجتماعي وانساني','تصميمي','اقتصادي','إعلامي','بيئي','لوجيستي','صحي') NOT NULL,
   `requirements` text NOT NULL,
   `study_level` enum('بكالوريوس','ماجستير','دكاوراه') NOT NULL,
   `Specializations` text NOT NULL,
-  `app_deadline` datetime NOT NULL,
-  `inv_id` int(11) NOT NULL
+  `app_deadline` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -274,10 +274,10 @@ CREATE TABLE `scholarship_requests` (
 
 CREATE TABLE `scholarship_request_documents` (
   `doc_id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
   `doc_type` enum('CV','LastDegreeCertificate','RecommendationLetter','AcceptanceLetter') NOT NULL,
   `file _name` varchar(150) NOT NULL,
-  `file` varchar(255) NOT NULL,
-  `request_id` int(11) NOT NULL
+  `file` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -326,8 +326,8 @@ ALTER TABLE `beneficiary`
 --
 ALTER TABLE `bnf_inv_msg`
   ADD PRIMARY KEY (`msg_id`),
-  ADD KEY `bnf_id` (`bnf_id`),
-  ADD KEY `inv_id` (`inv_id`);
+  ADD KEY `inv_id` (`inv_id`),
+  ADD KEY `bnf_id` (`bnf_id`);
 
 --
 -- Indexes for table `bnf_off_msg`
@@ -355,7 +355,8 @@ ALTER TABLE `consulting_office`
 -- Indexes for table `e_contract`
 --
 ALTER TABLE `e_contract`
-  ADD PRIMARY KEY (`contract_id`);
+  ADD PRIMARY KEY (`contract_id`),
+  ADD KEY `request_id` (`request_id`);
 
 --
 -- Indexes for table `investor`
@@ -401,7 +402,8 @@ ALTER TABLE `scholarship_opps`
 --
 ALTER TABLE `scholarship_requests`
   ADD PRIMARY KEY (`request_id`),
-  ADD UNIQUE KEY `bnf_id` (`bnf_id`,`scholarship_id`);
+  ADD UNIQUE KEY `bnf_id` (`bnf_id`,`scholarship_id`),
+  ADD KEY `scholarship_id` (`scholarship_id`);
 
 --
 -- Indexes for table `scholarship_request_documents`
@@ -463,10 +465,22 @@ ALTER TABLE `e_contract`
   MODIFY `contract_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `investor`
+--
+ALTER TABLE `investor`
+  MODIFY `inv_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `office_country`
 --
 ALTER TABLE `office_country`
   MODIFY `con_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `payments`
+--
+ALTER TABLE `payments`
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `rating`
@@ -478,13 +492,7 @@ ALTER TABLE `rating`
 -- AUTO_INCREMENT for table `scholarship_opps`
 --
 ALTER TABLE `scholarship_opps`
-  MODIFY `scholarship_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `scholarship_requests`
---
-ALTER TABLE `scholarship_requests`
-  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `scholarship_id` int(50) NOT NULL AUTO_INCREMENT;
 
 --
 -- قيود الجداول المُلقاة.
@@ -494,14 +502,15 @@ ALTER TABLE `scholarship_requests`
 -- قيود الجداول `academic_report`
 --
 ALTER TABLE `academic_report`
-  ADD CONSTRAINT `academic_report_ibfk_1` FOREIGN KEY (`bnf_id`) REFERENCES `beneficiary` (`bnf_id`),
-  ADD CONSTRAINT `academic_report_ibfk_2` FOREIGN KEY (`contract_id`) REFERENCES `e_contract` (`contract_id`);
+  ADD CONSTRAINT `academic_report_ibfk_1` FOREIGN KEY (`contract_id`) REFERENCES `e_contract` (`contract_id`),
+  ADD CONSTRAINT `academic_report_ibfk_2` FOREIGN KEY (`bnf_id`) REFERENCES `beneficiary` (`bnf_id`);
 
 --
 -- قيود الجداول `admission_request`
 --
 ALTER TABLE `admission_request`
-  ADD CONSTRAINT `admission_request_ibfk_1` FOREIGN KEY (`bnf_id`) REFERENCES `beneficiary` (`bnf_id`);
+  ADD CONSTRAINT `admission_request_ibfk_1` FOREIGN KEY (`bnf_id`) REFERENCES `beneficiary` (`bnf_id`),
+  ADD CONSTRAINT `admission_request_ibfk_2` FOREIGN KEY (`office_id`) REFERENCES `consulting_office` (`office_id`);
 
 --
 -- قيود الجداول `admission_request_documents`
@@ -513,8 +522,8 @@ ALTER TABLE `admission_request_documents`
 -- قيود الجداول `bnf_inv_msg`
 --
 ALTER TABLE `bnf_inv_msg`
-  ADD CONSTRAINT `bnf_inv_msg_ibfk_1` FOREIGN KEY (`bnf_id`) REFERENCES `beneficiary` (`bnf_id`),
-  ADD CONSTRAINT `bnf_inv_msg_ibfk_2` FOREIGN KEY (`inv_id`) REFERENCES `investor` (`inv_id`);
+  ADD CONSTRAINT `bnf_inv_msg_ibfk_1` FOREIGN KEY (`inv_id`) REFERENCES `investor` (`inv_id`),
+  ADD CONSTRAINT `bnf_inv_msg_ibfk_2` FOREIGN KEY (`bnf_id`) REFERENCES `beneficiary` (`bnf_id`);
 
 --
 -- قيود الجداول `bnf_off_msg`
@@ -522,6 +531,12 @@ ALTER TABLE `bnf_inv_msg`
 ALTER TABLE `bnf_off_msg`
   ADD CONSTRAINT `bnf_off_msg_ibfk_1` FOREIGN KEY (`bnf_id`) REFERENCES `beneficiary` (`bnf_id`),
   ADD CONSTRAINT `bnf_off_msg_ibfk_2` FOREIGN KEY (`office_id`) REFERENCES `consulting_office` (`office_id`);
+
+--
+-- قيود الجداول `e_contract`
+--
+ALTER TABLE `e_contract`
+  ADD CONSTRAINT `e_contract_ibfk_1` FOREIGN KEY (`request_id`) REFERENCES `scholarship_requests` (`request_id`);
 
 --
 -- قيود الجداول `office_country`
@@ -552,7 +567,92 @@ ALTER TABLE `scholarship_opps`
 -- قيود الجداول `scholarship_requests`
 --
 ALTER TABLE `scholarship_requests`
-  ADD CONSTRAINT `scholarship_requests_ibfk_1` FOREIGN KEY (`bnf_id`) REFERENCES `beneficiary` (`bnf_id`);
+  ADD CONSTRAINT `scholarship_requests_ibfk_1` FOREIGN KEY (`bnf_id`) REFERENCES `beneficiary` (`bnf_id`),
+  ADD CONSTRAINT `scholarship_requests_ibfk_2` FOREIGN KEY (`scholarship_id`) REFERENCES `scholarship_opps` (`scholarship_id`);
+
+--
+-- قيود الجداول `scholarship_request_documents`
+--
+ALTER TABLE `scholarship_request_documents`
+  ADD CONSTRAINT `scholarship_request_documents_ibfk_1` FOREIGN KEY (`request_id`) REFERENCES `scholarship_requests` (`request_id`);
+
+
+--
+-- Metadata
+--
+USE `phpmyadmin`;
+
+--
+-- Metadata for table academic_report
+--
+
+--
+-- Metadata for table admin
+--
+
+--
+-- Metadata for table admission_request
+--
+
+--
+-- Metadata for table admission_request_documents
+--
+
+--
+-- Metadata for table beneficiary
+--
+
+--
+-- Metadata for table bnf_inv_msg
+--
+
+--
+-- Metadata for table bnf_off_msg
+--
+
+--
+-- Metadata for table complaints_inquiries
+--
+
+--
+-- Metadata for table consulting_office
+--
+
+--
+-- Metadata for table e_contract
+--
+
+--
+-- Metadata for table investor
+--
+
+--
+-- Metadata for table office_country
+--
+
+--
+-- Metadata for table payments
+--
+
+--
+-- Metadata for table rating
+--
+
+--
+-- Metadata for table scholarship_opps
+--
+
+--
+-- Metadata for table scholarship_requests
+--
+
+--
+-- Metadata for table scholarship_request_documents
+--
+
+--
+-- Metadata for database noreen
+--
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
