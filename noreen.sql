@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 10 مارس 2026 الساعة 16:58
+-- Generation Time: 10 مارس 2026 الساعة 18:19
 -- إصدار الخادم: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -33,9 +33,7 @@ CREATE TABLE `academic_report` (
   `report_upload` enum('مرفوع','غير مرفوع','','') NOT NULL,
   `installment_num` int(11) NOT NULL,
   `submit_date` date NOT NULL,
-  `report_appoval` enum('معتمد','غير معتمد','','') NOT NULL,
-  `bnf_id` int(11) NOT NULL,
-  `contract_id` int(11) NOT NULL
+  `report_appoval` enum('معتمد','غير معتمد','','') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -94,7 +92,7 @@ CREATE TABLE `beneficiary` (
   `phone_num` varchar(15) NOT NULL,
   `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `field` enum('صناعي','صحي','اداري','') NOT NULL,
+  `sch_field` enum('تقني وحوسبي','علوم طبيعية','صناعي وتشغيلي','اداري','قانوني','اجتماعي وانساني','تصميمي','اقتصادي','اعلامي','بيئي','لوجيستي','صحي') NOT NULL,
   `degree_level` enum('ثانوي','بكالريوس','ماجستير','') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -107,9 +105,7 @@ CREATE TABLE `beneficiary` (
 CREATE TABLE `bnf_inv_msg` (
   `msg_id` int(11) NOT NULL,
   `msg_time` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `msg_text` text NOT NULL,
-  `bnf_id` int(11) NOT NULL,
-  `inv_id` int(11) NOT NULL
+  `msg_text` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -121,9 +117,7 @@ CREATE TABLE `bnf_inv_msg` (
 CREATE TABLE `bnf_off_msg` (
   `msg_id` int(11) NOT NULL,
   `msg_time` datetime NOT NULL DEFAULT current_timestamp(),
-  `msg_text` text NOT NULL,
-  `bnf_id` int(11) NOT NULL,
-  `office_id` int(11) NOT NULL
+  `msg_text` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -135,11 +129,11 @@ CREATE TABLE `bnf_off_msg` (
 CREATE TABLE `complaints_inquiries` (
   `ticket_id` int(11) NOT NULL,
   `sender_id` int(11) NOT NULL,
-  `sender_role` enum('beneficiary','investor','consulting_office') NOT NULL,
+  `sender_role` enum('Beneficiary','Investor','Office') NOT NULL,
   `submission_date` datetime DEFAULT current_timestamp(),
-  `inquiry_subject` text NOT NULL,
-  `inquiry_message` text NOT NULL,
-  `reply_status` enum('بانتظار الرد','تم الرد عليها') DEFAULT 'بانتظار الرد',
+  `subject` text NOT NULL,
+  `message` text NOT NULL,
+  `status` enum('بانتظار الرد','تم الرد عليها') DEFAULT 'بانتظار الرد',
   `admin_reply` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -174,8 +168,7 @@ CREATE TABLE `e_contract` (
   `funding_duration` int(11) NOT NULL,
   `ctr_status` enum('نشط','ملغي') NOT NULL,
   `terms` text NOT NULL,
-  `amount` decimal(10,2) NOT NULL,
-  `request_id` int(11) NOT NULL
+  `amount` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -215,8 +208,7 @@ CREATE TABLE `payments` (
   `installment_number` int(11) NOT NULL,
   `payment_amount` int(11) NOT NULL,
   `payment_status` enum('تم الدفع','بانتظار الدفع','','') NOT NULL,
-  `payment_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `contract_id` int(11) NOT NULL
+  `payment_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -230,7 +222,7 @@ CREATE TABLE `rating` (
   `bnf_id` int(11) NOT NULL,
   `office_id` int(11) NOT NULL,
   `rating_date` datetime DEFAULT current_timestamp(),
-  `comment` text DEFAULT NULL
+  `comment_text` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -246,8 +238,7 @@ CREATE TABLE `scholarship_opps` (
   `requirements` text NOT NULL,
   `study_level` enum('بكالوريوس','ماجستير','دكاوراه') NOT NULL,
   `Specializations` text NOT NULL,
-  `app_deadline` datetime NOT NULL,
-  `inv_id` int(11) NOT NULL
+  `app_deadline` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -288,9 +279,7 @@ CREATE TABLE `scholarship_request_documents` (
 -- Indexes for table `academic_report`
 --
 ALTER TABLE `academic_report`
-  ADD PRIMARY KEY (`report_id`),
-  ADD KEY `bnf_id` (`bnf_id`),
-  ADD KEY `contract_id` (`contract_id`);
+  ADD PRIMARY KEY (`report_id`);
 
 --
 -- Indexes for table `admin`
@@ -305,14 +294,13 @@ ALTER TABLE `admin`
 ALTER TABLE `admission_request`
   ADD PRIMARY KEY (`request_id`),
   ADD KEY `office_id` (`office_id`),
-  ADD KEY `bnf_id` (`bnf_id`);
+  ADD KEY `fk_request_id` (`bnf_id`);
 
 --
 -- Indexes for table `admission_request_documents`
 --
 ALTER TABLE `admission_request_documents`
-  ADD PRIMARY KEY (`doc_id`),
-  ADD KEY `request_id` (`request_id`);
+  ADD PRIMARY KEY (`doc_id`);
 
 --
 -- Indexes for table `beneficiary`
@@ -325,17 +313,13 @@ ALTER TABLE `beneficiary`
 -- Indexes for table `bnf_inv_msg`
 --
 ALTER TABLE `bnf_inv_msg`
-  ADD PRIMARY KEY (`msg_id`),
-  ADD KEY `bnf_id` (`bnf_id`),
-  ADD KEY `inv_id` (`inv_id`);
+  ADD PRIMARY KEY (`msg_id`);
 
 --
 -- Indexes for table `bnf_off_msg`
 --
 ALTER TABLE `bnf_off_msg`
-  ADD PRIMARY KEY (`msg_id`),
-  ADD KEY `bnf_id` (`bnf_id`),
-  ADD KEY `office_id` (`office_id`);
+  ADD PRIMARY KEY (`msg_id`);
 
 --
 -- Indexes for table `complaints_inquiries`
@@ -376,16 +360,13 @@ ALTER TABLE `office_country`
 -- Indexes for table `payments`
 --
 ALTER TABLE `payments`
-  ADD PRIMARY KEY (`payment_id`),
-  ADD KEY `contract_id` (`contract_id`);
+  ADD PRIMARY KEY (`payment_id`);
 
 --
 -- Indexes for table `rating`
 --
 ALTER TABLE `rating`
-  ADD PRIMARY KEY (`rating_id`),
-  ADD KEY `bnf_id` (`bnf_id`),
-  ADD KEY `office_id` (`office_id`);
+  ADD PRIMARY KEY (`rating_id`);
 
 --
 -- Indexes for table `scholarship_opps`
@@ -393,22 +374,21 @@ ALTER TABLE `rating`
 ALTER TABLE `scholarship_opps`
   ADD PRIMARY KEY (`scholarship_id`),
   ADD UNIQUE KEY `scholarship_id` (`scholarship_id`),
-  ADD KEY `field_filter` (`sch_field`),
-  ADD KEY `inv_id` (`inv_id`);
+  ADD KEY `field_filter` (`sch_field`);
 
 --
 -- Indexes for table `scholarship_requests`
 --
 ALTER TABLE `scholarship_requests`
   ADD PRIMARY KEY (`request_id`),
-  ADD UNIQUE KEY `bnf_id` (`bnf_id`,`scholarship_id`);
+  ADD KEY `scholarship_id` (`scholarship_id`);
 
 --
 -- Indexes for table `scholarship_request_documents`
 --
 ALTER TABLE `scholarship_request_documents`
   ADD PRIMARY KEY (`doc_id`),
-  ADD KEY `request_id` (`request_id`);
+  ADD KEY `fk_request_idd` (`request_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -493,41 +473,21 @@ ALTER TABLE `scholarship_requests`
   MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- قيود الجداول المُلقاة.
+-- AUTO_INCREMENT for table `scholarship_request_documents`
 --
+ALTER TABLE `scholarship_request_documents`
+  MODIFY `doc_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- قيود الجداول `academic_report`
+-- قيود الجداول المُلقاة.
 --
-ALTER TABLE `academic_report`
-  ADD CONSTRAINT `academic_report_ibfk_1` FOREIGN KEY (`bnf_id`) REFERENCES `beneficiary` (`bnf_id`),
-  ADD CONSTRAINT `academic_report_ibfk_2` FOREIGN KEY (`contract_id`) REFERENCES `e_contract` (`contract_id`);
 
 --
 -- قيود الجداول `admission_request`
 --
 ALTER TABLE `admission_request`
-  ADD CONSTRAINT `admission_request_ibfk_1` FOREIGN KEY (`bnf_id`) REFERENCES `beneficiary` (`bnf_id`);
-
---
--- قيود الجداول `admission_request_documents`
---
-ALTER TABLE `admission_request_documents`
-  ADD CONSTRAINT `admission_request_documents_ibfk_1` FOREIGN KEY (`request_id`) REFERENCES `admission_request` (`request_id`);
-
---
--- قيود الجداول `bnf_inv_msg`
---
-ALTER TABLE `bnf_inv_msg`
-  ADD CONSTRAINT `bnf_inv_msg_ibfk_1` FOREIGN KEY (`bnf_id`) REFERENCES `beneficiary` (`bnf_id`),
-  ADD CONSTRAINT `bnf_inv_msg_ibfk_2` FOREIGN KEY (`inv_id`) REFERENCES `investor` (`inv_id`);
-
---
--- قيود الجداول `bnf_off_msg`
---
-ALTER TABLE `bnf_off_msg`
-  ADD CONSTRAINT `bnf_off_msg_ibfk_1` FOREIGN KEY (`bnf_id`) REFERENCES `beneficiary` (`bnf_id`),
-  ADD CONSTRAINT `bnf_off_msg_ibfk_2` FOREIGN KEY (`office_id`) REFERENCES `consulting_office` (`office_id`);
+  ADD CONSTRAINT `admission_request_ibfk_1` FOREIGN KEY (`office_id`) REFERENCES `consulting_office` (`office_id`),
+  ADD CONSTRAINT `fk_request_id` FOREIGN KEY (`bnf_id`) REFERENCES `scholarship_request_documents` (`doc_id`);
 
 --
 -- قيود الجداول `office_country`
@@ -536,29 +496,16 @@ ALTER TABLE `office_country`
   ADD CONSTRAINT `office_country_ibfk_1` FOREIGN KEY (`office_id`) REFERENCES `consulting_office` (`office_id`);
 
 --
--- قيود الجداول `payments`
---
-ALTER TABLE `payments`
-  ADD CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`contract_id`) REFERENCES `e_contract` (`contract_id`);
-
---
--- قيود الجداول `rating`
---
-ALTER TABLE `rating`
-  ADD CONSTRAINT `rating_ibfk_1` FOREIGN KEY (`bnf_id`) REFERENCES `beneficiary` (`bnf_id`),
-  ADD CONSTRAINT `rating_ibfk_2` FOREIGN KEY (`office_id`) REFERENCES `consulting_office` (`office_id`);
-
---
--- قيود الجداول `scholarship_opps`
---
-ALTER TABLE `scholarship_opps`
-  ADD CONSTRAINT `scholarship_opps_ibfk_1` FOREIGN KEY (`inv_id`) REFERENCES `investor` (`inv_id`);
-
---
 -- قيود الجداول `scholarship_requests`
 --
 ALTER TABLE `scholarship_requests`
-  ADD CONSTRAINT `scholarship_requests_ibfk_1` FOREIGN KEY (`bnf_id`) REFERENCES `beneficiary` (`bnf_id`);
+  ADD CONSTRAINT `scholarship_requests_ibfk_1` FOREIGN KEY (`scholarship_id`) REFERENCES `scholarship_opps` (`scholarship_id`);
+
+--
+-- قيود الجداول `scholarship_request_documents`
+--
+ALTER TABLE `scholarship_request_documents`
+  ADD CONSTRAINT `fk_request_idd` FOREIGN KEY (`request_id`) REFERENCES `scholarship_requests` (`request_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
