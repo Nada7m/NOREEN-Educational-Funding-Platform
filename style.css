@@ -47,15 +47,17 @@ font-size:14px;
 color:red;
 }
 
-input{
+input,
+select{
 width:100%;
 padding:10px;
 border:1px solid #8fb4bf;
 border-radius:4px;
 font-family:'Noto Kufi Arabic',sans-serif;
+background:white;
 }
-
-input:focus{
+input:focus,
+select:focus{
 border-color:#4b2d67;
 outline:none;
 }
@@ -108,12 +110,13 @@ margin-top:20px;
 }
 
 .btn{
-background:#4b2d67;
+display:block;
+margin:auto;
+background:#4b2c68;
 color:white;
 border:none;
 padding:10px 25px;
-border-radius:4px;
-cursor:pointer;
+font-size:14p ;
 font-family:'Noto Kufi Arabic',sans-serif;
 }
 
@@ -139,8 +142,3 @@ outline:none;
 margin-top:20px;
 border:1px solid #ddd;
 }
-
-
-
-
-

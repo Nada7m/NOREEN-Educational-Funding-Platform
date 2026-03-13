@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 13 مارس 2026 الساعة 07:34
+-- Generation Time: 14 مارس 2026 الساعة 00:23
 -- إصدار الخادم: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -134,15 +134,14 @@ CREATE TABLE `bnf_off_msg` (
 
 CREATE TABLE `complaints_inquiries` (
   `ticket_id` int(11) NOT NULL,
-  `admin_id` int(11) NOT NULL,
   `office_id` int(11) NOT NULL,
   `bnf_id` int(11) NOT NULL,
   `inv_id` int(11) NOT NULL,
+  `admin_reply` text DEFAULT NULL,
   `submission_date` datetime DEFAULT current_timestamp(),
   `subject` text NOT NULL,
   `message` text NOT NULL,
-  `status` enum('بانتظار الرد','تم الرد عليها') DEFAULT 'بانتظار الرد',
-  `admin_reply` text DEFAULT NULL
+  `status` enum('بانتظار الرد','تم الرد عليها') DEFAULT 'بانتظار الرد'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -163,6 +162,13 @@ CREATE TABLE `consulting_office` (
   `password` varchar(255) NOT NULL,
   `phone` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- إرجاع أو استيراد بيانات الجدول `consulting_office`
+--
+
+INSERT INTO `consulting_office` (`office_id`, `ccr_number`, `email`, `office_name`, `office_description`, `Bachelor_fee`, `Masters_fee`, `Phd_fee`, `password`, `phone`) VALUES
+(1, '10198910', 'info@asasstudyabroad.com', 'أساس للدراسة بالخارج', 'مكتب رائد في مجال الاستشارات التعليمية والقبول الجامعي', 200, 300, 600, 'll1234', '0541722808');
 
 -- --------------------------------------------------------
 
@@ -190,6 +196,7 @@ CREATE TABLE `investor` (
   `inv_id` int(11) NOT NULL,
   `ccr_number` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
+  `inv_number` int(255) NOT NULL,
   `inv_name` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -344,7 +351,6 @@ ALTER TABLE `bnf_off_msg`
 --
 ALTER TABLE `complaints_inquiries`
   ADD PRIMARY KEY (`ticket_id`),
-  ADD KEY `admin_id` (`admin_id`),
   ADD KEY `bnf_id` (`bnf_id`),
   ADD KEY `inv_id` (`inv_id`),
   ADD KEY `office_id` (`office_id`);
@@ -474,7 +480,7 @@ ALTER TABLE `complaints_inquiries`
 -- AUTO_INCREMENT for table `consulting_office`
 --
 ALTER TABLE `consulting_office`
-  MODIFY `office_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `office_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `e_contract`
@@ -561,7 +567,6 @@ ALTER TABLE `bnf_off_msg`
 -- قيود الجداول `complaints_inquiries`
 --
 ALTER TABLE `complaints_inquiries`
-  ADD CONSTRAINT `complaints_inquiries_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `admin` (`admin_id`),
   ADD CONSTRAINT `complaints_inquiries_ibfk_2` FOREIGN KEY (`bnf_id`) REFERENCES `beneficiary` (`bnf_id`),
   ADD CONSTRAINT `complaints_inquiries_ibfk_3` FOREIGN KEY (`inv_id`) REFERENCES `investor` (`inv_id`),
   ADD CONSTRAINT `complaints_inquiries_ibfk_4` FOREIGN KEY (`office_id`) REFERENCES `consulting_office` (`office_id`);
