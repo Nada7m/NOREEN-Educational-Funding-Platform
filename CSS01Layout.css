@@ -240,3 +240,37 @@ body{
   height:42px;
   cursor:pointer;
 }
+.page-top{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 40px 
+}
+
+.back-btn img{
+    width: 45px;
+    height: 45px;
+}
+
+.create-btn-box{
+    margin-top: 10px;
+}
+
+.create-btn{
+    background: #3E2454;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.empty-state{
+    text-align: center;
+    margin-top: 220px;
+    color: #cfcfcf;
+    font-size: 28px;
+}
