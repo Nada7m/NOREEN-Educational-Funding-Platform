@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 12 مارس 2026 الساعة 00:06
+-- Generation Time: 13 مارس 2026 الساعة 07:34
 -- إصدار الخادم: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -31,9 +31,9 @@ CREATE TABLE `academic_report` (
   `report_id` int(11) NOT NULL,
   `bnf_id` int(11) NOT NULL,
   `contract_id` int(11) NOT NULL,
+  `payment_id` int(11) NOT NULL,
   `report_file` varchar(255) NOT NULL,
   `report_upload` enum('مرفوع','غير مرفوع','','') NOT NULL,
-  `installment_num` int(11) NOT NULL,
   `submit_date` date NOT NULL,
   `report_appoval` enum('معتمد','غير معتمد','','') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -134,8 +134,10 @@ CREATE TABLE `bnf_off_msg` (
 
 CREATE TABLE `complaints_inquiries` (
   `ticket_id` int(11) NOT NULL,
-  `sender_id` int(11) NOT NULL,
-  `sender_role` enum('beneficiary','investor','consulting_office') NOT NULL,
+  `admin_id` int(11) NOT NULL,
+  `office_id` int(11) NOT NULL,
+  `bnf_id` int(11) NOT NULL,
+  `inv_id` int(11) NOT NULL,
   `submission_date` datetime DEFAULT current_timestamp(),
   `subject` text NOT NULL,
   `message` text NOT NULL,
@@ -199,7 +201,6 @@ CREATE TABLE `investor` (
 --
 
 CREATE TABLE `office_country` (
-  `con_id` int(11) NOT NULL,
   `office_id` int(11) NOT NULL,
   `con_name` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -290,7 +291,8 @@ CREATE TABLE `scholarship_request_documents` (
 ALTER TABLE `academic_report`
   ADD PRIMARY KEY (`report_id`),
   ADD KEY `bnf_id` (`bnf_id`),
-  ADD KEY `contract_id` (`contract_id`);
+  ADD KEY `contract_id` (`contract_id`),
+  ADD KEY `payment_id` (`payment_id`);
 
 --
 -- Indexes for table `admin`
@@ -341,7 +343,11 @@ ALTER TABLE `bnf_off_msg`
 -- Indexes for table `complaints_inquiries`
 --
 ALTER TABLE `complaints_inquiries`
-  ADD PRIMARY KEY (`ticket_id`);
+  ADD PRIMARY KEY (`ticket_id`),
+  ADD KEY `admin_id` (`admin_id`),
+  ADD KEY `bnf_id` (`bnf_id`),
+  ADD KEY `inv_id` (`inv_id`),
+  ADD KEY `office_id` (`office_id`);
 
 --
 -- Indexes for table `consulting_office`
@@ -370,7 +376,7 @@ ALTER TABLE `investor`
 -- Indexes for table `office_country`
 --
 ALTER TABLE `office_country`
-  ADD PRIMARY KEY (`con_id`),
+  ADD PRIMARY KEY (`office_id`,`con_name`),
   ADD KEY `office_id` (`office_id`);
 
 --
@@ -483,12 +489,6 @@ ALTER TABLE `investor`
   MODIFY `inv_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `office_country`
---
-ALTER TABLE `office_country`
-  MODIFY `con_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
@@ -527,7 +527,8 @@ ALTER TABLE `scholarship_request_documents`
 --
 ALTER TABLE `academic_report`
   ADD CONSTRAINT `academic_report_ibfk_1` FOREIGN KEY (`bnf_id`) REFERENCES `beneficiary` (`bnf_id`),
-  ADD CONSTRAINT `academic_report_ibfk_2` FOREIGN KEY (`contract_id`) REFERENCES `e_contract` (`contract_id`);
+  ADD CONSTRAINT `academic_report_ibfk_2` FOREIGN KEY (`contract_id`) REFERENCES `e_contract` (`contract_id`),
+  ADD CONSTRAINT `academic_report_ibfk_3` FOREIGN KEY (`payment_id`) REFERENCES `payments` (`payment_id`);
 
 --
 -- قيود الجداول `admission_request`
@@ -555,6 +556,15 @@ ALTER TABLE `bnf_inv_msg`
 ALTER TABLE `bnf_off_msg`
   ADD CONSTRAINT `bnf_off_msg_ibfk_1` FOREIGN KEY (`bnf_id`) REFERENCES `beneficiary` (`bnf_id`),
   ADD CONSTRAINT `bnf_off_msg_ibfk_2` FOREIGN KEY (`office_id`) REFERENCES `consulting_office` (`office_id`);
+
+--
+-- قيود الجداول `complaints_inquiries`
+--
+ALTER TABLE `complaints_inquiries`
+  ADD CONSTRAINT `complaints_inquiries_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `admin` (`admin_id`),
+  ADD CONSTRAINT `complaints_inquiries_ibfk_2` FOREIGN KEY (`bnf_id`) REFERENCES `beneficiary` (`bnf_id`),
+  ADD CONSTRAINT `complaints_inquiries_ibfk_3` FOREIGN KEY (`inv_id`) REFERENCES `investor` (`inv_id`),
+  ADD CONSTRAINT `complaints_inquiries_ibfk_4` FOREIGN KEY (`office_id`) REFERENCES `consulting_office` (`office_id`);
 
 --
 -- قيود الجداول `e_contract`
