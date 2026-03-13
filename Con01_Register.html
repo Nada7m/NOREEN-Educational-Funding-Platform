@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>إنشاء حساب مكتب استشاري</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+<div class="box">
+
+<h2>إنشاء حساب <span>مكتب استشاري</span></h2>
+
+<form id="registerForm">
+
+<div class="row">
+
+<div class="field">
+<label><span class="star">*</span> اسم المكتب</label>
+<input type="text" id="officeName" name="office_name"
+placeholder="الرجاء إدخال الاسم الرسمي للمكتب">
+<div class="errorText" id="officeError"></div>
+</div>
+
+<div class="field">
+<label><span class="star">*</span> رقم السجل التجاري</label>
+<input type="text" id="commercial" name="commercial_number"
+placeholder="مثل : 101023456">
+<div class="errorText" id="commercialError"></div>
+</div>
+
+</div>
+
+
+<div class="row">
+
+<div class="field">
+<label><span class="star">*</span> رسوم خدمات الماجستير</label>
+<input type="text" id="masterFee" name="master_fee"
+placeholder="القيمة بالريال">
+<div class="errorText" id="masterError"></div>
+</div>
+
+<div class="field">
+<label><span class="star">*</span> رسوم خدمات الدكتوراه</label>
+<input type="text" id="phdFee" name="phd_fee"
+placeholder="القيمة بالريال">
+<div class="errorText" id="phdError"></div>
+</div>
+
+</div>
+
+
+<div class="row">
+
+<div class="field">
+<label><span class="star">*</span> رسوم خدمات البكالوريوس</label>
+<input type="text" id="bachelorFee" name="bachelor_fee"
+placeholder="القيمة بالريال">
+<div class="errorText" id="bachelorError"></div>
+</div>
+
+<div class="field"></div>
+
+</div>
+
+<div class="row">
+
+<div class="field" >
+
+<label><span class="star">*</span> نص تعريفي بالمكتب</label>
+
+<textarea id="description"
+name="office_description"
+class="descBox"
+placeholder="تعريف مفصل بخدمات ونطاق المكتب"></textarea>
+
+<div class="errorText" id="descError"></div>
+
+<hr class="line">
+
+</div>
+
+</div>
+
+
+
+<div class="row">
+
+<div class="field">
+<label><span class="star">*</span> البريد الإلكتروني</label>
+<input type="text" id="email" name="email"
+placeholder="example@gmail.com">
+<div class="errorText" id="emailError"></div>
+</div>
+
+<div class="field">
+<label><span class="star">*</span> رقم الهاتف</label>
+<input type="text" id="phone" name="phone"
+placeholder="9665XXXXXXXX+">
+<div class="errorText" id="phoneError"></div>
+</div>
+
+</div>
+
+
+<div class="row">
+
+<div class="field">
+
+<label><span class="star">*</span> كلمة المرور</label>
+
+<input type="password" id="password" name="password"
+placeholder="إدخال كلمة مرور قوية">
+
+<div class="errorText" id="passError"></div>
+
+</div>
+
+<div class="field">
+
+<label><span class="star">*</span> تأكيد كلمة المرور</label>
+
+<input type="password" id="confirmPassword"
+name="confirm_password"
+placeholder="أعد إدخال كلمة المرور">
+
+<div class="errorText" id="confirmError"></div>
+
+</div>
+
+</div>
+
+
+<div class="center">
+
+<button type="submit" class="btn">
+إنشاء حساب
+</button>
+
+</div>
+
+</form>
+
+</div>
+</div>
+
+<script>
+
+document.getElementById("registerForm").addEventListener("submit",function(e){
+
+e.preventDefault();
+
+var office=document.getElementById("officeName").value;
+var commercial=document.getElementById("commercial").value;
+var email=document.getElementById("email").value;
+var phone=document.getElementById("phone").value;
+var pass=document.getElementById("password").value;
+var confirm=document.getElementById("confirmPassword").value;
+
+var ok=true;
+
+document.querySelectorAll(".errorText").forEach(el=>el.innerText="");
+
+if(office===""){
+document.getElementById("officeError").innerText="يرجى إدخال اسم المكتب";
+ok=false;
+}
+
+if(commercial===""){
+document.getElementById("commercialError").innerText="يرجى إدخال رقم السجل التجاري";
+ok=false;
+}
+
+if(email===""){
+document.getElementById("emailError").innerText="يرجى إدخال البريد الإلكتروني";
+ok=false;
+}
+
+if(phone===""){
+document.getElementById("phoneError").innerText="يرجى إدخال رقم الهاتف";
+ok=false;
+}
+
+if(pass===""){
+document.getElementById("passError").innerText="يرجى إدخال كلمة المرور";
+ok=false;
+}
+
+if(confirm===""){
+document.getElementById("confirmError").innerText="يرجى تأكيد كلمة المرور";
+ok=false;
+}
+
+else if(pass!==confirm){
+document.getElementById("confirmError").innerText="كلمتا المرور غير متطابقتين";
+ok=false;
+}
+
+if(ok){
+alert("تم إنشاء الحساب بنجاح");
+this.reset();
+}
+
+});
+
+</script>
+
+</body>
+</html>
