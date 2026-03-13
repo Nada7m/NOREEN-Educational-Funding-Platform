@@ -1,122 +1,763 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نورين</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<title>نورين - الرئيسية</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:"Noto Kufi Arabic",sans-serif;
-    }
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:"Noto Kufi Arabic",sans-serif;
+scroll-behavior:smooth;
+text-decoration:none;
+}
 
-    body{
-      background:#FFFAF2;
-    }
+body{
+background:#fffdff;
+}
 
-    /* الشريط العلوي */
-    .navbar{
-      width:calc(100% - 80px);
-      margin: 25px auto;
-      padding:10px 30px;
-      background:linear-gradient(to left,#3E2454,#D6B7E2);
-      border-radius:90px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-    }
+/* الشريط العلوي */
+.navbar{
+width:100%;
+max-width:1200px;
+margin:25px auto;
+padding:10px 30px;
+background:linear-gradient(to left,#3E2454,#D6B7E2);
+border-radius:90px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+position:sticky;
+top:15px;
+}
 
-    /* الشعار */
-    .logo img{
-      width:100px;
-      height:auto;
-      display:block;
-    }
+.logo img{
+width:120px;
+}
 
-    /* روابط التنقل */
-    .nav-links{
-      display:flex;
-      align-items:center;
-      gap:60px;
-      list-style:none;
-    }
+.nav-lnk{
+display:flex;
+gap:60px;
+list-style:none;
+align-items:center;
+}
 
-    .nav-links a{
-      text-decoration:none;
-      color:#FFFAF2;
-      font-weight:600;
-      font-size:16px;
-      white-space:nowrap;
-    }
+.nav-lnk a{
+color:#FFFAF2;
+font-weight:600;
+font-size:16px;
+}
 
-    /* الأزرار */
-    .nav-buttons{
-      display:flex;
-      gap:12px;
-    }
+.nav-btns{
+display:flex;
+gap:12px;
+}
 
-    .nav-buttons button{
-      background:#FFFAF2;
-      box-shadow:0 3px 1px rgba(117, 116, 116, 0.2);
-      border:none;
-      border-radius:999px;
-      font-weight:600;
-      padding:6px 16px;
-      font-size:14px;
-      cursor:pointer;
-      white-space:nowrap;
+.nav-btns a{
+background:#FFFAF2;
+border-radius:999px;
+padding:6px 16px;
+font-size:14px;
+font-weight:600;
+cursor:pointer;
+box-shadow:0 3px 1px rgba(117,116,116,0.2);
+}
 
-      transition: transform 0.35s cubic-bezier(.25,.8,.25,1),
-                  box-shadow 0.35s cubic-bezier(.25,.8,.25,1);
-    }
+.create{
+color:#70A0AF;
+}
 
-    .create{
-      color:#70A0AF;
-    }
+.login{
+color:#3E2454;
+}
 
-    .login{
-      color:#3E2454;
-    }
+.nav-btns a:hover{
+transition:.3s;
+transform:scale(1.06);
+}
 
-    .nav-buttons button:hover{
-      transform:scale(1.06);
-      box-shadow:0 3px 1px rgba(117, 116, 116, 0.28);
-    }
+/* القسم الرئيسي */
+.intro{
+padding:80px 100px;
+background:url("موجه اولى.svg") center no-repeat;
+background-size:100% 300px;
+}
 
-    .nav-buttons button:active{
-      transform:scale(1.12);
-      box-shadow:0 3px 1px rgba(117, 116, 116, 0.3);
-    }
-  </style>
+.int-cnt{
+display:flex;
+align-items:center;
+gap:60px;
+}
+
+.int-txt{
+max-width:520px;
+text-align:center;
+margin:auto;
+margin-top:-25px;
+}
+
+.int-txt h2{
+font-size:20px;
+color:#3E2454;
+margin-bottom:10px;
+margin-right:-180px;
+}
+
+.int-txt h1{
+font-size:44px;
+color:#3E2454;
+margin-bottom:20px;
+margin-right:-160px;
+}
+
+.int-txt p{
+font-size:18px;
+line-height:1.7;
+color:#4b4b4b;
+margin-bottom:30px;
+}
+
+.int-btn{
+background:#FFFAF2;
+border-radius:25px;
+padding:10px 22px;
+font-size:16px;
+cursor:pointer;
+box-shadow:0 3px 2px rgba(0,0,0,0.1);
+color:#3E2454;
+margin-right:-200px;
+display:inline-block;
+border: 0.05px solid #d0cdd0;
+}
+
+.int-img img{
+width:460px;
+border-radius:40px;
+}
+
+/* مسافة */
+.gap{
+height:80px;
+}
+
+/* من نحن */
+.ab-sec{
+padding-top:120px;
+padding-bottom:120px;
+background:
+url("موجه2.svg") center 110px no-repeat,
+url("موجه3.svg") center calc(100% - 10px) no-repeat;
+background-size:
+100% 160px,
+100% 260px;
+}
+
+.ab-card{
+width:900px;
+max-width:100%;
+margin:0 190px 28px;
+background:#FFFAF2;
+border-radius:16px;
+box-shadow:0 4px 0 rgba(120,120,120,0.35);
+padding:22px 34px;
+display:flex;
+align-items:center;
+gap:24px;
+}
+
+.ab-ico img{
+width:168px;
+}
+
+.ab-txt{
+text-align:center;
+}
+
+.ab-txt h2{
+font-size:28px;
+color:#3E2454;
+margin-bottom:8px;
+}
+
+.ab-txt p{
+font-size:17px;
+}
+
+.ab-row{
+width:900px;
+max-width:calc(100% - 160px);
+margin:0 auto 24px;
+display:flex;
+gap:28px;
+}
+
+.ab-info{
+background:#FFFAF2;
+border-radius:14px;
+box-shadow:0 4px 0 rgba(120,120,120,0.35);
+padding:20px;
+text-align:center;
+flex:1;
+}
+
+.ab-info h3{
+font-size:24px;
+color:#70A0AF;
+margin-bottom:10px;
+}
+
+.ab-info p{
+font-size:14px;
+line-height:1.85;
+}
+
+.ab-title{
+width:900px;
+max-width:calc(100% - 160px);
+margin:0 auto 34px;
+text-align:center;
+font-size:24px;
+font-weight:700;
+background:#FFFAF2;
+border-radius:12px;
+box-shadow:0 4px 0 rgba(120,120,120,0.35);
+padding:10px 16px;
+color:#3E2454;
+}
+
+.ab-btns{
+width:900px;
+max-width:calc(100% - 160px);
+margin:auto;
+display:flex;
+gap:28px;
+justify-content:center;
+margin-top:10px;
+}
+
+.ab-btns button{
+flex:1;
+background:#FFFAF2;
+border:none;
+border-radius:12px;
+box-shadow:0 4px 0 rgba(120,120,120,0.35);
+padding:14px 10px;
+font-size:16px;
+font-weight:700;
+color:#70A0AF;
+cursor:pointer;
+}
+
+/* خدماتنا */
+.serv-sec{
+padding:110px 0 120px;
+background:url("موجه2.svg") center 390px no-repeat;
+background-size:100% 170px;
+}
+
+.serv-head{
+width:1100px;
+max-width:calc(100% - 160px);
+margin:0 auto 45px;
+text-align:center;
+}
+
+.serv-head h2{
+font-size:34px;
+font-weight:700;
+color:#3E2454;
+margin-bottom:8px;
+}
+
+.serv-head p{
+font-size:18px;
+color:#3E2454;
+line-height:1.7;
+}
+
+.serv-row{
+width:1100px;
+max-width:calc(100% - 160px);
+margin:0 auto;
+display:flex;
+gap:40px;
+justify-content:center;
+}
+
+.serv-col{
+flex:1;
+text-align:center;
+}
+
+.serv-col h3{
+font-size:24px;
+font-weight:700;
+color:#70A0AF;
+}
+
+.serv-sub{
+font-size:20px;
+color:#70A0AF;
+margin-bottom:24px;
+}
+
+.serv-card{
+background:#FFFAF2;
+border-radius:14px;
+box-shadow:0 4px 0 rgba(120,120,120,0.35);
+padding:20px 18px;
+text-align:center;
+}
+
+.serv-card p{
+font-size:14px;
+line-height:1.9;
+color:#222;
+}
+
+.serv-card b{
+display:block;
+color:#3E2454;
+font-size:15px;
+margin-bottom:8px;
+}
+
+/* إنشاء الحساب */
+.acc-sec{
+padding:110px 0 120px;
+background:url("موجه5.svg") center 285px no-repeat;
+background-size:100% 170px;
+}
+
+.acc-head{
+width:1100px;
+max-width:calc(100% - 160px);
+margin:0 auto 40px;
+text-align:center;
+}
+
+.acc-head h2{
+font-size:34px;
+font-weight:700;
+color:#3E2454;
+}
+
+.acc-row{
+width:920px;
+max-width:calc(100% - 160px);
+margin:0 auto;
+display:flex;
+gap:28px;
+justify-content:center;
+}
+
+.acc-card{
+background:#FFFAF2;
+border-radius:18px;
+box-shadow:0 4px 10px rgba(0,0,0,0.12);
+padding:26px 20px 24px;
+text-align:center;
+flex:1;
+}
+
+.acc-card h3{
+font-size:18px;
+font-weight:700;
+color:#3E2454;
+margin-bottom:18px;
+}
+
+.acc-card img{
+width:110px;
+margin-bottom:18px;
+}
+
+.acc-card a{
+display:inline-block;
+background:#70A0AF;
+color:#FFFFFF;
+border-radius:18px;
+padding:10px 28px;
+font-size:16px;
+font-weight:700;
+box-shadow:0 3px 0 rgba(120,120,120,0.35);
+}
+
+/* الأسئلة الشائعة */
+.faq-sec{
+padding:90px 0 70px;
+}
+
+.faq-head{
+width:900px;
+max-width:calc(100% - 160px);
+margin:0 auto 32px;
+text-align:center;
+}
+
+.faq-head h2{
+font-size:32px;
+font-weight:700;
+color:#3E2454;
+}
+
+.faq-list{
+width:900px;
+max-width:calc(100% - 160px);
+margin:0 auto;
+display:flex;
+flex-direction:column;
+gap:18px;
+}
+
+.faq-item{
+background:#FFFAF2;
+border-radius:12px;
+box-shadow:0 4px 0 rgba(120,120,120,0.35);
+padding:0 24px;
+}
+
+.faq-item summary{
+list-style:none;
+padding:20px 0;
+font-size:18px;
+font-weight:700;
+color:#3E2454;
+cursor:pointer;
+display:flex;
+align-items:center;
+justify-content:space-between;
+}
+
+.faq-item summary img{
+width:20px;
+height:20px;
+transition:.3s;
+}
+
+.faq-item[open] summary img{
+transform:rotate(180deg);
+}
+
+.faq-ans{
+padding:0 0 20px;
+font-size:15px;
+color:#333333;
+text-align:right;
+border-top:1px solid #E8E0D7;
+line-height:1.9;
+}
+
+/* الفوتر */
+.ftr{
+background:#4B296B;
+padding:28px 70px 16px;
+margin-top:40px;
+}
+
+.ftr-cnt{
+display:flex;
+justify-content:space-between;
+gap:40px;
+max-width:1100px;
+margin:0 auto 18px;
+}
+
+.ftr-col h3{
+font-size:18px;
+color:#70A0AF;
+margin-bottom:14px;
+}
+
+.ftr-col p,
+.ftr-col a{
+display:block;
+font-size:14px;
+color:#FFFFFF;
+margin-bottom:10px;
+}
+
+.ftr-copy{
+text-align:center;
+font-size:13px;
+color:#D8CFE0;
+padding-top:10px;
+border-top:1px solid rgba(255,255,255,0.12);
+}
+</style>
 </head>
 
 <body>
 
-  <nav class="navbar">
+<!-- شريط التنقل -->
+<nav class="navbar">
 
-    <div class="logo">
-      <img src="شعار نورين.png" alt="شعار نورين">
-    </div>
+<div class="logo">
+<img src="شعار نورين.png">
+</div>
 
-    <ul class="nav-links">
-      <li><a href="#">عن نورين</a></li>
-      <li><a href="#">خدماتنا</a></li>
-      <li><a href="#">الأسئلة الشائعة</a></li>
-      <li><a href="#">تواصل معنا</a></li>
-    </ul>
+<ul class="nav-lnk">
+<li><a href="#about">عن نورين</a></li>
+<li><a href="#services">خدماتنا</a></li>
+<li><a href="#faq">الأسئلة الشائعة</a></li>
+<li><a href="#footer">تواصل معنا</a></li>
+</ul>
 
-    <div class="nav-buttons">
-      <button class="create">إنشاء حساب</button>
-      <button class="login">تسجيل الدخول</button>
-    </div>
+<div class="nav-btns">
+<a href="#accounts" class="create">إنشاء حساب</a>
+<a href="#" class="login">تسجيل الدخول</a>
+</div>
 
-  </nav>
+</nav>
+
+<!-- القسم الرئيسي -->
+<section class="intro">
+
+<div class="int-cnt">
+
+<div class="int-txt">
+<h2>حين يجد الطموح من يدعمه</h2>
+<h1>يولد المستقبل</h1>
+
+<p>
+نورين منظومة رقمية تمكّن الطلاب المتميزين من الوصول إلى فرص تعليمية مدعومة ضمن بيئة موثوقة ومميزة
+</p>
+
+<a href="#accounts" class="int-btn">احصل على الدعم وابدأ رحلتك</a>
+</div>
+
+<div class="int-img">
+<img src="نورين الرئيسية.svg">
+</div>
+
+</div>
+
+</section>
+
+<div class="gap"></div>
+
+<!-- من نحن -->
+<section class="ab-sec" id="about">
+
+<div class="ab-card">
+
+<div class="ab-ico">
+<img src="بوابة نورين.svg">
+</div>
+
+<div class="ab-txt">
+<h2>من نحن - نورين</h2>
+<p>
+نورين منصة إلكترونية تهدف إلى ربط الطلاب بالمستثمرين
+والمكاتب الاستشارية لتسهيل الحصول على المنح الدراسية.
+</p>
+</div>
+
+</div>
+
+<div class="ab-row">
+<div class="ab-info">
+<h3>رؤيتنا</h3>
+<p>
+أن تكون نورين المنصة الرائدة في دعم وتمكين الطلاب
+للحصول على فرص تعليمية من خلال بيئة رقمية متكاملة
+</p>
+</div>
+
+<div class="ab-info">
+<h3>رسالتنا</h3>
+<p>
+توفير منصة موثوقة تجمع بين الطلاب والمستثمرين
+والمكاتب الاستشارية لإدارة المنح الدراسية بكفاءة
+</p>
+</div>
+</div>
+
+<div class="ab-title">
+من يخدم نورين؟
+</div>
+
+<div class="ab-btns">
+<button>الطلاب</button>
+<button>المستثمرين</button>
+<button>المكاتب الاستشارية</button>
+</div>
+
+</section>
+
+<!-- خدماتنا -->
+<section class="serv-sec" id="services">
+
+<div class="serv-head">
+<h2>خدماتنا - حلول متكاملة لبناء مستقبل واعد</h2>
+<p>في نورين، نؤمن بأن التعليم هو الاستثمار الأفضل</p>
+</div>
+
+<div class="serv-row">
+
+<div class="serv-col">
+<h3>خدمات المكاتب</h3>
+<div class="serv-sub">(سهل خطواتك)</div>
+
+<div class="serv-card">
+<p>
+<b>استشارات تعليمية متخصصة:</b>
+دعم أكاديمي مختص لاختيار التخصص والجامعة المناسبة لمسارك الدراسي
+<br><br>
+<b>القبول الجامعي:</b>
+التقديم ومتابعة طلبات القبول مع الجامعات حتى صدور خطاب القبول
+</p>
+</div>
+</div>
+
+<div class="serv-col">
+<h3>خدمات المستثمرين</h3>
+<div class="serv-sub">(استثمر في المستقبل)</div>
+
+<div class="serv-card">
+<p>
+<b>إدارة المنح الذكية:</b>
+منصة رقمية شاملة لمتابعة أداء الطلاب المبتعثين وضمان جودة مخرجاتهم التعليمية
+<br><br>
+<b>صناعة الكفاءات الوطنية:</b>
+صمم برنامج ابتعاث خاص بمنشأتك لاستقطاب وتجهيز كوادر متخصصة
+</p>
+</div>
+</div>
+
+<div class="serv-col">
+<h3>خدمات المستفيدين</h3>
+<div class="serv-sub">(طموحك يبدأ هنا)</div>
+
+<div class="serv-card">
+<p>
+<b>منح تعليمية ممولة:</b>
+نوفر لك فرصة لإكمال دراستك محليًا أو دوليًا بدعم كامل وسلس مع مسار وظيفي مضمون
+<br><br>
+<b>استشارات وتسهيلات القبول الجامعي:</b>
+نساعدك في اختيار تخصصك الأنسب وخدمة متكاملة للتقديم الجامعي
+</p>
+</div>
+</div>
+
+</div>
+
+</section>
+
+<!-- إنشاء حساب -->
+<section class="acc-sec" id="accounts">
+
+<div class="acc-head">
+<h2>ليس لديك حساب؟</h2>
+</div>
+
+<div class="acc-row">
+
+<div class="acc-card">
+<h3>حساب مستثمر</h3>
+<img src="ايقونة المستثمر.svg">
+<a href="Inv01_Register.html">إنشاء حساب</a>
+</div>
+
+<div class="acc-card">
+<h3>حساب مستفيد</h3>
+<img src="ايقونة الطلاب.svg">
+<a href="Ben01_Register.html">إنشاء حساب</a>
+</div>
+
+<div class="acc-card">
+<h3>حساب مكتب استشاري</h3>
+<img src="ايقونة المكاتب.svg">
+<a href="Con01_Register.html">إنشاء حساب</a>
+</div>
+
+</div>
+
+</section>
+
+<!-- الأسئلة الشائعة -->
+<section class="faq-sec" id="faq">
+
+<div class="faq-head">
+<h2>أعثر على إجابة سؤالك بسهولة</h2>
+</div>
+
+<div class="faq-list">
+
+<details class="faq-item">
+<summary>
+المستفيد
+<img src="سهم مدبل.svg">
+</summary>
+<div class="faq-ans">
+سؤال 1: اكتب السؤال هنا<br>
+الإجابة: اكتب الإجابة هنا
+<br><br>
+سؤال 2: اكتب السؤال هنا<br>
+الإجابة: اكتب الإجابة هنا
+</div>
+</details>
+
+<details class="faq-item">
+<summary>
+المستثمر
+<img src="سهم مدبل.svg">
+</summary>
+<div class="faq-ans">
+سؤال 1: اكتب السؤال هنا<br>
+الإجابة: اكتب الإجابة هنا
+<br><br>
+سؤال 2: اكتب السؤال هنا<br>
+الإجابة: اكتب الإجابة هنا
+</div>
+</details>
+
+<details class="faq-item">
+<summary>
+المكتب الاستشاري
+<img src="سهم مدبل.svg">
+</summary>
+<div class="faq-ans">
+سؤال 1: اكتب السؤال هنا<br>
+الإجابة: اكتب الإجابة هنا
+<br><br>
+سؤال 2: اكتب السؤال هنا<br>
+الإجابة: اكتب الإجابة هنا
+</div>
+</details>
+
+</div>
+
+</section>
+
+<!-- الفوتر -->
+<footer class="ftr" id="footer">
+
+<div class="ftr-cnt">
+
+<div class="ftr-col">
+<h3>تواصل معنا</h3>
+<p>0561310767</p>
+<p>infnoreen@gmail.come</p>
+</div>
+
+<div class="ftr-col">
+<h3>عن المنصة</h3>
+<a href="#services">خدماتنا</a>
+<a href="#about">عن نورين</a>
+<a href="#faq">الأسئلة الشائعة</a>
+</div>
+
+</div>
+
+<div class="ftr-copy">
+© 2026 نورين. جميع الحقوق محفوظة.
+</div>
+
+</footer>
 
 </body>
 </html>

@@ -1,12 +1,11 @@
-/* تنسيق عام */
 *{
   margin:0;
   padding:0;
   box-sizing:border-box;
   font-family:"Noto Kufi Arabic",sans-serif;
+  text-decoration:none;
 }
 
-/* خلفية الصفحة */
 body{
   background:#F4F4F4;
   direction:rtl;
@@ -20,21 +19,30 @@ body{
 
 /* الشريط الجانبي */
 .sidebar{
-  width:200px;
+  width:220px;
+  height:100vh;
+  position:fixed;
+  top:0;
+  right:0;
   background:linear-gradient(to bottom,#3E2454,#A48BB5);
-  color:white;
+  color:#FFFFFF;
   display:flex;
   flex-direction:column;
   justify-content:space-between;
+  z-index:1000;
+}
+
+.sidebar-top{
+  width:100%;
 }
 
 /* الشعار */
 .sidebar-logo{
-  height:80px;
+  height:82px;
   display:flex;
   align-items:center;
   justify-content:center;
-  border-bottom:1px solid rgba(255,255,255,0.2);
+  border-bottom:1px solid rgba(255,255,255,0.18);
 }
 
 .sidebar-logo img{
@@ -45,34 +53,32 @@ body{
 /* القائمة */
 .sidebar-menu{
   list-style:none;
-  margin-top:40px;
+  margin-top:26px;
 }
 
 .sidebar-menu li{
-  margin-bottom:18px;
+  margin-bottom:12px;
 }
 
 /* روابط القائمة */
 .sidebar-menu a{
-  color:white;
-  font-size:18px;
+  color:#FFFFFF;
+  font-size:17px;
   font-weight:600;
-  text-decoration:none;
   display:block;
-  padding:14px 20px;
+  padding:14px 22px;
   text-align:center;
-  transition:0.25s;
+  transition:.25s;
+  position:relative;
 }
 
 /* العنصر النشط */
 .sidebar-menu a.active{
   color:#70A0AF;
   background:rgba(255,255,255,0.12);
-  box-shadow:0 2px 4px rgba(0,0,0,0.08);
-  position:relative;
 }
 
-/* الشريط الجانبي للعنصر النشط */
+/* الخط الجانبي للعنصر النشط */
 .sidebar-menu a.active::after{
   content:"";
   position:absolute;
@@ -83,9 +89,9 @@ body{
   background:#70A0AF;
 }
 
-/* الجزء السفلي من الشريط */
+/* الجزء السفلي */
 .sidebar-bottom{
-  padding:25px;
+  padding:0px 10px 8px;
   display:flex;
   justify-content:center;
 }
@@ -94,25 +100,20 @@ body{
 .logout-btn{
   background:#F3E6DD;
   border:none;
-  border-radius:20px;
-  padding:4px 12px;
+  border-radius:18px;
+  padding:7px 14px;
   font-size:13px;
   cursor:pointer;
   display:flex;
   align-items:center;
   gap:6px;
   box-shadow:0 2px 1px rgba(0,0,0,0.15);
-  transition:transform 0.35s cubic-bezier(.25,.8,.25,1),
-             box-shadow 0.35s cubic-bezier(.25,.8,.25,1);
+  transition:transform .3s, box-shadow .3s;
 }
 
 .logout-btn:hover{
   transform:scale(1.04);
   box-shadow:0 3px 2px rgba(0,0,0,0.18);
-}
-
-.logout-btn:active{
-  transform:scale(1.08);
 }
 
 .logout-icon{
@@ -123,14 +124,19 @@ body{
 
 /* المحتوى الرئيسي */
 .main-content{
-  flex:1;
+  margin-right:220px;
+  width:calc(100% - 220px);
+  min-height:100vh;
   display:flex;
   flex-direction:column;
 }
 
 /* الهيدر */
 .header{
-  min-height:80px;
+  min-height:82px;
+  position:sticky;
+  top:0;
+  z-index:900;
   border-bottom:1px solid #d9d9d9;
   background:#F4F4F4;
   display:flex;
@@ -139,16 +145,14 @@ body{
   padding:10px 30px;
 }
 
-/* منطقة العنوان والوصف */
+/* منطقة العنوان */
 .page-heading{
   display:flex;
   flex-direction:column;
   align-items:flex-start;
   justify-content:center;
-  gap:2px;
 }
 
-/* عنوان الصفحة */
 .page-title{
   font-size:22px;
   font-weight:700;
@@ -156,7 +160,6 @@ body{
   line-height:1.4;
 }
 
-/* الوصف المختصر تحت العنوان */
 .page-description{
   font-size:14px;
   font-weight:600;
@@ -170,7 +173,7 @@ body{
   align-items:center;
 }
 
-/* حاوية القائمة المنسدلة */
+/* القائمة المنسدلة */
 .settings-dropdown{
   position:relative;
   display:inline-block;
@@ -185,7 +188,6 @@ body{
   height:10px;
 }
 
-/* أيقونة الإعدادات */
 .menu-icon{
   width:32px;
   height:32px;
@@ -193,12 +195,11 @@ body{
   display:block;
 }
 
-/* القائمة المنسدلة */
 .dropdown-menu{
   position:absolute;
   top:100%;
   left:0;
-  background:white;
+  background:#FFFFFF;
   border-radius:10px;
   box-shadow:0 4px 10px rgba(0,0,0,0.1);
   min-width:160px;
@@ -208,19 +209,16 @@ body{
   z-index:100;
 }
 
-/* إظهار القائمة عند المرور */
 .settings-dropdown:hover .dropdown-menu{
   display:block;
 }
 
-/* روابط القائمة المنسدلة */
 .dropdown-menu a{
   display:block;
   padding:10px 14px;
-  text-decoration:none;
-  color:#333;
+  color:#333333;
   font-size:14px;
-  transition:background 0.2s;
+  transition:background .2s;
 }
 
 .dropdown-menu a:hover{
@@ -230,4 +228,15 @@ body{
 /* مساحة الصفحة */
 .page{
   padding:30px;
+}
+
+.back-btn{
+  float:left;
+  margin-bottom:20px;
+}
+
+.back-icon{
+  width:42px;
+  height:42px;
+  cursor:pointer;
 }

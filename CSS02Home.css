@@ -1,0 +1,312 @@
+body{
+  background:#F4F4F4;
+}
+
+/* القسم الرئيسي */
+.intro{
+  padding:70px 40px;
+  margin-right:-30px;
+  margin-left:-30px;
+  padding-right:70px;
+  padding-left:70px;
+  background:url("موجه اولى.svg") center no-repeat;
+  background-size:100% 300px;
+}
+
+.int-cnt{
+  display:flex;
+  align-items:center;
+  gap:50px;
+}
+
+.int-txt{
+  max-width:520px;
+  text-align:center;
+  margin:auto;
+  margin-top:-20px;
+}
+
+.int-txt h2{
+  font-size:20px;
+  color:#3E2454;
+  margin-bottom:0px;
+  margin-right:-180px;
+}
+
+.int-txt h1{
+  font-size:44px;
+  color:#3E2454;
+  margin-bottom:30px;
+  margin-right:-160px;
+}
+
+.int-txt p{
+  font-size:14px;
+  line-height:1.4;
+  color:#4b4b4b;
+  margin-bottom:30px;
+}
+
+.int-img img{
+  width:430px;
+  border-radius:40px;
+}
+
+/* مسافة */
+.gap{
+  height:70px;
+}
+
+/* من نحن */
+.ab-sec{
+  padding-top:90px;
+  padding-bottom:110px;
+  margin-right:-30px;
+  margin-left:-30px;
+  padding-right:30px;
+  padding-left:30px;
+  background:
+  url("موجه2.svg") center 110px no-repeat,
+  url("موجه3.svg") center calc(100% - 10px) no-repeat;
+  background-size:
+  100% 160px,
+  100% 260px;
+}
+
+.ab-card{
+  width:100%;
+  max-width:1000px;
+  margin:0 auto 28px;
+  background:#FFFAF2;
+  border-radius:16px;
+  box-shadow:0 4px 0 rgba(120,120,120,0.35);
+  padding:22px 34px;
+  display:flex;
+  align-items:center;
+  gap:24px;
+}
+
+.ab-ico img{
+  width:168px;
+}
+
+.ab-txt{
+  text-align:center;
+}
+
+.ab-txt h2{
+  font-size:28px;
+  color:#3E2454;
+  margin-bottom:8px;
+}
+
+.ab-txt p{
+  font-size:17px;
+}
+
+.ab-row{
+  width:100%;
+  max-width:1000px;
+  margin:0 auto 24px;
+  display:flex;
+  gap:28px;
+}
+
+.ab-info{
+  background:#FFFAF2;
+  border-radius:14px;
+  box-shadow:0 4px 0 rgba(120,120,120,0.35);
+  padding:20px;
+  text-align:center;
+  flex:1;
+}
+
+.ab-info h3{
+  font-size:24px;
+  color:#70A0AF;
+  margin-bottom:10px;
+}
+
+.ab-info p{
+  font-size:14px;
+  line-height:1.85;
+}
+
+.ab-title{
+  width:100%;
+  max-width:1000px;
+  margin:0 auto 34px;
+  text-align:center;
+  font-size:24px;
+  font-weight:700;
+  background:#FFFAF2;
+  border-radius:12px;
+  box-shadow:0 4px 0 rgba(120,120,120,0.35);
+  padding:10px 16px;
+  color:#3E2454;
+}
+
+.ab-btns{
+  width:100%;
+  max-width:1000px;
+  margin:auto;
+  display:flex;
+  gap:28px;
+  justify-content:center;
+  margin-top:10px;
+}
+
+.ab-btns button{
+  flex:1;
+  background:#FFFAF2;
+  border:none;
+  border-radius:12px;
+  box-shadow:0 4px 0 rgba(120,120,120,0.35);
+  padding:14px 10px;
+  font-size:16px;
+  font-weight:700;
+  color:#70A0AF;
+  cursor:pointer;
+}
+
+/* خدماتنا */
+.serv-sec{
+  padding:100px 30px 110px;
+  margin-right:-30px;
+  margin-left:-30px;
+  background:url("موجه2.svg") center 390px no-repeat;
+  background-size:100% 170px;
+}
+
+.serv-head{
+  width:100%;
+  max-width:1100px;
+  margin:0 auto 45px;
+  text-align:center;
+}
+
+.serv-head h2{
+  font-size:34px;
+  font-weight:700;
+  color:#3E2454;
+  margin-bottom:8px;
+}
+
+.serv-head p{
+  font-size:18px;
+  color:#3E2454;
+  line-height:1.7;
+}
+
+.serv-row{
+  width:100%;
+  max-width:1100px;
+  margin:0 auto;
+  display:flex;
+  gap:30px;
+  justify-content:center;
+}
+
+.serv-col{
+  flex:1;
+  text-align:center;
+}
+
+.serv-col h3{
+  font-size:24px;
+  font-weight:700;
+  color:#70A0AF;
+}
+
+.serv-sub{
+  font-size:20px;
+  color:#70A0AF;
+  margin-bottom:24px;
+}
+
+.serv-card{
+  background:#FFFAF2;
+  border-radius:14px;
+  box-shadow:0 4px 0 rgba(120,120,120,0.35);
+  padding:20px 18px;
+  text-align:center;
+}
+
+.serv-card p{
+  font-size:14px;
+  line-height:1.9;
+  color:#222222;
+}
+
+.serv-card b{
+  display:block;
+  color:#3E2454;
+  font-size:15px;
+  margin-bottom:8px;
+}
+
+/* الأسئلة الشائعة */
+.faq-sec{
+  padding:80px 0 50px;
+}
+
+.faq-head{
+  width:100%;
+  max-width:900px;
+  margin:0 auto 32px;
+  text-align:center;
+}
+
+.faq-head h2{
+  font-size:32px;
+  font-weight:700;
+  color:#3E2454;
+}
+
+.faq-list{
+  width:100%;
+  max-width:900px;
+  margin:auto;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+.faq-item{
+  background:#FFFAF2;
+  border-radius:12px;
+  box-shadow:0 4px 0 rgba(120,120,120,0.35);
+  padding:0 24px;
+}
+
+.faq-item summary{
+  list-style:none;
+  padding:20px 0;
+  font-size:18px;
+  font-weight:700;
+  color:#3E2454;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+
+.faq-item summary img{
+  width:20px;
+  height:20px;
+  transition:.3s;
+}
+.faq-item[open] summary img{
+transform:rotate(180deg);
+}
+
+
+.faq-ans{
+  padding:0 0 20px;
+  font-size:15px;
+  color:#333333;
+  text-align:right;
+  border-top:1px solid #E8E0D7;
+  line-height:1.9;
+}
