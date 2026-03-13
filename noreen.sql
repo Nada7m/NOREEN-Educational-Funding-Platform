@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 13 مارس 2026 الساعة 23:40
+-- Generation Time: 14 مارس 2026 الساعة 00:23
 -- إصدار الخادم: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -162,6 +162,13 @@ CREATE TABLE `consulting_office` (
   `password` varchar(255) NOT NULL,
   `phone` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- إرجاع أو استيراد بيانات الجدول `consulting_office`
+--
+
+INSERT INTO `consulting_office` (`office_id`, `ccr_number`, `email`, `office_name`, `office_description`, `Bachelor_fee`, `Masters_fee`, `Phd_fee`, `password`, `phone`) VALUES
+(1, '10198910', 'info@asasstudyabroad.com', 'أساس للدراسة بالخارج', 'مكتب رائد في مجال الاستشارات التعليمية والقبول الجامعي', 200, 300, 600, 'll1234', '0541722808');
 
 -- --------------------------------------------------------
 
@@ -473,7 +480,7 @@ ALTER TABLE `complaints_inquiries`
 -- AUTO_INCREMENT for table `consulting_office`
 --
 ALTER TABLE `consulting_office`
-  MODIFY `office_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `office_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `e_contract`
