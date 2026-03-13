@@ -12,20 +12,20 @@ die("Connection failed");
 if($_SERVER["REQUEST_METHOD"]=="POST"){
 
 $office = $_POST["office_name"];
-$commercial = $_POST["commercial_number"];
+$ccr = $_POST["ccr_number"];
+$email = $_POST["email"];
+$desc = $_POST["office_description"];
+$bachelor = $_POST["bachelor_fee"];
 $master = $_POST["master_fee"];
 $phd = $_POST["phd_fee"];
-$bachelor = $_POST["bachelor_fee"];
-$desc = $_POST["office_description"];
-$email = $_POST["email"];
-$phone = $_POST["phone"];
 $password = $_POST["password"];
+$phone = $_POST["phone"];
 
 $sql = "INSERT INTO consulting_office
-(office_name,commercial_number,master_fee,phd_fee,bachelor_fee,office_description,email,phone,password)
+(ccr_number,email,office_name,office_description,Bachelor_fee,Masters_fee,Phd_fee,password,phone)
 
 VALUES
-('$office','$commercial','$master','$phd','$bachelor','$desc','$email','$phone','$password')";
+('$ccr','$email','$office','$desc','$bachelor','$master','$phd','$password','$phone')";
 
 if($conn->query($sql)){
 $msg="تم إنشاء الحساب بنجاح";
@@ -67,7 +67,7 @@ $type="error";
 </div>
 <?php } ?>
 
-<form method="post" id="registerForm">
+<form method="post">
 
 <div class="row">
 
@@ -75,14 +75,12 @@ $type="error";
 <label><span class="star">*</span> اسم المكتب</label>
 <input type="text" name="office_name"
 placeholder="الرجاء إدخال الاسم الرسمي للمكتب">
-<div class="errorText"></div>
 </div>
 
 <div class="field">
 <label><span class="star">*</span> رقم السجل التجاري</label>
-<input type="text" name="commercial_number"
+<input type="text" name="ccr_number"
 placeholder="مثل : 101023456">
-<div class="errorText"></div>
 </div>
 
 </div>
@@ -94,14 +92,12 @@ placeholder="مثل : 101023456">
 <label><span class="star">*</span> رسوم خدمات الماجستير</label>
 <input type="text" name="master_fee"
 placeholder="القيمة بالريال">
-<div class="errorText"></div>
 </div>
 
 <div class="field">
 <label><span class="star">*</span> رسوم خدمات الدكتوراه</label>
 <input type="text" name="phd_fee"
 placeholder="القيمة بالريال">
-<div class="errorText"></div>
 </div>
 
 </div>
@@ -113,7 +109,6 @@ placeholder="القيمة بالريال">
 <label><span class="star">*</span> رسوم خدمات البكالوريوس</label>
 <input type="text" name="bachelor_fee"
 placeholder="القيمة بالريال">
-<div class="errorText"></div>
 </div>
 
 <div class="field"></div>
@@ -132,8 +127,6 @@ name="office_description"
 class="descBox"
 placeholder="تعريف مفصل بخدمات ونطاق المكتب"></textarea>
 
-<div class="errorText"></div>
-
 <hr class="line">
 
 </div>
@@ -147,14 +140,12 @@ placeholder="تعريف مفصل بخدمات ونطاق المكتب"></textare
 <label><span class="star">*</span> البريد الإلكتروني</label>
 <input type="text" name="email"
 placeholder="example@gmail.com">
-<div class="errorText"></div>
 </div>
 
 <div class="field">
 <label><span class="star">*</span> رقم الهاتف</label>
 <input type="text" name="phone"
 placeholder="+9665XXXXXXXX">
-<div class="errorText"></div>
 </div>
 
 </div>
@@ -166,14 +157,12 @@ placeholder="+9665XXXXXXXX">
 <label><span class="star">*</span> كلمة المرور</label>
 <input type="password" name="password"
 placeholder="إدخال كلمة مرور قوية">
-<div class="errorText"></div>
 </div>
 
 <div class="field">
 <label><span class="star">*</span> تأكيد كلمة المرور</label>
 <input type="password" name="confirm_password"
 placeholder="أعد إدخال كلمة المرور">
-<div class="errorText"></div>
 </div>
 
 </div>
