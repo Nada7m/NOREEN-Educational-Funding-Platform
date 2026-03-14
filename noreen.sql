@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 14 مارس 2026 الساعة 00:23
+-- Generation Time: 14 مارس 2026 الساعة 01:50
 -- إصدار الخادم: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -98,6 +98,13 @@ CREATE TABLE `beneficiary` (
   `degree_level` enum('ثانوي','بكالريوس','ماجستير','') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- إرجاع أو استيراد بيانات الجدول `beneficiary`
+--
+
+INSERT INTO `beneficiary` (`bnf_id`, `email`, `f_name`, `l_name`, `phone_num`, `password`, `sch_field`, `degree_level`) VALUES
+(1, 'FatmaAlghamdi@gmail.com', 'فاطمة', 'الغامدي', '', '$2y$10$vS2J608Dv/DImLLpfl9Vu.PcHg0YtAsR2HX8IgX87Lj9Bh1AMhQlS', '', '');
+
 -- --------------------------------------------------------
 
 --
@@ -168,7 +175,7 @@ CREATE TABLE `consulting_office` (
 --
 
 INSERT INTO `consulting_office` (`office_id`, `ccr_number`, `email`, `office_name`, `office_description`, `Bachelor_fee`, `Masters_fee`, `Phd_fee`, `password`, `phone`) VALUES
-(1, '10198910', 'info@asasstudyabroad.com', 'أساس للدراسة بالخارج', 'مكتب رائد في مجال الاستشارات التعليمية والقبول الجامعي', 200, 300, 600, 'll1234', '0541722808');
+(1, '  10198910', 'info@asasstudyabroad.com', 'أساس للدراسة بالخارج', 'مكتب رائد في مجال الاستشارات التعليمية والقبول الجامعي، نخدم الطلاب في أكثر من 15 دولة حول العالم، مستشارينا معتمدين من التعليم البريطاني، والتعليم الكندي والتعليم الامريكي ومنظمة ICEF ومؤهلين لتقديم النصيحة والاستشارة المناسبة لكل طالب ونسعى لتقديم النصيحة الأمينة حسب متطلبات الجامعات  ومؤهلات الطلب لضمان انسب خيارات الدراسة لكل طالب.\r\nوكلاء افضل الجامعات والمعاهد في أمريكا، بريطانيا، استراليا، نيوزيلندا، أيرلندا، كندا، ماليزيا، اسبانيا، ايطاليا، فرنسا، الهند، مالطا، جنوب افريقيا، تركيا، وغيرها من الدول، تقديم سهل وسريع على المعاهد والجامعات لضمان توفير القبول المناسب بأسرع وقت ممكن.', 200, 300, 600, '$2y$10$M1U6Csn76PWKEvOk8KPtbuN4JEIN.eIQdJlZS.LxD41ph5s2qRszK', '0541722808');
 
 -- --------------------------------------------------------
 
@@ -200,6 +207,13 @@ CREATE TABLE `investor` (
   `inv_name` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- إرجاع أو استيراد بيانات الجدول `investor`
+--
+
+INSERT INTO `investor` (`inv_id`, `ccr_number`, `email`, `inv_number`, `inv_name`, `password`) VALUES
+(1, '1010010813', 'InvestorRelations@safco.sabic.com', 530014051, 'سابك - الشركة السعودية للصناعات الأساسية', '$2y$10$/8anVADcwa6r5K6nJk/RCO9Tb6fS7G05m9eUS4FIXm90T2iaJ7c4a');
 
 -- --------------------------------------------------------
 
@@ -456,7 +470,7 @@ ALTER TABLE `admission_request_documents`
 -- AUTO_INCREMENT for table `beneficiary`
 --
 ALTER TABLE `beneficiary`
-  MODIFY `bnf_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `bnf_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `bnf_inv_msg`
@@ -492,7 +506,7 @@ ALTER TABLE `e_contract`
 -- AUTO_INCREMENT for table `investor`
 --
 ALTER TABLE `investor`
-  MODIFY `inv_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `inv_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `payments`
