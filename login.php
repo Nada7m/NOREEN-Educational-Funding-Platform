@@ -3,32 +3,45 @@ session_start();
 
 // الاتصال بقاعدة البيانات
 $con = new mysqli("localhost", "root", "", "noreen");
-if ($con->connect_error) { die("فشل الاتصال بالقاعدة: " . $con->connect_error); }
+if ($con->connect_error) { 
+    die("فشل الاتصال بالقاعدة: " . $con->connect_error); 
+}
 
 $error = "";
+$success_msg = ""; // متغير جديد للتأكد من نجاح العملية داخلياً
 
-// التحقق من تسجيل الدخول
 if(isset($_POST['login'])) {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    $tables = ['Beneficiary', 'Investor', 'Consulting_Office'];
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
+    $tables = ['beneficiary', 'investor', 'consulting_office'];
     $found = false;
 
     foreach($tables as $table){
-        $stmt = $con->prepare("SELECT * FROM $table WHERE email=? AND password=?");
-        $stmt->bind_param("ss", $email, $password);
+        // (الباسورد مشفر) نبحث عن المستخدم بواسطة البريد الإلكتروني فقط
+        $stmt = $con->prepare("SELECT * FROM $table WHERE email=?");
+        $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
+
         if($result->num_rows > 0){
-            $_SESSION['email'] = $email;
-            $_SESSION['user_type'] = $table;
-            $found = true;
-             break; 
-          
+            $user = $result->fetch_assoc();
+            
+            //  التحقق من كلمة المرور المشفرة باستخدام password_verify
+            
+            if(password_verify($password, $user['password'])){
+                $_SESSION['email'] = $user['email'];
+                $_SESSION['user_type'] = $table;
+                
+                $found = true;
+                $success_msg = "تم التحقق بنجاح!";
+                break; 
+            }
         }
     }
 
-    if(!$found){ $error = "البريد الإلكتروني أو كلمة المرور غير صحيحة."; }
+    if(!$found){ 
+        $error = "البريد الإلكتروني أو كلمة المرور غير صحيحة."; 
+    }
 }
 ?>
 
