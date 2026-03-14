@@ -240,18 +240,14 @@ body{
   height:42px;
   cursor:pointer;
 }
-.page-top{
+   .page-top{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 25px 40px 
+    padding: 25px 40px;
 }
 
-.back-btn img{
-    width: 45px;
-    height: 45px;
-}
-
+/* زر إنشاء منحة */
 .create-btn-box{
     margin-top: 10px;
 }
@@ -268,6 +264,7 @@ body{
     font-size: 14px;
 }
 
+/* حالة عدم وجود منح */
 .empty-state{
     text-align: center;
     margin-top: 220px;
