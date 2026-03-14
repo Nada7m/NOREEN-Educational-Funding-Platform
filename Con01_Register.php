@@ -7,44 +7,44 @@ $type = "";
 
 if(isset($_POST["save"])){
 
-    $office = $_POST["office_name"];
-    $ccr = $_POST["ccr_number"];
-    $email = $_POST["email"];
-    $desc = $_POST["office_description"];
-    $bachelor = $_POST["bachelor_fee"];
-    $master = $_POST["master_fee"];
-    $phd = $_POST["phd_fee"];
-    $phone = $_POST["phone"];
-    $pass = $_POST["password"];
+$office = $_POST["office_name"];
+$ccr = $_POST["ccr_number"];
+$email = $_POST["email"];
+$desc = $_POST["office_description"];
+$bachelor = $_POST["bachelor_fee"];
+$master = $_POST["master_fee"];
+$phd = $_POST["phd_fee"];
+$phone = $_POST["phone"];
+$pass = $_POST["password"];
 
-    $checkEmail = mysqli_query($con,"SELECT * FROM consulting_office WHERE email='$email'");
-    $checkCcr = mysqli_query($con,"SELECT * FROM consulting_office WHERE ccr_number='$ccr'");
+$checkEmail = mysqli_query($con,"SELECT * FROM consulting_office WHERE email='$email'");
+$checkCcr = mysqli_query($con,"SELECT * FROM consulting_office WHERE ccr_number='$ccr'");
 
-    if(mysqli_num_rows($checkEmail) > 0){
-        $msg = "البريد الإلكتروني مستخدم مسبقًا.";
-        $type = "error";
-    }
-    else if(mysqli_num_rows($checkCcr) > 0){
-        $msg = "رقم السجل التجاري مسجل مسبقًا.";
-        $type = "error";
-    }
-    else{
-        $newpass = password_hash($pass, PASSWORD_DEFAULT);
+if(mysqli_num_rows($checkEmail) > 0){
+$msg = "البريد الإلكتروني مستخدم مسبقًا.";
+$type = "error";
+}
+else if(mysqli_num_rows($checkCcr) > 0){
+$msg = "رقم السجل التجاري مسجل مسبقًا.";
+$type = "error";
+}
+else{
+$newpass = password_hash($pass, PASSWORD_DEFAULT);
 
-        $sql = "INSERT INTO consulting_office
-        (ccr_number,email,office_name,office_description,Bachelor_fee,Masters_fee,Phd_fee,password,phone)
-        VALUES
-        ('$ccr','$email','$office','$desc','$bachelor','$master','$phd','$newpass','$phone')";
+$sql = "INSERT INTO consulting_office
+(ccr_number,email,office_name,office_description,Bachelor_fee,Masters_fee,Phd_fee,password,phone)
+VALUES
+('$ccr','$email','$office','$desc','$bachelor','$master','$phd','$newpass','$phone')";
 
-        if(mysqli_query($con,$sql)){
-            $msg = "تم إنشاء الحساب بنجاح.";
-            $type = "success";
-        }
-        else{
-            $msg = "حدث خطأ أثناء حفظ البيانات.";
-            $type = "error";
-        }
-    }
+if(mysqli_query($con,$sql)){
+$msg = "تم إنشاء الحساب بنجاح.";
+$type = "success";
+}
+else{
+$msg = "حدث خطأ أثناء حفظ البيانات.";
+$type = "error";
+}
+}
 }
 
 ?>
@@ -116,9 +116,36 @@ if(isset($_POST["save"])){
 <div class="errorText" id="bachelorError"></div>
 </div>
 
-<div class="field"></div>
+<div class="field">
+<label><span class="star">*</span> الدول</label>
+
+<select id="country" name="country">
+
+<option value="">اختر الدولة</option>
+
+<option>امريكا</option>
+<option>فرنسا</option>
+<option>ايرلندا</option>
+<option>مالطا</option>
+<option>بريطانيا</option>
+<option>اليابان</option>
+<option>الصين</option>
+<option>الهند</option>
+<option>نيوزيلندا</option>
+<option>ماليزيا</option>
+<option>تركيا</option>
+<option>المانيا</option>
+<option>استراليا</option>
+<option>كندا</option>
+<option>جنوب افريقيا</option>
+
+</select>
+
+<div class="errorText" id="countryError"></div>
 
 </div>
+
+
 
 <div class="row">
 
@@ -180,121 +207,126 @@ if(isset($_POST["save"])){
 <script>
 
 function showPass(id){
-    var x = document.getElementById(id);
+var x = document.getElementById(id);
 
-    if(x.type == "password"){
-        x.type = "text";
-    }
-    else{
-        x.type = "password";
-    }
+if(x.type == "password"){
+x.type = "text";
+}
+else{
+x.type = "password";
+}
 }
 
 function checkForm(){
 
-    document.getElementById("officeError").innerText = "";
-    document.getElementById("ccrError").innerText = "";
-    document.getElementById("masterError").innerText = "";
-    document.getElementById("phdError").innerText = "";
-    document.getElementById("bachelorError").innerText = "";
-    document.getElementById("descError").innerText = "";
-    document.getElementById("emailError").innerText = "";
-    document.getElementById("phoneError").innerText = "";
-    document.getElementById("passError").innerText = "";
-    document.getElementById("pass2Error").innerText = "";
+document.getElementById("officeError").innerText = "";
+document.getElementById("ccrError").innerText = "";
+document.getElementById("masterError").innerText = "";
+document.getElementById("phdError").innerText = "";
+document.getElementById("bachelorError").innerText = "";
+document.getElementById("descError").innerText = "";
+document.getElementById("emailError").innerText = "";
+document.getElementById("phoneError").innerText = "";
+document.getElementById("passError").innerText = "";
+document.getElementById("pass2Error").innerText = "";
+document.getElementById("countryError").innerText = "";
 
-    var office = document.getElementById("office").value;
-    var ccr = document.getElementById("ccr").value;
-    var master = document.getElementById("master").value;
-    var phd = document.getElementById("phd").value;
-    var bachelor = document.getElementById("bachelor").value;
-    var desc = document.getElementById("desc").value;
-    var email = document.getElementById("email").value;
-    var phone = document.getElementById("phone").value;
-    var pass = document.getElementById("pass").value;
-    var pass2 = document.getElementById("pass2").value;
+var office = document.getElementById("office").value;
+var ccr = document.getElementById("ccr").value;
+var master = document.getElementById("master").value;
+var phd = document.getElementById("phd").value;
+var bachelor = document.getElementById("bachelor").value;
+var desc = document.getElementById("desc").value;
+var email = document.getElementById("email").value;
+var phone = document.getElementById("phone").value;
+var pass = document.getElementById("pass").value;
+var pass2 = document.getElementById("pass2").value;
+var country = document.getElementById("country").value;
+var ok = true;
 
-    var ok = true;
+if(office == ""){
+document.getElementById("officeError").innerText = "يرجى إدخال اسم المكتب.";
+ok = false;
+}
 
-    if(office == ""){
-        document.getElementById("officeError").innerText = "يرجى إدخال اسم المكتب.";
-        ok = false;
-    }
+if(ccr == ""){
+document.getElementById("ccrError").innerText = "يرجى إدخال رقم السجل التجاري.";
+ok = false;
+}
+else if(ccr.length != 10 || isNaN(ccr)){
+document.getElementById("ccrError").innerText = "يرجى إدخال رقم سجل تجاري مكوّن من 10 أرقام.";
+ok = false;
+}
 
-    if(ccr == ""){
-        document.getElementById("ccrError").innerText = "يرجى إدخال رقم السجل التجاري.";
-        ok = false;
-    }
-    else if(ccr.length != 10 || isNaN(ccr)){
-        document.getElementById("ccrError").innerText = "يرجى إدخال رقم سجل تجاري مكوّن من 10 أرقام.";
-        ok = false;
-    }
+if(master == ""){
+document.getElementById("masterError").innerText = "يرجى إدخال رسوم خدمات الماجستير.";
+ok = false;
+}
+else if(isNaN(master)){
+document.getElementById("masterError").innerText = "يرجى إدخال قيمة رقمية صحيحة.";
+ok = false;
+}
 
-    if(master == ""){
-        document.getElementById("masterError").innerText = "يرجى إدخال رسوم خدمات الماجستير.";
-        ok = false;
-    }
-    else if(isNaN(master)){
-        document.getElementById("masterError").innerText = "يرجى إدخال قيمة رقمية صحيحة.";
-        ok = false;
-    }
+if(phd == ""){
+document.getElementById("phdError").innerText = "يرجى إدخال رسوم خدمات الدكتوراه.";
+ok = false;
+}
+else if(isNaN(phd)){
+document.getElementById("phdError").innerText = "يرجى إدخال قيمة رقمية صحيحة.";
+ok = false;
+}
 
-    if(phd == ""){
-        document.getElementById("phdError").innerText = "يرجى إدخال رسوم خدمات الدكتوراه.";
-        ok = false;
-    }
-    else if(isNaN(phd)){
-        document.getElementById("phdError").innerText = "يرجى إدخال قيمة رقمية صحيحة.";
-        ok = false;
-    }
+if(bachelor == ""){
+document.getElementById("bachelorError").innerText = "يرجى إدخال رسوم خدمات البكالوريوس.";
+ok = false;
+}
+if(country == ""){
+document.getElementById("countryError").innerText = "يرجى اختيار الدولة.";
+ok = false;
+}
+else if(isNaN(bachelor)){
+document.getElementById("bachelorError").innerText = "يرجى إدخال قيمة رقمية صحيحة.";
+ok = false;
+}
 
-    if(bachelor == ""){
-        document.getElementById("bachelorError").innerText = "يرجى إدخال رسوم خدمات البكالوريوس.";
-        ok = false;
-    }
-    else if(isNaN(bachelor)){
-        document.getElementById("bachelorError").innerText = "يرجى إدخال قيمة رقمية صحيحة.";
-        ok = false;
-    }
+if(desc == ""){
+document.getElementById("descError").innerText = "يرجى إدخال وصف المكتب.";
+ok = false;
+}
 
-    if(desc == ""){
-        document.getElementById("descError").innerText = "يرجى إدخال وصف المكتب.";
-        ok = false;
-    }
+if(email == ""){
+document.getElementById("emailError").innerText = "يرجى إدخال البريد الإلكتروني.";
+ok = false;
+}
+else if(email.indexOf("@") == -1){
+document.getElementById("emailError").innerText = "يرجى إدخال بريد إلكتروني صحيح.";
+ok = false;
+}
 
-    if(email == ""){
-        document.getElementById("emailError").innerText = "يرجى إدخال البريد الإلكتروني.";
-        ok = false;
-    }
-    else if(email.indexOf("@") == -1){
-        document.getElementById("emailError").innerText = "يرجى إدخال بريد إلكتروني صحيح.";
-        ok = false;
-    }
+if(phone == ""){
+document.getElementById("phoneError").innerText = "يرجى إدخال رقم الهاتف.";
+ok = false;
+}
+else if(phone.length != 10 || isNaN(phone)){
+document.getElementById("phoneError").innerText = "يرجى إدخال رقم هاتف مكوّن من 10 أرقام.";
+ok = false;
+}
 
-    if(phone == ""){
-        document.getElementById("phoneError").innerText = "يرجى إدخال رقم الهاتف.";
-        ok = false;
-    }
-    else if(phone.length != 10 || isNaN(phone)){
-        document.getElementById("phoneError").innerText = "يرجى إدخال رقم هاتف مكوّن من 10 أرقام.";
-        ok = false;
-    }
+if(pass == ""){
+document.getElementById("passError").innerText = "يرجى إدخال كلمة المرور.";
+ok = false;
+}
 
-    if(pass == ""){
-        document.getElementById("passError").innerText = "يرجى إدخال كلمة المرور.";
-        ok = false;
-    }
+if(pass2 == ""){
+document.getElementById("pass2Error").innerText = "يرجى تأكيد كلمة المرور.";
+ok = false;
+}
+else if(pass != pass2){
+document.getElementById("pass2Error").innerText = "كلمتا المرور غير متطابقتين.";
+ok = false;
+}
 
-    if(pass2 == ""){
-        document.getElementById("pass2Error").innerText = "يرجى تأكيد كلمة المرور.";
-        ok = false;
-    }
-    else if(pass != pass2){
-        document.getElementById("pass2Error").innerText = "كلمتا المرور غير متطابقتين.";
-        ok = false;
-    }
-
-    return ok;
+return ok;
 }
 
 </script>
