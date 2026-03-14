@@ -1,10 +1,9 @@
-<<<<<<< Updated upstream
-=======
+
 *{
   box-sizing:border-box;
 }
 
->>>>>>> Stashed changes
+
 body{
   margin:0;
   background:#FFFDFB !important;
@@ -85,13 +84,7 @@ outline:none;
 }
 
 .passBox{
-<<<<<<< Updated upstream
-position:relative;
-}
 
-.passBox input{
-padding-left:35px;
-=======
   position:relative;
   width:100%;
 }
@@ -99,7 +92,7 @@ padding-left:35px;
 .passBox input{
   width:100%;
   padding-left:35px;
->>>>>>> Stashed changes
+
 }
 
 .eye{
@@ -142,15 +135,6 @@ padding-left:35px;
 }
 
 .btn{
-<<<<<<< Updated upstream
-background:#4b2d67;
-color:white;
-border:none;
-padding:10px 25px;
-border-radius:4px;
-cursor:pointer;
-font-family:'Noto Kufi Arabic',sans-serif;
-=======
   display:block;
   margin:auto;
   background:#4b2c68;
@@ -160,7 +144,6 @@ font-family:'Noto Kufi Arabic',sans-serif;
   font-size:14px;
   font-family:'Noto Kufi Arabic',sans-serif;
   cursor:pointer;
->>>>>>> Stashed changes
 }
 
 .btn:hover{
@@ -182,16 +165,6 @@ font-family:'Noto Kufi Arabic',sans-serif;
   outline:none;
 }
 
-<<<<<<< Updated upstream
-
-
-
-
-
-
-
-
-=======
 .line{
   margin-top:20px;
   border:1px solid #ddd;
@@ -213,4 +186,4 @@ font-family:'Noto Kufi Arabic',sans-serif;
 #country + .select2-container.select2-container--focus .select2-selection--multiple{
   border-color:#4b2d67 !important;
 }
->>>>>>> Stashed changes
+
