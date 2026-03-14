@@ -49,7 +49,7 @@ if(isset($_POST["save"])){
 <meta charset="UTF-8">
 <title>إنشاء حساب مستثمر</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="Style.css">
 </head>
 
 <body>

@@ -7,6 +7,7 @@ $type = "";
 
 if(isset($_POST["save"])){
 
+<<<<<<< Updated upstream
     $office = $_POST["office_name"];
     $ccr = $_POST["ccr_number"];
     $email = $_POST["email"];
@@ -17,10 +18,23 @@ if(isset($_POST["save"])){
     $phone = $_POST["phone"];
     $pass = $_POST["password"];
     $country = $_POST["country"];
+=======
+$office = $_POST["office_name"];
+$ccr = $_POST["ccr_number"];
+$email = $_POST["email"];
+$desc = $_POST["office_description"];
+$bachelor = $_POST["bachelor_fee"];
+$master = $_POST["master_fee"];
+$phd = $_POST["phd_fee"];
+$phone = $_POST["phone"];
+$pass = $_POST["password"];
+$country = implode(", ", $_POST["country"]);
+>>>>>>> Stashed changes
 
     $checkEmail = mysqli_query($con,"SELECT * FROM consulting_office WHERE email='$email'");
     $checkCcr = mysqli_query($con,"SELECT * FROM consulting_office WHERE ccr_number='$ccr'");
 
+<<<<<<< Updated upstream
     if(mysqli_num_rows($checkEmail) > 0){
         $msg = "البريد الإلكتروني مستخدم مسبقًا.";
         $type = "error";
@@ -49,6 +63,36 @@ if(isset($_POST["save"])){
 
     }
 
+=======
+if(mysqli_num_rows($checkEmail) > 0){
+$msg = "البريد الإلكتروني مستخدم مسبقًا.";
+$type = "error";
+}
+else if(mysqli_num_rows($checkCcr) > 0){
+$msg = "رقم السجل التجاري مسجل مسبقًا.";
+$type = "error";
+}
+else{
+
+$newpass = password_hash($pass, PASSWORD_DEFAULT);
+
+$sql = "INSERT INTO consulting_office
+(ccr_number,email,office_name,office_description,Bachelor_fee,Masters_fee,Phd_fee,password,phone,country)
+VALUES
+('$ccr','$email','$office','$desc','$bachelor','$master','$phd','$newpass','$phone','$country')";
+
+if(mysqli_query($con,$sql)){
+$msg = "تم إنشاء الحساب بنجاح.";
+$type = "success";
+}
+else{
+$msg = "حدث خطأ أثناء حفظ البيانات.";
+$type = "error";
+}
+
+}
+
+>>>>>>> Stashed changes
 }
 
 ?>
@@ -62,7 +106,11 @@ if(isset($_POST["save"])){
 <title>إنشاء حساب مكتب استشاري</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="Style.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 </head>
 
@@ -130,8 +178,9 @@ if(isset($_POST["save"])){
 
 <label><span class="star">*</span> الدول</label>
 
-<select id="country" name="country">
+<select id="country" name="country[]" multiple>
 
+<<<<<<< Updated upstream
 <option value="">اختر الدولة</option>
 
 <option>امريكا</option>
@@ -149,6 +198,23 @@ if(isset($_POST["save"])){
 <option>كندا</option>
 <option>استراليا</option>
 <option>جنوب افريقيا</option>
+=======
+<option value="امريكا">امريكا</option>
+<option value="فرنسا">فرنسا</option>
+<option value="ايرلندا">ايرلندا</option>
+<option value="مالطا">مالطا</option>
+<option value="الهند">الهند</option>
+<option value="الصين">الصين</option>
+<option value="اليابان">اليابان</option>
+<option value="بريطانيا">بريطانيا</option>
+<option value="نيوزلندا">نيوزلندا</option>
+<option value="ماليزيا">ماليزيا</option>
+<option value="تركيا">تركيا</option>
+<option value="المانيا">المانيا</option>
+<option value="كندا">كندا</option>
+<option value="استراليا">استراليا</option>
+<option value="جنوب افريقيا">جنوب افريقيا</option>
+>>>>>>> Stashed changes
 
 </select>
 
@@ -237,6 +303,15 @@ if(isset($_POST["save"])){
 
 <script>
 
+<<<<<<< Updated upstream
+=======
+$(document).ready(function(){
+$('#country').select2({
+placeholder:"اختر الدول من القائمة أدناه",
+width:'100%'
+});
+});
+>>>>>>> Stashed changes
 
 function checkForm(){
 
@@ -262,8 +337,12 @@ var email = document.getElementById("email").value;
 var phone = document.getElementById("phone").value;
 var pass = document.getElementById("pass").value;
 var pass2 = document.getElementById("pass2").value;
+<<<<<<< Updated upstream
 var country = document.getElementById("country").value;
 
+=======
+var country = $('#country').val();
+>>>>>>> Stashed changes
 var ok = true;
 
 if(office == ""){
@@ -291,11 +370,18 @@ document.getElementById("bachelorError").innerText = "أدخل قيمة رقمي
 ok = false;
 }
 
+<<<<<<< Updated upstream
 if(country == ""){
 document.getElementById("countryError").innerText = "يرجى اختيار الدولة.";
 ok = false;
 }
 
+=======
+if(country == null || country.length == 0){
+document.getElementById("countryError").innerText = "يرجى اختيار الدولة.";
+ok = false;
+}
+>>>>>>> Stashed changes
 if(desc == ""){
 document.getElementById("descError").innerText = "يرجى إدخال وصف المكتب.";
 ok = false;

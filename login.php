@@ -51,7 +51,8 @@ if(isset($_POST['login'])) {
 <meta charset="UTF-8">
 <title>تسجيل الدخول</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="Style.css">
+
 <style>
 /* تعديلات بسيطة لتوسيط الصندوق عموديًا */
 body{
@@ -68,6 +69,7 @@ body{
     max-width:90%;
     margin:auto;
 }
+
 .error{
     text-align:center;
     margin-bottom:10px;
