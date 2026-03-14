@@ -107,7 +107,7 @@ body{
 </style>
 
             <p class="register center">
-  ليس لديك حساب؟ <a href="Ben00_MainPage.html">إنشاء حساب</a>
+  ليس لديك حساب؟ <a href="Main Page.html#accounts">إنشاء حساب</a>
 
 </p>
 

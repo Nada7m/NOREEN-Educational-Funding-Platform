@@ -114,6 +114,8 @@ if(isset($_POST["save"])){
 <option>بيئي</option>
 <option>لوجستي</option>
 <option>إعلامي</option>
+<option>لا يوجد</option>
+
 </select>
 <div class="errorText" id="majorError"></div>
 </div>
