@@ -237,17 +237,6 @@ if(isset($_POST["save"])){
 
 <script>
 
-function showPass(id){
-
-var x = document.getElementById(id);
-
-if(x.type == "password"){
-x.type = "text";
-}else{
-x.type = "password";
-}
-
-}
 
 function checkForm(){
 
