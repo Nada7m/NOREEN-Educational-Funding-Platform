@@ -9,9 +9,9 @@ if(isset($_POST["save"])){
 
     $first = $_POST["firstName"];
     $last = $_POST["lastName"];
-    $degree = $_POST["degree_level"];
-    $major = $_POST["field"];
-    $phone = $_POST["phone_num"];
+    $degree = $_POST["degree"];
+    $major = $_POST["major"];
+    $phone = $_POST["phone"];
     $email = $_POST["email"];
     $pass = $_POST["password"];
 
@@ -25,7 +25,7 @@ if(isset($_POST["save"])){
         $newpass = password_hash($pass, PASSWORD_DEFAULT);
 
         $sql = "INSERT INTO beneficiary (f_name,l_name,degree_level,sch_field,phone_num,email,password)
-                VALUES('$first','$last','$degree_level','$field','$phone','$email','$newpass')";
+                VALUES('$first','$last','$degree','$major','$phone','$email','$newpass')";
 
         if(mysqli_query($con,$sql)){
             $msg = "تم إنشاء الحساب بنجاح.";
@@ -95,12 +95,12 @@ if(isset($_POST["save"])){
 <option>ماجستير</option>
 <option>دكتوراه</option>
 </select>
-<div class="errorText" id="degree_levelError"></div>
+<div class="errorText" id="degreeError"></div>
 </div>
 
 <div class="field">
 <label><span class="star">*</span> المجال الدراسي</label>
-<select id="field" name="field">
+<select id="major" name="major">
 <option>اختر المجال الدراسي من القائمة أدناه</option>
 <option>تقني وحوسبي</option>
 <option>علوم طبيعية</option>
@@ -115,7 +115,7 @@ if(isset($_POST["save"])){
 <option>لوجستي</option>
 <option>إعلامي</option>
 </select>
-<div class="errorText" id="fieldError"></div>
+<div class="errorText" id="majorError"></div>
 </div>
 
 </div>
@@ -124,8 +124,8 @@ if(isset($_POST["save"])){
 
 <div class="field">
 <label><span class="star">*</span> رقم الهاتف</label>
-<input type="text" id="phone_num" name="phone_num" placeholder="05XXXXXXXX">
-<div class="errorText" id="phone_numError"></div>
+<input type="text" id="phone" name="phone" placeholder="05XXXXXXXX">
+<div class="errorText" id="phoneError"></div>
 </div>
 
 <div class="field">
@@ -184,17 +184,17 @@ function checkForm(){
 
     document.getElementById("firstError").innerText = "";
     document.getElementById("lastError").innerText = "";
-    document.getElementById("degree_levelError").innerText = "";
-    document.getElementById("fieldError").innerText = "";
-    document.getElementById("phone_numError").innerText = "";
+    document.getElementById("degreeError").innerText = "";
+    document.getElementById("majorError").innerText = "";
+    document.getElementById("phoneError").innerText = "";
     document.getElementById("emailError").innerText = "";
     document.getElementById("passError").innerText = "";
     document.getElementById("pass2Error").innerText = "";
 
     var first = document.getElementById("first").value;
     var last = document.getElementById("last").value;
-    var degree = document.getElementById("degree_level").value;
-    var field = document.getElementById("field").value;
+    var degree = document.getElementById("degree").value;
+    var major = document.getElementById("major").value;
     var phone = document.getElementById("phone").value;
     var email = document.getElementById("email").value;
     var pass = document.getElementById("pass").value;
@@ -213,21 +213,21 @@ function checkForm(){
     }
 
     if(degree == "اختر المؤهل الدراسي من القائمة أدناه"){
-        document.getElementById("degree_levelError").innerText = "يرجى اختيار المؤهل الدراسي.";
+        document.getElementById("degreeError").innerText = "يرجى اختيار المؤهل الدراسي.";
         ok = false;
     }
 
-    if(field == "اختر المجال الدراسي من القائمة أدناه"){
-        document.getElementById("fieldError").innerText = "يرجى اختيار المجال الدراسي.";
+    if(major == "اختر المجال الدراسي من القائمة أدناه"){
+        document.getElementById("majorError").innerText = "يرجى اختيار المجال الدراسي.";
         ok = false;
     }
 
     if(phone == ""){
-        document.getElementById("phone_numError").innerText = "يرجى إدخال رقم الهاتف.";
+        document.getElementById("phoneError").innerText = "يرجى إدخال رقم الهاتف.";
         ok = false;
     }
     else if(phone.length != 10 || isNaN(phone)){
-        document.getElementById("phone_numError").innerText = "يرجى إدخال رقم هاتف مكوّن من 10 أرقام.";
+        document.getElementById("phoneError").innerText = "يرجى إدخال رقم هاتف مكوّن من 10 أرقام.";
         ok = false;
     }
 
