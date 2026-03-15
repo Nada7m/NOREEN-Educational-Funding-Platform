@@ -291,12 +291,7 @@ body{
   opacity:.95;
 }
 
-.empty-state{
-  text-align:center;
-  margin-top:220px;
-  color:#cfcfcf;
-  font-size:28px;
-}
+
 /* صفحة إنشاء عرض منحة */
 
 .form-card{
@@ -696,4 +691,296 @@ body{
   .edit-wrapper{
     width:100%;
   }
+}
+
+/* بطاقة تفاصيل المنحة */
+.scholarship-card{
+  width: 460px;
+  background:#fff;
+  border:1.5px solid #E3E3E3;
+  border-radius:6px;
+  padding:32px 28px 24px;
+  margin:120px auto;
+  transform: translateX(120px);
+  direction:rtl;                 
+  text-align:right;              
+  font-family:"Noto Kufi Arabic", sans-serif;
+  box-sizing:border-box;
+}
+
+/* عنوان المنحة */
+.scholarship-title{
+  font-size:20px;                
+  font-weight:700;
+  color:#3E2454;
+  line-height:1.8;
+  margin-bottom:22px;
+  text-align:center;             
+}
+
+/* صف المجال والدرجة   */
+.info-row{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:20px;
+}
+
+/* عنوان الحقل مثل: المجال الرئيسي */
+.label{
+  font-size:16px;
+  color:#777;
+  margin-bottom:6px;
+}
+
+/* القيمة مثل: صناعي وتشغيلي */
+.value{
+  font-size:18px;
+  font-weight:600;
+  color:#70A0AF;                
+}
+
+/* التخصصات الدقيقة */
+.specializations{
+  margin-top:10px;
+  margin-bottom:22px;
+}
+
+.specializations .label{
+  margin-bottom:8px;
+}
+
+.specializations p{
+  color:#70A0AF;                
+  font-size:16px;
+  line-height:2;
+  margin:0;
+}
+
+/* خط فاصل */
+.divider{
+  border-top:1px solid #E5E5E5;
+  margin:22px 0 16px;
+}
+
+/* موعد التقديم */
+.deadline{
+  display:flex;
+  justify-content:flex-start;    
+  align-items:center;
+  gap:6px;
+  font-size:16px;
+  color:#555;
+  margin-bottom:18px;
+}
+
+/* زر عرض التفاصيل */
+.details-btn{
+width:100%;
+height:46px;
+background:#70A0AF;
+color:#fff;
+border-radius:6px;
+font-size:16px;
+font-weight:600;
+display:flex;
+align-items:center;
+justify-content:center;
+text-decoration:none;
+}
+
+
+/*  التفاصيل صفحة*/
+
+.details-page{
+  width: 100%;
+  direction: rtl;
+  font-family: "Noto Kufi Arabic", sans-serif;
+  box-sizing: border-box;
+  padding: 20px 30px 40px;
+}
+
+/* سهم التراجع */
+.back-row{
+  width: 90%;
+  margin: 10px auto 18px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.back-arrow{
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #E9DFF0;
+  color: #3E2454;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+/* التبويبات */
+.tabs-row{
+  width: 90%;
+  margin: 0 auto 18px;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+}
+
+.tab{
+  width: 50%;
+  height: 64px;
+  border: 1px solid #D9D9D9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: #3E2454;
+  background: #FFFFFF;
+}
+
+.tab-active{
+  background: #F2F2F2;
+}
+
+/* المربع الكبير */
+.scholarship-details-box{
+  width: 90%;
+  min-height: 430px;
+  margin: 0 auto;
+  background: #FFFFFF;
+  border: 1px solid #E3E3E3;
+  border-radius: 6px;
+  padding: 34px 36px 30px;
+  box-sizing: border-box;
+}
+
+/* الصف العلوي */
+.top-info-row{
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+/* يمين */
+.main-info-box{
+  width: 68%;
+  text-align: right;
+}
+
+.main-title{
+  margin: 0 0 18px 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #3E2454;
+  line-height: 1.9;
+}
+
+.double-info-row{
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: 70px;
+  margin-bottom: 18px;
+}
+
+.info-item{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.info-label{
+  font-size: 16px;
+  font-weight: 500;
+  color: #666666;
+  margin-bottom: 6px;
+}
+
+.info-value{
+  font-size: 17px;
+  font-weight: 700;
+  color: #70A0AF;
+}
+
+.specialization-line{
+  font-size: 16px;
+  line-height: 2;
+  text-align: right;
+}
+
+.specialization-label{
+  color: #555555;
+  font-weight: 600;
+}
+
+.specialization-value{
+  color: #70A0AF;
+  font-weight: 500;
+}
+
+/* يسار */
+.deadline-box{
+  width: 28%;
+  text-align: left;
+  direction: ltr;
+  padding-top: 50px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.deadline-icon{
+  font-size: 16px;
+}
+
+.deadline-label{
+  font-size: 15px;
+  font-weight: 700;
+  color: #3E2454;
+}
+
+.deadline-value{
+  font-size: 15px;
+  font-weight: 500;
+  color: #70A0AF;
+}
+
+/* الفاصل */
+.section-divider{
+  width: 100%;
+  height: 1px;
+  background: #DCDCDC;
+  margin: 28px 0 22px;
+}
+
+/* الشروط */
+.conditions-box{
+  text-align: right;
+}
+
+.conditions-title{
+  margin: 0 0 14px 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: #3E2454;
+}
+
+.conditions-list{
+  margin: 0;
+  padding-right: 22px;
+  list-style-type: disc;
+}
+
+.conditions-list li{
+  font-size: 16px;
+  color: #444444;
+  line-height: 2;
+  margin-bottom: 2px;
 }

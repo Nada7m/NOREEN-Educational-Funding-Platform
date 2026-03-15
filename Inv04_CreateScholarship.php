@@ -78,12 +78,44 @@ if(!isset($_SESSION['inv_id'])){
         </div>
       </div>
 
-      <div class="empty-state">
-        <p>لم تقم بنشر منحة حتى الآن</p>
-      </div>
 
     </div>
+<div class="scholarship-card">
 
+  <h2 class="scholarship-title">
+    برنامج سابك - تطوير الأنظمة الصناعية المتقدمة
+  </h2>
+
+  <div class="info-row">
+    <div>
+      <div class="label">المجال الرئيسي:</div>
+      <div class="value">صناعي وتشغيلي</div>
+    </div>
+
+    <div>
+      <div class="label">الدرجة المستهدفة:</div>
+      <div class="value">ماجستير</div>
+    </div>
+  </div>
+
+  <div class="specializations">
+    <div class="label">التخصصات الدقيقة:</div>
+    <p>تحسين العمليات الصناعية.</p>
+    <p>سلاسل الإمداد، نظم الدعم الشاملة</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="deadline">
+    <span>آخر موعد للتقديم: 15 أبريل 2026</span>
+    <span>📅</span>
+  </div>
+
+  <a href="Inv05_ScholarshipsDetails.php" class="details-btn">
+عرض تفاصيل أكثر
+</a>
+
+</div>
   </div>
 
 </body>
