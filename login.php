@@ -1,47 +1,70 @@
 <?php
 session_start();
 
-// الاتصال بقاعدة البيانات
 $con = new mysqli("localhost", "root", "", "noreen");
-if ($con->connect_error) { 
-    die("فشل الاتصال بالقاعدة: " . $con->connect_error); 
+if ($con->connect_error) {
+    die("فشل الاتصال بقاعدة البيانات: " . $con->connect_error);
 }
 
 $error = "";
-$success_msg = ""; // متغير جديد للتأكد من نجاح العملية داخلياً
 
-if(isset($_POST['login'])) {
+if (isset($_POST['login'])) {
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
-    $tables = ['beneficiary', 'investor', 'consulting_office'];
-    $found = false;
 
-    foreach($tables as $table){
-        // (الباسورد مشفر) نبحث عن المستخدم بواسطة البريد الإلكتروني فقط
-        $stmt = $con->prepare("SELECT * FROM $table WHERE email=?");
+    $users = [
+        [
+            "table" => "investor",
+            "id_field" => "inv_id",
+            "session_key" => "inv_id",
+            "redirect" => "Inv00_MainPage.html"
+        ],
+        [
+            "table" => "beneficiary",
+            "id_field" => "bnf_id",
+            "session_key" => "bnf_id",
+            "redirect" => "Ben00_MainPage.html"
+        ],
+        [
+            "table" => "consulting_office",
+            "id_field" => "office_id",
+            "session_key" => "office_id",
+            "redirect" => "Con00_MainPage.html"
+        ],
+        [
+            "table" => "admin",
+            "id_field" => "admin_id",
+            "session_key" => "admin_id",
+            "redirect" => "Admin00_MainPage.html"
+        ]
+    ];
+
+    foreach ($users as $userType) {
+        $table = $userType["table"];
+        $id_field = $userType["id_field"];
+        $session_key = $userType["session_key"];
+        $redirect = $userType["redirect"];
+
+        $stmt = $con->prepare("SELECT * FROM $table WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
 
-        if($result->num_rows > 0){
+        if ($result->num_rows > 0) {
             $user = $result->fetch_assoc();
-            
-            //  التحقق من كلمة المرور المشفرة باستخدام password_verify
-            
-            if(password_verify($password, $user['password'])){
+
+            if (password_verify($password, $user['password'])) {
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['user_type'] = $table;
-                
-                $found = true;
-                $success_msg = "تم التحقق بنجاح!";
-                break; 
+                $_SESSION[$session_key] = $user[$id_field];
+
+                header("Location: " . $redirect);
+                exit();
             }
         }
     }
 
-    if(!$found){ 
-        $error = "البريد الإلكتروني أو كلمة المرور غير صحيحة."; 
-    }
+    $error = "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
 }
 ?>
 
@@ -54,7 +77,6 @@ if(isset($_POST['login'])) {
 <link rel="stylesheet" href="Style.css">
 
 <style>
-/* تعديلات بسيطة لتوسيط الصندوق عموديًا */
 body{
     margin:0;
     background:#f5f4f2;
@@ -62,20 +84,24 @@ body{
 }
 .container{
     min-height:100vh;
-    padding-top:120px; /* يرفع الصندوق شوي */
+    padding-top:120px;
 }
 .box{
     width:650px;
     max-width:90%;
     margin:auto;
 }
-
 .error{
     text-align:center;
     margin-bottom:10px;
     color:red;
 }
-.center{text-align:center;}
+.center{
+    text-align:center;
+}
+.btn{
+    margin-top:15px;
+}
 </style>
 </head>
 <body>
@@ -92,7 +118,7 @@ body{
 
             <label>البريد الإلكتروني</label>
             <div class="input-group">
-                <input type="text" name="email" placeholder="أدخل البريد الإلكتروني أو اسم المستخدم" required>
+                <input type="text" name="email" placeholder="أدخل البريد الإلكتروني" required>
             </div>
 
             <label>كلمة المرور</label>
@@ -101,22 +127,9 @@ body{
             </div>
 
             <button type="submit" name="login" class="btn">تسجيل الدخول</button>
-<style>
-
-.btn {
-    margin-top: 15px; 
-}
-</style>
 
             <p class="register center">
-  ليس لديك حساب؟ <a href="Main Page.html#accounts">إنشاء حساب</a>
-
-</p>
-
-
-
-
-
+              ليس لديك حساب؟ <a href="Main Page.html#accounts">إنشاء حساب</a>
             </p>
 
         </form>
