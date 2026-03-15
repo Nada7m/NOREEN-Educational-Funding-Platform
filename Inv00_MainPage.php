@@ -25,7 +25,7 @@
         </div>
 
         <ul class="sidebar-menu">
-          <li><a href="Inv00_MainPage.html" class="active">الرئيسية</a></li>
+          <li><a href="Inv00_MainPage.php" class="active">الرئيسية</a></li>
           <li><a href="Inv04_CreateScholarship.php">عرض المنح</a></li>
           <li><a href="#">إدارة المنح</a></li>
           <li><a href="#">المدفوعات</a></li>
@@ -57,7 +57,7 @@
             <img src="ايقونة قائمة الاعدادات.png" class="menu-icon">
 
             <div class="dropdown-menu">
-              <a href="Inv02_Profile.html">الملف الشخصي</a>
+              <a href="Inv02_Profile.php">الملف الشخصي</a>
               <a href="#">التواصل والدعم</a>
             </div>
           </div>

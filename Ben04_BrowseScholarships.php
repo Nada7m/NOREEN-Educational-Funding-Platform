@@ -26,12 +26,12 @@
       </div>
 
       <ul class="sidebar-menu">
-        <li><a href="Ben00_MainPage.html">الرئيسية</a></li>
-        <li><a href="Ben04_BrowseScholarships.html" class="active">التقديم على المنح</a></li>
+        <li><a href="Ben00_MainPage.php">الرئيسية</a></li>
+        <li><a href="Ben04_BrowseScholarships.php" class="active">التقديم على المنح</a></li>
         <li><a href="">متابعة المنح</a></li>
-        <li><a href=".html">المكاتب الاستشارية</a></li>
-        <li><a href=".html">طلبات إصدار القبول</a></li>
-        <li><a href=".html">الاستشارات</a></li>
+        <li><a href=".php">المكاتب الاستشارية</a></li>
+        <li><a href=".php">طلبات إصدار القبول</a></li>
+        <li><a href=".php">الاستشارات</a></li>
       </ul>
 
     </div>
@@ -69,8 +69,8 @@
           <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" >
 
           <div class="dropdown-menu">
-            <a href="Ben02_Profile.html">الملف الشخصي</a>
-            <a href="Ben11_MyScholarshipWallet.html">محفظة منحتي</a>
+            <a href="Ben02_Profile.php">الملف الشخصي</a>
+            <a href="Ben11_MyScholarshipWallet.php">محفظة منحتي</a>
             <a href="#">التواصل والدعم</a>
           </div>
 
