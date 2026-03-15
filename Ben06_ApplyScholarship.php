@@ -18,13 +18,13 @@
       <div class="sidebar-top">
 
         <div class="sidebar-logo">
-          <img src="شعار نورين.png" >
+          <img src="شعار نورين.png" alt="نورين">
         </div>
 
         <ul class="sidebar-menu">
-          <li><a href="Ben00_MainPage.html">الرئيسية</a></li>
-          <li><a href="Ben04_BrowseScholarships.html" class="active">التقديم على المنح</a></li>
-          <li><a href="Ben07_ApplicationStatus.html">متابعة الطلب</a></li>
+          <li><a href="Ben00_MainPage.php">الرئيسية</a></li>
+          <li><a href="Ben04_BrowseScholarships.php" class="active">التقديم على المنح</a></li>
+          <li><a href="Ben07_ApplicationStatus.php">متابعة الطلب</a></li>
           <li><a href="#">المكاتب الاستشارية</a></li>
           <li><a href="#">طلبات إصدار القبول</a></li>
           <li><a href="#">الاستشارات</a></li>
@@ -34,7 +34,7 @@
 
       <div class="sidebar-bottom">
         <button class="logout-btn">
-          <img src="ايقونة تسجيل الخروج.png" class="logout-icon" >
+          <img src="ايقونة تسجيل الخروج.png" class="logout-icon" alt="تسجيل الخروج">
           <span>تسجيل الخروج</span>
         </button>
       </div>
@@ -47,7 +47,7 @@
 
         <div class="page-heading">
           <div class="page-title">التقديم على المنح</div>
-          <div class="page-description">صفحة استعراض تفاصيل المنحة</div>
+          <div class="page-description">صفحة نموذج التقديم على المنحة</div>
         </div>
 
         <div class="header-icons">
@@ -55,8 +55,8 @@
             <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="الإعدادات">
 
             <div class="dropdown-menu">
-              <a href="Ben02_Profile.html">الملف الشخصي</a>
-              <a href="Ben03_EditProfile.html">تعديل الملف الشخصي</a>
+              <a href="Ben02_Profile.php">الملف الشخصي</a>
+              <a href="Ben03_EditProfile.php">تعديل الملف الشخصي</a>
               <a href="#">محفظة منحتي</a>
               <a href="#">التواصل والدعم</a>
             </div>
@@ -68,12 +68,12 @@
       <div class="page">
 
         <div class="back-wrap">
-          <a href="Ben04_BrowseScholarships.html" class="back-btn">
-            <img src="سهم تراجع.svg" class="back-icon" >
+          <a href="Ben05_ScholarshipDetails.php" class="back-btn">
+            <img src="سهم تراجع.svg" class="back-icon" alt="رجوع">
           </a>
         </div>
 
-        <!-- محتوى تفاصيل المنحة يوضع هنا -->
+        <!-- محتوى نموذج التقديم يوضع هنا -->
 
       </div>
 
