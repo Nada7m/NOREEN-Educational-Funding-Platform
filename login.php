@@ -17,25 +17,25 @@ if (isset($_POST['login'])) {
             "table" => "investor",
             "id_field" => "inv_id",
             "session_key" => "inv_id",
-            "redirect" => "Inv00_MainPage.html"
+            "redirect" => "Inv00_MainPage.php"
         ],
         [
             "table" => "beneficiary",
             "id_field" => "bnf_id",
             "session_key" => "bnf_id",
-            "redirect" => "Ben00_MainPage.html"
+            "redirect" => "Ben00_MainPage.php"
         ],
         [
             "table" => "consulting_office",
             "id_field" => "office_id",
             "session_key" => "office_id",
-            "redirect" => "Con00_MainPage.html"
+            "redirect" => "Con00_MainPage.php"
         ],
         [
             "table" => "admin",
             "id_field" => "admin_id",
             "session_key" => "admin_id",
-            "redirect" => "Admin00_MainPage.html"
+            "redirect" => "Admin00_MainPage.php"
         ]
     ];
 
