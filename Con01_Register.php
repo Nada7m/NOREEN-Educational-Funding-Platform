@@ -16,7 +16,7 @@ $master = $_POST["master_fee"];
 $phd = $_POST["phd_fee"];
 $phone = $_POST["phone"];
 $pass = $_POST["password"];
-$country = implode(", ", $_POST["country"]);
+$countries = isset($_POST["country"]) ? $_POST["country"] : [];
 
 $checkEmail = mysqli_query($con,"SELECT * FROM consulting_office WHERE email='$email'");
 $checkCcr = mysqli_query($con,"SELECT * FROM consulting_office WHERE ccr_number='$ccr'");
@@ -34,13 +34,22 @@ else{
 $newpass = password_hash($pass, PASSWORD_DEFAULT);
 
 $sql = "INSERT INTO consulting_office
-(ccr_number,email,office_name,office_description,Bachelor_fee,Masters_fee,Phd_fee,password,phone,country)
+(ccr_number,email,office_name,office_description,Bachelor_fee,Masters_fee,Phd_fee,password,phone)
 VALUES
-('$ccr','$email','$office','$desc','$bachelor','$master','$phd','$newpass','$phone','$country')";
+('$ccr','$email','$office','$desc','$bachelor','$master','$phd','$newpass','$phone')";
 
 if(mysqli_query($con,$sql)){
-$msg = "تم إنشاء الحساب بنجاح.";
-$type = "success";
+
+    $office_id = mysqli_insert_id($con);
+
+    foreach($countries as $oneCountry){
+        $sql_country = "INSERT INTO office_country (office_id, con_name)
+                        VALUES ('$office_id', '$oneCountry')";
+        mysqli_query($con, $sql_country);
+    }
+
+    $msg = "تم إنشاء الحساب بنجاح.";
+    $type = "success";
 }
 else{
 $msg = "حدث خطأ أثناء حفظ البيانات.";
@@ -65,7 +74,6 @@ $type = "error";
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="Style.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 </head>
@@ -119,9 +127,6 @@ $type = "error";
 
 </div>
 
-
-
-
 <div class="row">
 
 <div class="field">
@@ -151,7 +156,33 @@ $type = "error";
 <option value="كندا">كندا</option>
 <option value="استراليا">استراليا</option>
 <option value="جنوب افريقيا">جنوب افريقيا</option>
-
+<option value="اسبانيا">اسبانيا</option>
+<option value="ايطاليا">ايطاليا</option>
+<option value="هولندا">هولندا</option>
+<option value="بلجيكا">بلجيكا</option>
+<option value="سويسرا">سويسرا</option>
+<option value="السويد">السويد</option>
+<option value="النرويج">النرويج</option>
+<option value="فنلندا">فنلندا</option>
+<option value="الدنمارك">الدنمارك</option>
+<option value="بولندا">بولندا</option>
+<option value="النمسا">النمسا</option>
+<option value="التشيك">التشيك</option>
+<option value="المجر">المجر</option>
+<option value="البرتغال">البرتغال</option>
+<option value="اليونان">اليونان</option>
+<option value="روسيا">روسيا</option>
+<option value="كوريا الجنوبية">كوريا الجنوبية</option>
+<option value="سنغافورة">سنغافورة</option>
+<option value="تايلاند">تايلاند</option>
+<option value="اندونيسيا">اندونيسيا</option>
+<option value="الفلبين">الفلبين</option>
+<option value="فيتنام">فيتنام</option>
+<option value="مصر">مصر</option>
+<option value="الامارات">الامارات</option>
+<option value="الكويت">الكويت</option>
+<option value="قطر">قطر</option>
+<option value="الاردن">الاردن</option>
 </select>
 
 <div class="errorText" id="countryError"></div>
@@ -159,7 +190,6 @@ $type = "error";
 </div>
 
 </div>
-
 
 <div class="row">
 
@@ -193,11 +223,7 @@ $type = "error";
 <label><span class="star">*</span> كلمة المرور</label>
 
 <div class="passBox">
-
 <input type="password" id="pass" name="password" placeholder="إدخال كلمة مرور قوية">
-
-
-
 </div>
 
 <div class="errorText" id="passError"></div>
@@ -209,11 +235,7 @@ $type = "error";
 <label><span class="star">*</span> تأكيد كلمة المرور</label>
 
 <div class="passBox">
-
 <input type="password" id="pass2" name="confirm_password" placeholder="أعد إدخال كلمة المرور">
-
-
-
 </div>
 
 <div class="errorText" id="pass2Error"></div>
@@ -225,9 +247,7 @@ $type = "error";
 <div class="center">
 
 <button type="submit" class="btn" name="save">
-
 إنشاء حساب
-
 </button>
 
 </div>
@@ -302,6 +322,7 @@ if(country == null || country.length == 0){
 document.getElementById("countryError").innerText = "يرجى اختيار الدولة.";
 ok = false;
 }
+
 if(desc == ""){
 document.getElementById("descError").innerText = "يرجى إدخال وصف المكتب.";
 ok = false;

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 14 مارس 2026 الساعة 06:39
+-- Generation Time: 15 مارس 2026 الساعة 06:01
 -- إصدار الخادم: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -50,6 +50,13 @@ CREATE TABLE `admin` (
   `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- إرجاع أو استيراد بيانات الجدول `admin`
+--
+
+INSERT INTO `admin` (`admin_id`, `admin_name`, `password`) VALUES
+(1, 'noreenAdmin', 'Admin@123');
+
 -- --------------------------------------------------------
 
 --
@@ -95,7 +102,7 @@ CREATE TABLE `beneficiary` (
   `phone_num` varchar(15) NOT NULL,
   `password` varchar(255) NOT NULL,
   `sch_field` enum('تقني و حوسبي','علوم طبيعية','صناعي و تشغيلي','إداري','قانوني','اجتماعي و إنساني','تصميمي','اقتصادي','إعلامي','بيئي','لوجيستي','صحي','لا يوجد') NOT NULL,
-  `degree_level` enum('ثانوي','بكالريوس','ماجستير','') NOT NULL
+  `degree_level` enum('ثانوي','بكالوريوس','ماجستير','') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -103,7 +110,7 @@ CREATE TABLE `beneficiary` (
 --
 
 INSERT INTO `beneficiary` (`bnf_id`, `email`, `f_name`, `l_name`, `phone_num`, `password`, `sch_field`, `degree_level`) VALUES
-(1, 'FatmaAlghamdi@gmail.com', 'فاطمة', 'الغامدي', '', '$2y$10$vS2J608Dv/DImLLpfl9Vu.PcHg0YtAsR2HX8IgX87Lj9Bh1AMhQlS', '', ''),
+(1, 'FatmaAlghamdi@gmail.com', 'فاطمة', 'الغامدي', '0502508284', '$2y$10$vS2J608Dv/DImLLpfl9Vu.PcHg0YtAsR2HX8IgX87Lj9Bh1AMhQlS', 'صناعي و تشغيلي', ''),
 (3, 'Tasneem@gmail.com', 'تسنيم', 'الحربي', '0535246000', '$2y$10$6AxmbjZBFFpd8KP8K.9jWuFUkZ0ifxmunNsiRxq3pzNng6mvo2RhW', 'لا يوجد', 'ثانوي');
 
 -- --------------------------------------------------------
@@ -215,7 +222,8 @@ CREATE TABLE `investor` (
 
 INSERT INTO `investor` (`inv_id`, `ccr_number`, `email`, `inv_number`, `inv_name`, `password`) VALUES
 (1, '1010010813', 'InvestorRelations@safco.sabic.com', 530014051, 'سابك - الشركة السعودية للصناعات الأساسية', '$2y$10$/8anVADcwa6r5K6nJk/RCO9Tb6fS7G05m9eUS4FIXm90T2iaJ7c4a'),
-(2, '4030175741', 'Baggage.Inquiries@Saudia.com', 2147483647, 'الخطوط السعودية', '$2y$10$46r8y.xFY5El.dVX2RJuN.2ijifWQAc8tZgH6GxcpN.vi5D5hJPby');
+(2, '4030175741', 'Baggage.Inquiries@Saudia.com', 2147483647, 'الخطوط السعودية', '$2y$10$46r8y.xFY5El.dVX2RJuN.2ijifWQAc8tZgH6GxcpN.vi5D5hJPby'),
+(3, '2052101150', 'investor@aramco.com', 567788990, 'أرامكو', '$2y$10$IGfO7u71zWhhE/n3JrK72.0Wh2ZOM9PyPNd.3vGYwGuYarq8SCIT.');
 
 -- --------------------------------------------------------
 
@@ -273,6 +281,13 @@ CREATE TABLE `scholarship_opps` (
   `Specializations` text NOT NULL,
   `app_deadline` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- إرجاع أو استيراد بيانات الجدول `scholarship_opps`
+--
+
+INSERT INTO `scholarship_opps` (`scholarship_id`, `sch_field`, `inv_id`, `sch_name`, `requirements`, `study_level`, `Specializations`, `app_deadline`) VALUES
+(1, '', 1, 'برنامج سابك - تطوير الأنظمة الصناعية المتقدمة', '• أن يكون المتقدم سعودي الجنسية\r\n  • حاصل على بكالوريوس في الهندسة الصناعية بمعدل لا يقل عن 3.5 من 4  \r\n• خبرة عملية لا تقل عن سنة في مجال ذات صلة (للماجستير) \r\n • الالتزام بالعمل في سابك بعد التخرج لمدة محددة', 'بكالوريوس', 'تحسين العمليات الصناعية، سلاسل الامداد، نظم الدعم الشاملة', '2026-04-15 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -454,7 +469,7 @@ ALTER TABLE `academic_report`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `admission_request`
@@ -508,7 +523,7 @@ ALTER TABLE `e_contract`
 -- AUTO_INCREMENT for table `investor`
 --
 ALTER TABLE `investor`
-  MODIFY `inv_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `inv_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `payments`
@@ -526,7 +541,7 @@ ALTER TABLE `rating`
 -- AUTO_INCREMENT for table `scholarship_opps`
 --
 ALTER TABLE `scholarship_opps`
-  MODIFY `scholarship_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `scholarship_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `scholarship_requests`
