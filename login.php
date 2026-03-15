@@ -56,7 +56,11 @@ if (isset($_POST['login'])) {
         $redirect = $userType["redirect"];
 
         
-        $stmt = $con->prepare("SELECT * FROM $table WHERE email = ?");
+       if ($table == "admin") {
+    $stmt = $con->prepare("SELECT * FROM admin WHERE admin_name = ?");
+} else {
+    $stmt = $con->prepare("SELECT * FROM $table WHERE email = ?");
+}
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
