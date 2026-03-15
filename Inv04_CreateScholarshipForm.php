@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     ) {
         $error = "يرجى تعبئة جميع الحقول المطلوبة وتأكيد صحة البيانات.";
     } else {
-        $stmt = $conn->prepare("INSERT INTO scholarship 
+        $stmt = $conn->prepare("INSERT INTO scholarship_opps 
         (sch_field, inv_id, sch_name, requirements, study_level, Specializations, app_deadline)
         VALUES (?, ?, ?, ?, ?, ?, ?)");
 
