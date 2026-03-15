@@ -5,6 +5,11 @@ $con = mysqli_connect("localhost","root","","noreen");
 $msg = "";
 $type = "";
 
+/* فحص الاتصال بقاعدة البيانات */
+if(!$con){
+    die("فشل الاتصال بقاعدة البيانات");
+}
+
 if(isset($_POST["save"])){
 
     $name = $_POST["orgName"];
@@ -13,26 +18,42 @@ if(isset($_POST["save"])){
     $phone = $_POST["phone"];
     $pass = $_POST["password"];
 
-    $checkEmail = mysqli_query($con,"SELECT * FROM investor WHERE email='$email'");
-    $checkCcr = mysqli_query($con,"SELECT * FROM investor WHERE ccr_number='$ccr'");
+    /* فحص البريد الإلكتروني */
+    $stmt1 = mysqli_prepare($con,"SELECT inv_id FROM investor WHERE email=?");
+    mysqli_stmt_bind_param($stmt1,"s",$email);
+    mysqli_stmt_execute($stmt1);
+    mysqli_stmt_store_result($stmt1);
 
-    if(mysqli_num_rows($checkEmail) > 0){
+    /* فحص السجل التجاري */
+    $stmt2 = mysqli_prepare($con,"SELECT inv_id FROM investor WHERE ccr_number=?");
+    mysqli_stmt_bind_param($stmt2,"s",$ccr);
+    mysqli_stmt_execute($stmt2);
+    mysqli_stmt_store_result($stmt2);
+
+    if(mysqli_stmt_num_rows($stmt1) > 0){
         $msg = "البريد الإلكتروني مستخدم مسبقًا.";
         $type = "error";
     }
-    else if(mysqli_num_rows($checkCcr) > 0){
+    else if(mysqli_stmt_num_rows($stmt2) > 0){
         $msg = "رقم السجل التجاري مسجل مسبقًا.";
         $type = "error";
     }
     else{
+
         $newpass = password_hash($pass, PASSWORD_DEFAULT);
 
-        $sql = "INSERT INTO investor(inv_name,ccr_number,email,inv_number,password)
-                VALUES('$name','$ccr','$email','$phone','$newpass')";
+        $stmt3 = mysqli_prepare($con,
+        "INSERT INTO investor(inv_name,ccr_number,email,inv_number,password)
+        VALUES(?,?,?,?,?)");
 
-        if(mysqli_query($con,$sql)){
-            $msg = "تم إنشاء الحساب بنجاح.";
-            $type = "success";
+        mysqli_stmt_bind_param($stmt3,"sssss",$name,$ccr,$email,$phone,$newpass);
+
+        if(mysqli_stmt_execute($stmt3)){
+
+            /* تحويل المستخدم لصفحة تسجيل الدخول */
+            header("Location: login.php");
+            exit();
+
         }
         else{
             $msg = "حدث خطأ أثناء حفظ البيانات.";
@@ -49,7 +70,7 @@ if(isset($_POST["save"])){
 <meta charset="UTF-8">
 <title>إنشاء حساب مستثمر</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="Style.css">
 </head>
 
 <body>

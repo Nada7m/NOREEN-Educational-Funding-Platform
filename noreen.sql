@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 14 مارس 2026 الساعة 01:50
+-- Generation Time: 14 مارس 2026 الساعة 06:39
 -- إصدار الخادم: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -94,7 +94,7 @@ CREATE TABLE `beneficiary` (
   `l_name` varchar(50) NOT NULL,
   `phone_num` varchar(15) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `sch_field` enum('تقني و حوسبي','علوم طبيعية','صناعي و تشغيلي','إداري','قانوني','اجتماعي و إنساني','تصميمي','اقتصادي','إعلامي','بيئي','لوجيستي','صحي') NOT NULL,
+  `sch_field` enum('تقني و حوسبي','علوم طبيعية','صناعي و تشغيلي','إداري','قانوني','اجتماعي و إنساني','تصميمي','اقتصادي','إعلامي','بيئي','لوجيستي','صحي','لا يوجد') NOT NULL,
   `degree_level` enum('ثانوي','بكالريوس','ماجستير','') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -103,7 +103,8 @@ CREATE TABLE `beneficiary` (
 --
 
 INSERT INTO `beneficiary` (`bnf_id`, `email`, `f_name`, `l_name`, `phone_num`, `password`, `sch_field`, `degree_level`) VALUES
-(1, 'FatmaAlghamdi@gmail.com', 'فاطمة', 'الغامدي', '', '$2y$10$vS2J608Dv/DImLLpfl9Vu.PcHg0YtAsR2HX8IgX87Lj9Bh1AMhQlS', '', '');
+(1, 'FatmaAlghamdi@gmail.com', 'فاطمة', 'الغامدي', '', '$2y$10$vS2J608Dv/DImLLpfl9Vu.PcHg0YtAsR2HX8IgX87Lj9Bh1AMhQlS', '', ''),
+(3, 'Tasneem@gmail.com', 'تسنيم', 'الحربي', '0535246000', '$2y$10$6AxmbjZBFFpd8KP8K.9jWuFUkZ0ifxmunNsiRxq3pzNng6mvo2RhW', 'لا يوجد', 'ثانوي');
 
 -- --------------------------------------------------------
 
@@ -213,7 +214,8 @@ CREATE TABLE `investor` (
 --
 
 INSERT INTO `investor` (`inv_id`, `ccr_number`, `email`, `inv_number`, `inv_name`, `password`) VALUES
-(1, '1010010813', 'InvestorRelations@safco.sabic.com', 530014051, 'سابك - الشركة السعودية للصناعات الأساسية', '$2y$10$/8anVADcwa6r5K6nJk/RCO9Tb6fS7G05m9eUS4FIXm90T2iaJ7c4a');
+(1, '1010010813', 'InvestorRelations@safco.sabic.com', 530014051, 'سابك - الشركة السعودية للصناعات الأساسية', '$2y$10$/8anVADcwa6r5K6nJk/RCO9Tb6fS7G05m9eUS4FIXm90T2iaJ7c4a'),
+(2, '4030175741', 'Baggage.Inquiries@Saudia.com', 2147483647, 'الخطوط السعودية', '$2y$10$46r8y.xFY5El.dVX2RJuN.2ijifWQAc8tZgH6GxcpN.vi5D5hJPby');
 
 -- --------------------------------------------------------
 
@@ -470,7 +472,7 @@ ALTER TABLE `admission_request_documents`
 -- AUTO_INCREMENT for table `beneficiary`
 --
 ALTER TABLE `beneficiary`
-  MODIFY `bnf_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `bnf_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `bnf_inv_msg`
@@ -506,7 +508,7 @@ ALTER TABLE `e_contract`
 -- AUTO_INCREMENT for table `investor`
 --
 ALTER TABLE `investor`
-  MODIFY `inv_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `inv_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `payments`
