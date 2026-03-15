@@ -1,18 +1,23 @@
+<?php
+session_start();
+
+if(!isset($_SESSION['inv_id'])){
+    header("Location: login.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<meta charset="UTF-8">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>عرض المنح</title>
 
-  <!-- خط الموقع -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- ملف التنسيق -->
   <link rel="stylesheet" href="CSS01Layout.css">
 </head>
 
@@ -20,78 +25,59 @@
 
   <div class="layout">
 
-    <!-- الشريط الجانبي -->
     <aside class="sidebar">
-
       <div class="sidebar-top">
 
-        <!-- الشعار -->
         <div class="sidebar-logo">
           <img src="شعار نورين.png" alt="نورين">
         </div>
 
-        <!-- روابط الشريط -->
         <ul class="sidebar-menu">
-          <li><a href="Inv00_MainPage.html">الرئيسية</a></li>
-          <li><a href="Inv04_CreateScholarship.html" class="active">عرض المنح</a></li>
+          <li><a href="Inv00_MainPage.php">الرئيسية</a></li>
+          <li><a href="Inv04_CreateScholarship.php" class="active">عرض المنح</a></li>
           <li><a href="#">إدارة المنح</a></li>
           <li><a href="#">المدفوعات</a></li>
         </ul>
 
       </div>
 
-      <!-- زر تسجيل الخروج -->
       <div class="sidebar-bottom">
         <button class="logout-btn">
           <img src="ايقونة تسجيل الخروج.png" class="logout-icon" alt="تسجيل الخروج">
           <span>تسجيل الخروج</span>
         </button>
       </div>
-
     </aside>
 
-    <!-- المحتوى الرئيسي -->
     <div class="main-content">
 
-      <!-- الهيدر -->
       <header class="header">
-
-        <!-- عنوان الصفحة -->
         <div class="page-heading">
           <h1 class="page-title">عرض المنح</h1>
           <p class="page-description">صفحة تقديم عروض فرص المنح</p>
         </div>
 
-        <!-- أيقونة القائمة -->
         <div class="header-icons">
           <div class="settings-dropdown">
-
             <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="الإعدادات">
 
             <div class="dropdown-menu">
-              <a href="Inv02_Profile.html">الملف الشخصي</a>
+              <a href="Inv02_Profile.php">الملف الشخصي</a>
               <a href="#">التواصل والدعم</a>
             </div>
-
           </div>
         </div>
-
       </header>
 
-      <!-- أعلى الصفحة -->
       <div class="page-top">
-
-        <!-- زر إنشاء منحة جديدة -->
         <div class="create-btn-box">
-          <a href="Inv04_CreateScholarshipForm.html" class="create-btn">
+          <a href="Inv04_CreateScholarshipForm.php" class="create-btn">
             <span>+</span>
             <span>إنشاء عرض منحة جديدة</span>
           </a>
         </div>
-
       </div>
 
-      <!-- المحتوى الفارغ -->
       <div class="empty-state">
         <p>لم تقم بنشر منحة حتى الآن</p>
       </div>

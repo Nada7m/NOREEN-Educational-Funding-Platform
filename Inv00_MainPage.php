@@ -26,7 +26,7 @@
 
         <ul class="sidebar-menu">
           <li><a href="Inv00_MainPage.html" class="active">الرئيسية</a></li>
-          <li><a href="Inv04_CreateScholarship.html">عرض المنح</a></li>
+          <li><a href="Inv04_CreateScholarship.php">عرض المنح</a></li>
           <li><a href="#">إدارة المنح</a></li>
           <li><a href="#">المدفوعات</a></li>
         </ul>

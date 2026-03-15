@@ -11,17 +11,15 @@ body{
   direction:rtl;
 }
 
-/* 
-   التنسيقات العامة المشتركة في النظام
- */
+/* تنسيقات عامة */
 
-/* الهيكل العام */
 .layout{
   display:flex;
   min-height:100vh;
 }
 
 /* الشريط الجانبي */
+
 .sidebar{
   width:220px;
   height:100vh;
@@ -41,6 +39,7 @@ body{
 }
 
 /* الشعار */
+
 .sidebar-logo{
   height:82px;
   display:flex;
@@ -55,7 +54,8 @@ body{
   object-fit:contain;
 }
 
-/* القائمة */
+/* روابط القائمة */
+
 .sidebar-menu{
   list-style:none;
   margin-top:26px;
@@ -65,7 +65,6 @@ body{
   margin-bottom:12px;
 }
 
-/* روابط القائمة */
 .sidebar-menu a{
   color:#FFFFFF;
   font-size:17px;
@@ -77,13 +76,13 @@ body{
   position:relative;
 }
 
-/* العنصر النشط */
+/* الصفحة الحالية في القائمة */
+
 .sidebar-menu a.active{
   color:#70A0AF;
   background:rgba(255,255,255,0.12);
 }
 
-/* الخط الجانبي للعنصر النشط */
 .sidebar-menu a.active::after{
   content:"";
   position:absolute;
@@ -94,7 +93,8 @@ body{
   background:#70A0AF;
 }
 
-/* الجزء السفلي */
+/* الجزء السفلي من الشريط */
+
 .sidebar-bottom{
   padding:0 10px 8px;
   display:flex;
@@ -102,6 +102,7 @@ body{
 }
 
 /* زر تسجيل الخروج */
+
 .logout-btn{
   background:#F3E6DD;
   border:none;
@@ -127,7 +128,8 @@ body{
   object-fit:contain;
 }
 
-/* المحتوى الرئيسي */
+/* مساحة المحتوى */
+
 .main-content{
   margin-right:220px;
   width:calc(100% - 220px);
@@ -137,6 +139,7 @@ body{
 }
 
 /* الهيدر */
+
 .header{
   min-height:82px;
   position:sticky;
@@ -150,7 +153,8 @@ body{
   padding:10px 30px;
 }
 
-/* منطقة العنوان */
+/* عنوان الصفحة */
+
 .page-heading{
   display:flex;
   flex-direction:column;
@@ -173,13 +177,13 @@ body{
   line-height:1.6;
 }
 
-/* أيقونات الهيدر */
+/* أيقونة الإعدادات */
+
 .header-icons{
   display:flex;
   align-items:center;
 }
 
-/* القائمة المنسدلة */
 .settings-dropdown{
   position:relative;
   display:inline-block;
@@ -233,7 +237,8 @@ body{
   background:#f2f2f2;
 }
 
-/* مساحة الصفحة */
+/* مساحة الصفحة نفسها */
+
 .page{
   padding:30px;
 }
@@ -245,6 +250,8 @@ body{
   padding:25px 40px;
 }
 
+/* زر الرجوع */
+
 .back-btn{
   float:left;
   margin-bottom:20px;
@@ -254,30 +261,16 @@ body{
   width:42px;
   height:42px;
   cursor:pointer;
-<<<<<<< HEAD
-}
-.page-top{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 25px 40px 
-}
-
-.back-btn img{
-    width: 45px;
-    height: 45px;
-}
-
-=======
   object-fit:contain;
 }
 
-/* 
-   صفحة عرض المنح
-   Inv04_CreateScholarship.html
- */
+.back-btn img{
+  width:45px;
+  height:45px;
+}
 
->>>>>>> e6c65867a0fa8685c68f0bfabe109034db986098
+/* صفحة عرض المنح */
+
 .create-btn-box{
   margin-top:10px;
 }
@@ -299,30 +292,19 @@ body{
 }
 
 .empty-state{
-<<<<<<< HEAD
-    text-align: center;
-    margin-top: 220px;
-    color: #cfcfcf;
-    font-size: 28px;
-}
-
-color:#70A0AF;
-=======
   text-align:center;
   margin-top:220px;
   color:#cfcfcf;
   font-size:28px;
 }
 
-/* 
-   صفحة إنشاء عرض منحة
-   Inv04_CreateScholarshipForm.html*/
+/* صفحة إنشاء عرض منحة */
 
 .form-card{
   max-width:1110px;
   margin:0 auto;
-  background:#F8F8F8;
-  border-radius:6px;
+  background:#ffffff;
+  border-radius:8px;
   padding:26px 34px 30px;
   box-shadow:0 4px 18px rgba(0,0,0,0.05);
 }
@@ -337,7 +319,7 @@ color:#70A0AF;
 .form-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:24px 34px;
+  gap:24px 30px;
   align-items:start;
 }
 
@@ -360,9 +342,9 @@ color:#70A0AF;
 
 .field input[type="text"],
 .field input[type="date"],
-.field select,
-.field textarea{
+.field select{
   width:100%;
+  height:44px;
   border:1.5px solid #8FB4C9;
   background:#F8F8F8;
   padding:10px 14px;
@@ -372,10 +354,17 @@ color:#70A0AF;
   font-family:"Noto Kufi Arabic",sans-serif;
 }
 
-.field input[type="text"],
-.field input[type="date"],
-.field select{
-  height:46px;
+.field textarea{
+  width:100%;
+  min-height:250px;
+  border:1.5px solid #8FB4C9;
+  background:#F8F8F8;
+  padding:12px 14px;
+  font-size:14px;
+  color:#222;
+  outline:none;
+  resize:none;
+  font-family:"Noto Kufi Arabic",sans-serif;
 }
 
 .field input:focus,
@@ -383,12 +372,6 @@ color:#70A0AF;
 .field textarea:focus{
   border-color:#6E4A8E;
   background:#ffffff;
-}
-
-.field textarea{
-  min-height:305px;
-  resize:none;
-  padding-top:14px;
 }
 
 .field input::placeholder,
@@ -507,37 +490,7 @@ color:#70A0AF;
   cursor:pointer;
 }
 
-@media (max-width: 950px){
-  .sidebar{
-    position:relative;
-    width:100%;
-    height:auto;
-  }
-
-  .main-content{
-    margin-right:0;
-    width:100%;
-  }
-
-  .layout{
-    flex-direction:column;
-  }
-
-  .page-top{
-    padding:20px;
-  }
-
-  .form-grid{
-    grid-template-columns:1fr;
-  }
-
-  .form-submit-btn{
-    min-width:100%;
-  }
->>>>>>> e6c65867a0fa8685c68f0bfabe109034db986098
-}
-
-/* ===== تعديل بيانات الجهة الاستثمارية ===== */
+/* صفحة تعديل بيانات الجهة */
 
 .profile-content{
   padding:35px 40px 55px;
@@ -706,4 +659,41 @@ color:#70A0AF;
 .success{
   background:#f1fff3;
   color:#1f7a2e;
+}
+
+@media (max-width: 950px){
+  .sidebar{
+    position:relative;
+    width:100%;
+    height:auto;
+  }
+
+  .main-content{
+    margin-right:0;
+    width:100%;
+  }
+
+  .layout{
+    flex-direction:column;
+  }
+
+  .page-top{
+    padding:20px;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .form-submit-btn{
+    min-width:100%;
+  }
+
+  .form-boxes{
+    flex-direction:column;
+  }
+
+  .edit-wrapper{
+    width:100%;
+  }
 }
