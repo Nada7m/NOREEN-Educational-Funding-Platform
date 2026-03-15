@@ -11,6 +11,10 @@ body{
   direction:rtl;
 }
 
+/* 
+   التنسيقات العامة المشتركة في النظام
+ */
+
 /* الهيكل العام */
 .layout{
   display:flex;
@@ -48,6 +52,7 @@ body{
 .sidebar-logo img{
   width:120px;
   height:auto;
+  object-fit:contain;
 }
 
 /* القائمة */
@@ -91,7 +96,7 @@ body{
 
 /* الجزء السفلي */
 .sidebar-bottom{
-  padding:0px 10px 8px;
+  padding:0 10px 8px;
   display:flex;
   justify-content:center;
 }
@@ -151,6 +156,7 @@ body{
   flex-direction:column;
   align-items:flex-start;
   justify-content:center;
+  text-align:right;
 }
 
 .page-title{
@@ -193,6 +199,7 @@ body{
   height:32px;
   cursor:pointer;
   display:block;
+  object-fit:contain;
 }
 
 .dropdown-menu{
@@ -219,6 +226,7 @@ body{
   color:#333333;
   font-size:14px;
   transition:background .2s;
+  text-align:right;
 }
 
 .dropdown-menu a:hover{
@@ -230,6 +238,13 @@ body{
   padding:30px;
 }
 
+.page-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:25px 40px;
+}
+
 .back-btn{
   float:left;
   margin-bottom:20px;
@@ -239,35 +254,259 @@ body{
   width:42px;
   height:42px;
   cursor:pointer;
-}
-   .page-top{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 25px 40px;
+  object-fit:contain;
 }
 
-/* زر إنشاء منحة */
+/* 
+   صفحة عرض المنح
+   Inv04_CreateScholarship.html
+ */
+
 .create-btn-box{
-    margin-top: 10px;
+  margin-top:10px;
 }
 
 .create-btn{
-    background: #3E2454;
-    color: white;
-    text-decoration: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
+  background:#3E2454;
+  color:white;
+  padding:10px 20px;
+  border-radius:4px;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size:14px;
+  font-weight:600;
 }
 
-/* حالة عدم وجود منح */
+.create-btn:hover{
+  opacity:.95;
+}
+
 .empty-state{
-    text-align: center;
-    margin-top: 220px;
-    color: #cfcfcf;
-    font-size: 28px;
+  text-align:center;
+  margin-top:220px;
+  color:#cfcfcf;
+  font-size:28px;
+}
+
+/* 
+   صفحة إنشاء عرض منحة
+   Inv04_CreateScholarshipForm.html*/
+
+.form-card{
+  max-width:1110px;
+  margin:0 auto;
+  background:#F8F8F8;
+  border-radius:6px;
+  padding:26px 34px 30px;
+  box-shadow:0 4px 18px rgba(0,0,0,0.05);
+}
+
+.intro-text{
+  text-align:center;
+  font-size:15px;
+  color:#222;
+  margin-bottom:18px;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:24px 34px;
+  align-items:start;
+}
+
+.field{
+  margin-bottom:16px;
+}
+
+.field label{
+  display:block;
+  font-size:15px;
+  font-weight:500;
+  margin-bottom:8px;
+  color:#191919;
+  line-height:1.8;
+}
+
+.required{
+  color:#d34343;
+}
+
+.field input[type="text"],
+.field input[type="date"],
+.field select,
+.field textarea{
+  width:100%;
+  border:1.5px solid #8FB4C9;
+  background:#F8F8F8;
+  padding:10px 14px;
+  font-size:14px;
+  color:#222;
+  outline:none;
+  font-family:"Noto Kufi Arabic",sans-serif;
+}
+
+.field input[type="text"],
+.field input[type="date"],
+.field select{
+  height:46px;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+  border-color:#6E4A8E;
+  background:#ffffff;
+}
+
+.field textarea{
+  min-height:305px;
+  resize:none;
+  padding-top:14px;
+}
+
+.field input::placeholder,
+.field textarea::placeholder,
+.field select{
+  color:#c9c9c9;
+}
+
+.radio-group{
+  display:grid;
+  grid-template-columns:repeat(2,max-content);
+  gap:8px 40px;
+  padding:4px 6px 0 0;
+  margin-bottom:8px;
+}
+
+.radio-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:15px;
+  color:#151515;
+}
+
+.radio-item input{
+  width:14px;
+  height:14px;
+  accent-color:#4E2E65;
+}
+
+.confirm-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:15px;
+  color:#171717;
+  margin-top:16px;
+}
+
+.confirm-row input{
+  width:15px;
+  height:15px;
+}
+
+.form-submit-box{
+  margin-top:22px;
+}
+
+.form-submit-btn{
+  background:#4A2B63;
+  color:white;
+  border:none;
+  padding:12px 20px;
+  border-radius:4px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:15px;
+  font-weight:700;
+  min-width:320px;
+  cursor:pointer;
+}
+
+.form-submit-btn:hover{
+  opacity:.95;
+}
+
+.error-text{
+  display:none;
+  margin-top:14px;
+  color:#C0392B;
+  font-size:14px;
+  font-weight:600;
+}
+
+.success-modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.35);
+  justify-content:center;
+  align-items:center;
+  z-index:2000;
+}
+
+.success-box{
+  background:#ffffff;
+  width:420px;
+  max-width:90%;
+  border-radius:12px;
+  padding:28px 24px;
+  text-align:center;
+  box-shadow:0 8px 20px rgba(0,0,0,0.15);
+}
+
+.success-box h2{
+  color:#4A2B63;
+  font-size:22px;
+  margin-bottom:12px;
+}
+
+.success-box p{
+  color:#333;
+  font-size:15px;
+  line-height:1.9;
+  margin-bottom:18px;
+}
+
+.success-btn{
+  background:#4A2B63;
+  color:#fff;
+  border:none;
+  border-radius:6px;
+  padding:10px 24px;
+  font-size:14px;
+  cursor:pointer;
+}
+
+@media (max-width: 950px){
+  .sidebar{
+    position:relative;
+    width:100%;
+    height:auto;
+  }
+
+  .main-content{
+    margin-right:0;
+    width:100%;
+  }
+
+  .layout{
+    flex-direction:column;
+  }
+
+  .page-top{
+    padding:20px;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .form-submit-btn{
+    min-width:100%;
+  }
 }

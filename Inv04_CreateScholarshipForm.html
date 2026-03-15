@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>إنشاء عرض منحة جديدة</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="CSS01Layout.css">
+</head>
+<body>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="sidebar-logo">
+          <img src="شعار نورين.png" alt="نورين">
+        </div>
+
+        <ul class="sidebar-menu">
+          <li><a href="Inv00_MainPage.html">الرئيسية</a></li>
+          <li><a href="Inv04_CreateScholarshipForm.html" class="active">عرض المنح</a></li>
+          <li><a href="#">إدارة المنح</a></li>
+          <li><a href="#">المدفوعات</a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-bottom">
+        <button class="logout-btn" type="button">
+          <img src="ايقونة تسجيل الخروج.png" class="logout-icon" alt="تسجيل الخروج">
+          <span>تسجيل الخروج</span>
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <div class="page-heading">
+          <h1 class="page-title">إنشاء عرض منحة جديدة</h1>
+          <p class="page-description">صفحة تقديم عروض فرص المنح</p>
+        </div>
+
+        <div class="header-icons">
+          <div class="settings-dropdown">
+            <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="الإعدادات">
+
+            <div class="dropdown-menu">
+              <a href="Inv02_Profile.html">الملف الشخصي</a>
+              <a href="#">التواصل والدعم</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="page">
+        <div class="page-top">
+          <div></div>
+
+          <div class="back-btn">
+            <a href="Inv04_CreateScholarship.html">
+              <img src="سهم تراجع.svg" alt="رجوع" class="back-icon">
+            </a>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <div class="intro-text">
+            يرجى إدخال تفاصيل المنحة بدقة قبل نشرها للمستفيدين
+          </div>
+
+          <form id="scholarshipForm">
+            <div class="form-grid">
+
+              <div>
+                <div class="field">
+                  <label><span class="required">*</span> اسم برنامج المنحة الدراسية</label>
+                  <input type="text" id="programName" placeholder="مثال: منحة الدراسات العليا في الهندسة الصناعية">
+                </div>
+
+                <div class="field">
+                  <label><span class="required">*</span> المجال الرئيسي</label>
+                  <select id="mainField">
+                    <option value="" selected>اختر المجال العام للبرنامج</option>
+                    <option>الهندسة</option>
+                    <option>تقنية المعلومات</option>
+                    <option>إدارة الأعمال</option>
+                    <option>العلوم الصحية</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label><span class="required">*</span> اختر المرحلة الدراسية التي تستهدفها المنحة</label>
+                  <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="stage" value="ماجستير"> ماجستير</label>
+                    <label class="radio-item"><input type="radio" name="stage" value="دكتوراه"> دكتوراه</label>
+                    <label class="radio-item"><input type="radio" name="stage" value="بكالوريوس"> بكالوريوس</label>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label><span class="required">*</span> حدد تاريخ انتهاء فترة التقديم على المنحة المعروضة</label>
+                  <input type="date" id="endDate">
+                </div>
+
+                <label class="confirm-row">
+                  <input type="checkbox" id="confirmData">
+                  <span>أقر بصحة جميع المعلومات المدخلة في هذا النموذج</span>
+                </label>
+              </div>
+
+              <div>
+                <div class="field">
+                  <label>الرجاء إدخال التخصصات الدقيقة المشمولة ضمن البرنامج.</label>
+                  <input type="text" id="specializations" placeholder="مثال: هندسة البرمجيات، الأمن السيبراني، تحليل البيانات">
+                </div>
+
+                <div class="field">
+                  <label>متطلبات القبول في البرنامج</label>
+                  <textarea id="requirements" placeholder="اكتب متطلبات القبول (معدل، لغة، خبرة...)"></textarea>
+                </div>
+
+                <div class="form-submit-box">
+                  <button class="form-submit-btn" type="submit">إنشاء عرض منحة</button>
+                  <p id="errorText" class="error-text">يرجى تعبئة جميع الحقول المطلوبة وتأكيد صحة البيانات.</p>
+                </div>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="successMessage" class="success-modal">
+    <div class="success-box">
+      <h2>تم نشر عرض المنحة بنجاح</h2>
+      <p>أصبح عرض المنحة متاحًا الآن للمستفيدين، ويمكنهم الاطلاع عليه والتقديم عليه.</p>
+      <button type="button" class="success-btn" onclick="closeMessage()">حسنًا</button>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("scholarshipForm");
+    const successMessage = document.getElementById("successMessage");
+    const errorText = document.getElementById("errorText");
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const programName = document.getElementById("programName").value.trim();
+      const mainField = document.getElementById("mainField").value;
+      const endDate = document.getElementById("endDate").value;
+      const confirmData = document.getElementById("confirmData").checked;
+      const selectedStage = document.querySelector('input[name="stage"]:checked');
+
+      if (programName === "" || mainField === "" || !selectedStage || endDate === "" || !confirmData) {
+        errorText.style.display = "block";
+        successMessage.style.display = "none";
+      } else {
+        errorText.style.display = "none";
+        successMessage.style.display = "flex";
+        form.reset();
+      }
+    });
+
+    function closeMessage() {
+      successMessage.style.display = "none";
+    }
+  </script>
+
+</body>
+</html>

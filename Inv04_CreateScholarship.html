@@ -18,7 +18,6 @@
 
 <body>
 
-  <!-- الهيكل العام -->
   <div class="layout">
 
     <!-- الشريط الجانبي -->
@@ -79,29 +78,22 @@
 
       </header>
 
-    <div class="page-top">
+      <!-- أعلى الصفحة -->
+      <div class="page-top">
 
-  <!-- زر إنشاء منحة جديدة -->
-  <div class="create-btn-box">
-    <a href="Inv04_CreateScholarship.html" class="create-btn">
-      <span>+</span>
-      <span>إنشاء عرض منحة جديدة</span>
-    </a>
-  </div>
-
-  <!-- زر الرجوع -->
-  <div class="back-btn">
-    <a href="Inv00_MainPage.html">
-      <img src="سهم تراجع.svg"رجوع">
-    </a>
-  </div>
-
-</div>
-        <!-- المحتوى الفارغ -->
-        <div class="empty-state">
-          <p>لم تقم بنشر منحة حتى الآن</p>
+        <!-- زر إنشاء منحة جديدة -->
+        <div class="create-btn-box">
+          <a href="Inv04_CreateScholarshipForm.html" class="create-btn">
+            <span>+</span>
+            <span>إنشاء عرض منحة جديدة</span>
+          </a>
         </div>
 
+      </div>
+
+      <!-- المحتوى الفارغ -->
+      <div class="empty-state">
+        <p>لم تقم بنشر منحة حتى الآن</p>
       </div>
 
     </div>
