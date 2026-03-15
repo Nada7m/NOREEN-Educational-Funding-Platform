@@ -1,38 +1,51 @@
 <?php
 
+// الاتصال بقاعدة البيانات
 $con = mysqli_connect("localhost","root","","noreen");
 
+// متغيرات لرسالة النجاح أو الخطأ
 $msg = "";
 $type = "";
 
+// التحقق إذا تم الضغط على زر إنشاء الحساب
 if(isset($_POST["save"])){
 
-$office = $_POST["office_name"];
-$ccr = $_POST["ccr_number"];
-$email = $_POST["email"];
-$desc = $_POST["office_description"];
-$bachelor = $_POST["bachelor_fee"];
-$master = $_POST["master_fee"];
-$phd = $_POST["phd_fee"];
-$phone = $_POST["phone"];
-$pass = $_POST["password"];
+// استقبال البيانات من الفورم
+$office = $_POST["office_name"]; // اسم المكتب
+$ccr = $_POST["ccr_number"]; // رقم السجل التجاري
+$email = $_POST["email"]; // البريد الإلكتروني
+$desc = $_POST["office_description"]; // وصف المكتب
+$bachelor = $_POST["bachelor_fee"]; // رسوم البكالوريوس
+$master = $_POST["master_fee"]; // رسوم الماجستير
+$phd = $_POST["phd_fee"]; // رسوم الدكتوراه
+$phone = $_POST["phone"]; // رقم الهاتف
+$pass = $_POST["password"]; // كلمة المرور
+
+// استقبال الدول المختارة كمصفوفة
 $countries = isset($_POST["country"]) ? $_POST["country"] : [];
 
+// التحقق من عدم تكرار البريد الإلكتروني
 $checkEmail = mysqli_query($con,"SELECT * FROM consulting_office WHERE email='$email'");
+
+// التحقق من عدم تكرار السجل التجاري
 $checkCcr = mysqli_query($con,"SELECT * FROM consulting_office WHERE ccr_number='$ccr'");
 
 if(mysqli_num_rows($checkEmail) > 0){
 $msg = "البريد الإلكتروني مستخدم مسبقًا.";
 $type = "error";
 }
+
 else if(mysqli_num_rows($checkCcr) > 0){
 $msg = "رقم السجل التجاري مسجل مسبقًا.";
 $type = "error";
 }
+
 else{
 
+// تشفير كلمة المرور للحماية
 $newpass = password_hash($pass, PASSWORD_DEFAULT);
 
+// إدخال بيانات المكتب في جدول consulting_office
 $sql = "INSERT INTO consulting_office
 (ccr_number,email,office_name,office_description,Bachelor_fee,Masters_fee,Phd_fee,password,phone)
 VALUES
@@ -40,16 +53,20 @@ VALUES
 
 if(mysqli_query($con,$sql)){
 
-    $office_id = mysqli_insert_id($con);
+// الحصول على رقم المكتب الذي تم إدخاله
+$office_id = mysqli_insert_id($con);
 
-    foreach($countries as $oneCountry){
-        $sql_country = "INSERT INTO office_country (office_id, con_name)
-                        VALUES ('$office_id', '$oneCountry')";
-        mysqli_query($con, $sql_country);
-    }
+// إدخال الدول المختارة وربطها بالمكتب
+foreach($countries as $oneCountry){
 
-    $msg = "تم إنشاء الحساب بنجاح.";
-    $type = "success";
+$sql_country = "INSERT INTO office_country (office_id, con_name)
+VALUES ('$office_id', '$oneCountry')";
+
+mysqli_query($con, $sql_country);
+}
+
+$msg = "تم إنشاء الحساب بنجاح.";
+$type = "success";
 }
 else{
 $msg = "حدث خطأ أثناء حفظ البيانات.";
@@ -70,10 +87,19 @@ $type = "error";
 <meta charset="UTF-8">
 <title>إنشاء حساب مكتب استشاري</title>
 
+<!-- خط عربي -->
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic&display=swap" rel="stylesheet">
+
+<!-- مكتبة select2 -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- ملف التنسيقات -->
 <link rel="stylesheet" href="Style.css">
+
+<!-- مكتبة jquery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- مكتبة select2 -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 </head>
@@ -139,6 +165,7 @@ $type = "error";
 
 <label><span class="star">*</span> الدول</label>
 
+<!-- قائمة الدول ويمكن اختيار أكثر من دولة -->
 <select id="country" name="country[]" multiple>
 
 <option value="امريكا">امريكا</option>
@@ -156,6 +183,7 @@ $type = "error";
 <option value="كندا">كندا</option>
 <option value="استراليا">استراليا</option>
 <option value="جنوب افريقيا">جنوب افريقيا</option>
+
 <option value="اسبانيا">اسبانيا</option>
 <option value="ايطاليا">ايطاليا</option>
 <option value="هولندا">هولندا</option>
@@ -172,17 +200,20 @@ $type = "error";
 <option value="البرتغال">البرتغال</option>
 <option value="اليونان">اليونان</option>
 <option value="روسيا">روسيا</option>
+
 <option value="كوريا الجنوبية">كوريا الجنوبية</option>
 <option value="سنغافورة">سنغافورة</option>
 <option value="تايلاند">تايلاند</option>
 <option value="اندونيسيا">اندونيسيا</option>
 <option value="الفلبين">الفلبين</option>
 <option value="فيتنام">فيتنام</option>
+
 <option value="مصر">مصر</option>
 <option value="الامارات">الامارات</option>
 <option value="الكويت">الكويت</option>
 <option value="قطر">قطر</option>
 <option value="الاردن">الاردن</option>
+
 </select>
 
 <div class="errorText" id="countryError"></div>
@@ -190,7 +221,6 @@ $type = "error";
 </div>
 
 </div>
-
 <div class="row">
 
 <div class="field" style="width:100%">
@@ -256,7 +286,6 @@ $type = "error";
 
 </div>
 </div>
-
 <script>
 
 $(document).ready(function(){
