@@ -1,3 +1,106 @@
+<?php
+session_start();
+
+/* الاتصال بقاعدة البيانات */
+$con = mysqli_connect("localhost", "root", "", "noreen");
+
+if (!$con) {
+    die("فشل الاتصال بقاعدة البيانات");
+}
+
+/* رسالة النظام */
+$msg = "";
+$type = "";
+
+/* التحقق من وجود مستثمر مسجل دخول */
+if (!isset($_SESSION["inv_id"])) {
+    die("يجب تسجيل الدخول أولاً.");
+}
+
+/* رقم المستثمر الحالي */
+$inv_id = $_SESSION["inv_id"];
+
+/* عند الضغط على حفظ التغييرات */
+if (isset($_POST["save"])) {
+
+    $name  = trim($_POST["orgName"]);
+    $ccr   = trim($_POST["commercial"]);
+    $field = trim($_POST["companyField"]);
+    $phone = trim($_POST["phone"]);
+    $email = trim($_POST["email"]);
+    $pass  = trim($_POST["password"]);
+    $pass2 = trim($_POST["confirmPassword"]);
+
+    if ($name == "" || $ccr == "" || $phone == "" || $email == "") {
+        $msg = "يرجى تعبئة جميع الحقول المطلوبة.";
+        $type = "error";
+    } elseif (!preg_match("/^[0-9]{10}$/", $ccr)) {
+        $msg = "رقم السجل التجاري يجب أن يكون 10 أرقام.";
+        $type = "error";
+    } elseif (!preg_match("/^[0-9]{10}$/", $phone)) {
+        $msg = "رقم الهاتف يجب أن يكون 10 أرقام.";
+        $type = "error";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $msg = "يرجى إدخال بريد إلكتروني صحيح.";
+        $type = "error";
+    } elseif ($pass != "" && $pass != $pass2) {
+        $msg = "كلمتا المرور غير متطابقتين.";
+        $type = "error";
+    } else {
+
+        /* التحقق من تكرار البريد */
+        $stmtEmail = mysqli_prepare($con, "SELECT inv_id FROM investor WHERE email = ? AND inv_id != ?");
+        mysqli_stmt_bind_param($stmtEmail, "si", $email, $inv_id);
+        mysqli_stmt_execute($stmtEmail);
+        $resultEmail = mysqli_stmt_get_result($stmtEmail);
+
+        /* التحقق من تكرار السجل التجاري */
+        $stmtCcr = mysqli_prepare($con, "SELECT inv_id FROM investor WHERE ccr_number = ? AND inv_id != ?");
+        mysqli_stmt_bind_param($stmtCcr, "si", $ccr, $inv_id);
+        mysqli_stmt_execute($stmtCcr);
+        $resultCcr = mysqli_stmt_get_result($stmtCcr);
+
+        if (mysqli_num_rows($resultEmail) > 0) {
+            $msg = "البريد الإلكتروني مستخدم مسبقًا.";
+            $type = "error";
+        } elseif (mysqli_num_rows($resultCcr) > 0) {
+            $msg = "رقم السجل التجاري مسجل مسبقًا.";
+            $type = "error";
+        } else {
+
+            if ($pass != "") {
+                $newpass = password_hash($pass, PASSWORD_DEFAULT);
+
+                $stmtUpdate = mysqli_prepare($con, "UPDATE investor SET inv_name = ?, ccr_number = ?, inv_number = ?, email = ?, password = ? WHERE inv_id = ?");
+                mysqli_stmt_bind_param($stmtUpdate, "sssssi", $name, $ccr, $phone, $email, $newpass, $inv_id);
+            } else {
+                $stmtUpdate = mysqli_prepare($con, "UPDATE investor SET inv_name = ?, ccr_number = ?, inv_number = ?, email = ? WHERE inv_id = ?");
+                mysqli_stmt_bind_param($stmtUpdate, "ssssi", $name, $ccr, $phone, $email, $inv_id);
+            }
+
+            if (mysqli_stmt_execute($stmtUpdate)) {
+                $msg = "تم حفظ التغييرات بنجاح.";
+                $type = "success";
+            } else {
+                $msg = "حدث خطأ أثناء حفظ البيانات.";
+                $type = "error";
+            }
+        }
+    }
+}
+
+/* جلب بيانات المستثمر الحالي */
+$stmtData = mysqli_prepare($con, "SELECT * FROM investor WHERE inv_id = ?");
+mysqli_stmt_bind_param($stmtData, "i", $inv_id);
+mysqli_stmt_execute($stmtData);
+$data = mysqli_stmt_get_result($stmtData);
+$row = mysqli_fetch_assoc($data);
+
+if (!$row) {
+    die("لم يتم العثور على بيانات المستثمر.");
+}
+?>
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>

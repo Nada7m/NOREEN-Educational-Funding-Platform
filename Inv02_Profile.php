@@ -1,29 +1,24 @@
 <?php
 session_start();
 
-/* التحقق من تسجيل دخول المستثمر */
 if (!isset($_SESSION['inv_id'])) {
     header("Location: login.php");
     exit();
 }
 
-/* الاتصال بقاعدة البيانات */
 $conn = new mysqli("localhost", "root", "", "noreen");
 
 if ($conn->connect_error) {
     die("فشل الاتصال بقاعدة البيانات");
 }
 
-/* جلب رقم المستثمر من الجلسة */
 $inv_id = $_SESSION['inv_id'];
 
-/* استعلام جلب بيانات المستثمر */
-$stmt = $conn->prepare("SELECT company_name, commercial_no, company_field, phone, email, password FROM investor WHERE inv_id = ?");
+$stmt = $conn->prepare("SELECT inv_name, inv_number, ccr_number, email, password FROM investor WHERE inv_id = ?");
 $stmt->bind_param("i", $inv_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
-/* التحقق من وجود البيانات */
 if ($result->num_rows > 0) {
     $investor = $result->fetch_assoc();
 } else {
@@ -219,8 +214,10 @@ if ($result->num_rows > 0) {
                 </div>
 
                 <!-- زر تعديل البيانات -->
-                <button class="edit-btn">تعديل البيانات</button>
-
+                
+<a href="Inv03_EditProfile.php" class="edit-btn ">
+ تعديل البيانات
+</a>
             </div>
 
         </div>
