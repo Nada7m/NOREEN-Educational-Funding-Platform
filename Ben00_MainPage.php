@@ -1,3 +1,14 @@
+<?php
+session_start();
+
+/* التحقق من تسجيل دخول المستفيد */
+if (!isset($_SESSION['bnf_id'])) {
+    header("Location: login.php");
+    exit();
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <meta charset="UTF-8">
@@ -25,23 +36,24 @@
         </div>
 
         <ul class="sidebar-menu">
-          <li><a href="Ben00_MainPage.html" class="active">الرئيسية</a></li>
-          <li><a href="Ben04_BrowseScholarships.html">التقديم على المنح</a></li>
-          <li><a href="Ben0_TrackScholarship.html">متابعة المنح</a></li>
-          <li><a href="Ben0_ConsultingOffices.html">المكاتب الاستشارية</a></li>
-          <li><a href="Ben0_AcceptanceRequests.html">طلبات إصدار القبول</a></li>
-          <li><a href="Ben0_Consultations.html">الاستشارات</a></li>
+          <li><a href="Ben00_MainPage.php" class="active">الرئيسية</a></li>
+          <li><a href="Ben04_BrowseScholarships.php">التقديم على المنح</a></li>
+          <li><a href="Ben09_TrackScholarship.php">متابعة المنح</a></li>
+          <li><a href="Ben013_ConsultingOffices.php">المكاتب الاستشارية</a></li>
+          <li><a href="Ben0_AcceptanceRequests.php">طلبات إصدار القبول</a></li>
+          <li><a href="Ben0_Consultations.php">الاستشارات</a></li>
         </ul>
 
       </div>
 
-      <div class="sidebar-bottom">
-        <button class="logout-btn">
-          <img src="ايقونة تسجيل الخروج.png" class="logout-icon">
-          <b>تسجيل الخروج</b>
-        </button>
-      </div>
-
+ <div class="sidebar-bottom">
+  <form action="logout.php" method="post">
+    <button type="submit" class="logout-btn">
+      <img src="ايقونة تسجيل الخروج.png" class="logout-icon">
+      <b>تسجيل الخروج</b>
+    </button>
+  </form>
+</div>
     </aside>
 
     <!-- المحتوى الرئيسي -->
@@ -59,8 +71,8 @@
             <img src="ايقونة قائمة الاعدادات.png" class="menu-icon">
 
             <div class="dropdown-menu">
-              <a href="Ben02_Profile.html">الملف الشخصي</a>
-              <a href="Ben03_MyScholarshipWallet.html">محفظة منحتي</a>
+              <a href="Ben02_Profile.php">الملف الشخصي</a>
+              <a href="Ben03_MyScholarshipWallet.php">محفظة منحتي</a>
               <a href="#">التواصل والدعم</a>
             </div>
           </div>

@@ -3,7 +3,7 @@
 <meta charset="UTF-8">
 
 <head>
-  <title>التقديم على المنح</title>
+  <title>متابعة المنح</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="CSS01Layout.css">
@@ -23,8 +23,8 @@
 
         <ul class="sidebar-menu">
           <li><a href="Ben00_MainPage.php">الرئيسية</a></li>
-          <li><a href="Ben04_BrowseScholarships.php" class="active">التقديم على المنح</a></li>
-          <li><a href="Ben09_TrackScholarship.php">متابعة المنح</a></li>
+          <li><a href="Ben04_BrowseScholarships.php">التقديم على المنح</a></li>
+          <li><a href="Ben09_TrackScholarship.php" class="active">متابعة المنح</a></li>
           <li><a href="Ben013_ConsultingOffices.php">المكاتب الاستشارية</a></li>
           <li><a href="#">طلبات إصدار القبول</a></li>
           <li><a href="#">الاستشارات</a></li>
@@ -32,7 +32,7 @@
 
       </div>
 
-   <div class="sidebar-bottom">
+       <div class="sidebar-bottom">
   <form action="logout.php" method="post">
     <button type="submit" class="logout-btn">
       <img src="ايقونة تسجيل الخروج.png" class="logout-icon">
@@ -40,7 +40,6 @@
     </button>
   </form>
 </div>
-
     </aside>
 
     <div class="main-content">
@@ -48,8 +47,8 @@
       <header class="header">
 
         <div class="page-heading">
-          <div class="page-title">التقديم على المنح</div>
-          <div class="page-description">صفحة نموذج التقديم على المنحة</div>
+          <div class="page-title">متابعة المنح</div>
+          <div class="page-description">صفحة متابعة طلبات المنح الحالية</div>
         </div>
 
         <div class="header-icons">
@@ -69,13 +68,7 @@
 
       <div class="page">
 
-        <div class="back-wrap">
-          <a href="Ben05_ScholarshipDetails.php" class="back-btn">
-            <img src="سهم تراجع.svg" class="back-icon" alt="رجوع">
-          </a>
-        </div>
-
-        <!-- محتوى نموذج التقديم يوضع هنا -->
+        <!-- محتوى متابعة المنح يوضع هنا -->
 
       </div>
 

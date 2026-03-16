@@ -1,29 +1,44 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['inv_id'])) {
+/* التحقق من تسجيل دخول المستفيد */
+if (!isset($_SESSION['bnf_id'])) {
     header("Location: login.php");
     exit();
 }
 
+/* الاتصال بقاعدة البيانات */
 $conn = new mysqli("localhost", "root", "", "noreen");
 
 if ($conn->connect_error) {
     die("فشل الاتصال بقاعدة البيانات");
 }
 
-$inv_id = $_SESSION['inv_id'];
+/* دعم العربية */
+$conn->set_charset("utf8mb4");
 
-$stmt = $conn->prepare("SELECT inv_name, inv_number, ccr_number, email, password FROM investor WHERE inv_id = ?");
-$stmt->bind_param("i", $inv_id);
+/* جلب رقم المستفيد من الجلسة */
+$bnf_id = $_SESSION['bnf_id'];
+
+/* استعلام جلب بيانات المستفيد */
+$stmt = $conn->prepare("
+    SELECT f_name, l_name, sch_field, degree_level, phone_num, email
+    FROM beneficiary
+    WHERE bnf_id = ?
+");
+$stmt->bind_param("i", $bnf_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
+/* التحقق من وجود البيانات */
 if ($result->num_rows > 0) {
-    $investor = $result->fetch_assoc();
+    $beneficiary = $result->fetch_assoc();
 } else {
-    die("لم يتم العثور على بيانات المستثمر");
+    die("لم يتم العثور على بيانات المستفيد");
 }
+
+$stmt->close();
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -37,7 +52,7 @@ if ($result->num_rows > 0) {
 
 <style>
 
-/* تنسيق مساحة الصفحة */
+/* الصفحة */
 .page{
     padding:40px;
     font-family:"Noto Kufi Arabic", sans-serif;
@@ -53,7 +68,7 @@ if ($result->num_rows > 0) {
     box-shadow:0 3px 10px rgba(0,0,0,0.08);
 }
 
-/* اسم الشركة */
+/* اسم المستفيد */
 .profile-box h2{
     text-align:center;
     margin-bottom:15px;
@@ -61,7 +76,7 @@ if ($result->num_rows > 0) {
     color:#4b2a63;
 }
 
-/* الخط أسفل اسم الشركة */
+/* الخط أسفل الاسم */
 .line{
     width:100%;
     height:1px;
@@ -94,17 +109,6 @@ if ($result->num_rows > 0) {
     display:flex;
     align-items:center;
     gap:10px;
-    flex-wrap:wrap;
-}
-
-/* زر إظهار كلمة المرور */
-.show-btn{
-    background:#eee;
-    border:none;
-    padding:6px 12px;
-    border-radius:6px;
-    cursor:pointer;
-    font-size:13px;
 }
 
 /* زر تعديل البيانات */
@@ -119,6 +123,15 @@ if ($result->num_rows > 0) {
     cursor:pointer;
 }
 
+/* تنسيق العناوين داخل البيانات */
+label , .field{
+    font-weight:600;
+}
+
+/* إزالة مارجن الفقرة داخل صف كلمة المرور */
+.password-box p{
+    margin:0;
+}
 </style>
 </head>
 
@@ -138,10 +151,12 @@ if ($result->num_rows > 0) {
 
             <!-- روابط التنقل -->
             <ul class="sidebar-menu">
-                <li><a href="Inv00_MainPage.php">الرئيسية</a></li>
-                <li><a href="Inv04_CreateScholarship.php">عرض المنح</a></li>
-                <li><a href="#">إدارة المنح</a></li>
-                <li><a href="#">المدفوعات</a></li>
+                <li><a href="Ben00_MainPage.php">الرئيسية</a></li>
+                 <li><a href="Ben04_BrowseScholarships.php">التقديم على المنح</a></li>
+          <li><a href="Ben09_TrackScholarship.php">متابعة المنح</a></li>
+          <li><a href="Ben013_ConsultingOffices.php">المكاتب الاستشارية</a></li>
+                <li><a href="#">طلبات إصدار القبول</a></li>
+                <li><a href="#">الاستشارات</a></li>
             </ul>
 
         </div>
@@ -172,7 +187,7 @@ if ($result->num_rows > 0) {
                     <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="القائمة">
 
                     <div class="dropdown-menu">
-                        <a href="Inv02_Profile.php">الملف الشخصي</a>
+                        <a href="Ben02_Profile.php">الملف الشخصي</a>
                         <a href="#">التواصل والدعم</a>
                     </div>
 
@@ -186,39 +201,40 @@ if ($result->num_rows > 0) {
 
             <div class="profile-box">
 
-                <!-- اسم الشركة -->
-                <h2><?php echo htmlspecialchars($investor['company_name']); ?></h2>
+                <!-- اسم المستفيد -->
+                <h2><?php echo htmlspecialchars($beneficiary['f_name'] . " " . $beneficiary['l_name']); ?></h2>
 
-                <!-- خط أسفل اسم الشركة -->
+                <!-- خط أسفل الاسم -->
                 <div class="line"></div>
 
-                <!-- بيانات الشركة -->
+                <!-- بيانات المستفيد -->
                 <div class="profile-section">
-                    <h3>بيانات الشركة</h3>
+                    <h3>بيانات المستفيد</h3>
 
-                    <p><strong>رقم السجل التجاري:</strong> <?php echo htmlspecialchars($investor['commercial_no']); ?></p>
-                    <p><strong>مجال نشاط الشركة:</strong> <?php echo htmlspecialchars($investor['company_field']); ?></p>
-                    <p><strong>رقم الهاتف:</strong> <?php echo htmlspecialchars($investor['phone']); ?></p>
+                    <p><label>المجال الدراسي:</label> <?php echo htmlspecialchars($beneficiary['sch_field']); ?></p>
+                    <p><label>المؤهل الدراسي:</label> <?php echo htmlspecialchars($beneficiary['degree_level']); ?></p>
+                    <p><label>رقم الهاتف:</label> <?php echo htmlspecialchars($beneficiary['phone_num']); ?></p>
                 </div>
 
                 <!-- بيانات الحساب -->
                 <div class="profile-section">
                     <h3>بيانات الحساب</h3>
 
-                    <p><strong>البريد الإلكتروني:</strong> <?php echo htmlspecialchars($investor['email']); ?></p>
+                    <p class="field">
+                        البريد الإلكتروني: <?php echo htmlspecialchars($beneficiary['email']); ?>
+                    </p>
 
                     <div class="password-box">
-                        <strong>كلمة المرور:</strong>
-                        <span id="password">********</span>
-                        <button class="show-btn" onclick="togglePassword()">إظهار</button>
+                        <label>كلمة المرور:</label>
+                        <p>********</p>
                     </div>
                 </div>
 
                 <!-- زر تعديل البيانات -->
-                
-<a href="Inv03_EditProfile.php" class="edit-btn ">
- تعديل البيانات
-</a>
+                <button type="button" class="edit-btn" onclick="window.location.href='Ben03_EditProfile.php'">
+                    تعديل البيانات
+                </button>
+
             </div>
 
         </div>
@@ -226,19 +242,6 @@ if ($result->num_rows > 0) {
     </div>
 
 </div>
-
-<script>
-/* إظهار وإخفاء كلمة المرور */
-function togglePassword() {
-    let pass = document.getElementById("password");
-
-    if (pass.innerHTML === "********") {
-        pass.innerHTML = "<?php echo htmlspecialchars($investor['password']); ?>";
-    } else {
-        pass.innerHTML = "********";
-    }
-}
-</script>
 
 </body>
 </html>

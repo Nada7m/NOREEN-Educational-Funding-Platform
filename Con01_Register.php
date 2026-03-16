@@ -167,7 +167,6 @@ $type = "error";
 
 <!-- قائمة الدول ويمكن اختيار أكثر من دولة -->
 <select id="country" name="country[]" multiple>
-
 <option value="امريكا">امريكا</option>
 <option value="فرنسا">فرنسا</option>
 <option value="ايرلندا">ايرلندا</option>
@@ -183,7 +182,6 @@ $type = "error";
 <option value="كندا">كندا</option>
 <option value="استراليا">استراليا</option>
 <option value="جنوب افريقيا">جنوب افريقيا</option>
-
 <option value="اسبانيا">اسبانيا</option>
 <option value="ايطاليا">ايطاليا</option>
 <option value="هولندا">هولندا</option>
@@ -200,14 +198,12 @@ $type = "error";
 <option value="البرتغال">البرتغال</option>
 <option value="اليونان">اليونان</option>
 <option value="روسيا">روسيا</option>
-
 <option value="كوريا الجنوبية">كوريا الجنوبية</option>
 <option value="سنغافورة">سنغافورة</option>
 <option value="تايلاند">تايلاند</option>
 <option value="اندونيسيا">اندونيسيا</option>
 <option value="الفلبين">الفلبين</option>
 <option value="فيتنام">فيتنام</option>
-
 <option value="مصر">مصر</option>
 <option value="الامارات">الامارات</option>
 <option value="الكويت">الكويت</option>
