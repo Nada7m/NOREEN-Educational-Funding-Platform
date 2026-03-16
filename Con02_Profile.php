@@ -36,6 +36,24 @@ if ($result->num_rows > 0) {
 }
 
 $stmt->close();
+
+/* جلب الدول المرتبطة بالمكتب */
+$countryStmt = $conn->prepare("
+    SELECT con_name
+    FROM office_country
+    WHERE office_id = ?
+");
+$countryStmt->bind_param("i", $office_id);
+$countryStmt->execute();
+$countryResult = $countryStmt->get_result();
+
+$countries = [];
+
+while ($row = $countryResult->fetch_assoc()) {
+    $countries[] = $row['con_name'];
+}
+
+$countryStmt->close();
 $conn->close();
 ?>
 
@@ -46,7 +64,6 @@ $conn->close();
 <title>الملف الشخصي</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-
 <link rel="stylesheet" href="CSS01Layout.css">
 
 <style>
@@ -115,6 +132,22 @@ $conn->close();
     font-size:20px;
 }
 
+.countries-box{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:10px;
+}
+
+.country-tag{
+    background:#f3ecf9;
+    color:#4b2a63;
+    padding:8px 14px;
+    border-radius:20px;
+    font-size:14px;
+    font-weight:600;
+}
+
 .edit-wrap{
     text-align:left;
     margin-top:25px;
@@ -149,22 +182,23 @@ $conn->close();
                 <img src="شعار نورين.png" alt="شعار نورين">
             </div>
 
-            <ul class="sidebar-menu">
-                <li><a href="Con00_MainPage.php">الرئيسية</a></li>
-                <li><a href="#">طلبات إصدار القبول</a></li>
-                <li><a href="#">الخدمات</a></li>
-                <li><a href="#">الاستشارات</a></li>
-            </ul>
+          <ul class="sidebar-menu">
+          <li><a href="Con00_MainPage.php" class="active">الرئيسية</a></li>
+          <li><a href="Con0_AdmissionRequests.php">إدارة طلبات القبول</a></li>
+          <li><a href="Con0_Consultations.php">الاستشارات</a></li>
+          <li><a href="Con0_BeneficiaryRatings.php">تقييمات المستفيدين</a></li>
+        </ul>
 
         </div>
 
-        <div class="sidebar-bottom">
-            <button class="logout-btn">
-                <img src="ايقونة تسجيل الخروج.png" class="logout-icon" alt="تسجيل الخروج">
-                <span>تسجيل الخروج</span>
-            </button>
-        </div>
-    </aside>
+   <div class="sidebar-bottom">
+  <form action="logout.php" method="post">
+    <button type="submit" class="logout-btn">
+      <img src="ايقونة تسجيل الخروج.png" class="logout-icon">
+      <b>تسجيل الخروج</b>
+    </button>
+  </form>
+</div>   </aside>
 
     <div class="main-content">
 
@@ -198,6 +232,20 @@ $conn->close();
                     <p><label>السجل التجاري:</label> <?php echo htmlspecialchars($office['ccr_number']); ?></p>
                     <p><label>رقم الهاتف:</label> <?php echo htmlspecialchars($office['phone']); ?></p>
                     <p><label>وصف المكتب:</label> <?php echo htmlspecialchars($office['office_description']); ?></p>
+
+                    <p><label>الدول المتاحة:</label></p>
+
+                <div class="countries-box">
+<?php if (!empty($countries)) { ?>
+    <?php foreach ($countries as $country) { ?>
+        <div class="country-tag">
+            <?php echo htmlspecialchars($country); ?>
+        </div>
+    <?php } ?>
+<?php } else { ?>
+    <p>لا توجد دول مضافة</p>
+<?php } ?>
+</div>
                 </div>
 
                 <div class="profile-section">

@@ -152,13 +152,14 @@ if ($result->num_rows > 0) {
         </div>
 
         <!-- زر تسجيل الخروج -->
-        <div class="sidebar-bottom">
-            <button class="logout-btn">
-                <img src="ايقونة تسجيل الخروج.png" class="logout-icon" alt="تسجيل الخروج">
-                <span>تسجيل الخروج</span>
-            </button>
-        </div>
-
+   <div class="sidebar-bottom">
+  <form action="logout.php" method="post">
+    <button type="submit" class="logout-btn">
+      <img src="ايقونة تسجيل الخروج.png" class="logout-icon">
+      <b>تسجيل الخروج</b>
+    </button>
+  </form>
+</div>
     </aside>
 
     <div class="main-content">

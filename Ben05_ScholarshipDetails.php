@@ -24,20 +24,22 @@
         <ul class="sidebar-menu">
           <li><a href="Ben00_MainPage.php">الرئيسية</a></li>
           <li><a href="Ben04_BrowseScholarships.php" class="active">التقديم على المنح</a></li>
-          <li><a href="Ben07_ApplicationStatus.php">متابعة الطلب</a></li>
-          <li><a href="#">المكاتب الاستشارية</a></li>
+          <li><a href="Ben09_TrackScholarship.php">متابعة المنح</a></li>
+          <li><a href="Ben013_ConsultingOffices.php">المكاتب الاستشارية</a></li>
           <li><a href="#">طلبات إصدار القبول</a></li>
           <li><a href="#">الاستشارات</a></li>
         </ul>
 
       </div>
 
-      <div class="sidebar-bottom">
-        <button class="logout-btn">
-          <img src="ايقونة تسجيل الخروج.png" class="logout-icon" >
-          <span>تسجيل الخروج</span>
-        </button>
-      </div>
+       <div class="sidebar-bottom">
+  <form action="logout.php" method="post">
+    <button type="submit" class="logout-btn">
+      <img src="ايقونة تسجيل الخروج.png" class="logout-icon">
+      <b>تسجيل الخروج</b>
+    </button>
+  </form>
+</div>
 
     </aside>
 
