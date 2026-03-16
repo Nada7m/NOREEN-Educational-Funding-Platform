@@ -67,7 +67,7 @@ if ($result->num_rows > 0) {
 }
 
 /* الخط أسفل اسم الشركة */
-.company-line{
+.line{
     width:100%;
     height:1px;
     background:#d8cde2;
@@ -194,7 +194,7 @@ if ($result->num_rows > 0) {
                 <h2><?php echo htmlspecialchars($investor['company_name']); ?></h2>
 
                 <!-- خط أسفل اسم الشركة -->
-                <div class="company-line"></div>
+                <div class="line"></div>
 
                 <!-- بيانات الشركة -->
                 <div class="profile-section">
