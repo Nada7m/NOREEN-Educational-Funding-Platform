@@ -1,29 +1,45 @@
 <?php
 session_start();
 
+/* التحقق من تسجيل دخول المستثمر */
 if (!isset($_SESSION['inv_id'])) {
     header("Location: login.php");
     exit();
 }
 
+/* الاتصال بقاعدة البيانات */
 $conn = new mysqli("localhost", "root", "", "noreen");
 
 if ($conn->connect_error) {
     die("فشل الاتصال بقاعدة البيانات");
 }
 
+/* دعم العربية */
+$conn->set_charset("utf8mb4");
+
+/* جلب رقم المستثمر من الجلسة */
 $inv_id = $_SESSION['inv_id'];
 
-$stmt = $conn->prepare("SELECT inv_name, inv_number, ccr_number, email, password FROM investor WHERE inv_id = ?");
+/* استعلام جلب بيانات المستثمر */
+$stmt = $conn->prepare("
+    SELECT inv_name, ccr_number, inv_number, email
+    FROM investor
+    WHERE inv_id = ?
+");
+
 $stmt->bind_param("i", $inv_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
+/* التحقق من وجود البيانات */
 if ($result->num_rows > 0) {
     $investor = $result->fetch_assoc();
 } else {
     die("لم يتم العثور على بيانات المستثمر");
 }
+
+$stmt->close();
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -187,8 +203,7 @@ if ($result->num_rows > 0) {
             <div class="profile-box">
 
                 <!-- اسم الشركة -->
-                <h2><?php echo htmlspecialchars($investor['company_name']); ?></h2>
-
+                <h2><?php echo htmlspecialchars($investor['inv_name']); ?></h2>
                 <!-- خط أسفل اسم الشركة -->
                 <div class="line"></div>
 
@@ -196,10 +211,10 @@ if ($result->num_rows > 0) {
                 <div class="profile-section">
                     <h3>بيانات الشركة</h3>
 
-                    <p><strong>رقم السجل التجاري:</strong> <?php echo htmlspecialchars($investor['commercial_no']); ?></p>
-                    <p><strong>مجال نشاط الشركة:</strong> <?php echo htmlspecialchars($investor['company_field']); ?></p>
-                    <p><strong>رقم الهاتف:</strong> <?php echo htmlspecialchars($investor['phone']); ?></p>
+                  <p><strong>رقم السجل التجاري:</strong> <?php echo htmlspecialchars($investor['ccr_number']); ?></p>
+                  <p><strong>رقم الهاتف:</strong> <?php echo htmlspecialchars($investor['inv_number']); ?></p>
                 </div>
+                
 
                 <!-- بيانات الحساب -->
                 <div class="profile-section">
@@ -208,9 +223,8 @@ if ($result->num_rows > 0) {
                     <p><strong>البريد الإلكتروني:</strong> <?php echo htmlspecialchars($investor['email']); ?></p>
 
                     <div class="password-box">
-                        <strong>كلمة المرور:</strong>
-                        <span id="password">********</span>
-                        <button class="show-btn" onclick="togglePassword()">إظهار</button>
+                        <label>كلمة المرور:</label>
+                        <p>********</p>
                     </div>
                 </div>
 
