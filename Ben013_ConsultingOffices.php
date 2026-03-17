@@ -13,68 +13,17 @@ $conn = new mysqli("localhost", "root", "", "noreen");
 if ($conn->connect_error) {
     die("فشل الاتصال بقاعدة البيانات");
 }
-
 $conn->set_charset("utf8mb4");
 
-/* الدول المختارة من الفلتر */
-$selectedCountries = isset($_GET['country']) && is_array($_GET['country']) ? $_GET['country'] : [];
+/* التحقق من وجود دول مختارة في الفلتر وتخزيينها في المتغير ، وإذا لم توجد تترك فارغة */
+if (isset($_GET['country'])) {
+    $selectedCountry = $_GET['country'];
+} else {
+    $selectedCountry = "";
+}
 
-/* حذف القيم الفارغة */
-$selectedCountries = array_filter($selectedCountries, function($value){
-    return trim($value) !== "";
-});
-
-/* قائمة الدول الثابتة للفلتر */
-$countryList = [
-    "امريكا",
-    "فرنسا",
-    "ايرلندا",
-    "مالطا",
-    "الهند",
-    "الصين",
-    "اليابان",
-    "بريطانيا",
-    "نيوزلندا",
-    "ماليزيا",
-    "تركيا",
-    "المانيا",
-    "كندا",
-    "استراليا",
-    "جنوب افريقيا",
-    "اسبانيا",
-    "ايطاليا",
-    "هولندا",
-    "بلجيكا",
-    "سويسرا",
-    "السويد",
-    "النرويج",
-    "فنلندا",
-    "الدنمارك",
-    "بولندا",
-    "النمسا",
-    "التشيك",
-    "المجر",
-    "البرتغال",
-    "اليونان",
-    "روسيا",
-    "كوريا الجنوبية",
-    "سنغافورة",
-    "تايلاند",
-    "اندونيسيا",
-    "الفلبين",
-    "فيتنام",
-    "مصر",
-    "الامارات",
-    "الكويت",
-    "قطر",
-    "الاردن"
-];
-
-/* جلب المكاتب */
-if (!empty($selectedCountries)) {
-
-    $placeholders = implode(',', array_fill(0, count($selectedCountries), '?'));
-    $types = str_repeat('s', count($selectedCountries));
+/*  جلب المكاتب وربطها مع كل دولة يكون رقم المكتب موجود عندها*/
+if (!empty($selectedCountry)) {
 
     $sql = "
         SELECT 
@@ -90,7 +39,7 @@ if (!empty($selectedCountries)) {
         WHERE co.office_id IN (
             SELECT office_id
             FROM office_country
-            WHERE con_name IN ($placeholders)
+            WHERE con_name = ?
         )
         GROUP BY 
             co.office_id,
@@ -99,11 +48,10 @@ if (!empty($selectedCountries)) {
             co.Bachelor_fee,
             co.Masters_fee,
             co.Phd_fee
-        ORDER BY co.office_id DESC
     ";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param($types, ...$selectedCountries);
+    $stmt->bind_param("s", $selectedCountry);
 
 } else {
 
@@ -125,33 +73,26 @@ if (!empty($selectedCountries)) {
             co.Bachelor_fee,
             co.Masters_fee,
             co.Phd_fee
-        ORDER BY co.office_id DESC
     ";
 
     $stmt = $conn->prepare($sql);
 }
 
 $stmt->execute();
+
+/* متغير يحوي جميع الصفوف الناتجة من الاستعلام*/
 $result = $stmt->get_result();
 
+/*  مصفوفة فارغة لتخزين المكاتب */
 $offices = [];
+
+/* لوب يمر على كل صف من وجلب المكاتب واحدًا تلو الآخر */
 while ($row = $result->fetch_assoc()) {
     $offices[] = $row;
 }
 
 $stmt->close();
 $conn->close();
-
-/* دالة لاختصار الوصف */
-function shortText($text, $length = 95){
-    $text = trim($text);
-
-    if (mb_strlen($text, "UTF-8") <= $length) {
-        return $text;
-    }
-
-    return mb_substr($text, 0, $length, "UTF-8") . " ...";
-}
 ?>
 
 <!DOCTYPE html>
@@ -164,173 +105,120 @@ function shortText($text, $length = 95){
 <link rel="stylesheet" href="CSS01Layout.css">
 
 <style>
+
 .page{
-  padding:30px 40px;
+  padding:10px 30px;
   font-family:"Noto Kufi Arabic", sans-serif;
 }
 
-.filter-row{
+.frow{
   display:flex;
-  align-items:flex-start;
+  align-items:center;
   gap:14px;
-  margin-bottom:24px;
-  flex-wrap:wrap;
-}
-
-.filter-label{
+  margin-bottom:14px;}
+.flbl{
   font-size:16px;
   font-weight:600;
   color:#444;
-  margin-top:8px;
 }
-
-.filter-form{
-  margin:0;
-}
-
-.filter-select{
-  width:260px;
-  height:130px;
-  border:1px solid #c9b7d7;
+.fsel{
+  width:120px;
+  height:34px;
   border-radius:8px;
-  padding:8px;
-  background:#fff;
   font-family:"Noto Kufi Arabic", sans-serif;
   font-size:14px;
-  color:#444;
-  outline:none;
+    text-align:center;
+
 }
 
-.filter-note{
-  margin-top:8px;
-  font-size:12px;
-  color:#777;
-}
-
-.consultants-grid{
+.cgrid{
   display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(320px, 360px));
-  gap:22px;
-  justify-content:start;
-}
+grid-template-columns:33% 33% 33%;
+gap:22px;}
 
-.consultant-card{
+.ccard{
   background:#fff;
   border:1px solid #e4e4e4;
-  border-radius:10px;
+  border-radius:14px;
   padding:18px;
-  box-shadow:0 2px 8px rgba(0,0,0,0.05);
+  box-shadow:0 2px 10px rgba(0,0,0,0.05);
+  display:flex;
+  flex-direction:column;
+  gap:8px;
 }
 
-.consultant-title{
-  font-size:20px;
+.cttl{
+  font-size:22px;
   font-weight:700;
   color:#5a2d82;
-  margin-bottom:8px;
+  text-align:center;
+  padding-bottom:2px;
+  border-bottom:1px solid #eee;
+  margin-bottom:-6px;
 }
-
-.consultant-desc{
+.cdesc{
   font-size:14px;
   color:#666;
-  line-height:1.9;
-  margin-bottom:14px;
-  min-height:54px;
-}
+  text-align:center;
+  border-bottom:1px solid #eee;
+  margin-top:4px;
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:3;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  min-height:25px;}
 
-.info-title{
-  font-size:15px;
+.sttl{
+  font-size:16px;
   font-weight:700;
   color:#444;
-  margin-bottom:8px;
-}
-
-.countries-box{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-bottom:15px;
-}
-
-.country-tag{
-  background:#eadcf6;
-  color:#5a2d82;
-  padding:6px 12px;
-  border-radius:16px;
-  font-size:13px;
-  font-weight:600;
-}
-
-.more-tag{
-  background:#f3f3f3;
-  color:#666;
-  padding:6px 12px;
-  border-radius:16px;
-  font-size:13px;
-  font-weight:600;
-}
-
-.fees-box{
-  background:#f2f5f6;
-  border-radius:8px;
-  padding:14px;
-  margin-bottom:16px;
-}
-
-.fees-title{
-  font-size:14px;
-  font-weight:700;
-  color:#555;
-  margin-bottom:10px;
-}
-
-.fees-row{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-}
-
-.fee-item{
-  flex:1;
   text-align:center;
 }
 
-.fee-name{
-  font-size:14px;
-  font-weight:700;
-  color:#555;
-  margin-bottom:4px;
+.cbox{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px;
+  padding-bottom:10px;
+  border-bottom:1px solid #eee;
 }
 
-.fee-value{
-  font-size:14px;
+.ctag{
+  background:#eadcf6;
   color:#5a2d82;
+  padding:6px 10px;
+  border-radius:16px;
+  font-size:12px;
+  font-weight:600;
+  line-height:1.4;
 }
-
-.details-btn{
+.btnmore{
+  margin-top:auto;
   width:100%;
-  height:42px;
+  height:44px;
   border:none;
-  border-radius:6px;
+  border-radius:8px;
   background:#4b2a63;
   color:#fff;
   font-family:"Noto Kufi Arabic", sans-serif;
   font-size:15px;
   cursor:pointer;
 }
-
-.details-btn:hover{
+.btnmore:hover{
   background:#3d2251;
 }
 
-.no-data{
+.nores{
   background:#fff;
   border:1px solid #e3e3e3;
   border-radius:10px;
   padding:20px;
   text-align:center;
   color:#666;
-  font-size:15px;
 }
+
 </style>
 </head>
 
@@ -338,172 +226,166 @@ function shortText($text, $length = 95){
 
 <div class="layout">
 
-  <aside class="sidebar">
+<aside class="sidebar">
 
-    <div class="sidebar-top">
+<div class="sidebar-top">
 
-      <div class="sidebar-logo">
-        <img src="شعار نورين.png" alt="نورين">
-      </div>
-
-      <ul class="sidebar-menu">
-        <li><a href="Ben00_MainPage.php">الرئيسية</a></li>
-        <li><a href="Ben04_BrowseScholarships.php">التقديم على المنح</a></li>
-        <li><a href="Ben09_TrackScholarship.php">متابعة المنح</a></li>
-        <li><a href="Ben10_Consultants.php" class="active">المكاتب الاستشارية</a></li>
-        <li><a href="#">طلبات إصدار القبول</a></li>
-        <li><a href="#">الاستشارات</a></li>
-      </ul>
-
-    </div>
-
-   <div class="sidebar-bottom">
-  <form action="logout.php" method="post">
-    <button type="submit" class="logout-btn">
-      <img src="ايقونة تسجيل الخروج.png" class="logout-icon">
-      <b>تسجيل الخروج</b>
-    </button>
-  </form>
+<div class="sidebar-logo">
+<img src="شعار نورين.png" alt="نورين">
 </div>
 
-  </aside>
+<ul class="sidebar-menu">
+<li><a href="Ben00_MainPage.php">الرئيسية</a></li>
+<li><a href="Ben04_BrowseScholarships.php">التقديم على المنح</a></li>
+<li><a href="Ben09_TrackScholarship.php">متابعة المنح</a></li>
+<li><a href="Ben10_Consultants.php" class="active">المكاتب الاستشارية</a></li>
+<li><a href="#">طلبات إصدار القبول</a></li>
+<li><a href="#">الاستشارات</a></li>
+</ul>
 
-  <div class="main-content">
+</div>
 
-    <header class="header">
+<div class="sidebar-bottom">
+<form action="logout.php" method="post">
+<button type="submit" class="logout-btn">
+<img src="ايقونة تسجيل الخروج.png" class="logout-icon">
+<b>تسجيل الخروج</b>
+</button>
+</form>
+</div>
 
-      <div class="page-heading">
-        <div class="page-title">المكاتب الاستشارية</div>
-        <div class="page-description">صفحة استعراض المكاتب الاستشارية</div>
-      </div>
+</aside>
 
-      <div class="header-icons">
-        <div class="settings-dropdown">
-          <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="الإعدادات">
+<div class="main-content">
 
-          <div class="dropdown-menu">
-            <a href="Ben02_Profile.php">الملف الشخصي</a>
-            <a href="Ben03_EditProfile.php">تعديل الملف الشخصي</a>
-            <a href="#">محفظة منحتي</a>
-            <a href="#">التواصل والدعم</a>
-          </div>
-        </div>
-      </div>
+<header class="header">
 
-    </header>
+<div class="page-heading">
+<div class="page-title">المكاتب الاستشارية</div>
+<div class="page-description">صفحة استعراض المكاتب الاستشارية</div>
+</div>
 
-    <div class="page">
+<div class="header-icons">
+<div class="settings-dropdown">
+<img src="ايقونة قائمة الاعدادات.png" class="menu-icon">
+<div class="dropdown-menu">
+<a href="Ben02_Profile.php">الملف الشخصي</a>
+<a href="Ben03_EditProfile.php">تعديل الملف الشخصي</a>
+<a href="#">محفظة منحتي</a>
+<a href="#">التواصل والدعم</a>
+</div>
+</div>
+</div>
 
-      <div class="filter-row">
+</header>
 
-        <div class="filter-label">
-          تصفية المكاتب الاستشارية حسب الدولة:
-        </div>
+<div class="page">
 
-        <form class="filter-form" method="get">
-          <select id="country" name="country[]" multiple class="filter-select" onchange="this.form.submit()">
-            <?php foreach ($countryList as $country) { ?>
-              <option value="<?php echo htmlspecialchars($country); ?>"
-                <?php echo in_array($country, $selectedCountries) ? "selected" : ""; ?>>
-                <?php echo htmlspecialchars($country); ?>
-              </option>
-            <?php } ?>
-          </select>
+<div class="frow">
 
-          <div class="filter-note">
-            يمكن اختيار أكثر من دولة بالضغط المستمر على Ctrl أو Cmd.
-          </div>
-        </form>
+<div class="flbl">
+تصفية المكاتب الاستشارية حسب الدولة:
+</div>
 
-      </div>
+<form class="fform" method="get">
 
-      <?php if (!empty($offices)) { ?>
-        <div class="consultants-grid">
+<select id="country" name="country" class="fsel" onchange="this.form.submit()">
 
-          <?php foreach ($offices as $office) { ?>
-            <?php
-              $countries = [];
+<option value="">اختر الدولة</option>
+<option value="امريكا">امريكا</option>
+<option value="فرنسا">فرنسا</option>
+<option value="ايرلندا">ايرلندا</option>
+<option value="مالطا">مالطا</option>
+<option value="الهند">الهند</option>
+<option value="الصين">الصين</option>
+<option value="اليابان">اليابان</option>
+<option value="بريطانيا">بريطانيا</option>
+<option value="نيوزلندا">نيوزلندا</option>
+<option value="ماليزيا">ماليزيا</option>
+<option value="تركيا">تركيا</option>
+<option value="المانيا">المانيا</option>
+<option value="كندا">كندا</option>
+<option value="استراليا">استراليا</option>
 
-              if (!empty($office['countries'])) {
-                  $countries = explode("||", $office['countries']);
-              }
+</select>
 
-              $shownCountries = array_slice($countries, 0, 4);
-              $remainingCount = count($countries) - count($shownCountries);
-            ?>
+</form>
 
-            <div class="consultant-card">
+</div>
 
-              <div class="consultant-title">
-                <?php echo htmlspecialchars($office['office_name']); ?>
-              </div>
+<?php if (!empty($offices)) { ?>
 
-              <div class="consultant-desc">
-                <?php echo htmlspecialchars(shortText($office['office_description'], 85)); ?>
-              </div>
+<div class="cgrid">
 
-              <div class="info-title">الدول:</div>
+<!-- لوب يمر على كل مكتب في القاعدة ليعرض في بطاقة مستقلة -->
+<?php foreach ($offices as $office) { ?>
 
-              <div class="countries-box">
-                <?php if (!empty($shownCountries)) { ?>
-                  <?php foreach ($shownCountries as $country) { ?>
-                    <div class="country-tag">
-                      <?php echo htmlspecialchars($country); ?>
-                    </div>
-                  <?php } ?>
+<?php
+$countries = [];
 
-                  <?php if ($remainingCount > 0) { ?>
-                    <div class="more-tag">
-                      +<?php echo $remainingCount; ?>
-                    </div>
-                  <?php } ?>
-                <?php } else { ?>
-                  <div class="country-tag">لا توجد دول</div>
-                <?php } ?>
-              </div>
+/* تقسيم الدول القادمة من قاعدة البيانات إلى مصفوفة */
+if (!empty($office['countries'])) {
+$countries = explode("||", $office['countries']);
+}
+?>
 
-              <div class="fees-box">
-                <div class="fees-title">رسوم خدمة إصدار القبول:</div>
+<div class="ccard">
 
-                <div class="fees-row">
-                  <div class="fee-item">
-                    <div class="fee-name">بكالوريوس</div>
-                    <div class="fee-value"><?php echo htmlspecialchars($office['Bachelor_fee']); ?> ر.س</div>
-                  </div>
+<div class="cttl">
+<?php echo $office['office_name']; ?>
+</div>
 
-                  <div class="fee-item">
-                    <div class="fee-name">ماجستير</div>
-                    <div class="fee-value"><?php echo htmlspecialchars($office['Masters_fee']); ?> ر.س</div>
-                  </div>
+<div class="cdesc">
+<?php echo $office['office_description']; ?>
+</div>
 
-                  <div class="fee-item">
-                    <div class="fee-name">دكتوراه</div>
-                    <div class="fee-value"><?php echo htmlspecialchars($office['Phd_fee']); ?> ر.س</div>
-                  </div>
-                </div>
-              </div>
+<div class="sttl">الدول:</div>
 
-              <button
-                type="button"
-                class="details-btn"
-                onclick="window.location.href='Ben11_ConsultantDetails.php?id=<?php echo $office['office_id']; ?>'">
-                عرض تفاصيل أكثر
-              </button>
+<div class="cbox">
 
-            </div>
-          <?php } ?>
+<?php if (!empty($countries)) { ?>
 
-        </div>
-      <?php } else { ?>
-        <div class="no-data">
-          لا توجد مكاتب استشارية مطابقة للدول المختارة.
-        </div>
-      <?php } ?>
+<?php foreach ($countries as $country) { ?>
 
-    </div>
+<div class="ctag">
+<?php echo htmlspecialchars($country); ?>
+</div>
 
-  </div>
+<?php } ?>
 
+<?php } else { ?>
+
+<div class="ctag">لا توجد دول</div>
+
+<?php } ?>
+
+</div>
+
+<button
+type="button"
+class="btnmore"
+onclick="window.location.href='Ben14_OfficeDetails.php?id=<?php echo $office['office_id']; ?>'">
+
+عرض تفاصيل أكثر
+
+</button>
+
+</div>
+
+<?php } ?>
+
+</div>
+
+<?php } else { ?>
+
+<div class="nores">
+لا توجد مكاتب استشارية مطابقة للدول المختارة.
+</div>
+
+<?php } ?>
+
+</div>
+</div>
 </div>
 
 </body>

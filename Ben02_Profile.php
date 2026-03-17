@@ -176,24 +176,18 @@ label , .field{
 
         <!-- الهيدر -->
         <header class="header">
-
             <div class="page-title">
                 الملف الشخصي
             </div>
-
             <div class="header-icons">
                 <div class="settings-dropdown">
-
                     <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="القائمة">
-
                     <div class="dropdown-menu">
-                        <a href="Ben02_Profile.php">الملف الشخصي</a>
-                        <a href="#">التواصل والدعم</a>
+                    <a href="Ben02_Profile.php">الملف الشخصي</a>
+                    <a href="support.php">التواصل والدعم</a>
                     </div>
-
                 </div>
             </div>
-
         </header>
 
         <!-- محتوى الصفحة -->
