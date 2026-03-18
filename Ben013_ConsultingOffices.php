@@ -141,7 +141,7 @@ gap:22px;}
   border:1px solid #e4e4e4;
   border-radius:14px;
   padding:18px;
-  box-shadow:0 2px 10px rgba(0,0,0,0.05);
+  box-shadow:0 2px 3px rgba(127, 127, 127, 0.05);
   display:flex;
   flex-direction:column;
   gap:8px;
@@ -221,15 +221,10 @@ gap:22px;}
 
 </style>
 </head>
-
 <body>
-
 <div class="layout">
-
 <aside class="sidebar">
-
 <div class="sidebar-top">
-
 <div class="sidebar-logo">
 <img src="شعار نورين.png" alt="نورين">
 </div>
@@ -244,7 +239,6 @@ gap:22px;}
 </ul>
 
 </div>
-
 <div class="sidebar-bottom">
 <form action="logout.php" method="post">
 <button type="submit" class="logout-btn">
@@ -253,18 +247,13 @@ gap:22px;}
 </button>
 </form>
 </div>
-
 </aside>
-
 <div class="main-content">
-
 <header class="header">
-
 <div class="page-heading">
 <div class="page-title">المكاتب الاستشارية</div>
 <div class="page-description">صفحة استعراض المكاتب الاستشارية</div>
 </div>
-
 <div class="header-icons">
 <div class="settings-dropdown">
 <img src="ايقونة قائمة الاعدادات.png" class="menu-icon">
@@ -272,11 +261,10 @@ gap:22px;}
 <a href="Ben02_Profile.php">الملف الشخصي</a>
 <a href="Ben03_EditProfile.php">تعديل الملف الشخصي</a>
 <a href="#">محفظة منحتي</a>
-<a href="#">التواصل والدعم</a>
+              <a href="support.php">تقديم شكوى او استفسار</a>
 </div>
 </div>
 </div>
-
 </header>
 
 <div class="page">
@@ -288,9 +276,7 @@ gap:22px;}
 </div>
 
 <form class="fform" method="get">
-
 <select id="country" name="country" class="fsel" onchange="this.form.submit()">
-
 <option value="">اختر الدولة</option>
 <option value="امريكا">امريكا</option>
 <option value="فرنسا">فرنسا</option>
@@ -306,11 +292,8 @@ gap:22px;}
 <option value="المانيا">المانيا</option>
 <option value="كندا">كندا</option>
 <option value="استراليا">استراليا</option>
-
 </select>
-
 </form>
-
 </div>
 
 <?php if (!empty($offices)) { ?>

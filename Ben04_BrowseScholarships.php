@@ -120,7 +120,7 @@ $selected_field = isset($_POST['sch_field']) ? $_POST['sch_field'] : '';
                     <div class="dropdown-menu">
                         <a href="Ben02_Profile.php">الملف الشخصي</a>
                         <a href="Ben11_MyScholarshipWallet.php">محفظة منحتي</a>
-                        <a href="support.php">التواصل والدعم</a>
+              <a href="support.php">تقديم شكوى او استفسار</a>
                     </div>
                 </div>
             </div>

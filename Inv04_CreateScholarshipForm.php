@@ -105,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="الإعدادات">
           <div class="dropdown-menu">
             <a href="Inv02_Profile.php">الملف الشخصي</a>
-            <a href="#">التواصل والدعم</a>
+              <a href="support.php">تقديم شكوى او استفسار</a>
           </div>
         </div>
       </div>
