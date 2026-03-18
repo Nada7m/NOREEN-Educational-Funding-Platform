@@ -64,7 +64,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>إنشاء عرض منحة جديدة</title>
-  <link rel="stylesheet" href="CSS01Layout.css?v=2"></head>
+  <link rel="stylesheet" href="CSS01Layout.css">
+</head>
 <body>
 
 <div class="layout">
@@ -146,22 +147,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
               <div class="field">
                 <label><span class="required">*</span> المجال الرئيسي</label>
+              
                 <select name="sch_field">
-                  <option value="">اختر المجال العام للبرنامج</option>
-                  <option value="تقني و حوسبي">تقني و حوسبي</option>
-                  <option value=" علوم طبيعية"> علوم طبيعية</option>
-                  <option value=" صناعي و تشغيلي">صناعي و تشغيلي</option>
-                  <option value=" إداري"> إداري</option>
-                                    <option value=" قانوني">قانوني </option>
-                  <option value=" اجتماعي و إنساني"> اجتماعي و إنساني</option>
-                  <option value=" تصميمي"> تصميمي</option>
-                  <option value=" اقتصادي"> اقتصادي</option>
-                  <option value=" إعلامي"> إعلامي</option>
-                  <option value=" بيئي"> بيئي</option>
-                  <option value=" لوجيستي"> لوجيستي</option>
-                  <option value=" صحي"> صحي</option>
-                  <option value=" لا يوجد"> لا يوجد</option>
-                </select>
+  <option value="">اختر المجال العام للبرنامج</option>
+
+  <option value="تقني وحوسبي">تقني وحوسبي</option>
+  <option value="علوم طبيعية">علوم طبيعية</option>
+  <option value="صناعي وتشغيلي">صناعي وتشغيلي</option>
+  <option value="ادراي">ادراي</option> <!-- نفس القاعدة حتى لو غلط -->
+  <option value="قانوني">قانوني</option>
+  <option value="اجتماعي وانساني">اجتماعي وانساني</option>
+  <option value="تصميمي">تصميمي</option>
+  <option value="اقتصادي">اقتصادي</option>
+  <option value="إعلامي">إعلامي</option>
+  <option value="بيئي">بيئي</option>
+  <option value="لوجيستي">لوجيستي</option>
+  <option value="صحي">صحي</option>
+
+</select>
               </div>
 
               <div class="field">

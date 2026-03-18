@@ -130,7 +130,7 @@ $result = mysqli_query($con, $sql);
             <div class="divider"></div>
 
             <div class="deadline">
-                <span>آخر موعد للتقديم: <?php echo htmlspecialchars($row['app_deadline']); ?></span>
+                <span>آخر موعد للتقديم: <?php echo date("d-m-Y", strtotime($row['app_deadline']));  ?></span>
                 <span>📅</span>
             </div>
 
