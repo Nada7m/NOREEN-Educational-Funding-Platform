@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 16 مارس 2026 الساعة 07:54
+-- Generation Time: 18 مارس 2026 الساعة 03:56
 -- إصدار الخادم: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -149,15 +149,23 @@ CREATE TABLE `bnf_off_msg` (
 
 CREATE TABLE `complaints_inquiries` (
   `ticket_id` int(11) NOT NULL,
-  `office_id` int(11) NOT NULL,
-  `bnf_id` int(11) NOT NULL,
-  `inv_id` int(11) NOT NULL,
+  `office_id` int(11) DEFAULT NULL,
+  `bnf_id` int(11) DEFAULT NULL,
+  `inv_id` int(11) DEFAULT NULL,
   `admin_reply` text DEFAULT NULL,
   `submission_date` datetime DEFAULT current_timestamp(),
   `subject` text NOT NULL,
   `message` text NOT NULL,
   `status` enum('بانتظار الرد','تم الرد عليها') DEFAULT 'بانتظار الرد'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- إرجاع أو استيراد بيانات الجدول `complaints_inquiries`
+--
+
+INSERT INTO `complaints_inquiries` (`ticket_id`, `office_id`, `bnf_id`, `inv_id`, `admin_reply`, `submission_date`, `subject`, `message`, `status`) VALUES
+(31, NULL, 1, NULL, NULL, '2026-03-17 12:33:09', 'مشكله', 'ممممم', 'بانتظار الرد'),
+(32, NULL, 1, NULL, NULL, '2026-03-17 12:35:12', 'مشكله', '...', 'بانتظار الرد');
 
 -- --------------------------------------------------------
 
@@ -526,7 +534,7 @@ ALTER TABLE `bnf_off_msg`
 -- AUTO_INCREMENT for table `complaints_inquiries`
 --
 ALTER TABLE `complaints_inquiries`
-  MODIFY `ticket_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ticket_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `consulting_office`
