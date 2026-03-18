@@ -207,18 +207,18 @@ body{
 }
 
 .dropdown-menu{
+  position:absolute;
   top:100%;
   left:0;
   background:#FFFFFF;
   border-radius:10px;
-  box-shadow:0 4px 7px rgba(119, 118, 118, 0.1);
-  width:360px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+  width:200px;   /* زيادة العرض */
   display:none;
   overflow:hidden;
   border:1px solid #ececec;
   z-index:100;
 }
-
 .settings-dropdown:hover .dropdown-menu{
   display:block;
 }
@@ -251,21 +251,20 @@ body{
 
 /* زر الرجوع */
 
-.back-btn{
-  float:left;
-  margin-bottom:20px;
-}
-
-.back-icon{
+.backbtn{
   width:42px;
   height:42px;
-  cursor:pointer;
-  object-fit:contain;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
 }
 
-.back-btn img{
-  width:45px;
-  height:45px;
+/* أيقونة السهم الخاصة بالرجوع */
+.backicon{
+  width:42px;
+  height:42px;
+  object-fit:contain;
 }
 
 /* صفحة عرض المنح */

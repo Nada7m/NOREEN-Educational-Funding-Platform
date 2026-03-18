@@ -95,42 +95,29 @@ $conn->close();
 <title>تفاصيل المكتب الاستشاري</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="CSS01Layout.css">
-
+<link rel="stylesheet" href="CSS01Layout.css?v=2">
 <style>
-
 .page{
   padding:10px 30px;
   font-family:"Noto Kufi Arabic", sans-serif;
 }
 
+/* صف يحتوي زر الرجوع أعلى الصفحة */
 .backrow{
   width:90%;
   margin:10px auto 18px;
   display:flex;
   justify-content:flex-end;
 }
+
+/* حاوية لتنظيم زر الرجوع والأيقونة */
 .backwrap{
   display:flex;
   align-items:center;
 }
 
-.backbtn{
-  width:42px;
-  height:42px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-decoration:none;
-}
 
-.backicon{
-  width:42px;
-  height:42px;
-  object-fit:contain;
-}
-
-/* بطاقة التفاصيل */
+/* كارد  تفاصيل المكتب */
 .dbox{
   width:90%;
   margin:0 auto 20px;
@@ -141,6 +128,7 @@ $conn->close();
   box-shadow:0 2px 8px rgba(0,0,0,0.04);
 }
 
+/* اسم المكتب في  الكارد */
 .ttl{
   font-size:20px;
   font-weight:700;
@@ -149,6 +137,7 @@ $conn->close();
   margin-bottom:10px;
 }
 
+/* وصف المكتب */
 .desc{
   font-size:14px;
   color:#555;
@@ -156,7 +145,7 @@ $conn->close();
   margin-bottom:14px;
 }
 
-/* عنوان القسم */
+/*  عنوان قسم الدول */
 .sttl{
   font-size:15px;
   font-weight:700;
@@ -164,7 +153,7 @@ $conn->close();
   margin-bottom:10px;
 }
 
-/* الدول */
+/* بوكس يحتوي تاقز الدول */
 .cbox{
   display:flex;
   flex-wrap:wrap;
@@ -172,6 +161,7 @@ $conn->close();
   margin-bottom:18px;
 }
 
+/* التاق الفردي لكل دولة */
 .ctag{
   background:#eadcf6;
   color:#5a2d82;
@@ -181,7 +171,7 @@ $conn->close();
   font-weight:600;
 }
 
-/* الرسوم والأزرار */
+/* صف يحتوي الأزرار وصندوق الرسوم */
 .midrow{
   display:flex;
   gap:14px;
@@ -195,6 +185,7 @@ $conn->close();
   gap:8px;
 }
 
+/* بوكس الرسوم الخاصة بالخدمة */
 .feebox{
   flex:1;
   background:#f4f6f7;
@@ -202,6 +193,8 @@ $conn->close();
   border-radius:6px;
   padding:14px;
 }
+
+/* عنوان بوكس الرسوم */
 .feettl{
   font-size:14px;
   font-weight:700;
@@ -210,6 +203,7 @@ $conn->close();
   margin-bottom:16px;
 }
 
+/* قريد لعرض رسوم البرامج  */
 .feegrid{
   display:grid;
   grid-template-columns:33% 33% 33%;
@@ -222,6 +216,7 @@ $conn->close();
   line-height:2;
 }
 
+/* اسم البرنامج (بكالوريوس / ماجستير / دكتوراه) */
 .fname{
   display:block;
   font-size:16px;
@@ -230,6 +225,7 @@ $conn->close();
   margin-bottom:6px;
 }
 
+/* رسوم  البرنامج */
 .fprice{
   display:block;
   font-size:16px;
@@ -237,6 +233,7 @@ $conn->close();
   color:#4b2a63;
 }
 
+/* تنسيق مشترك للأزرار */
 .btnlight,
 .btndark{
   width:100%;
@@ -249,29 +246,33 @@ $conn->close();
   cursor:pointer;
 }
 
+/* زر التواصل للاستشارة */
 .btnlight{
   background:#d7bce4;
   color:#fff;
-  height: 67px;
+  height:67px;
 }
 
+/* زر تقديم طلب إصدار قبول */
 .btndark{
   background:#4b2a63;
   color:#fff;
-    height: 67px;
-
+  height:67px;
 }
-/* التقييمات */
+
 .rsec{
   width:90%;
   margin:0 auto;
 }
+
 .rttl{
   font-size:15px;
   font-weight:700;
   color:#4b2a63;
   margin-bottom:10px;
 }
+
+/* كارد التقييم الواحد */
 .rcard{
   background:#fff;
   border:1px solid #dcdcdc;
@@ -293,6 +294,7 @@ $conn->close();
   margin-bottom:6px;
 }
 
+/* اسم المستفيد */
 .rname{
   font-size:14px;
   font-weight:700;
@@ -300,6 +302,7 @@ $conn->close();
   margin-bottom:6px;
 }
 
+/* نص  التقييم */
 .rcom{
   font-size:13px;
   color:#666;
@@ -314,6 +317,7 @@ $conn->close();
   border:1px solid #cfcfcf;
 }
 
+/* الرسال عند عدم وجود تقييمات */
 .norate{
   background:#fff;
   border:1px solid #ddd;
@@ -322,7 +326,6 @@ $conn->close();
   text-align:center;
   color:#666;
 }
-
 
 </style>
 </head>

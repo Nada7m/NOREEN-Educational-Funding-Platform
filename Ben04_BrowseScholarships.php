@@ -17,8 +17,7 @@ $selected_field = isset($_POST['sch_field']) ? $_POST['sch_field'] : '';
     <meta charset="UTF-8">
     <title>التقديم على المنح</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="CSS01Layout.css">
-    
+    <link rel="stylesheet" href="CSS01Layout.css?v=2">    
     <style>
         .page { padding: 20px 40px; position: relative; }
         
@@ -31,18 +30,18 @@ $selected_field = isset($_POST['sch_field']) ? $_POST['sch_field'] : '';
         .back-circle svg { width: 24px; height: 24px; fill: #3E2454; } 
 
         /* الفلترة */
-        .filter-container { display: flex; align-items: center; gap: 10px; margin-bottom: 30px; }
-        .filter-select { padding: 8px 12px; border: 1px  }
+        .filter-container { display: flex; align-items: center; gap: 10px; margin-bottom: 30px;   font-size:16px; font-weight:600; color:#444;}
+        .filter-select { padding: 3px 12px; border: 1px  }
 
         /* الكروت */
         .scholarships-grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); 
+  grid-template-columns:repeat(2, minmax(0, 1fr));
             gap: 25px; 
         }
         .s-card { 
-            background: #fff; border-radius: 10px; padding: 25px; 
-            border: 1px box-shadow: 0 5px 15px  text-align: center; 
+            background: #fff; border-radius: 14px; padding: 25px;  border-radius:14px;  border:1px solid #e4e4e4;
+            border: 1px box-shadow: 0 5px 15px  text-align: center; width:100%;
         }
         .s-title { color: #3E2454; font-size: 15px; font-weight: 700; margin-bottom: 20px; }
         
@@ -50,9 +49,9 @@ $selected_field = isset($_POST['sch_field']) ? $_POST['sch_field'] : '';
         .s-data-row { 
             display: flex; 
             justify-content: space-between; 
-            margin-bottom: 12px; 
+            margin-bottom: 5px; 
             font-size: 13px;
-            gap: 20px; /* مسافة كافية تمنع التداخل */
+            gap: 10px; /* مسافة كافية تمنع التداخل */
             flex-wrap: wrap; 
         }
         .s-lbl { color: #595959; min-width: fit-content; }

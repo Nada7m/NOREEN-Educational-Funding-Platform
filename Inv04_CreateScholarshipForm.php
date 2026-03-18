@@ -64,8 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>إنشاء عرض منحة جديدة</title>
-  <link rel="stylesheet" href="CSS01Layout.css">
-</head>
+  <link rel="stylesheet" href="CSS01Layout.css?v=2"></head>
 <body>
 
 <div class="layout">
