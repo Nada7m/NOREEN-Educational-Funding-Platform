@@ -691,6 +691,17 @@ body{
     width:100%;
   }
 }
+/* حالة عدم وجود منح */
+.empty-state{
+    text-align: center;
+    margin-top: 220px;
+    color: #cfcfcf;
+    font-size: 28px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 
 /* بطاقة تفاصيل المنحة */
 .scholarship-card{

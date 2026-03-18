@@ -5,6 +5,24 @@ if(!isset($_SESSION['inv_id'])){
     header("Location: login.php");
     exit();
 }
+
+$con = mysqli_connect("localhost","root","","noreen");
+
+if(!$con){
+    die("فشل الاتصال بقاعدة البيانات");
+}
+
+mysqli_set_charset($con,"utf8mb4");
+
+/* رقم المستثمر الحالي من الجلسة */
+$inv_id = $_SESSION['inv_id'];
+
+/* جلب منح المستثمر الحالي فقط */
+$sql = "SELECT scholarship_id, sch_name, sch_field, study_level, Specializations, app_deadline
+FROM scholarship_opps
+WHERE inv_id = '$inv_id'";
+
+$result = mysqli_query($con, $sql);
 ?>
 
 <!DOCTYPE html>
@@ -82,42 +100,57 @@ if(!isset($_SESSION['inv_id'])){
 
 
     </div>
-<div class="scholarship-card">
+    <!-- عرض المنح -->
+<?php if(mysqli_num_rows($result) > 0){ ?>
 
-  <h2 class="scholarship-title">
-    برنامج سابك - تطوير الأنظمة الصناعية المتقدمة
-  </h2>
+    <?php while($row = mysqli_fetch_assoc($result)){ ?>
 
-  <div class="info-row">
-    <div>
-      <div class="label">المجال الرئيسي:</div>
-      <div class="value">صناعي وتشغيلي</div>
+        <div class="scholarship-card">
+
+            <h2 class="scholarship-title">
+                <?php echo htmlspecialchars($row['sch_name']); ?>
+            </h2>
+
+            <div class="info-row">
+                <div>
+                    <div class="label">المجال الرئيسي:</div>
+                    <div class="value"><?php echo htmlspecialchars($row['sch_field']); ?></div>
+                </div>
+
+                <div>
+                    <div class="label">الدرجة المستهدفة:</div>
+                    <div class="value"><?php echo htmlspecialchars($row['study_level']); ?></div>
+                </div>
+            </div>
+
+            <div class="specializations">
+                <div class="label">التخصصات الدقيقة:</div>
+                <p><?php echo nl2br(htmlspecialchars($row['Specializations'])); ?></p>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="deadline">
+                <span>آخر موعد للتقديم: <?php echo htmlspecialchars($row['app_deadline']); ?></span>
+                <span>📅</span>
+            </div>
+
+            <a href="Inv05_ScholarshipsDetails.php?id=<?php echo $row['scholarship_id']; ?>" class="details-btn">
+                عرض تفاصيل أكثر
+            </a>
+
+        </div>
+
+    <?php } ?>
+
+<?php } else { ?>
+
+    <!-- لا توجد منح -->
+    <div class="empty-state">
+        لم تقم بنشر منحة حتى الآن
     </div>
 
-    <div>
-      <div class="label">الدرجة المستهدفة:</div>
-      <div class="value">ماجستير</div>
-    </div>
-  </div>
-
-  <div class="specializations">
-    <div class="label">التخصصات الدقيقة:</div>
-    <p>تحسين العمليات الصناعية.</p>
-    <p>سلاسل الإمداد، نظم الدعم الشاملة</p>
-  </div>
-
-  <div class="divider"></div>
-
-  <div class="deadline">
-    <span>آخر موعد للتقديم: 15 أبريل 2026</span>
-    <span>📅</span>
-  </div>
-
-  <a href="Inv05_ScholarshipsDetails.php" class="details-btn">
-عرض تفاصيل أكثر
-</a>
-
-</div>
+<?php } ?>
   </div>
 
 </body>
