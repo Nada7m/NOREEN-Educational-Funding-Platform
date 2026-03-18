@@ -148,7 +148,7 @@ if (isset($_POST['login'])) {
             <button type="submit" name="login" class="btn">تسجيل الدخول</button>
 
             <p class="register center">
-              ليس لديك حساب؟ <a href="Main Page.php#accounts">إنشاء حساب</a>
+              ليس لديك حساب؟ <a href="Main Page.html#accounts">إنشاء حساب</a>
             </p>
 
         </form>

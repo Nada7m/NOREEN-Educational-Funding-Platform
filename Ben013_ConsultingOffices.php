@@ -102,12 +102,11 @@ $conn->close();
 <title>المكاتب الاستشارية</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="CSS01Layout.css">
-
+<link rel="stylesheet" href="CSS01Layout.css?v=2">
 <style>
 
 .page{
-  padding:10px 30px;
+  padding:20px 30px;
   font-family:"Noto Kufi Arabic", sans-serif;
 }
 
@@ -121,43 +120,38 @@ $conn->close();
   font-weight:600;
   color:#444;
 }
-.fsel{
-  width:120px;
-  height:34px;
-  border-radius:8px;
-  font-family:"Noto Kufi Arabic", sans-serif;
-  font-size:14px;
-    text-align:center;
+.fsel { padding: 4px 15px; border: 1px ; width: 120px;  }
 
-}
 
 .cgrid{
   display:grid;
-grid-template-columns:33% 33% 33%;
-gap:22px;}
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:25px;
+}
 
 .ccard{
   background:#fff;
   border:1px solid #e4e4e4;
+  width:100%;
   border-radius:14px;
-  padding:18px;
-  box-shadow:0 2px 3px rgba(127, 127, 127, 0.05);
+  padding:25px;
+  box-shadow:0 1px 1px rgba(127, 127, 127, 0.05);
   display:flex;
   flex-direction:column;
   gap:8px;
+  box-sizing:border-box;
 }
-
 .cttl{
-  font-size:22px;
+  font-size:15px;
   font-weight:700;
-  color:#5a2d82;
+  color:#3E2454;
   text-align:center;
   padding-bottom:2px;
   border-bottom:1px solid #eee;
   margin-bottom:-6px;
 }
 .cdesc{
-  font-size:14px;
+  font-size:13px;
   color:#666;
   text-align:center;
   border-bottom:1px solid #eee;
@@ -170,7 +164,7 @@ gap:22px;}
   min-height:25px;}
 
 .sttl{
-  font-size:16px;
+  font-size:14px;
   font-weight:700;
   color:#444;
   text-align:center;
@@ -180,7 +174,7 @@ gap:22px;}
   display:flex;
   flex-wrap:wrap;
   justify-content:center;
-  gap:10px;
+  gap:6px;
   padding-bottom:10px;
   border-bottom:1px solid #eee;
 }
@@ -190,21 +184,14 @@ gap:22px;}
   color:#5a2d82;
   padding:6px 10px;
   border-radius:16px;
-  font-size:12px;
+  font-size:10px;
   font-weight:600;
   line-height:1.4;
 }
 .btnmore{
-  margin-top:auto;
-  width:100%;
-  height:44px;
-  border:none;
-  border-radius:8px;
-  background:#4b2a63;
-  color:#fff;
-  font-family:"Noto Kufi Arabic", sans-serif;
-  font-size:15px;
-  cursor:pointer;
+  margin-top:auto; width:100%; height:44px; border:none; border-radius:6px;
+  background:#4b2a63; color:#fff;
+  font-family:"Noto Kufi Arabic", sans-serif; font-size:15px;cursor:pointer;
 }
 .btnmore:hover{
   background:#3d2251;
@@ -345,9 +332,7 @@ $countries = explode("||", $office['countries']);
 </div>
 
 <button
-type="button"
-class="btnmore"
-onclick="window.location.href='Ben14_OfficeDetails.php?id=<?php echo $office['office_id']; ?>'">
+type="button" class="btnmore" onclick="window.location.href='Ben14_OfficeDetails.php?id=<?php echo $office['office_id']; ?>'">
 
 عرض تفاصيل أكثر
 
