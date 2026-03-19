@@ -190,7 +190,9 @@ $selected_field = isset($_POST['sch_field']) ? $_POST['sch_field'] : '';
                         <h4>الشروط:</h4>
                         <div class="conditions-text"><?php echo nl2br($opp['requirements']); ?></div>
                     </div>
-                    <button class="btn-action" style="width: 250px; margin: 40px auto 0; display: block;">التقديم الآن</button>
+                    <button class="btn-action" style="width: 250px; margin: 40px auto 0; display: block;"><a href="Ben06_ApplyScholarship.php?sch_id=<?php echo $row['scholarship_id']; ?>" class="apply-btn">
+    التقديم الآن
+</a></button>
                 </div>
             <?php endif; ?>
         </div>
