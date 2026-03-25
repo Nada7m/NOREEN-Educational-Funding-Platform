@@ -6,7 +6,12 @@ $con = new mysqli("localhost", "root", "", "noreen", 3306);
 if ($con->connect_error) { die("فشل الاتصال بالقاعدة: " . $con->connect_error); }
 
 // 2. تحديد هوية المستخدم (لو فيه جلسة بيعرفها، ولو للعرض بيفترض إنها فاطمة رقم 1)
-$user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 1;
+if(!isset($_SESSION['user_id'])){
+    header("Location: login.php");
+    exit();
+}
+
+$user_id = $_SESSION['user_id'];
 $sch_id = isset($_GET['sch_id']) ? intval($_GET['sch_id']) : 1;
 
 // 3. جلب بيانات الطالبة تلقائياً من جدول beneficiary

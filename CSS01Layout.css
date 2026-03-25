@@ -1017,47 +1017,7 @@ text-decoration:none;
   margin: auto;
 }
 
-/* قسم المعلومات */
-.info-section{
-  background: #F8F8F8;
-  padding: 30px;
-  border-radius: 12px;
-  gap: 50px;
-}
 
-/* يمين ويسار */
-.info-data{
-  flex: 1;
-}
-
-.form-inputs{
-  flex: 1;
-}
-
-/* عناصر المعلومات */
-.info-item{
-  display: flex;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.info-label{
-  min-width: 120px;
-  color: #70A0AF;
-}
-
-.info-value{
-  color: #3E2454;
-}
-
-/* المستندات */
-.docs-row{
-  gap: 15px;
-}
-
-.doc{
-  text-align: center;
-}
 
 /* بوكس الرفع */
 .uploadBox{
