@@ -1067,7 +1067,7 @@ text-decoration:none;
     background: #fff;
     padding: 30px;
     border-radius: 12px;
-   box-shadow: 0 4px 15px rgba(0,0,0,0.05);/ /* اختيارية إذا أردت ظل */
+   box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
 /* تقسيم المعلومات الشخصية (يمين بيانات - يسار حقول) */
@@ -1134,13 +1134,14 @@ text-decoration:none;
 .upload-wrapper {
     border: 1.5px solid #8FB4C9;
     background-color: #F8F8F8;
-    height: 60px; /* زدت الارتفاع قليلاً ليناسب الصورة */
+    height: 60px; 
     border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: 0.3s;
+    direction: ltr;
 }
 
 .upload-wrapper:hover {
@@ -1150,7 +1151,7 @@ text-decoration:none;
 
 /* تنسيق صورة الرفع الخاصة بك */
 .upload-img {
-    width: 30px; /* يمكنك تعديل المقاس حسب حجم صورتك */
+    width: 30px; 
     height: auto;
 }
 
