@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: 18 مارس 2026 الساعة 05:50
+-- Host: 127.0.0.1:3306
+-- Generation Time: 25 مارس 2026 الساعة 14:45
 -- إصدار الخادم: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -357,6 +357,13 @@ CREATE TABLE `scholarship_requests` (
   `univ_name` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- إرجاع أو استيراد بيانات الجدول `scholarship_requests`
+--
+
+INSERT INTO `scholarship_requests` (`request_id`, `scholarship_id`, `bnf_id`, `Submit_date`, `request_status`, `major_name`, `univ_name`) VALUES
+(2, 1, 1, '2026-03-25', '', 'نمذجة وتحسين النظم الصناعية', 'إلينوي أوربانا شامبين - الولايات المتحدة');
+
 -- --------------------------------------------------------
 
 --
@@ -366,10 +373,20 @@ CREATE TABLE `scholarship_requests` (
 CREATE TABLE `scholarship_request_documents` (
   `doc_id` int(11) NOT NULL,
   `request_id` int(11) NOT NULL,
-  `doc_type` enum('CV','LastDegreeCertificate','RecommendationLetter','AcceptanceLetter') NOT NULL,
-  `file _name` varchar(150) NOT NULL,
+  `doc_type` varchar(150) NOT NULL,
+  `file_name` varchar(150) NOT NULL,
   `file` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- إرجاع أو استيراد بيانات الجدول `scholarship_request_documents`
+--
+
+INSERT INTO `scholarship_request_documents` (`doc_id`, `request_id`, `doc_type`, `file_name`, `file`) VALUES
+(1, 2, 'CV', '1774446178_Fatimah_Alhammadi_CV.pdf', '1774446178_Fatimah_Alhammadi_CV.pdf'),
+(2, 2, 'Certificate', '1774446178_DegreeCertificate.pdf', '1774446178_DegreeCertificate.pdf'),
+(3, 2, 'Recommendation', '1774446178_Fatimah_Alhammadi_Recommendation.pdf', '1774446178_Fatimah_Alhammadi_Recommendation.pdf'),
+(4, 2, 'Acceptance', '1774446178_AcceptanceLetter.pdf', '1774446178_AcceptanceLetter.pdf');
 
 --
 -- Indexes for dumped tables
@@ -599,13 +616,13 @@ ALTER TABLE `scholarship_opps`
 -- AUTO_INCREMENT for table `scholarship_requests`
 --
 ALTER TABLE `scholarship_requests`
-  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `scholarship_request_documents`
 --
 ALTER TABLE `scholarship_request_documents`
-  MODIFY `doc_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `doc_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- قيود الجداول المُلقاة.

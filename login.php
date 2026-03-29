@@ -75,7 +75,7 @@ if (isset($_POST['login'])) {
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['user_type'] = $table;
                 $_SESSION[$session_key] = $user[$id_field]; 
-
+                $_SESSION['user_id'] = $user[$id_field];
                 // توجيه المستخدم فوراً لصفحته الخاصة بناءً على نوع حسابه
                 header("Location: " . $redirect);
                 exit(); 
