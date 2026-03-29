@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Generation Time: 25 مارس 2026 الساعة 14:45
+-- Host: 127.0.0.1
+-- Generation Time: 30 مارس 2026 الساعة 00:44
 -- إصدار الخادم: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -352,7 +352,7 @@ CREATE TABLE `scholarship_requests` (
   `scholarship_id` int(11) NOT NULL,
   `bnf_id` int(11) NOT NULL,
   `Submit_date` date NOT NULL,
-  `request_status` enum('مفبول','مرفوض','','') NOT NULL,
+  `request_status` enum('مقبول','مرفوض','في انتظار المراجعة','') NOT NULL DEFAULT 'في انتظار المراجعة',
   `major_name` varchar(100) NOT NULL,
   `univ_name` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -362,7 +362,7 @@ CREATE TABLE `scholarship_requests` (
 --
 
 INSERT INTO `scholarship_requests` (`request_id`, `scholarship_id`, `bnf_id`, `Submit_date`, `request_status`, `major_name`, `univ_name`) VALUES
-(2, 1, 1, '2026-03-25', '', 'نمذجة وتحسين النظم الصناعية', 'إلينوي أوربانا شامبين - الولايات المتحدة');
+(2, 1, 1, '2026-03-25', 'في انتظار المراجعة', 'نمذجة وتحسين النظم الصناعية', 'إلينوي أوربانا شامبين - الولايات المتحدة');
 
 -- --------------------------------------------------------
 
