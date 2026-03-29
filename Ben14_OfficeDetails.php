@@ -1,12 +1,6 @@
 <?php
 session_start();
 
-/* التحقق من تسجيل دخول المستفيد */
-if (!isset($_SESSION['bnf_id'])) {
-    header("Location: login.php");
-    exit();
-}
-
 /* الاتصال بقاعدة البيانات */
 $conn = new mysqli("localhost", "root", "", "noreen");
 
@@ -366,14 +360,12 @@ $conn->close();
 <img src="ايقونة قائمة الاعدادات.png" class="menu-icon">
 <div class="dropdown-menu">
 <a href="Ben02_Profile.php">الملف الشخصي</a>
-<a href="Ben03_EditProfile.php">تعديل الملف الشخصي</a>
 <a href="#">محفظة منحتي</a>
               <a href="support.php">تقديم شكوى او استفسار</a>
 </div>
 </div>
 </div>
 </header>
-
 <div class="page">
 
 <!-- زر الرجوع -->
@@ -397,7 +389,7 @@ $conn->close();
   <div class="cbox">
     <?php if (!empty($countries)) { ?>
       <?php foreach ($countries as $country) { ?>
-        <div class="ctag"><?php echo htmlspecialchars($country); ?></div>
+        <div class="ctag"><?php echo  ($country); ?></div>
       <?php } ?>
     <?php } else { ?>
       <div class="ctag">لا توجد دول</div>

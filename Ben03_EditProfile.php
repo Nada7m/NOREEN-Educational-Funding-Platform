@@ -226,12 +226,12 @@ $conn->close();
 
                         <div class="field">
                             <label><span class="star">*</span> الاسم الأول</label>
-                            <input type="text" name="firstName" value="<?php echo htmlspecialchars($beneficiary['f_name']); ?>">
+                            <input type="text" name="firstName" value="<?php echo  ($beneficiary['f_name']); ?>">
                         </div>
 
                         <div class="field">
                             <label><span class="star">*</span> الاسم الأخير</label>
-                            <input type="text" name="lastName" value="<?php echo htmlspecialchars($beneficiary['l_name']); ?>">
+                            <input type="text" name="lastName" value="<?php echo  ($beneficiary['l_name']); ?>">
                         </div>
 
                     </div>
@@ -275,12 +275,12 @@ $conn->close();
 
                         <div class="field">
                             <label><span class="star">*</span> رقم الهاتف</label>
-                            <input type="text" name="phone" value="<?php echo htmlspecialchars($beneficiary['phone_num']); ?>">
+                            <input type="text" name="phone" value="<?php echo  ($beneficiary['phone_num']); ?>">
                         </div>
 
                         <div class="field">
                             <label><span class="star">*</span> البريد الإلكتروني</label>
-                            <input type="email" name="email" value="<?php echo htmlspecialchars($beneficiary['email']); ?>">
+                            <input type="email" name="email" value="<?php echo  ($beneficiary['email']); ?>">
                         </div>
 
                     </div>

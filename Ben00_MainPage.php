@@ -1,11 +1,5 @@
 <?php
 session_start();
-
-/* التحقق من تسجيل دخول المستفيد */
-if (!isset($_SESSION['bnf_id'])) {
-    header("Location: login.php");
-    exit();
-}
 ?>
 
 
