@@ -266,6 +266,28 @@ body{
   height:42px;
   object-fit:contain;
 }
+/* زر بيانات الحساب */
+.header-left{
+  display:flex;
+  align-items:center;
+}
+
+.profile-btn{
+  background:#FFFFFF;
+  color:#3E2454;
+  padding:8px 18px;
+  border-radius:20px;
+  font-size:14px;
+  font-weight:600;
+  border:1px solid #ddd;
+  transition:.3s;
+}
+
+/*  عند المرور على الزر */
+.profile-btn:hover{
+  background:#3E2454;
+  color:#FFFFFF;
+}
 
 /* صفحة عرض المنح */
 
