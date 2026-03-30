@@ -314,7 +314,7 @@ while ($row = mysqli_fetch_assoc($app_result)) {
         <ul class="sidebar-menu">
           <li><a href="Inv00_MainPage.php">الرئيسية</a></li>
           <li><a href="Inv04_CreateScholarship.php" class="active">عرض المنح</a></li>
-          <li><a href="#">إدارة المنح</a></li>
+             <li><a href="Inv06_ManageScholarships.php">إدارة المنح</a></li>  
           <li><a href="#">المدفوعات</a></li>
         </ul>
 
@@ -383,18 +383,11 @@ while ($row = mysqli_fetch_assoc($app_result)) {
           </div>
 
         </div>
-
         <!-- تبويب تفاصيل المنحة -->
         <div id="scholarship-tab" class="tab-content active">
 
           <div class="scholarship-details-box">
-
-            <div class="top-info-row">
-
-              <!-- سطر تاريخ التقديم:
-                   أولًا النص
-                   ثم التاريخ
-                   ثم الأيقونة -->
+            <div class="top-info-row">              
               <div class="deadline-box">
                 <span class="deadline-label">آخر موعد للتقديم:</span>
                 <span class="deadline-value"><?php echo date("d-m-Y", strtotime($scholarship['app_deadline'])); ?></span>
