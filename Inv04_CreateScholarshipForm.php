@@ -137,7 +137,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <ul class="sidebar-menu">
       <li><a href="Inv00_MainPage.php">الرئيسية</a></li>
       <li><a href="Inv04_CreateScholarship.php" class="active">عرض المنح</a></li>
-      <li><a href="#">إدارة المنح</a></li>
+     <li><a href="Inv06_ManageScholarships.php">إدارة المنح</a></li>
       <li><a href="#">المدفوعات</a></li>
     </ul>
 
