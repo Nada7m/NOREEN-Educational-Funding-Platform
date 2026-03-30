@@ -220,17 +220,17 @@ $conn->close();
 
             <div class="profile-box">
 
-                <h2><?php echo htmlspecialchars($office['office_name']); ?></h2>
+                <h2><?php echo ($office['office_name']); ?></h2>
 
                 <div class="line"></div>
 
                 <div class="profile-section">
                     <h3>بيانات المكتب</h3>
 
-                    <p><label>اسم المكتب:</label> <?php echo htmlspecialchars($office['office_name']); ?></p>
-                    <p><label>السجل التجاري:</label> <?php echo htmlspecialchars($office['ccr_number']); ?></p>
-                    <p><label>رقم الهاتف:</label> <?php echo htmlspecialchars($office['phone']); ?></p>
-                    <p><label>وصف المكتب:</label> <?php echo htmlspecialchars($office['office_description']); ?></p>
+                    <p><label>اسم المكتب:</label> <?php echo ($office['office_name']); ?></p>
+                    <p><label>السجل التجاري:</label> <?php echo ($office['ccr_number']); ?></p>
+                    <p><label>رقم الهاتف:</label> <?php echo ($office['phone']); ?></p>
+                    <p><label>وصف المكتب:</label> <?php echo ($office['office_description']); ?></p>
 
                     <p><label>الدول المتاحة:</label></p>
 
@@ -238,7 +238,7 @@ $conn->close();
 <?php if (!empty($countries)) { ?>
     <?php foreach ($countries as $country) { ?>
         <div class="country-tag">
-            <?php echo htmlspecialchars($country); ?>
+            <?php echo ($country); ?>
         </div>
     <?php } ?>
 <?php } else { ?>
@@ -250,15 +250,15 @@ $conn->close();
                 <div class="profile-section">
                     <h3>رسوم الخدمات</h3>
 
-                    <p><label>رسوم البكالوريوس:</label> <?php echo htmlspecialchars($office['Bachelor_fee']); ?> ريال</p>
-                    <p><label>رسوم الماجستير:</label> <?php echo htmlspecialchars($office['Masters_fee']); ?> ريال</p>
-                    <p><label>رسوم الدكتوراه:</label> <?php echo htmlspecialchars($office['Phd_fee']); ?> ريال</p>
+                    <p><label>رسوم البكالوريوس:</label> <?php echo ($office['Bachelor_fee']); ?> ريال</p>
+                    <p><label>رسوم الماجستير:</label> <?php echo ($office['Masters_fee']); ?> ريال</p>
+                    <p><label>رسوم الدكتوراه:</label> <?php echo ($office['Phd_fee']); ?> ريال</p>
                 </div>
 
                 <div class="profile-section">
                     <h3>بيانات الحساب</h3>
 
-                    <p><label>البريد الإلكتروني:</label> <?php echo htmlspecialchars($office['email']); ?></p>
+                    <p><label>البريد الإلكتروني:</label> <?php echo ($office['email']); ?></p>
 
                     <div class="password-box">
                         <label>كلمة المرور:</label>
