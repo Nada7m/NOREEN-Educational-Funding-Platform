@@ -1,25 +1,26 @@
 <?php
 session_start();
 
-// 1. الاتصال بالقاعدة (منفذ 3306)
-$con = new mysqli("localhost", "root", "", "noreen", 3306);
+$con = new mysqli("localhost", "root", "", "noreen");
 if ($con->connect_error) { die("فشل الاتصال بالقاعدة: " . $con->connect_error); }
 
-// 2. تحديد هوية المستخدم (لو فيه جلسة بيعرفها، ولو للعرض بيفترض إنها فاطمة رقم 1)
 if(!isset($_SESSION['user_id'])){
     header("Location: login.php");
     exit();
 }
 
+// جلب رقم المستخم
 $user_id = $_SESSION['user_id'];
+
+//جلب رقم المنحة من الرابط
 $sch_id = isset($_GET['sch_id']) ? intval($_GET['sch_id']) : 1;
 
-// 3. جلب بيانات الطالبة تلقائياً من جدول beneficiary
-$sql_user = "SELECT * FROM beneficiary WHERE bnf_id = '$user_id'";
+// جلب بيانات المستخدم 
+$sql_user = "SELECT * FROM beneficiary WHERE bnf_id = $user_id ";
 $res_user = $con->query($sql_user);
 $userData = $res_user->fetch_assoc();
 
-// 4. معالجة إرسال النموذج (الضغط على إرسال الطلب)
+// معالجة إرسال النموذج (الضغط على إرسال الطلب)
 if(isset($_POST['submit_request'])){
     $univ = $con->real_escape_string($_POST['university']);
     $major = $con->real_escape_string($_POST['major']);
@@ -27,23 +28,24 @@ if(isset($_POST['submit_request'])){
 
     // إدخال الطلب في جدول scholarship_requests
     $sql_req = "INSERT INTO scholarship_requests (scholarship_id, bnf_id, Submit_date, request_status, major_name, univ_name) 
-                VALUES ('$sch_id', '$user_id', '$today', 'قيد المعالجة', '$major', '$univ')";
+                VALUES ('$sch_id', '$user_id', '$today','$major', '$univ')";
     
     if($con->query($sql_req)){
         $req_id = $con->insert_id;
         $upload_dir = "upload/";
-        if (!is_dir($upload_dir)) { mkdir($upload_dir, 0777, true); }
+         }
 
         // دالة رفع المستندات وحفظها في جدول scholarship_request_documents
         function uploadDoc($con, $req_id, $input, $type, $dir) {
             if(!empty($_FILES[$input]['name'])) {
                 $fName = time() . "_" . $_FILES[$input]['name'];
-                if(move_uploaded_file($_FILES[$input]['tmp_name'], $dir . $fName)) {
-                    $sql_d = "INSERT INTO scholarship_request_documents (request_id, doc_type, file_name, file) 
+                if(move_uploaded_file($_FILES[$input]['tmp_name'], $dir . $fName))
+                     
+                   { $sql_d = "INSERT INTO scholarship_request_documents (request_id, doc_type, file_name, file) 
                               VALUES ('$req_id', '$type', '$fName', '$fName')";
-                    $con->query($sql_d);
+                    $con->query($sql_d);}
                 }
-            }
+            
         }
 
         uploadDoc($con, $req_id, 'cv_file', 'CV', $upload_dir);
@@ -53,7 +55,7 @@ if(isset($_POST['submit_request'])){
 
         echo "<script>alert('✅ تم إرسال طلبك بنجاح!'); window.location.href='Ben09_TrackScholarship.php';</script>";
     }
-}
+
 ?>
 
 <!DOCTYPE html>
