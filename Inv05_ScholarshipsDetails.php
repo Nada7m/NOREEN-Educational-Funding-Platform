@@ -28,19 +28,12 @@ if (!isset($_GET['id']) || $_GET['id'] == "") {
 /* تحويل رقم المنحة إلى رقم صحيح */
 $scholarship_id = (int)$_GET['id'];
 
-/* ===================================================
-   هذا الجزء خاص بتحديث حالة الطلب
-   إذا ضغط المستثمر قبول أو رفض
-   =================================================== */
+/* هذا الجزء خاص بتحديث حالة الطلب عند الضغط على قبول أو رفض */
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["action_type"]) && isset($_POST["request_id"])) {
 
-    /* رقم الطلب */
     $request_id = (int)$_POST["request_id"];
-
-    /* نوع الإجراء */
     $action_type = $_POST["action_type"];
 
-    /* نحدد الحالة الجديدة */
     if ($action_type == "accept") {
         $new_status = "مقبول";
     } elseif ($action_type == "reject") {
@@ -49,11 +42,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["action_type"]) && isse
         $new_status = "";
     }
 
-    /* نحدث الحالة فقط إذا كانت القيمة صحيحة */
+    /* تحديث حالة الطلب */
     if ($new_status != "") {
-
-        /* نربط التحديث بنفس المنحة حتى لا يتعدل طلب مختلف */
-        $update_stmt = mysqli_prepare($con, "UPDATE scholarship_requests 
+        $update_stmt = mysqli_prepare($con, "UPDATE scholarship_requests
                                              SET request_status = ?
                                              WHERE request_id = ? AND scholarship_id = ?");
 
@@ -62,9 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["action_type"]) && isse
     }
 }
 
-/* ===================================================
-   جلب بيانات المنحة
-   =================================================== */
+/* جلب بيانات المنحة */
 $stmt = mysqli_prepare($con, "SELECT scholarship_id, sch_name, sch_field, study_level, Specializations, requirements, app_deadline
                               FROM scholarship_opps
                               WHERE scholarship_id = ? AND inv_id = ?");
@@ -74,20 +63,27 @@ mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 $scholarship = mysqli_fetch_assoc($result);
 
-/* إذا لم نجد المنحة نوقف الصفحة */
+/* إذا لم نجد المنحة */
 if (!$scholarship) {
     die("لم يتم العثور على بيانات هذه المنحة.");
 }
 
-/* ===================================================
-   جلب الطلبات الخاصة بهذه المنحة
-   =================================================== */
+/* جلب الطلبات الخاصة بهذه المنحة مع الاسم الأول والاسم الأخير */
 $applicants = [];
 
-$app_stmt = mysqli_prepare($con, "SELECT request_id, univ_name, major_name, request_status, Submit_date
+$app_stmt = mysqli_prepare($con, "SELECT
+                                    scholarship_requests.request_id,
+                                    scholarship_requests.univ_name,
+                                    scholarship_requests.major_name,
+                                    scholarship_requests.request_status,
+                                    scholarship_requests.Submit_date,
+                                    beneficiary.f_name,
+                                    beneficiary.l_name
                                   FROM scholarship_requests
-                                  WHERE scholarship_id = ?
-                                  ORDER BY request_id DESC");
+                                  LEFT JOIN beneficiary
+                                    ON scholarship_requests.bnf_id = beneficiary.bnf_id
+                                  WHERE scholarship_requests.scholarship_id = ?
+                                  ORDER BY scholarship_requests.request_id DESC");
 
 mysqli_stmt_bind_param($app_stmt, "i", $scholarship_id);
 mysqli_stmt_execute($app_stmt);
@@ -111,19 +107,20 @@ while ($row = mysqli_fetch_assoc($app_result)) {
 
   <style>
     /* ترتيب الهيدر:
-       العنوان يكون يمين
-       والإعدادات تكون يسار */
+       الإعدادات في اليسار
+       العنوان في اليمين */
     .header{
       display:flex;
-      flex-direction:row-reverse;
       justify-content:space-between;
       align-items:center;
     }
 
-    /* عنوان الصفحة */
+    /* عنوان الصفحة يظهر في اليمين */
     .page-heading{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
       text-align:right;
-      align-items:flex-end;
     }
 
     /* أيقونة الإعدادات */
@@ -141,7 +138,7 @@ while ($row = mysqli_fetch_assoc($app_result)) {
       justify-content:center;
     }
 
-    /* تصغير السهم نفسه */
+    /* تصغير السهم */
     .back-icon{
       width:24px;
       height:24px;
@@ -176,27 +173,47 @@ while ($row = mysqli_fetch_assoc($app_result)) {
       background:#F2F2F2;
     }
 
-    /* نخفي كل محتويات التبويبات */
+    /* نخفي كل المحتويات */
     .tab-content{
       display:none;
     }
 
-    /* نظهر التبويب المفتوح فقط */
+    /* نظهر المحتوى المفتوح فقط */
     .tab-content.active{
       display:block;
     }
 
-    /* هذا التنسيق خاص بالتاريخ حتى يظهر بالترتيب الصحيح */
-    .deadline-value{
-      direction:ltr;
-      unicode-bidi:embed;
-      display:inline;
+    /* سطر تاريخ المنحة */
+    .deadline-box{
+      width:28%;
+      text-align:right;
+      direction:rtl;
+      padding-top:50px;
+      display:flex;
+      align-items:center;
+      justify-content:flex-start;
+      gap:6px;
+      flex-wrap:wrap;
     }
 
-    /* هذا أيضًا لتاريخ الطلبات */
+    /* عنوان التاريخ */
+    .deadline-label{
+      direction:rtl;
+      white-space:nowrap;
+    }
+
+    /* التاريخ نفسه */
+    .deadline-value{
+      direction:ltr;
+      unicode-bidi:isolate;
+      white-space:nowrap;
+      display:inline-block;
+    }
+
+    /* تاريخ الطلبات داخل الجدول */
     .date-cell{
       direction:ltr;
-      unicode-bidi:embed;
+      unicode-bidi:isolate;
       white-space:nowrap;
     }
 
@@ -273,7 +290,7 @@ while ($row = mysqli_fetch_assoc($app_result)) {
       color:#FFFFFF;
     }
 
-    /* شكل الحالة */
+    /* شكل نص الحالة */
     .status-text{
       font-weight:700;
       color:#3E2454;
@@ -320,22 +337,21 @@ while ($row = mysqli_fetch_assoc($app_result)) {
       <!-- الهيدر -->
       <header class="header">
 
-        <!-- عنوان الصفحة -->
-        <div class="page-heading">
-          <h1 class="page-title">عرض المنح</h1>
-          <p class="page-description">صفحة تقديم عروض فرص المنح</p>
-        </div>
-
-        <!-- الإعدادات -->
+        <!-- الإعدادات تظهر في اليسار -->
         <div class="header-icons">
           <div class="settings-dropdown">
             <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="الإعدادات">
-
             <div class="dropdown-menu">
               <a href="Inv02_Profile.php">الملف الشخصي</a>
               <a href="support.php">تقديم شكوى او استفسار</a>
             </div>
           </div>
+        </div>
+
+        <!-- العنوان يظهر في اليمين -->
+        <div class="page-heading">
+          <h1 class="page-title">عرض المنح</h1>
+          <p class="page-description">صفحة تقديم عروض فرص المنح</p>
         </div>
 
       </header>
@@ -356,34 +372,32 @@ while ($row = mysqli_fetch_assoc($app_result)) {
         <!-- التبويبات -->
         <div class="tabs-row">
 
-          <!-- تبويب المنحة -->
+          <!-- تبويب تفاصيل المنحة -->
           <div class="tab tab-active" data-target="scholarship-tab">
             تفاصيل المنحة
           </div>
 
-          <!-- تبويب المتقدمين -->
+          <!-- تبويب تفاصيل المتقدمين -->
           <div class="tab" data-target="requests-tab">
             تفاصيل المتقدمين
           </div>
 
         </div>
 
-        <!-- =========================
-             تبويب تفاصيل المنحة
-             ========================= -->
+        <!-- تبويب تفاصيل المنحة -->
         <div id="scholarship-tab" class="tab-content active">
 
           <div class="scholarship-details-box">
 
             <div class="top-info-row">
 
-              <!-- بيانات الموعد -->
+              <!-- سطر تاريخ التقديم:
+                   أولًا النص
+                   ثم التاريخ
+                   ثم الأيقونة -->
               <div class="deadline-box">
-                <span class="deadline-icon">🗓</span>
                 <span class="deadline-label">آخر موعد للتقديم:</span>
-                <div class="deadline-value">
-                  <?php echo date("d-m-Y", strtotime($scholarship['app_deadline'])); ?>
-                </div>
+                <span class="deadline-value"><?php echo date("d-m-Y", strtotime($scholarship['app_deadline'])); ?></span>
               </div>
 
               <!-- بيانات المنحة -->
@@ -443,9 +457,7 @@ while ($row = mysqli_fetch_assoc($app_result)) {
           </div>
         </div>
 
-        <!-- =========================
-             تبويب تفاصيل المتقدمين
-             ========================= -->
+        <!-- تبويب تفاصيل المتقدمين -->
         <div id="requests-tab" class="tab-content">
 
           <div class="requests-box">
@@ -461,6 +473,8 @@ while ($row = mysqli_fetch_assoc($app_result)) {
               <table class="requests-table">
                 <thead>
                   <tr>
+                    <th>الاسم الأول</th>
+                    <th>الاسم الأخير</th>
                     <th>الجامعة</th>
                     <th>التخصص</th>
                     <th>حالة الطلب</th>
@@ -473,34 +487,28 @@ while ($row = mysqli_fetch_assoc($app_result)) {
                   <?php foreach ($applicants as $applicant): ?>
                     <tr>
 
-                      <!-- اسم الجامعة -->
+                      <td><?php echo htmlspecialchars($applicant['f_name']); ?></td>
+                      <td><?php echo htmlspecialchars($applicant['l_name']); ?></td>
                       <td><?php echo htmlspecialchars($applicant['univ_name']); ?></td>
-
-                      <!-- التخصص -->
                       <td><?php echo htmlspecialchars($applicant['major_name']); ?></td>
 
-                      <!-- الحالة الحالية -->
                       <td class="status-text">
                         <?php echo htmlspecialchars($applicant['request_status']); ?>
                       </td>
 
-                      <!-- تاريخ التقديم -->
                       <td class="date-cell">
                         <?php echo date("d-m-Y", strtotime($applicant['Submit_date'])); ?>
                       </td>
 
-                      <!-- أزرار القبول والرفض -->
                       <td>
                         <div class="actions-box">
 
-                          <!-- زر قبول -->
                           <form method="post" style="margin:0;">
                             <input type="hidden" name="request_id" value="<?php echo $applicant['request_id']; ?>">
                             <input type="hidden" name="action_type" value="accept">
                             <button type="submit" class="action-btn accept-btn">قبول</button>
                           </form>
 
-                          <!-- زر رفض -->
                           <form method="post" style="margin:0;">
                             <input type="hidden" name="request_id" value="<?php echo $applicant['request_id']; ?>">
                             <input type="hidden" name="action_type" value="reject">
@@ -528,30 +536,23 @@ while ($row = mysqli_fetch_assoc($app_result)) {
   </div>
 
   <script>
-    /* هذا الجزء يشغل التبويبات
-       عندما يضغط المستخدم على اسم التبويب
-       نخفي الباقي ونظهر المطلوب فقط */
-
+    /* تشغيل التبويبات */
     const tabs = document.querySelectorAll(".tab");
     const contents = document.querySelectorAll(".tab-content");
 
     tabs.forEach(function(tab){
       tab.addEventListener("click", function(){
 
-        /* إزالة التحديد من كل التبويبات */
         tabs.forEach(function(item){
           item.classList.remove("tab-active");
         });
 
-        /* إخفاء كل المحتويات */
         contents.forEach(function(content){
           content.classList.remove("active");
         });
 
-        /* تحديد التبويب الحالي */
         tab.classList.add("tab-active");
 
-        /* إظهار المحتوى المرتبط به */
         const targetId = tab.getAttribute("data-target");
         document.getElementById(targetId).classList.add("active");
       });
