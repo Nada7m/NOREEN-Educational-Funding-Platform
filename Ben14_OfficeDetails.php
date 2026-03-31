@@ -402,9 +402,9 @@ $conn->close();
       <button type="button" class="btnlight" onclick="window.location.href='#'">
         التواصل للاستشارة
       </button>
-      <button type="button" class="btndark" onclick="window.location.href='#'">
-        تقديم طلب إصدار قبول
-      </button>
+      <button type="button" class="btndark" onclick="window.location.href='Ben15_AdmissionReq.php?id=<?php echo $office['office_id']; ?>'">
+  تقديم طلب إصدار قبول
+</button>
     </div>
 
     <!-- الرسوم -->
