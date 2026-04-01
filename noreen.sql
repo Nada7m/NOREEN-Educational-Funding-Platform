@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Generation Time: 01 أبريل 2026 الساعة 18:00
+-- Host: 127.0.0.1
+-- Generation Time: 02 أبريل 2026 الساعة 01:30
 -- إصدار الخادم: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -70,9 +70,16 @@ CREATE TABLE `admission_request` (
   `major_name` varchar(100) NOT NULL,
   `univ_name` varchar(100) NOT NULL,
   `Submit_date` date NOT NULL,
-  `result_notes` text NOT NULL,
-  `Result_status` enum('في انتظار الاصدار','أصدرت') NOT NULL
+  `result_notes` text DEFAULT NULL,
+  `Result_status` enum('قيد المعالجة','أصدرت') NOT NULL DEFAULT 'قيد المعالجة'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- إرجاع أو استيراد بيانات الجدول `admission_request`
+--
+
+INSERT INTO `admission_request` (`request_id`, `bnf_id`, `office_id`, `major_name`, `univ_name`, `Submit_date`, `result_notes`, `Result_status`) VALUES
+(1, 1, 2, 'نمذجة وتحسين النظم الصناعية', 'إلينوي أوربانا شامبين - الولايات المتحدة', '2026-04-02', '', '');
 
 -- --------------------------------------------------------
 
@@ -87,6 +94,20 @@ CREATE TABLE `admission_request_documents` (
   `file_name` varchar(255) NOT NULL,
   `file` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- إرجاع أو استيراد بيانات الجدول `admission_request_documents`
+--
+
+INSERT INTO `admission_request_documents` (`doc_id`, `request_id`, `doc_type`, `file_name`, `file`) VALUES
+(1, 1, 'CV', 'Fatima_Alghamdi_CV.pdf', 'uploads/admission_requests/1_cv_file.pdf'),
+(2, 1, 'Passport', 'Fatima_Alghamdi_Passport.pdf', 'uploads/admission_requests/1_passport_file.pdf'),
+(3, 1, 'Language Certificate', 'Fatima_Alghamdi_Language_Certificate.pdf', 'uploads/admission_requests/1_language_file.pdf'),
+(4, 1, 'Recommendation Letters', 'Fatima_Alghamdi_Recommendation_Letters.pdf', 'uploads/admission_requests/1_recommendation_file.pdf'),
+(5, 1, 'Other Certificates', 'Fatima_Alghamdi_Other_Certificates.pdf.pdf', 'uploads/admission_requests/1_other_file.pdf'),
+(6, 1, 'University Degree Certificate', 'Fatima_Alghamdi_University_Degree.pdf', 'uploads/admission_requests/1_degree_file.pdf'),
+(7, 1, 'Academic Transcript', 'Fatima_Alghamdi_Transcript.pdf', 'uploads/admission_requests/1_transcript_file.pdf'),
+(8, 1, 'Statement of Purpose', 'Fatima_Alghamdi_SOP.pdf', 'uploads/admission_requests/1_sop_file.pdf');
 
 -- --------------------------------------------------------
 
@@ -124,17 +145,8 @@ CREATE TABLE `bnf_inv_msg` (
   `bnf_id` int(11) NOT NULL,
   `inv_id` int(11) NOT NULL,
   `msg_time` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `msg_text` text NOT NULL,
-  `sender_type` enum('beneficiary','investor') NOT NULL
+  `msg_text` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- إرجاع أو استيراد بيانات الجدول `bnf_inv_msg`
---
-
-INSERT INTO `bnf_inv_msg` (`msg_id`, `bnf_id`, `inv_id`, `msg_time`, `msg_text`, `sender_type`) VALUES
-(1, 1, 1, '2026-04-01 17:57:45', 'السلام عليكم ورحمة الله وبركاته، نبارك لكم قبولكم المبدئي في منحة تطوير الانظمة الصناعية، ويسعدنا التواصل معكم لاستكمال الإجراءات واقتراح  موعد لمقابلة تعريفية لمناقشة التفاصيل والخطوات القادمة. هل يناسبكم يوم الأحد الساعة 10:00 صباحًا؟  شاكرين ومقدّرين تعاونكم.', 'investor'),
-(2, 1, 1, '2026-04-01 18:13:26', 'وعليكم السلام ورحمة الله وبركاته، أسعد الله مساءكم بكل خير، وشكرًا لكم على قبولكم وثقتكم. نعم، الموعد المقترح يوم الأحد الساعة 10:00 صباحًا مناسب لي، كما أتطلع لمعرفة تفاصيل المقابلة والآلية المتبعة وتفضلوا بقبول فائق الاحترام', 'beneficiary');
 
 -- --------------------------------------------------------
 
@@ -560,13 +572,13 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `admission_request`
 --
 ALTER TABLE `admission_request`
-  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `admission_request_documents`
 --
 ALTER TABLE `admission_request_documents`
-  MODIFY `doc_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `doc_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `beneficiary`
@@ -578,7 +590,7 @@ ALTER TABLE `beneficiary`
 -- AUTO_INCREMENT for table `bnf_inv_msg`
 --
 ALTER TABLE `bnf_inv_msg`
-  MODIFY `msg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `msg_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `bnf_off_msg`
