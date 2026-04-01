@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: 01 أبريل 2026 الساعة 10:12
+-- Host: 127.0.0.1:3306
+-- Generation Time: 01 أبريل 2026 الساعة 18:00
 -- إصدار الخادم: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -124,8 +124,17 @@ CREATE TABLE `bnf_inv_msg` (
   `bnf_id` int(11) NOT NULL,
   `inv_id` int(11) NOT NULL,
   `msg_time` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `msg_text` text NOT NULL
+  `msg_text` text NOT NULL,
+  `sender_type` enum('beneficiary','investor') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- إرجاع أو استيراد بيانات الجدول `bnf_inv_msg`
+--
+
+INSERT INTO `bnf_inv_msg` (`msg_id`, `bnf_id`, `inv_id`, `msg_time`, `msg_text`, `sender_type`) VALUES
+(1, 1, 1, '2026-04-01 17:57:45', 'السلام عليكم ورحمة الله وبركاته، نبارك لكم قبولكم المبدئي في منحة تطوير الانظمة الصناعية، ويسعدنا التواصل معكم لاستكمال الإجراءات واقتراح  موعد لمقابلة تعريفية لمناقشة التفاصيل والخطوات القادمة. هل يناسبكم يوم الأحد الساعة 10:00 صباحًا؟  شاكرين ومقدّرين تعاونكم.', 'investor'),
+(2, 1, 1, '2026-04-01 18:13:26', 'وعليكم السلام ورحمة الله وبركاته، أسعد الله مساءكم بكل خير، وشكرًا لكم على قبولكم وثقتكم. نعم، الموعد المقترح يوم الأحد الساعة 10:00 صباحًا مناسب لي، كما أتطلع لمعرفة تفاصيل المقابلة والآلية المتبعة وتفضلوا بقبول فائق الاحترام', 'beneficiary');
 
 -- --------------------------------------------------------
 
@@ -569,7 +578,7 @@ ALTER TABLE `beneficiary`
 -- AUTO_INCREMENT for table `bnf_inv_msg`
 --
 ALTER TABLE `bnf_inv_msg`
-  MODIFY `msg_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `msg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `bnf_off_msg`
