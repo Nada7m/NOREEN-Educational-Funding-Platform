@@ -36,7 +36,7 @@ $result=mysqli_stmt_get_result($stmt);
 .header-icons{display:flex;align-items:center;}
 /* تنسيق الصفحة */
 .manage-page{padding:35px;}
-/* الكارد الرئيسي مع تصحيح الاتجاه */
+/* الكارد الرئيسي    */
 .accepted-card{width:100%;background:#FFFFFF;border:1px solid #CFCFCF;border-radius:8px;padding:20px;display:flex;flex-direction:row-reverse;justify-content:space-between;align-items:center;margin-bottom:20px;box-sizing:border-box;}
 /* معلومات الطالب */
 .accepted-info{display:flex;flex-direction:column;gap:10px;text-align:right;}
@@ -101,8 +101,9 @@ $result=mysqli_stmt_get_result($stmt);
   <a href="Inv07_StudentDetails.php?request_id=<?php echo $row['request_id']; 
   ?>" class="manage-btn btn-view">عرض البيانات</a>
 <a href="#" class="manage-btn btn-contact">التواصل</a>
-<a href="#" class="manage-btn btn-contract">العقد الإلكتروني</a>
-</div>
+<a href="Inv09_create_contract.php?request_id=<?php echo $row['request_id']; ?>" class="manage-btn btn-contract">
+    العقد الإلكتروني
+</a></div>
 <div class="accepted-info">
 <div class="accepted-line"><span class="accepted-label">الاسم:</span><?php echo htmlspecialchars($row['f_name'])." ".htmlspecialchars($row['l_name']); ?></div>
 <div class="accepted-line"><span class="accepted-label">رقم الطلب:</span>#<?php echo htmlspecialchars($row['request_id']); ?></div>
