@@ -404,7 +404,7 @@ body{
                         <div>
                             <div class="form-group">
                                 <label class="form-label"><span class="req">*</span> قيمة الدعم الإجمالية</label>
-                                <input type="text" name="amount" class="form-input" placeholder="ااكتب المبلغ الإجمالي المتفق عليه (بالريال)" value="<?php echo isset($_POST['amount']) ? htmlspecialchars($_POST['amount']) : ''; ?>">
+                                <input type="text" name="amount" class="form-input" placeholder="اكتب المبلغ الإجمالي المتفق عليه (بالريال)" value="<?php echo isset($_POST['amount']) ? htmlspecialchars($_POST['amount']) : ''; ?>">
                             </div>
 
                             <div class="form-group">
