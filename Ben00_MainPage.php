@@ -33,7 +33,7 @@ session_start();
           <li><a href="Ben04_BrowseScholarships.php">التقديم على المنح</a></li>
           <li><a href="Ben09_TrackScholarship.php">متابعة المنح</a></li>
           <li><a href="Ben013_ConsultingOffices.php">المكاتب الاستشارية</a></li>
-          <li><a href="Ben0_AcceptanceRequests.php">طلبات إصدار القبول</a></li>
+          <li><a href="Ben16_AdmissionList.php">طلبات إصدار القبول</a></li>
           <li><a href="Ben0_Consultations.php">الاستشارات</a></li>
         </ul>
 

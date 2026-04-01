@@ -109,7 +109,7 @@ if ($request) {
           <li><a href="Ben04_BrowseScholarships.php">التقديم على المنح</a></li>
           <li><a href="Ben09_TrackScholarship.php" class="active">متابعة المنح</a></li>
           <li><a href="Ben013_ConsultingOffices.php">المكاتب الاستشارية</a></li>
-          <li><a href="#">طلبات إصدار القبول</a></li>
+          <li><a href="Ben16_AdmissionList.php">طلبات إصدار القبول</a></li>
           <li><a href="#">الاستشارات</a></li>
         </ul>
       </div>
@@ -129,18 +129,16 @@ if ($request) {
           <div class="page-description">صفحة متابعة طلبات المنح الحالية</div>
         </div>
         <div class="header-icons">
-          <div class="settings-dropdown">
-            <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="الإعدادات">
-            <div class="dropdown-menu">
-              <a href="Ben02_Profile.php">الملف الشخصي</a>
-              <a href="Ben03_EditProfile.php">تعديل الملف الشخصي</a>
-              <a href="#">محفظة منحتي</a>
-              <a href="support.php">تقديم شكوى او استفسار</a>
-            </div>
-          </div>
-        </div>
-      </header>
-
+<div class="settings-dropdown">
+<img src="ايقونة قائمة الاعدادات.png" class="menu-icon">
+<div class="dropdown-menu">
+<a href="Ben02_Profile.php">الملف الشخصي</a>
+<a href="#">محفظة منحتي</a>
+<a href="support.php">تقديم شكوى او استفسار</a>
+</div>
+</div>
+</div>
+</header>
       <!-- قسم بيانات الطلب--> 
       <div class="page">
         <div class="track-wrap">

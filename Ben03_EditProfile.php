@@ -177,7 +177,7 @@ $conn->close();
                  <li><a href="Ben04_BrowseScholarships.php">التقديم على المنح</a></li>
           <li><a href="Ben09_TrackScholarship.php">متابعة المنح</a></li>
                 <li><a href="#">المكاتب الاستشارية</a></li>
-                <li><a href="#">طلبات إصدار القبول</a></li>
+                 <li><a href="#Ben16_AdmissionList.php">طلبات إصدار القبول</a></li>
                 <li><a href="#">الاستشارات</a></li>
             </ul>
 
