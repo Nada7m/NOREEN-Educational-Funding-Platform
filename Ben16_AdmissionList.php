@@ -6,18 +6,19 @@ if (!isset($_SESSION['bnf_id'])) {
     header("Location: login.php");
     exit();
 }
+
 /* الاتصال بقاعدة البيانات */
 $conn = new mysqli("localhost", "root", "", "noreen");
 if ($conn->connect_error) {
     die("فشل الاتصال بقاعدة البيانات");
 }
 $conn->set_charset("utf8mb4");
+
 $bnf_id = (int) $_SESSION['bnf_id'];
+
 /* جلب طلبات إصدار القبول الخاصة بالمستفيد */
 $sql = "SELECT 
             ar.request_id,
-            ar.major_name,
-            ar.univ_name,
             ar.Submit_date,
             ar.result_notes,
             ar.Result_status,
@@ -26,6 +27,7 @@ $sql = "SELECT
         LEFT JOIN consulting_office co ON ar.office_id = co.office_id
         WHERE ar.bnf_id = $bnf_id
         ORDER BY ar.request_id DESC";
+
 $result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
@@ -41,22 +43,18 @@ $result = $conn->query($sql);
 .page{ padding:18px 30px 30px; }
 .content-box{ width:100%; max-width:1100px; margin:20px auto; background:#fff; padding:30px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.05); }
 .requests-table-wrap{ width:100%; overflow-x:auto; }
-.requests-table{ width:100%; border-collapse:collapse; min-width:900px; }
-.requests-table th{ background:#F5F3F7; color:#3E2454; padding:14px 12px; font-size:15px; font-weight:700; text-align:center; border-bottom:1px solid #ddd; font-family:'Noto Kufi Arabic', sans-serif ; }
-.requests-table td{ background:#fff; padding:14px 12px; font-size:14px; color:#444; text-align:center; border-bottom:1px solid #eee; font-family:'Noto Kufi Arabic', sans-serif ; vertical-align:middle; }
+.requests-table{ width:100%; border-collapse:collapse; min-width:700px; }
+.requests-table th{ background:#F5F3F7; color:#3E2454; padding:14px 12px; font-size:15px; font-weight:700; text-align:center; border-bottom:1px solid #ddd; font-family:'Noto Kufi Arabic', sans-serif; }
+.requests-table td{ background:#fff; padding:14px 12px; font-size:14px; color:#444; text-align:center; border-bottom:1px solid #eee; font-family:'Noto Kufi Arabic', sans-serif; vertical-align:middle; }
 .requests-table tr:hover td{ background:#fcfbfd; }
 .req-code{ color:#6f6f6f; font-weight:700; }
-.uni-text{ line-height:1.8; color:#666; }
-.status-processing{ background:#F3D48A ; color:#7A5A00 ; padding:8px ; border-radius:8px; font-weight:700;  }
-.status-done{ background:#8FD0A5 ; color:#185C31 ; padding:8px ; border-radius:8px; font-weight:700; }
-.status-rejected{ background:#F2B6B6 ; color:#8A1F1F; padding:8px ; border-radius:8px; font-weight:700; }
-.details-btn{ display:inline-block; padding:8px 16px; background:#fff; color:#3E2454; border:1.5px solid #B9B0C6; border-radius:10px; text-decoration:none; font-size:13px; font-weight:700; transition:0.3s; font-family:'Noto Kufi Arabic',}
 .status-box{ display:inline-block; min-width:110px; padding:8px 14px; border-radius:10px; font-size:13px; font-weight:700; }
 .status-processing{ background:#F3D48A; color:#7A5A00; }
 .status-done{ background:#8FD0A5; color:#185C31; }
 .status-rejected{ background:#F2B6B6; color:#8A1F1F; }
+.details-btn{ display:inline-block; padding:8px 16px; background:#fff; color:#3E2454; border:1.5px solid #B9B0C6; border-radius:10px; text-decoration:none; font-size:13px; font-weight:700; transition:0.3s; font-family:'Noto Kufi Arabic', sans-serif; }
 .details-btn:hover{ background:#f6f2fa; }
-.empty-box{ text-align:center; padding:50px 20px; color:#777; font-size:16px; font-family:'Noto Kufi Arabic', sans-serif ; }
+.empty-box{ text-align:center; padding:50px 20px; color:#777; font-size:16px; font-family:'Noto Kufi Arabic', sans-serif; }
 </style>
 </head>
 <body>
@@ -118,8 +116,7 @@ $result = $conn->query($sql);
 
                             <tr>
                                 <th>رقم الطلب</th>
-                                <th>التخصص</th>
-                                <th>الجامعة</th>
+                                <th>المكتب</th>
                                 <th>تاريخ التقديم</th>
                                 <th>حالة النتيجة</th>
                                 <th>الإجراءات</th>
@@ -144,24 +141,23 @@ $result = $conn->query($sql);
 
                                 <tr>
                                     <td class="req-code">UA<?php echo $row['request_id']; ?></td>
+
                                     <td>
-                                        <?php echo ($row['major_name']); ?>
-                                    </td>
-                                    <td class="uni-text">
-                                        <?php echo ($row['univ_name']); ?>
+                                        <?php echo $row['office_name']; ?>
                                     </td>
 
                                     <td>
-                                        <?php echo ($row['Submit_date']); ?>
+                                        <?php echo $row['Submit_date']; ?>
                                     </td>
 
-                                   <td>
-    <div class="status-box <?php echo $statusClass; ?>">
-        <?php echo ($statusText); ?>
-    </div>
-</td>
-<td>
-                                        <a href="Ben17_AdmissionRequestDetails.php?id=<?php echo $row['request_id']; ?>" class="details-btn">
+                                    <td>
+                                        <div class="status-box <?php echo $statusClass; ?>">
+                                            <?php echo $statusText; ?>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <a href="Ben17_AdmissionDetails.php?id=<?php echo $row['request_id']; ?>" class="details-btn">
                                             عرض تفاصيل الطلب
                                         </a>
                                     </td>

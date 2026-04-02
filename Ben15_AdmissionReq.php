@@ -231,32 +231,20 @@ foreach ($programDocs as $programKey => $docs) {
 .star{ color:red !important; font-weight:bold; margin-left:3px; }
 .form-submit-btn{ font-family:'Noto Kufi Arabic', font-size:18px; font-weight:700; background-color:#70A0AF; color:#ffffff; cursor:pointer; border:none; border-radius:4px;  }
 .pay-modal{ display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:3000; justify-content:center; align-items:center; }
-
 .pay-card{ width:700px; max-width:92%; background:#fff; border-radius:10px; padding:30px 24px; box-shadow:0 8px 24px rgba(0,0,0,0.18); }
-
 .pay-title{ text-align:center; color:#d46a6a; font-size:22px; font-weight:700; margin-bottom:18px; font-family:'Noto Kufi Arabic',   }
-
 .pay-box{ width:78%; margin:0 auto; border:1px solid #e0e0e0; border-radius:10px; padding:18px; }
-
 .pay-box-title{ text-align:center; font-size:20px; font-weight:700; color:#333; margin-bottom:16px; font-family:'Noto Kufi Arabic',   }
-
 .pay-field{ margin-bottom:14px; }
-
 .pay-field input{ width:100%; height:46px; border:1px solid #d1d1d1; border-radius:6px; padding:8px 12px; font-size:14px; font-family:'Noto Kufi Arabic',   outline:none; }
-
 .pay-row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-
 .pay-confirm{ width:100%; height:46px; border:none; border-radius:6px; background:#70A0AF; color:#fff; font-size:18px; font-weight:700; font-family:'Noto Kufi Arabic',   cursor:pointer; margin-top:10px; }
-
 .close-btn{ display:block; margin:12px auto 0; background:none; border:none; color:#777; font-size:14px; font-family:'Noto Kufi Arabic',   cursor:pointer; }
-
 .hidden{ display:none; }
 </style>
 </head>
 <body>
-
 <div class="layout">
-
     <aside class="sidebar">
         <div class="sidebar-top">
             <div class="sidebar-logo">
@@ -340,12 +328,12 @@ foreach ($programDocs as $programKey => $docs) {
                             <div class="form-fields">
                                 <div class="field">
                                     <label><b class="star">*</b> اسم الجامعة المرغوبة</label>
-                                    <input type="text" name="univ_name" id="univ_name" placeholder="ادخل اسم الجامعة" value="<?php echo ($univ_name, ENT_QUOTES, 'UTF-8'); ?>" required>
+                                <input type="text" name="univ_name" id="univ_name" placeholder="ادخل اسم الجامعة" value="<?php echo htmlspecialchars($univ_name, ENT_QUOTES, 'UTF-8'); ?>" required>
                                 </div>
 
                                 <div class="field">
                                     <label><b class="star">*</b> التخصص الدراسي المرغوب</label>
-                                    <input type="text" name="major_name" id="major_name" placeholder="ادخل التخصص الدراسي المرغوب" value="<?php echo ($major_name, ENT_QUOTES, 'UTF-8'); ?>" required>
+                                    <input type="text" name="major_name" id="major_name" placeholder="ادخل التخصص الدراسي المرغوب" value="<?php echo htmlspecialchars($major_name, ENT_QUOTES, 'UTF-8');  ?>" required>
                                 </div>
                             </div>
                         </div>
