@@ -9,7 +9,7 @@ if ($con->connect_error) {
 $con->set_charset("utf8mb4");
 
 // 2. المعرفات (تأكدي أن inv_id يصل في الرابط)
-$current_bnf_id = $_SESSION['user_id'] ?? 18; 
+$current_bnf_id = $_SESSION['bnf_id'] ?? 0;
 $target_inv_id = isset($_GET['inv_id']) ? intval($_GET['inv_id']) : 0; 
 
 // 3. معالجة الإرسال
@@ -26,15 +26,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send_msg']) && $target
 }
 
 // 4. جلب بيانات المستثمر (مع فحص الأمان لمنع الخطأ الذي ظهر لك)
-$inv_name = "الجهة المانحة"; // اسم افتراضي في حال فشل الاستعلام
+$inv_name = "الجهة المانحة";
 if ($target_inv_id > 0) {
-    $inv_res = $con->query("SELECT f_name, l_name FROM investor WHERE inv_id = '$target_inv_id'");
+    $inv_res = $con->query("SELECT inv_name FROM investor WHERE inv_id = '$target_inv_id'");
     if ($inv_res && $inv_res->num_rows > 0) {
         $inv_row = $inv_res->fetch_assoc();
-        $inv_name = $inv_row['f_name'] . " " . $inv_row['l_name'];
+        $inv_name = $inv_row['inv_name'];
     }
 }
-
 // 5. جلب المحادثة
 $res_msgs = $con->query("SELECT * FROM bnf_inv_msg WHERE bnf_id = '$current_bnf_id' AND inv_id = '$target_inv_id' ORDER BY msg_time ASC");
 ?>

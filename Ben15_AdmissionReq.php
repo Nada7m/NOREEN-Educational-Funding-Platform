@@ -200,7 +200,7 @@ foreach ($programDocs as $programKey => $docs) {
 <title>تقديم طلب إصدار قبول</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="CSS01Layout.css?v=2">
+<link rel="stylesheet" href="CSS01Layout.css?v=3">
 
 <style>
 .scholarship-details-box{ width:100%; max-width:850px; margin:20px auto; background:#fff; padding:20px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.05); }

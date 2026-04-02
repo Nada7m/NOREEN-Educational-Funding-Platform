@@ -35,7 +35,7 @@ $conn->close();
 <meta charset="UTF-8">
 <title>الملف الشخصي</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="CSS01Layout.css?v=2">
+<link rel="stylesheet" href="CSS01Layout.css?v=3">
 <style>
 /* الصفحة */
 .page{padding: 40px; font-family: "Noto Kufi Arabic", sans-serif;}

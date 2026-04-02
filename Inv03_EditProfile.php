@@ -114,7 +114,7 @@ if (!$row) {
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- ملف التنسيق -->
-  <link rel="stylesheet" href="CSS01Layout.css?v=2"></head>
+  <link rel="stylesheet" href="CSS01Layout.css?v=3"></head>
 <body>
 
   <!-- الهيكل العام -->

@@ -14,15 +14,19 @@ $bnf_id = $_SESSION['bnf_id'];
 /* جلب آخر طلب للمستفيد*/
 $sql  = "
     SELECT 
-        request_id,
-        scholarship_id,
-        bnf_id,
-        request_status,
-        major_name,
-        univ_name
-    FROM scholarship_requests
-    WHERE bnf_id = ?
-    ORDER BY request_id DESC
+        sr.request_id,
+        sr.scholarship_id,
+        sr.bnf_id,
+        sr.request_status,
+        sr.major_name,
+        sr.univ_name,
+        s.inv_id,
+        s.sch_name
+    FROM scholarship_requests sr
+    INNER JOIN scholarship_opps s 
+        ON sr.scholarship_id = s.scholarship_id
+    WHERE sr.bnf_id = ?
+    ORDER BY sr.request_id DESC
     LIMIT 1
 ";/* رتب الطلبات تنازليا واعطني طلب واحد فقط*/
 
@@ -68,7 +72,7 @@ if ($request) {
   <title>متابعة المنح</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="CSS01Layout.css?v=2">
+  <link rel="stylesheet" href="CSS01Layout.css?v=3">
 
   <style>
 .track-wrap{ padding:30px 20px; }
@@ -177,7 +181,9 @@ if ($request) {
   <!-- قسم الازرار--> 
 <div class="track-actions">
    <!--لا يعتمد على حالة الطلب مفعل دائما -->
-  <a href="Ben10_Contact.php"  class="track-btn btn-contact"> التواصل </a>
+<a href="Ben10_InvestorContact.php?inv_id=<?php echo $request['inv_id']; ?>" class="track-btn btn-contact">
+  التواصل
+</a>
 
   <?php if ($reportsEnabled) { ?>
     <a href="Ben11_ReportsPayments.php"  class="track-btn btn-reports">

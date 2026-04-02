@@ -28,7 +28,7 @@ $result=mysqli_stmt_get_result($stmt);
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>إدارة المنح</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="CSS01Layout.css?v=2">
+<link rel="stylesheet" href="CSS01Layout.css?v=3">
 <style>
 /* ضبط اتجاه الهيدر */
 .header{display:flex;justify-content:space-between;align-items:center;}
