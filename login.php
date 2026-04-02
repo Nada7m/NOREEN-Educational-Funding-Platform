@@ -69,17 +69,36 @@ if (isset($_POST['login'])) {
         if ($result->num_rows > 0) {
             $user = $result->fetch_assoc();
 
-          
-            if (password_verify($password, $user['password'])) {
-                
-                $_SESSION['email'] = $user['email'];
-                $_SESSION['user_type'] = $table;
-                $_SESSION[$session_key] = $user[$id_field]; 
-                $_SESSION['user_id'] = $user[$id_field];
-                // توجيه المستخدم فوراً لصفحته الخاصة بناءً على نوع حسابه
-                header("Location: " . $redirect);
-                exit(); 
-            }
+          if (password_verify($password, $user['password'])) {
+
+    /* =========================
+       التحقق من الاعتماد (فقط للمستثمر والمكتب)
+    ========================= */
+    if ($table == "investor" || $table == "consulting_office") {
+
+        if ($user['approval_status'] == 'بانتظار المراجعة') {
+            $error = "حسابك بانتظار المراجعة من الإدارة";
+            break;
+        }
+        elseif ($user['approval_status'] == 'مرفوض') {
+            $error = "تم رفض طلب التسجيل";
+            break;
+        }
+        elseif ($user['approval_status'] != 'معتمد') {
+            $error = "حالة الحساب غير معروفة";
+            break;
+        }
+    }
+
+    /* إذا معتمد أو نوعه مو يحتاج اعتماد */
+    $_SESSION['email'] = $user['email'];
+    $_SESSION['user_type'] = $table;
+    $_SESSION[$session_key] = $user[$id_field]; 
+    $_SESSION['user_id'] = $user[$id_field];
+
+    header("Location: " . $redirect);
+    exit(); 
+}
         }
     }
 
