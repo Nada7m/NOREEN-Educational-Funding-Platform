@@ -230,7 +230,7 @@ $result = mysqli_query($con, $sql);
       </div>
 
       <ul class="sidebar-menu">
-        <li><a href="Admin_Contracts.php">إدارة العقود</a></li>
+        <li><a href="Admin3_Contracts.php">إدارة العقود</a></li>
         <li><a href="complaints.php">الشكاوى والاستفسارات</a></li>
         <li><a href="users_manage.php">إدارة المستخدمين</a></li>
         <li><a href="Admin2_ EntitiesApproval.php"class="active">اعتماد الجهات</a></li>
