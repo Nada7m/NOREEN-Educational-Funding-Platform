@@ -74,10 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <meta charset="UTF-8">
 <title>إنشاء عرض منحة جديدة</title>
 <link rel="stylesheet" href="CSS01Layout.css">
-
 <style>
-
-/* الهيدر: العنوان يمين والإعدادات يسار */
 .header{
   display:flex;
   flex-direction:row-reverse;
@@ -85,25 +82,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   align-items:center;
 }
 
-/* عنوان الصفحة */
 .page-heading{
   text-align:right;
   align-items:flex-end;
 }
 
-/* أيقونة الإعدادات */
 .header-icons{
   display:flex;
   align-items:center;
 }
 
-/* تصغير سهم الرجوع */
 .back-icon{
   width:26px;
   height:26px;
 }
 
-/* تصغير الزر */
 .back-btn{
   width:32px;
   height:32px;
@@ -112,12 +105,164 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   justify-content:center;
 }
 
-/* شكل النص داخل الحقول */
 ::placeholder{
   color:#999;
   font-size:13px;
 }
 
+.form-card{
+  width:96%;
+  max-width:1450px;
+  margin:0 auto;
+  background:#ffffff;
+  border-radius:10px;
+  padding:42px 46px 52px;
+  box-shadow:0 4px 18px rgba(0,0,0,0.05);
+}
+
+.intro-text{
+  text-align:center;
+  font-size:17px;
+  color:#222;
+  margin-bottom:28px;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:30px 38px;
+  align-items:start;
+}
+
+.field{
+  margin-bottom:22px;
+}
+
+.field label{
+  display:block;
+  font-size:17px;
+  font-weight:600;
+  margin-bottom:10px;
+  color:#191919;
+  line-height:1.9;
+}
+
+.field input[type="text"],
+.field input[type="date"],
+.field select{
+  width:100%;
+  height:50px;
+  border:1.5px solid #8FB4C9;
+  background:#F8F8F8;
+  padding:10px 14px;
+  font-size:15px;
+  color:#222;
+  outline:none;
+  font-family:"Noto Kufi Arabic",sans-serif;
+}
+
+.field textarea{
+  width:100%;
+  min-height:320px;
+  border:1.5px solid #8FB4C9;
+  background:#F8F8F8;
+  padding:14px 16px;
+  font-size:15px;
+  color:#222;
+  outline:none;
+  resize:none;
+  font-family:"Noto Kufi Arabic",sans-serif;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+  border-color:#6E4A8E;
+  background:#ffffff;
+}
+
+.field input::placeholder,
+.field textarea::placeholder,
+.field select{
+  color:#c9c9c9;
+}
+
+.radio-group{
+  display:grid;
+  grid-template-columns:repeat(2,max-content);
+  gap:12px 46px;
+  padding:6px 6px 0 0;
+  margin-bottom:10px;
+}
+
+.radio-group label{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:16px;
+  color:#151515;
+}
+
+.radio-group input{
+  width:16px;
+  height:16px;
+  accent-color:#4E2E65;
+}
+
+.confirm-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:16px;
+  color:#171717;
+  margin-top:22px;
+}
+
+.confirm-row input{
+  width:16px;
+  height:16px;
+}
+
+.form-submit-box{
+  margin-top:30px;
+}
+
+.form-submit-btn{
+  background:#4A2B63;
+  color:white;
+  border:none;
+  padding:14px 26px;
+  border-radius:4px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:17px;
+  font-weight:700;
+  min-width:340px;
+  cursor:pointer;
+}
+
+.form-submit-btn:hover{
+  opacity:.95;
+}
+
+.error-text{
+  display:none;
+  margin-top:14px;
+  color:#C0392B;
+  font-size:15px;
+  font-weight:600;
+}
+
+@media (max-width: 950px){
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .form-submit-btn{
+    min-width:100%;
+  }
+}
 </style>
 </head>
 
@@ -138,7 +283,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <li><a href="Inv00_MainPage.php">الرئيسية</a></li>
       <li><a href="Inv04_CreateScholarship.php" class="active">عرض المنح</a></li>
      <li><a href="Inv06_ManageScholarships.php">إدارة المنح</a></li>
-      <li><a href="#">المدفوعات</a></li>
+<li><a href="Inv10_Payments.php">المدفوعات</a></li>
     </ul>
 
   </div>
@@ -186,7 +331,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <div class="back-btn">
       <a href="Inv04_CreateScholarship.php">
-        <img src="سهم تراجع.svg" alt="رجوع" class="back-icon">
+        <img src="سهم تراجع.svg" width="40">
       </a>
     </div>
   </div>

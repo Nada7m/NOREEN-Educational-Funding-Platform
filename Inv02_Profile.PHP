@@ -41,18 +41,20 @@ if ($result->num_rows > 0) {
 $stmt->close();
 $conn->close();
 ?>
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <title>الملف الشخصي</title>
 
+<!-- الخط -->
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="CSS01Layout.css?v=3">
-<style>
 
-/* تنسيق مساحة الصفحة */
+<!-- ملف التنسيق الأساسي المشترك -->
+<link rel="stylesheet" href="CSS01Layout.css?v=3">
+
+<style>
+/* مساحة الصفحة الداخلية */
 .page{
     padding:40px;
     font-family:"Noto Kufi Arabic", sans-serif;
@@ -76,7 +78,7 @@ $conn->close();
     color:#4b2a63;
 }
 
-/* الخط أسفل اسم الشركة */
+/* الخط الفاصل */
 .line{
     width:100%;
     height:1px;
@@ -84,14 +86,14 @@ $conn->close();
     margin:0 auto 25px;
 }
 
-/* كل قسم من البيانات */
+/* كل قسم داخل الصندوق */
 .profile-section{
     margin-bottom:25px;
     padding-bottom:15px;
     border-bottom:1px solid #eee;
 }
 
-/* عناوين الأقسام */
+/* عنوان القسم */
 .profile-section h3{
     margin-bottom:15px;
     font-size:19px;
@@ -112,16 +114,6 @@ $conn->close();
     flex-wrap:wrap;
 }
 
-/* زر إظهار كلمة المرور */
-.show-btn{
-    background:#eee;
-    border:none;
-    padding:6px 12px;
-    border-radius:6px;
-    cursor:pointer;
-    font-size:13px;
-}
-
 /* زر تعديل البيانات */
 .edit-btn{
     margin-top:20px;
@@ -132,8 +124,13 @@ $conn->close();
     color:#fff;
     font-size:15px;
     cursor:pointer;
+    display:inline-block;
+    transition:0.3s;
 }
 
+.edit-btn:hover{
+    opacity:0.9;
+}
 </style>
 </head>
 
@@ -155,42 +152,43 @@ $conn->close();
             <ul class="sidebar-menu">
                 <li><a href="Inv00_MainPage.php">الرئيسية</a></li>
                 <li><a href="Inv04_CreateScholarship.php">عرض المنح</a></li>
-                <li><a href="Inv06_ManageScholarships.php">إدارة المنح</a></li>         
+                <li><a href="Inv06_ManageScholarships.php">إدارة المنح</a></li>
                 <li><a href="#">المدفوعات</a></li>
             </ul>
 
         </div>
 
         <!-- زر تسجيل الخروج -->
-   <div class="sidebar-bottom">
-  <form action="logout.php" method="post">
-    <button type="submit" class="logout-btn">
-      <img src="ايقونة تسجيل الخروج.png" class="logout-icon">
-      <b>تسجيل الخروج</b>
-    </button>
-  </form>
-</div>
+        <div class="sidebar-bottom">
+            <form action="logout.php" method="post">
+                <button type="submit" class="logout-btn">
+                    <img src="ايقونة تسجيل الخروج.png" class="logout-icon" alt="خروج">
+                    <b>تسجيل الخروج</b>
+                </button>
+            </form>
+        </div>
     </aside>
 
+    <!-- محتوى الصفحة -->
     <div class="main-content">
 
         <!-- الهيدر -->
         <header class="header">
 
+            <!-- عنوان الصفحة -->
             <div class="page-title">
                 الملف الشخصي
             </div>
 
+            <!-- أيقونة الإعدادات -->
             <div class="header-icons">
                 <div class="settings-dropdown">
-
                     <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="القائمة">
 
                     <div class="dropdown-menu">
                         <a href="Inv02_Profile.php">الملف الشخصي</a>
-              <a href="support.php">تقديم شكوى او استفسار</a>
+                        <a href="support.php">تقديم شكوى او استفسار</a>
                     </div>
-
                 </div>
             </div>
 
@@ -203,22 +201,20 @@ $conn->close();
 
                 <!-- اسم الشركة -->
                 <h2><?php echo htmlspecialchars($investor['inv_name']); ?></h2>
-                <!-- خط أسفل اسم الشركة -->
+
+                <!-- خط فاصل -->
                 <div class="line"></div>
 
                 <!-- بيانات الشركة -->
                 <div class="profile-section">
                     <h3>بيانات الشركة</h3>
-
-                  <p><strong>رقم السجل التجاري:</strong> <?php echo htmlspecialchars($investor['ccr_number']); ?></p>
-                  <p><strong>رقم الهاتف:</strong> <?php echo htmlspecialchars($investor['inv_number']); ?></p>
+                    <p><strong>رقم السجل التجاري:</strong> <?php echo htmlspecialchars($investor['ccr_number']); ?></p>
+                    <p><strong>رقم الهاتف:</strong> <?php echo htmlspecialchars($investor['inv_number']); ?></p>
                 </div>
-                
 
                 <!-- بيانات الحساب -->
                 <div class="profile-section">
                     <h3>بيانات الحساب</h3>
-
                     <p><strong>البريد الإلكتروني:</strong> <?php echo htmlspecialchars($investor['email']); ?></p>
 
                     <div class="password-box">
@@ -227,11 +223,9 @@ $conn->close();
                     </div>
                 </div>
 
-                <!-- زر تعديل البيانات -->
-                
-<a href="Inv03_EditProfile.php" class="edit-btn ">
- تعديل البيانات
-</a>
+                <!-- زر التعديل -->
+                <a href="Inv03_EditProfile.php" class="edit-btn">تعديل البيانات</a>
+
             </div>
 
         </div>
@@ -239,19 +233,6 @@ $conn->close();
     </div>
 
 </div>
-
-<script>
-/* إظهار وإخفاء كلمة المرور */
-function togglePassword() {
-    let pass = document.getElementById("password");
-
-    if (pass.innerHTML === "********") {
-        pass.innerHTML = "<?php echo htmlspecialchars($investor['password']); ?>";
-    } else {
-        pass.innerHTML = "********";
-    }
-}
-</script>
 
 </body>
 </html>

@@ -103,19 +103,19 @@ while ($row = mysqli_fetch_assoc($app_result)) {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- التنسيق الأساسي المشترك -->
   <link rel="stylesheet" href="CSS01Layout.css?v=3">
 
   <style>
-    /* ترتيب الهيدر:
-       الإعدادات في اليسار
-       العنوان في اليمين */
+    /* ترتيب الهيدر */
     .header{
       display:flex;
       justify-content:space-between;
       align-items:center;
     }
 
-    /* عنوان الصفحة يظهر في اليمين */
+    /* عنوان الصفحة */
     .page-heading{
       display:flex;
       flex-direction:column;
@@ -123,13 +123,13 @@ while ($row = mysqli_fetch_assoc($app_result)) {
       text-align:right;
     }
 
-    /* أيقونة الإعدادات */
+    /* أيقونات الهيدر */
     .header-icons{
       display:flex;
       align-items:center;
     }
 
-    /* تصغير زر الرجوع */
+    /* زر الرجوع */
     .back-btn{
       width:34px;
       height:34px;
@@ -138,7 +138,6 @@ while ($row = mysqli_fetch_assoc($app_result)) {
       justify-content:center;
     }
 
-    /* تصغير السهم */
     .back-icon{
       width:24px;
       height:24px;
@@ -173,17 +172,94 @@ while ($row = mysqli_fetch_assoc($app_result)) {
       background:#F2F2F2;
     }
 
-    /* نخفي كل المحتويات */
+    /* إظهار وإخفاء محتوى التبويب */
     .tab-content{
       display:none;
     }
 
-    /* نظهر المحتوى المفتوح فقط */
     .tab-content.active{
       display:block;
     }
 
-    /* سطر تاريخ المنحة */
+    /* صندوق تفاصيل المنحة */
+    .scholarship-details-box{
+      width:90%;
+      min-height:430px;
+      margin:0 auto;
+      background:#FFFFFF;
+      border:1px solid #E3E3E3;
+      border-radius:6px;
+      padding:34px 36px 30px;
+      box-sizing:border-box;
+    }
+
+    /* الصف العلوي */
+    .top-info-row{
+      display:flex;
+      flex-direction:row-reverse;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:40px;
+    }
+
+    /* بيانات المنحة */
+    .main-info-box{
+      width:68%;
+      text-align:right;
+    }
+
+    .main-title{
+      margin:0 0 18px 0;
+      font-size:22px;
+      font-weight:700;
+      color:#3E2454;
+      line-height:1.9;
+    }
+
+    .double-info-row{
+      display:flex;
+      flex-direction:row-reverse;
+      justify-content:flex-end;
+      gap:70px;
+      margin-bottom:18px;
+    }
+
+    .info-item{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-end;
+    }
+
+    .info-label{
+      font-size:16px;
+      font-weight:500;
+      color:#666666;
+      margin-bottom:6px;
+    }
+
+    .info-value{
+      font-size:17px;
+      font-weight:700;
+      color:#70A0AF;
+    }
+
+    .specialization-line{
+      font-size:16px;
+      line-height:2;
+      text-align:right;
+    }
+
+    .specialization-label{
+      color:#555555;
+      font-weight:600;
+    }
+
+    .specialization-value{
+      color:#70A0AF;
+      font-weight:500;
+    }
+
+    /* صندوق التاريخ */
     .deadline-box{
       width:28%;
       text-align:right;
@@ -196,21 +272,58 @@ while ($row = mysqli_fetch_assoc($app_result)) {
       flex-wrap:wrap;
     }
 
-    /* عنوان التاريخ */
     .deadline-label{
+      font-size:15px;
+      font-weight:700;
+      color:#3E2454;
       direction:rtl;
       white-space:nowrap;
     }
 
-    /* التاريخ نفسه */
     .deadline-value{
+      font-size:15px;
+      font-weight:500;
+      color:#70A0AF;
       direction:ltr;
       unicode-bidi:isolate;
       white-space:nowrap;
       display:inline-block;
     }
 
-    /* تاريخ الطلبات داخل الجدول */
+    /* خط الفاصل */
+    .section-divider{
+      width:100%;
+      height:1px;
+      background:#DCDCDC;
+      margin:28px 0 22px;
+    }
+
+    /* الشروط */
+    .conditions-box{
+      text-align:right;
+    }
+
+    .conditions-title{
+      margin:0 0 14px 0;
+      font-size:17px;
+      font-weight:700;
+      color:#3E2454;
+    }
+
+    .conditions-list{
+      margin:0;
+      padding-right:22px;
+      list-style-type:disc;
+    }
+
+    .conditions-list li{
+      font-size:16px;
+      color:#444444;
+      line-height:2;
+      margin-bottom:2px;
+    }
+
+    /* تاريخ الطلبات في الجدول */
     .date-cell{
       direction:ltr;
       unicode-bidi:isolate;
@@ -290,10 +403,39 @@ while ($row = mysqli_fetch_assoc($app_result)) {
       color:#FFFFFF;
     }
 
-    /* شكل نص الحالة */
+    /* نص الحالة */
     .status-text{
       font-weight:700;
       color:#3E2454;
+    }
+
+    /* تجاوب الصفحة */
+    @media (max-width: 950px){
+      .scholarship-details-box,
+      .requests-box,
+      .tabs-row{
+        width:100%;
+      }
+
+      .top-info-row{
+        flex-direction:column;
+        gap:20px;
+      }
+
+      .main-info-box,
+      .deadline-box{
+        width:100%;
+      }
+
+      .double-info-row{
+        flex-direction:column;
+        gap:18px;
+      }
+
+      .requests-table{
+        display:block;
+        overflow-x:auto;
+      }
     }
   </style>
 </head>
@@ -315,7 +457,7 @@ while ($row = mysqli_fetch_assoc($app_result)) {
           <li><a href="Inv00_MainPage.php">الرئيسية</a></li>
           <li><a href="Inv04_CreateScholarship.php" class="active">عرض المنح</a></li>
              <li><a href="Inv06_ManageScholarships.php">إدارة المنح</a></li>  
-          <li><a href="#">المدفوعات</a></li>
+<li><a href="Inv10_Payments.php">المدفوعات</a></li>
         </ul>
 
       </div>
@@ -364,7 +506,7 @@ while ($row = mysqli_fetch_assoc($app_result)) {
 
           <div class="back-btn">
             <a href="Inv04_CreateScholarship.php">
-              <img src="سهم تراجع.svg" alt="رجوع" class="back-icon">
+        <img src="سهم تراجع.svg" width="40">
             </a>
           </div>
         </div>

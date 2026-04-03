@@ -26,8 +26,8 @@
         <ul class="sidebar-menu">
           <li><a href="Inv00_MainPage.php" class="active">الرئيسية</a></li>
           <li><a href="Inv04_CreateScholarship.php">عرض المنح</a></li>
-          <li><a href="#">إدارة المنح</a></li>
-          <li><a href="#">المدفوعات</a></li>
+          <li><a href="Inv06_ManageScholarships.php">إدارة المنح</a></li>
+<li><a href="Inv10_Payments.php">المدفوعات</a></li>
         </ul>
 
       </div>
@@ -49,22 +49,22 @@
       <!-- الهيدر -->
       <header class="header">
 
-        <div class="page-heading">
-          <div class="page-title">الرئيسية</div>
-        </div>
+  <div class="header-icons">
+    <div class="settings-dropdown">
+      <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="الإعدادات">
 
-        <div class="header-icons">
-          <div class="settings-dropdown">
-            <img src="ايقونة قائمة الاعدادات.png" class="menu-icon">
+      <div class="dropdown-menu">
+        <a href="Inv02_Profile.php">الملف الشخصي</a>
+        <a href="support.php">تقديم شكوى او استفسار</a>
+      </div>
+    </div>
+  </div>
 
-            <div class="dropdown-menu">
-              <a href="Inv02_Profile.php">الملف الشخصي</a>
-              <a href="support.php">تقديم شكوى او استفسار</a>
-            </div>
-          </div>
-        </div>
+  <div class="page-heading">
+    <div class="page-title">الرئيسية</div>
+  </div>
 
-      </header>
+</header>
 
       <!-- محتوى الصفحة -->
       <div class="page">

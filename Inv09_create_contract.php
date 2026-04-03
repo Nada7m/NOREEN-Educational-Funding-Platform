@@ -332,7 +332,7 @@ body{
                 <li><a href="Inv00_MainPage.php">الرئيسية</a></li>
                 <li><a href="Inv04_CreateScholarship.php">عرض المنح</a></li>
                 <li><a href="Inv06_ManageScholarships.php" class="active">إدارة المنح</a></li>
-                <li><a href="#">المدفوعات</a></li>
+<li><a href="Inv10_Payments.php">المدفوعات</a></li>
             </ul>
         </div>
 
@@ -374,7 +374,7 @@ body{
 
                 <div class="back-btn">
                     <a href="Inv06_ManageScholarships.php">
-                        <img src="سهم تراجع.svg" alt="رجوع" class="back-icon">
+        <img src="سهم تراجع.svg" width="40">
                     </a>
                 </div>
             </div>
@@ -411,11 +411,13 @@ body{
                                 <label class="form-label"><span class="req">*</span> مدة تمويل المنحة(عدد سنوات الدراسة)</label>
                                 <select name="funding_duration" class="form-select">
                                     <option value="">اختر مدة التمويل</option>
-                                    <option value="1" <?php if(isset($_POST['funding_duration']) && $_POST['funding_duration']=="1") echo "selected"; ?>>1</option>
-                                    <option value="2" <?php if(isset($_POST['funding_duration']) && $_POST['funding_duration']=="2") echo "selected"; ?>>2</option>
-                                    <option value="3" <?php if(isset($_POST['funding_duration']) && $_POST['funding_duration']=="3") echo "selected"; ?>>3</option>
-                                    <option value="4" <?php if(isset($_POST['funding_duration']) && $_POST['funding_duration']=="4") echo "selected"; ?>>4</option>
-                                    <option value="5" <?php if(isset($_POST['funding_duration']) && $_POST['funding_duration']=="5") echo "selected"; ?>>5</option>
+                                    <option value="1" <?php if(isset($_POST['funding_duration']) && $_POST['funding_duration']=="1") echo "selected"; ?>>سنة</option>
+                                    <option value="2" <?php if(isset($_POST['funding_duration']) && $_POST['funding_duration']=="2") echo "selected"; ?>>سنتين</option>
+                                    <option value="3" <?php if(isset($_POST['funding_duration']) && $_POST['funding_duration']=="3") echo "selected"; ?>>ثلاث سنوات</option>
+                                    <option value="4" <?php if(isset($_POST['funding_duration']) && $_POST['funding_duration']=="4") echo "selected"; ?>>أربع سنوات</option>
+                                    <option value="5" <?php if(isset($_POST['funding_duration']) && $_POST['funding_duration']=="5") echo "selected"; ?>>خمس سنوات</option>
+                                   <option value="6" <?php if(isset($_POST['funding_duration']) && $_POST['funding_duration']=="6") echo "selected"; ?>>ست سنوات</option>
+
                                 </select>
                             </div>
 

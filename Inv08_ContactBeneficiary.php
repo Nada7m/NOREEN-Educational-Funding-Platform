@@ -69,7 +69,7 @@ $res_msgs = $con->query("SELECT * FROM bnf_inv_msg WHERE bnf_id = '$target_bnf_i
                 <li><a href="Inv00_MainPage.php">الرئيسية</a></li>
                 <li><a href="Inv04_CreateScholarship.php">عرض المنح</a></li>
                 <li><a href="Inv06_ManageScholarships.php" class="active">إدارة المنح</a></li>
-                <li><a href="Inv08_Payments.php">المدفوعات</a></li>
+<li><a href="Inv10_Payments.php">المدفوعات</a></li>
             </ul>
         </div>
         <div class="sidebar-bottom">

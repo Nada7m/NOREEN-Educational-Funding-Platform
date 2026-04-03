@@ -214,7 +214,7 @@ width:100%;
 <li><a href="Inv00_MainPage.php">الرئيسية</a></li>
 <li><a href="Inv06_ManageScholarships.php" class="active">إدارة المنح</a></li>
 <li><a href="Inv04_CreateScholarship.php">عرض المنح</a></li>
-<li><a href="#">المدفوعات</a></li>
+<li><a href="Inv10_Payments.php">المدفوعات</a></li>
 </ul>
 </div>
 <div class="sidebar-bottom">
@@ -247,7 +247,7 @@ width:100%;
 <div></div>
 <div class="back-btn">
 <a href="Inv06_ManageScholarships.php">
-<img src="سهم تراجع.svg" alt="رجوع" class="back-icon">
+        <img src="سهم تراجع.svg" width="40">
 </a>
 </div>
 </div>
