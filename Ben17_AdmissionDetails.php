@@ -82,7 +82,7 @@ $statusMessage = "";
 if ($status == "" || $status == "قيد المعالجة") {
     $statusText = "في انتظار إصدار النتيجة";
     $statusClass = "processing";
-    $statusMessage = "طلبك ما زال تحت مراجعة المكتب، وسيتم تحديث هذه الصفحة عند صدور النتيجة.";
+    $statusMessage = "طلبك ما زال تحت مراجعة المكتب، وسيتم تحديث هذه الخانة عند صدور النتيجة.";
 } elseif ($status == "مرفوض" || $status == "مرفوضة" || $status == "رفض") {
     $statusText = "تم رفض الطلب";
     $statusClass = "rejected";

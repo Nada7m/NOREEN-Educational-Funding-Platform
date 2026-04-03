@@ -20,6 +20,7 @@ $bnf_id = (int) $_SESSION['bnf_id'];
 $sql = "SELECT 
             ar.request_id,
             ar.Submit_date,
+            ar.request_status,
             ar.result_notes,
             ar.Result_status,
             co.office_name
@@ -43,7 +44,7 @@ $result = $conn->query($sql);
 .page{ padding:18px 30px 30px; }
 .content-box{ width:100%; max-width:1100px; margin:20px auto; background:#fff; padding:30px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.05); }
 .requests-table-wrap{ width:100%; overflow-x:auto; }
-.requests-table{ width:100%; border-collapse:collapse; min-width:700px; }
+.requests-table{ width:100%; border-collapse:collapse; min-width:850px; }
 .requests-table th{ background:#F5F3F7; color:#3E2454; padding:14px 12px; font-size:15px; font-weight:700; text-align:center; border-bottom:1px solid #ddd; font-family:'Noto Kufi Arabic', sans-serif; }
 .requests-table td{ background:#fff; padding:14px 12px; font-size:14px; color:#444; text-align:center; border-bottom:1px solid #eee; font-family:'Noto Kufi Arabic', sans-serif; vertical-align:middle; }
 .requests-table tr:hover td{ background:#fcfbfd; }
@@ -118,6 +119,7 @@ $result = $conn->query($sql);
                                 <th>رقم الطلب</th>
                                 <th>المكتب</th>
                                 <th>تاريخ التقديم</th>
+                                <th>حالة الطلب</th>
                                 <th>حالة النتيجة</th>
                                 <th>الإجراءات</th>
                             </tr>
@@ -125,17 +127,32 @@ $result = $conn->query($sql);
                             <?php while ($row = $result->fetch_assoc()) { ?>
 
                                 <?php
-                                $status = trim($row['Result_status']);
+                                /* حالة الطلب */
+                                $request_status = trim($row['request_status']);
 
-                                if ($status == "" || $status == "قيد المعالجة") {
-                                    $statusText = "قيد المعالجة";
-                                    $statusClass = "status-processing";
-                                } elseif ($status == "مرفوض" || $status == "مرفوضة") {
-                                    $statusText = "مرفوض";
-                                    $statusClass = "status-rejected";
+                                if ($request_status == "" || $request_status == "في الانتظار") {
+                                    $requestStatusText = "في الانتظار";
+                                    $requestStatusClass = "status-processing";
+                                } elseif ($request_status == "مرفوض") {
+                                    $requestStatusText = "مرفوض";
+                                    $requestStatusClass = "status-rejected";
                                 } else {
-                                    $statusText = $status;
-                                    $statusClass = "status-done";
+                                    $requestStatusText = "مقبول";
+                                    $requestStatusClass = "status-done";
+                                }
+
+                                /* حالة النتيجة */
+                                $result_status = trim($row['Result_status']);
+
+                                if ($result_status == "" || $result_status == "قيد المعالجة") {
+                                    $resultStatusText = "قيد المعالجة";
+                                    $resultStatusClass = "status-processing";
+                                } elseif ($result_status == "مرفوض" || $result_status == "مرفوضة") {
+                                    $resultStatusText = "مرفوض";
+                                    $resultStatusClass = "status-rejected";
+                                } else {
+                                    $resultStatusText = $result_status;
+                                    $resultStatusClass = "status-done";
                                 }
                                 ?>
 
@@ -151,8 +168,14 @@ $result = $conn->query($sql);
                                     </td>
 
                                     <td>
-                                        <div class="status-box <?php echo $statusClass; ?>">
-                                            <?php echo $statusText; ?>
+                                        <div class="status-box <?php echo $requestStatusClass; ?>">
+                                            <?php echo $requestStatusText; ?>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <div class="status-box <?php echo $resultStatusClass; ?>">
+                                            <?php echo $resultStatusText; ?>
                                         </div>
                                     </td>
 
