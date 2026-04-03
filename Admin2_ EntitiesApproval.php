@@ -218,20 +218,7 @@ $result = mysqli_query($con, $sql);
     .col-status{ width: 18%; }
     .col-actions{ width: 20%; }
 
-    .logout-btn{
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-family: "Noto Kufi Arabic", sans-serif;
-    }
-
-    .logout-icon{
-      width: 18px;
-      height: 18px;
-    }
+    
   </style>
 </head>
 <body>
@@ -243,10 +230,10 @@ $result = mysqli_query($con, $sql);
       </div>
 
       <ul class="sidebar-menu">
-        <li><a href="contracts_manage.php">إدارة العقود</a></li>
+        <li><a href="Admin_Contracts.php">إدارة العقود</a></li>
         <li><a href="complaints.php">الشكاوى والاستفسارات</a></li>
         <li><a href="users_manage.php">إدارة المستخدمين</a></li>
-        <li><a href="admin_ EntitiesApproval.php"class="active">اعتماد الجهات</a></li>
+        <li><a href="Admin2_ EntitiesApproval.php"class="active">اعتماد الجهات</a></li>
       </ul>
     </div>
 
