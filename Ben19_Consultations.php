@@ -130,7 +130,7 @@ $result = $con->query($sql);
                                 $is_new_reply = (!$last_bnf || ($last_off > $last_bnf));
 
                                 $btn_class = $is_new_reply ? "btn-action btn-green-alert" : "btn-action";
-                                $btn_text = $is_new_reply ? "لديك رد جديد" : "عرض محتوى الاستشارة";
+                                $btn_text = $is_new_reply ? "عرض محتوى الاستشارة" : "عرض محتوى الاستشارة";
                             ?>
                                 <tr>
                                     <td style="font-weight: 600;"><?php echo htmlspecialchars($row['office_name']); ?></td>

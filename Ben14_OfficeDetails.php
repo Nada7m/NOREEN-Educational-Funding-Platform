@@ -402,7 +402,7 @@ $conn->close();
     <div class="actcol">
     <a href="Ben18_ContactConsultingOffice.php?off_id=<?php echo $officeId; ?>" class="btnlight" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">
     التواصل للاستشارة
-</a>>
+</a>
       <button type="button" class="btndark" onclick="window.location.href='Ben15_AdmissionReq.php?id=<?php echo $office['office_id']; ?>'">
   تقديم طلب إصدار قبول
 </button>

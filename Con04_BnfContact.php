@@ -130,3 +130,4 @@ $res_msgs = $con->query("SELECT * FROM bnf_off_msg WHERE bnf_id = '$target_bnf_i
   </div>
 </body>
 </html>
+
