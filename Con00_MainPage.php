@@ -26,7 +26,7 @@
         <ul class="sidebar-menu">
           <li><a href="Con00_MainPage.php" class="active">الرئيسية</a></li>
           <li><a href="Con04_AdmissionReq.php">إدارة طلبات القبول</a></li>
-          <li><a href="Con0_Consultations.php">الاستشارات</a></li>
+          <li><a href="Con03_Consultations.php">الاستشارات</a></li>
           <li><a href="Con08_ReqRating.php">تقييمات المستفيدين</a></li>
         </ul>
 
