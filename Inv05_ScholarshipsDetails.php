@@ -108,27 +108,6 @@ while ($row = mysqli_fetch_assoc($app_result)) {
   <link rel="stylesheet" href="CSS01Layout.css?v=3">
 
   <style>
-    /* ترتيب الهيدر */
-    .header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-    }
-
-    /* عنوان الصفحة */
-    .page-heading{
-      display:flex;
-      flex-direction:column;
-      align-items:flex-start;
-      text-align:right;
-    }
-
-    /* أيقونات الهيدر */
-    .header-icons{
-      display:flex;
-      align-items:center;
-    }
-
     /* زر الرجوع */
     .back-btn{
       width:34px;
@@ -408,35 +387,6 @@ while ($row = mysqli_fetch_assoc($app_result)) {
       font-weight:700;
       color:#3E2454;
     }
-
-    /* تجاوب الصفحة */
-    @media (max-width: 950px){
-      .scholarship-details-box,
-      .requests-box,
-      .tabs-row{
-        width:100%;
-      }
-
-      .top-info-row{
-        flex-direction:column;
-        gap:20px;
-      }
-
-      .main-info-box,
-      .deadline-box{
-        width:100%;
-      }
-
-      .double-info-row{
-        flex-direction:column;
-        gap:18px;
-      }
-
-      .requests-table{
-        display:block;
-        overflow-x:auto;
-      }
-    }
   </style>
 </head>
 
@@ -478,8 +428,11 @@ while ($row = mysqli_fetch_assoc($app_result)) {
 
       <!-- الهيدر -->
       <header class="header">
+   <div class="page-heading">
+          <h1 class="page-title">عرض المنح</h1>
+          <p class="page-description">صفحة تقديم عروض فرص المنح</p>
+        </div>
 
-        <!-- الإعدادات تظهر في اليسار -->
         <div class="header-icons">
           <div class="settings-dropdown">
             <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="الإعدادات">
@@ -490,12 +443,7 @@ while ($row = mysqli_fetch_assoc($app_result)) {
           </div>
         </div>
 
-        <!-- العنوان يظهر في اليمين -->
-        <div class="page-heading">
-          <h1 class="page-title">عرض المنح</h1>
-          <p class="page-description">صفحة تقديم عروض فرص المنح</p>
-        </div>
-
+    
       </header>
 
       <section class="page">

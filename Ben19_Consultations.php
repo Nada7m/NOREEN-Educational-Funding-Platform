@@ -33,13 +33,9 @@ $result = $con->query($sql);
     <meta charset="UTF-8">
     <title>الاستشارات - نورين</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="CSS01Layout.css">
+    <link rel="stylesheet" href="CSS01Layout.css?v=4">
     <style>
         :root { --main-purple: #3E2454; }
-        body { background-color: #FFFFFF; margin: 0; font-family: 'Noto Kufi Arabic', sans-serif; }
-        .layout { display: flex; min-height: 100vh; }
-        
-        .header { background-color: #FFFFFF; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; padding: 15px 30px; align-items: center; }
 
         /* الجدول */
         .content-body { padding: 20px 30px; }
@@ -63,11 +59,6 @@ $result = $con->query($sql);
             font-weight: bold;
         }
 
-        /* قائمة الإعدادات */
-        .settings-dropdown { position: relative; }
-        .dropdown-menu { display: none; position: absolute; left: 0; top: 100%; background: white; border: 1px solid #ddd; border-radius: 8px; width: 190px; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .settings-dropdown:hover .dropdown-menu { display: block; }
-        .dropdown-menu a { display: block; padding: 12px 15px; text-decoration: none; color: #333; font-size: 13px; text-align: right; }
     </style>
 </head>
 <body>
@@ -80,7 +71,7 @@ $result = $con->query($sql);
                 <li><a href="Ben04_BrowseScholarships.php">التقديم على المنح</a></li>
                 <li><a href="Ben09_TrackScholarship.php">متابعة المنح</a></li>
                 <li><a href="Ben013_ConsultingOffices.php">المكاتب الاستشارية</a></li>
-                <li><a href="Ben15_AdmissionRequests.php">طلبات إصدار القبول</a></li>
+                <li><a href="Ben16_AdmissionList.php">طلبات إصدار القبول</a></li>
                 <li><a href="Ben19_Consultations.php" class="active">الاستشارات</a></li>
             </ul>
         </div>
@@ -95,20 +86,24 @@ $result = $con->query($sql);
       </div>
     </aside>
 
-    <div class="main-content" style="flex:1;">
-        <header class="header">
-            <div class="page-heading">
-                <h1 style="margin:0; font-size: 24px;">الاستشارات</h1>
-                 <p class="page-description" style="margin:5px 0 0; font-size: 14px; color: #000000;">صفحة تتضمن جميع الاستشارات التي تم تقديمها للمكاتب الاستشاراية</p>
-            </div>
+   <div class="main-content">
+    <header class="header">
+        <div class="page-heading">
+            <div class="page-title">الاستشارات</div>
+            <div class="page-description">صفحة تتضمن جميع الاستشارات التي تم تقديمها للمكاتب الاستشارية</div>
+        </div>
+
+        <div class="header-icons">
             <div class="settings-dropdown">
-                <img src="ايقونة قائمة الاعدادات.png" width="30" style="cursor:pointer;">
+                <img src="ايقونة قائمة الاعدادات.png" class="menu-icon">
                 <div class="dropdown-menu">
                     <a href="Ben02_Profile.php">الملف الشخصي</a>
-                    <a href="support.php">تقديم  شكوى او استفسار</a>
+                    <a href=".php">محفظة منحتي</a>
+                    <a href="support.php">تقديم شكوى او استفسار</a>
                 </div>
             </div>
-        </header>
+        </div>
+    </header>
 
         <div class="content-body">
             <div class="table-container">

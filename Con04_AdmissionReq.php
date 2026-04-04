@@ -99,7 +99,7 @@ $resRequests = mysqli_query($con, $sqlRequests);
                 <li><a href="Con00_MainPage.php">الرئيسية</a></li>
                 <li><a href="Con04_AdmissionReq.php" class="active">إدارة طلبات القبول</a></li>
                 <li><a href="Con0_Consultations.php">الاستشارات</a></li>
-                <li><a href="Con0_BeneficiaryRatings.php">تقييمات المستفيدين</a></li>
+          <li><a href="Con08_ReqRating.php">تقييمات المستفيدين</a></li>
             </ul>
         </div>
 

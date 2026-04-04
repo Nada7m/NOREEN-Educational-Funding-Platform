@@ -74,7 +74,7 @@ $res_msgs = $con->query("SELECT * FROM bnf_off_msg WHERE bnf_id = '$target_bnf_i
           <li><a href="Con00_MainPage.php">الرئيسية</a></li>
           <li><a href="Con0_AdmissionRequests.php">إدارة طلبات القبول</a></li>
           <li><a href="Con0_Consultations.php" class="active">الاستشارات</a></li>
-          <li><a href="Con0_BeneficiaryRatings.php">تقييمات المستفيدين</a></li>
+          <li><a href="Con08_ReqRating.php">تقييمات المستفيدين</a></li>
         </ul>
       </div>
       

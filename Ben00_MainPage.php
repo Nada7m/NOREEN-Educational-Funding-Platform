@@ -1,33 +1,22 @@
 <?php
 session_start();
 ?>
-
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <meta charset="UTF-8">
-
 <head>
   <title>نورين - الرئيسية</title>
-
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="CSS01Layout.css?v=3">  <link rel="stylesheet" href="CSS02Home.css">
+  <link rel="stylesheet" href="CSS01Layout.css?v=4">  <link rel="stylesheet" href="CSS02Home.css?v=2">
 </head>
-
 <body>
-
   <div class="layout">
-
     <!-- الشريط الجانبي -->
     <aside class="sidebar">
-
       <div class="sidebar-top">
-
         <div class="sidebar-logo">
           <img src="شعار نورين.png">
         </div>
-
         <ul class="sidebar-menu">
           <li><a href="Ben00_MainPage.php" class="active">الرئيسية</a></li>
           <li><a href="Ben04_BrowseScholarships.php">التقديم على المنح</a></li>
@@ -36,9 +25,7 @@ session_start();
           <li><a href="Ben16_AdmissionList.php">طلبات إصدار القبول</a></li>
           <li><a href="Ben19_Consultations.php">الاستشارات</a></li>
         </ul>
-
       </div>
-
  <div class="sidebar-bottom">
   <form action="logout.php" method="post">
     <button type="submit" class="logout-btn">
@@ -229,37 +216,7 @@ session_start();
                 الإجابة: اكتب الإجابة هنا
               </div>
             </details>
-
-            <details class="faq-item">
-              <summary>
-                المستثمر
-                <img src="سهم مدبل.svg">
-              </summary>
-              <div class="faq-ans">
-                سؤال 1: اكتب السؤال هنا<br>
-                الإجابة: اكتب الإجابة هنا
-                <br><br>
-                سؤال 2: اكتب السؤال هنا<br>
-                الإجابة: اكتب الإجابة هنا
-              </div>
-            </details>
-
-            <details class="faq-item">
-              <summary>
-                المكتب الاستشاري
-                <img src="سهم مدبل.svg">
-              </summary>
-              <div class="faq-ans">
-                سؤال 1: اكتب السؤال هنا<br>
-                الإجابة: اكتب الإجابة هنا
-                <br><br>
-                سؤال 2: اكتب السؤال هنا<br>
-                الإجابة: اكتب الإجابة هنا
-              </div>
-            </details>
-
           </div>
-
         </section>
 
       </div>

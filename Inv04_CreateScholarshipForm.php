@@ -73,25 +73,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
 <meta charset="UTF-8">
 <title>إنشاء عرض منحة جديدة</title>
-<link rel="stylesheet" href="CSS01Layout.css">
+<link rel="stylesheet" href="CSS01Layout.css?v=4">
 <style>
-.header{
-  display:flex;
-  flex-direction:row-reverse;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.page-heading{
-  text-align:right;
-  align-items:flex-end;
-}
-
-.header-icons{
-  display:flex;
-  align-items:center;
-}
-
 .back-icon{
   width:26px;
   height:26px;
@@ -252,16 +235,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   color:#C0392B;
   font-size:15px;
   font-weight:600;
-}
 
-@media (max-width: 950px){
-  .form-grid{
-    grid-template-columns:1fr;
-  }
-
-  .form-submit-btn{
-    min-width:100%;
-  }
 }
 </style>
 </head>
@@ -303,7 +277,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <main class="main-content">
 
 <header class="header">
-
+  <!-- العنوان -->
+  <div class="page-heading">
+    <h1 class="page-title">إنشاء عرض منحة جديدة</h1>
+    <p class="page-description">صفحة تقديم عروض فرص المنح</p>
+  </div>
   <!-- الإعدادات -->
   <div class="header-icons">
     <div class="settings-dropdown">
@@ -315,11 +293,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
   </div>
 
-  <!-- العنوان -->
-  <div class="page-heading">
-    <h1 class="page-title">إنشاء عرض منحة جديدة</h1>
-    <p class="page-description">صفحة تقديم عروض فرص المنح</p>
-  </div>
 
 </header>
 

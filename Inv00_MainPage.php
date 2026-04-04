@@ -7,7 +7,7 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="CSS01Layout.css?v=3">  <link rel="stylesheet" href="CSS02Home.css">
+  <link rel="stylesheet" href="CSS01Layout.css?v=4">  <link rel="stylesheet" href="CSS02Home.css">
 </head>
 
 <body>
@@ -49,6 +49,10 @@
       <!-- الهيدر -->
       <header class="header">
 
+  <div class="page-heading">
+    <div class="page-title">الرئيسية</div>
+  </div>
+
   <div class="header-icons">
     <div class="settings-dropdown">
       <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="الإعدادات">
@@ -58,10 +62,6 @@
         <a href="support.php">تقديم شكوى او استفسار</a>
       </div>
     </div>
-  </div>
-
-  <div class="page-heading">
-    <div class="page-title">الرئيسية</div>
   </div>
 
 </header>
@@ -210,19 +210,6 @@
 
           <div class="faq-list">
 
-            <details class="faq-item">
-              <summary>
-                المستفيد
-                <img src="سهم مدبل.svg">
-              </summary>
-              <div class="faq-ans">
-                سؤال 1: اكتب السؤال هنا<br>
-                الإجابة: اكتب الإجابة هنا
-                <br><br>
-                سؤال 2: اكتب السؤال هنا<br>
-                الإجابة: اكتب الإجابة هنا
-              </div>
-            </details>
 
             <details class="faq-item">
               <summary>
@@ -238,20 +225,7 @@
               </div>
             </details>
 
-            <details class="faq-item">
-              <summary>
-                المكتب الاستشاري
-                <img src="سهم مدبل.svg">
-              </summary>
-              <div class="faq-ans">
-                سؤال 1: اكتب السؤال هنا<br>
-                الإجابة: اكتب الإجابة هنا
-                <br><br>
-                سؤال 2: اكتب السؤال هنا<br>
-                الإجابة: اكتب الإجابة هنا
-              </div>
-            </details>
-
+          
           </div>
 
         </section>

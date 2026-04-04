@@ -97,7 +97,10 @@ $res_msgs = $con->query("SELECT * FROM bnf_inv_msg WHERE bnf_id = '$current_bnf_
             <div class="page-heading"><h1 class="page-title">متابعة المنح</h1><p class="page-description">صفحة التواصل مع الجهة المانحة</p></div>
             <div class="settings-dropdown">
                 <img src="ايقونة قائمة الاعدادات.png" id="menuBtn" class="menu-icon-img">
-                <div class="dropdown-menu" id="myDropdown"><a href="Ben02_Profile.php">الملف الشخصي</a><a href="support.php">تقديم شكوى او استفسار</a></div>
+                <div class="dropdown-menu" id="myDropdown">
+                <a href="Ben02_Profile.php">الملف الشخصي</a>
+                <a href=".php">محفظة منحتي</a>
+                <a href="support.php">تقديم شكوى او استفسار</a></div>
             </div>
         </header>
 

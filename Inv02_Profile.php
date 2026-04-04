@@ -1,18 +1,14 @@
 <?php
 session_start();
-
 /* التحقق من تسجيل دخول المستثمر */
 if (!isset($_SESSION['inv_id'])) {
     header("Location: login.php");
-    exit();
-}
+    exit();}
 
 /* الاتصال بقاعدة البيانات */
 $conn = new mysqli("localhost", "root", "", "noreen");
-
 if ($conn->connect_error) {
-    die("فشل الاتصال بقاعدة البيانات");
-}
+    die("فشل الاتصال بقاعدة البيانات");}
 
 /* دعم العربية */
 $conn->set_charset("utf8mb4");
@@ -24,8 +20,7 @@ $inv_id = $_SESSION['inv_id'];
 $stmt = $conn->prepare("
     SELECT inv_name, ccr_number, inv_number, email
     FROM investor
-    WHERE inv_id = ?
-");
+    WHERE inv_id = ?");
 
 $stmt->bind_param("i", $inv_id);
 $stmt->execute();
@@ -46,13 +41,10 @@ $conn->close();
 <head>
 <meta charset="UTF-8">
 <title>الملف الشخصي</title>
-
 <!-- الخط -->
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-
 <!-- ملف التنسيق الأساسي المشترك -->
-<link rel="stylesheet" href="CSS01Layout.css?v=3">
-
+<link rel="stylesheet" href="CSS01Layout.css?v=4">
 <style>
 /* مساحة الصفحة الداخلية */
 .page{
@@ -173,26 +165,24 @@ $conn->close();
     <div class="main-content">
 
         <!-- الهيدر -->
-        <header class="header">
+  <header class="header">
 
-            <!-- عنوان الصفحة -->
-            <div class="page-title">
-                الملف الشخصي
-            </div>
+  <div class="page-heading">
+    <div class="page-title">الملف الشخصي</div>
+  </div>
 
-            <!-- أيقونة الإعدادات -->
-            <div class="header-icons">
-                <div class="settings-dropdown">
-                    <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="القائمة">
+  <div class="header-icons">
+    <div class="settings-dropdown">
+      <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="الإعدادات">
 
-                    <div class="dropdown-menu">
-                        <a href="Inv02_Profile.php">الملف الشخصي</a>
-                        <a href="support.php">تقديم شكوى او استفسار</a>
-                    </div>
-                </div>
-            </div>
+      <div class="dropdown-menu">
+        <a href="Inv02_Profile.php">الملف الشخصي</a>
+        <a href="support.php">تقديم شكوى او استفسار</a>
+      </div>
+    </div>
+  </div>
 
-        </header>
+</header>
 
         <!-- محتوى الصفحة -->
         <div class="page">

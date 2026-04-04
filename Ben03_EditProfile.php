@@ -4,8 +4,7 @@ session_start();
 /* التحقق من تسجيل دخول المستفيد */
 if (!isset($_SESSION['bnf_id'])) {
     header("Location: login.php");
-    exit();
-}
+    exit();}
 
 /* الاتصال بقاعدة البيانات */
 $conn = new mysqli("localhost", "root", "", "noreen");
@@ -13,7 +12,6 @@ $conn = new mysqli("localhost", "root", "", "noreen");
 if ($conn->connect_error) {
     die("فشل الاتصال بقاعدة البيانات");
 }
-
 $conn->set_charset("utf8mb4");
 
 /* رقم المستفيد الحالي */
@@ -21,7 +19,6 @@ $bnf_id = $_SESSION['bnf_id'];
 
 $msg = "";
 $type = "";
-
 /* عند حفظ التعديلات */
 if (isset($_POST["save"])) {
 
@@ -128,7 +125,6 @@ if ($result->num_rows > 0) {
 } else {
     die("لم يتم العثور على بيانات المستفيد");
 }
-
 $stmt->close();
 $conn->close();
 ?>
@@ -138,51 +134,31 @@ $conn->close();
 <head>
 <meta charset="UTF-8">
 <title>تعديل البيانات</title>
-
- 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="CSS01Layout.css?v=3"><link rel="stylesheet" href="Style.css">
+<link rel="stylesheet" href="CSS01Layout.css?v=4"><link rel="stylesheet" href="Style.css">
 
 <style>
-.page{
-  padding:40px;
-}
-
-.box{
-  width:760px;
-}
-
-.note{
-  font-size:12px;
-  color:#666;
-  margin-top:5px;
-}
+.page{padding:40px;}
+.box{width:760px;}
+.note{font-size:12px;color:#666; margin-top:5px;}
 </style>
 </head>
-
 <body>
-
 <div class="layout">
-
     <aside class="sidebar">
         <div class="sidebar-top">
-
             <div class="sidebar-logo">
                 <img src="شعار نورين.png" alt="شعار نورين">
             </div>
-
             <ul class="sidebar-menu">
                 <li><a href="Ben00_MainPage.php">الرئيسية</a></li>
                  <li><a href="Ben04_BrowseScholarships.php">التقديم على المنح</a></li>
           <li><a href="Ben09_TrackScholarship.php">متابعة المنح</a></li>
                 <li><a href="#">المكاتب الاستشارية</a></li>
                  <li><a href="#Ben16_AdmissionList.php">طلبات إصدار القبول</a></li>
-                <li><a href="#">الاستشارات</a></li>
+                <li><a href="Ben19_Consultations.php">الاستشارات</a></li>
             </ul>
-
         </div>
-
    <div class="sidebar-bottom">
   <form action="logout.php" method="post">
     <button type="submit" class="logout-btn">
@@ -191,16 +167,12 @@ $conn->close();
     </button>
   </form>
 </div>    </aside>
-
     <div class="main-content">
-
         <header class="header">
             <div class="page-title">تعديل البيانات</div>
-
             <div class="header-icons">
                 <div class="settings-dropdown">
                     <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="القائمة">
-
                     <div class="dropdown-menu">
                         <a href="Ben02_Profile.php">الملف الشخصي</a>
                         <a href="#">التواصل والدعم</a>
@@ -208,36 +180,26 @@ $conn->close();
                 </div>
             </div>
         </header>
-
         <div class="page">
             <div class="box">
-
                 <h2>تعديل <span>بيانات المستفيد</span></h2>
-
                 <?php if($msg != ""){ ?>
                 <div class="message <?php echo $type; ?>">
                     <?php echo $msg; ?>
                 </div>
                 <?php } ?>
-
                 <form method="post">
-
                     <div class="row">
-
                         <div class="field">
                             <label><span class="star">*</span> الاسم الأول</label>
                             <input type="text" name="firstName" value="<?php echo  ($beneficiary['f_name']); ?>">
                         </div>
-
                         <div class="field">
                             <label><span class="star">*</span> الاسم الأخير</label>
                             <input type="text" name="lastName" value="<?php echo  ($beneficiary['l_name']); ?>">
                         </div>
-
                     </div>
-
                     <div class="row">
-
                         <div class="field">
                             <label><span class="star">*</span> المؤهل الدراسي</label>
                             <select name="degree">
@@ -352,6 +314,5 @@ function showPass(id){
     }
 }
 </script>
-
 </body>
 </html>

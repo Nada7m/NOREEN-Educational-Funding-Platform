@@ -87,8 +87,8 @@ $res_msgs = $con->query("SELECT * FROM bnf_off_msg WHERE bnf_id = '$current_bnf_
                 <li><a href="Ben04_BrowseScholarships.php">التقديم على المنح</a></li>
                 <li><a href="Ben09_TrackScholarship.php">متابعة المنح</a></li>
                 <li><a href="Ben013_ConsultingOffices.php" class="active">المكاتب الاستشارية</a></li>
-                <li><a href="Ben15_AdmissionRequests.php">طلبات إصدار القبول</a></li>
-                <li><a href="Ben16_Consultations.php">الاستشارات</a></li>
+                <li><a href="Ben15_AdmissionReq.php">طلبات إصدار القبول</a></li>
+                <li><a href="Ben19_Consultations.php">الاستشارات</a></li>
             </ul>
         </div>
         <div class="sidebar-bottom">
@@ -105,13 +105,14 @@ $res_msgs = $con->query("SELECT * FROM bnf_off_msg WHERE bnf_id = '$current_bnf_
         <header class="header">
             <div class="page-heading">
                 <h1 class="page-title" style="margin:0; font-size: 24px;">المكاتب الاستشارية</h1>
-                <p class="page-description" style="margin:5px 0 0; font-size: 14px; color: #000000;">صفحة التواصل مع المكتب الاستشاري</p>
+                <p class="page-description" ">صفحة التواصل مع المكتب الاستشاري</p>
             </div>
             <div class="header-icons">
                 <div class="settings-dropdown">
                     <img src="ايقونة قائمة الاعدادات.png" width="30" class="menu-icon" style="cursor:pointer;">
                     <div class="dropdown-menu">
                         <a href="Ben02_Profile.php">الملف الشخصي</a>
+                         <a href=".php">محفظة منحتي </a>
                         <a href="support.php">تقديم شكوى أو استفسار</a>
                     </div>
                 </div>
@@ -120,7 +121,7 @@ $res_msgs = $con->query("SELECT * FROM bnf_off_msg WHERE bnf_id = '$current_bnf_
 
         <div style="background: #E9DFF1; padding: 12px 25px; margin: 20px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;">
             <div>التواصل مع مكتب : <span style="color: var(--main-purple); font-weight: bold;"><?php echo htmlspecialchars($off_name); ?></span></div>
-            <a href="Ben013_ConsultingOffices.php"><img src="سهم تراجع.svg" width="40"></a>
+            <a href="Ben19_Consultations.php"><img src="سهم تراجع.svg" width="40"></a>
         </div>
 
         <div class="chat-container">

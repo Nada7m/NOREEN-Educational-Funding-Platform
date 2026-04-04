@@ -19,8 +19,7 @@ $selected_field = isset($_POST['sch_field']) ? $_POST['sch_field'] : '';
     <meta charset="UTF-8">
     <title><?php echo $is_details ? "تفاصيل المنحة" : "التقديم على المنح"; ?></title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="CSS01Layout.css">
-    
+<link rel="stylesheet" href="CSS01Layout.css?v=4">    
     <style>
         .page { padding: 20px 40px; position: relative; }
         
@@ -120,6 +119,8 @@ $selected_field = isset($_POST['sch_field']) ? $_POST['sch_field'] : '';
         <header class="header">
             <div class="page-heading" style="display:flex;align-items:center;gap:10px;">
                 <div class="page-title"><?php echo $is_details ? "تفاصيل المنحة" : "التقديم على المنح"; ?></div>
+                            <div class="page-description">صفحة استعراض وتقديم الطلبات على المنح المتاحة</div>
+
             </div>
             <div class="header-icons">
                 <div class="settings-dropdown">
@@ -127,7 +128,7 @@ $selected_field = isset($_POST['sch_field']) ? $_POST['sch_field'] : '';
                     <div class="dropdown-menu">
                         <a href="Ben02_Profile.php">الملف الشخصي</a>
                         <a href="Ben11_MyScholarshipWallet.php">محفظة منحتي</a>
-                        <a href="support.php">التواصل والدعم</a>
+                        <a href="support.php">تقديم شكوى او استفسار</a>
                     </div>
                 </div>
             </div>

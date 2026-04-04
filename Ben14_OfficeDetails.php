@@ -438,7 +438,7 @@ $conn->close();
   <?php if (!empty($rates)) { ?>
     <?php foreach ($rates as $rate) { ?>
       <div class="rcard">
-        <img src=" أيقونة التقيم.svg" class="rimg" alt="مستخدم">
+        <img src="التقييم.svg" class="rimg" alt="مستخدم">
         <div class="rtxt">
           <div class="rdate"><?php echo date("d-m-Y", strtotime($rate['rating_date'])); ?></div>
           <div class="rname">

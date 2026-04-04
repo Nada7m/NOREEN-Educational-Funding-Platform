@@ -27,7 +27,7 @@
           <li><a href="Con00_MainPage.php" class="active">الرئيسية</a></li>
           <li><a href="Con04_AdmissionReq.php">إدارة طلبات القبول</a></li>
           <li><a href="Con0_Consultations.php">الاستشارات</a></li>
-          <li><a href="Con0_BeneficiaryRatings.php">تقييمات المستفيدين</a></li>
+          <li><a href="Con08_ReqRating.php">تقييمات المستفيدين</a></li>
         </ul>
 
       </div>
@@ -197,6 +197,30 @@
 
           </div>
 
+        </section>
+    <!-- الأسئلة الشائعة -->
+        <section class="faq-sec" id="faq">
+
+          <div class="faq-head">
+            <h2>أعثر على إجابة سؤالك بسهولة</h2>
+          </div>
+
+          <div class="faq-list">
+
+            <details class="faq-item">
+              <summary>
+                المكتب الاستشاري
+                <img src="سهم مدبل.svg">
+              </summary>
+              <div class="faq-ans">
+                سؤال 1: اكتب السؤال هنا<br>
+                الإجابة: اكتب الإجابة هنا
+                <br><br>
+                سؤال 2: اكتب السؤال هنا<br>
+                الإجابة: اكتب الإجابة هنا
+              </div>
+            </details>
+          </div>
         </section>
 
       </div>

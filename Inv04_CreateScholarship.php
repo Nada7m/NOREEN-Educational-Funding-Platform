@@ -39,22 +39,6 @@ $result = mysqli_query($con, $sql);
 <link rel="stylesheet" href="CSS01Layout.css?v=3">
 
 <style>
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.page-heading{
-  text-align:right;
-  align-items:flex-end;
-}
-
-.header-icons{
-  display:flex;
-  align-items:center;
-}
-
 /* زر إنشاء منحة */
 .create-btn-box{
   margin-top:10px;
@@ -182,22 +166,7 @@ $result = mysqli_query($con, $sql);
   align-items:center;
   justify-content:center;
   text-decoration:none;
-}
 
-@media (max-width: 950px){
-  .scholarships-list{
-    padding:0 20px 30px;
-  }
-
-  .scholarship-card{
-    width:100%;
-    margin:20px auto;
-  }
-
-  .info-row{
-    flex-direction:column;
-    gap:14px;
-  }
 }
 </style>
 </head>
@@ -235,6 +204,10 @@ $result = mysqli_query($con, $sql);
 <div class="main-content">
 
 <header class="header">
+ <div class="page-heading">
+    <h1 class="page-title">عرض المنح</h1>
+    <p class="page-description">صفحة تقديم عروض فرص المنح</p>
+  </div>
 
   <div class="header-icons">
     <div class="settings-dropdown">
@@ -246,12 +219,6 @@ $result = mysqli_query($con, $sql);
       </div>
     </div>
   </div>
-
-  <div class="page-heading">
-    <h1 class="page-title">عرض المنح</h1>
-    <p class="page-description">صفحة تقديم عروض فرص المنح</p>
-  </div>
-
 </header>
 
 <div class="page-top">
@@ -262,11 +229,6 @@ $result = mysqli_query($con, $sql);
       <span>إنشاء عرض منحة جديدة</span>
     </a>
   </div>
-
-  <a href="Inv06_ManageScholarships.php">
-    <img src="سهم تراجع.svg" width="40" alt="رجوع">
-  </a>
-
 </div>
 
 <div class="scholarships-list">

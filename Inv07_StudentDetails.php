@@ -86,24 +86,6 @@ foreach ($documents as $doc) {
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="CSS01Layout.css?v=3">
 <style>
-/* تنسيق الهيدر */
-.header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
-/* تنسيق عنوان الصفحة */
-.page-heading{
-display:flex;
-flex-direction:column;
-align-items:flex-start;
-text-align:right;
-}
-/* تنسيق أيقونات الهيدر */
-.header-icons{
-display:flex;
-align-items:center;
-}
 /* تنسيق زر الرجوع */
 .back-btn{
 width:34px;
@@ -228,6 +210,10 @@ width:100%;
 </aside>
 <div class="main-content">
 <header class="header">
+    <div class="page-heading">
+<h1 class="page-title">إدارة المنح</h1>
+<p class="page-description">صفحة استعراض بيانات التقديم على المنحة</p>
+</div>
 <div class="header-icons">
 <div class="settings-dropdown">
 <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="الإعدادات">
@@ -236,10 +222,6 @@ width:100%;
 <a href="support.php">تقديم شكوى او استفسار</a>
 </div>
 </div>
-</div>
-<div class="page-heading">
-<h1 class="page-title">إدارة المنح</h1>
-<p class="page-description">صفحة استعراض بيانات التقديم على المنحة</p>
 </div>
 </header>
 <section class="page">

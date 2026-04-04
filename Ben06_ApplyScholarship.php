@@ -99,7 +99,7 @@ if(isset($_POST['submit_request'])){
                     <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="الإعدادات">
                     <div class="dropdown-menu">
                         <a href="Ben02_Profile.php">الملف الشخصي</a>
-                        <a href="Ben03_EditProfile.php">تعديل الملف الشخصي</a>
+                        <a href=".php">محفظة منحتي</a>
                         <a href="support.php">تقديم شكوى او استفسار</a>
                     </div>
                 </div>

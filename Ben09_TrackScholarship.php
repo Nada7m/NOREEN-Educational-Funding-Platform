@@ -76,8 +76,8 @@ if ($request) {
 
   <style>
 .track-wrap{ padding:30px 20px; }
-.track-card{ background:#FFFFFF; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.08); padding:28px 22px; max-width:900px; margin:auto; border:1px solid #ececec; }
-.track-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:30px; flex-wrap:wrap; }
+.track-card{background:#FFFFFF; border-radius:12px; padding:28px 22px; width:100%; margin:auto; border:1px solid #ececec;
+}.track-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:30px; flex-wrap:wrap; }
 .status-box{ min-width:240px; max-width:240px; height:40px; border-radius:4px; display:flex; align-items:center; justify-content:center; color:#FFFFFF; font-size:16px; font-weight:700; }
 .st-pending{ background:#E6BC6A; }
 .st-accepted{ background:#69B38A; }
@@ -87,7 +87,7 @@ if ($request) {
 .info-line{ margin-bottom:8px; font-size:15px; color:#777777; line-height:1.9; }
 .info-line b{ color:#8EB4C2; font-size:16px; margin-left:6px; }
 .track-divider{ border:none; border-top:1px solid #dddddd; margin:24px 0 18px; }
-.track-actions{ display:flex; gap:14px; flex-wrap:wrap; }
+.track-actions{display:flex; gap:14px; flex-wrap:wrap; justify-content:center;}
 .track-btn{ min-width:180px; height:40px; border:none; border-radius:4px; font-family:"Noto Kufi Arabic", sans-serif; font-size:15px; font-weight:700; cursor:pointer; text-decoration:none; display:flex; align-items:center; justify-content:center; transition:0.2s; }
 .btn-disabled{ background:#A9A9A9; color:#FFFFFF; pointer-events:none; cursor:default; }
 .btn-contact{ background:#C9ADD8; color:#FFFFFF; }

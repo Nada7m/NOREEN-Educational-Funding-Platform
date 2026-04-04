@@ -35,7 +35,7 @@ $conn->close();
 <meta charset="UTF-8">
 <title>الملف الشخصي</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="CSS01Layout.css?v=3">
+<link rel="stylesheet" href="CSS01Layout.css?v=4">
 <style>
 /* الصفحة */
 .page{padding: 40px; font-family: "Noto Kufi Arabic", sans-serif;}
@@ -91,7 +91,7 @@ label, .field{font-weight: 600;}
           <li><a href="Ben09_TrackScholarship.php">متابعة المنح</a></li>
           <li><a href="Ben013_ConsultingOffices.php">المكاتب الاستشارية</a></li>
                 <li><a href="Ben16_AdmissionList.php">طلبات إصدار القبول</a></li>
-                <li><a href="#">الاستشارات</a></li>
+                <li><a href="Ben19_Consultations.php">الاستشارات</a></li>
             </ul>
         </div>
         <!-- زر تسجيل الخروج -->

@@ -28,12 +28,8 @@ $result=mysqli_stmt_get_result($stmt);
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>إدارة المنح</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="CSS01Layout.css?v=3">
+<link rel="stylesheet" href="CSS01Layout.css?v=4">
 <style>
-/* ضبط اتجاه الهيدر */
-.header{display:flex;justify-content:space-between;align-items:center;}
-.page-heading{display:flex;flex-direction:column;align-items:flex-start;text-align:right;}
-.header-icons{display:flex;align-items:center;}
 /* تنسيق الصفحة */
 .manage-page{padding:35px;}
 /* الكارد الرئيسي    */
@@ -79,6 +75,10 @@ $result=mysqli_stmt_get_result($stmt);
 </aside>
 <div class="main-content">
 <header class="header">
+    <div class="page-heading">
+<h1 class="page-title">إدارة المنح</h1>
+<p class="page-description">صفحة التواصل مع المرشح المعني بالمنحة</p>
+</div>
 <div class="header-icons">
 <div class="settings-dropdown">
 <img src="ايقونة قائمة الاعدادات.png" class="menu-icon">
@@ -88,10 +88,7 @@ $result=mysqli_stmt_get_result($stmt);
 </div>
 </div>
 </div>
-<div class="page-heading">
-<h1 class="page-title">إدارة المنح</h1>
-<p class="page-description">صفحة التواصل مع المرشح المعني بالمنحة</p>
-</div>
+
 </header>
 <div class="manage-page">
 <?php if(mysqli_num_rows($result)>0): ?>
