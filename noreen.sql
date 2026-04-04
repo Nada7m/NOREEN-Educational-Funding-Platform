@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: 03 أبريل 2026 الساعة 14:38
+-- Host: 127.0.0.1:3306
+-- Generation Time: 04 أبريل 2026 الساعة 14:46
 -- إصدار الخادم: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -170,8 +170,18 @@ CREATE TABLE `bnf_off_msg` (
   `bnf_id` int(11) NOT NULL,
   `office_id` int(11) NOT NULL,
   `msg_time` datetime NOT NULL DEFAULT current_timestamp(),
-  `msg_text` text NOT NULL
+  `msg_text` text NOT NULL,
+  `sender_type` enum('beneficiary','office') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- إرجاع أو استيراد بيانات الجدول `bnf_off_msg`
+--
+
+INSERT INTO `bnf_off_msg` (`msg_id`, `bnf_id`, `office_id`, `msg_time`, `msg_text`, `sender_type`) VALUES
+(1, 1, 2, '2026-04-04 15:42:12', 'السلام عليكم ورحمة الله وبركاته.  أنا فاطمة الغامدي، أرغب في دراسة الماجستير في الولايات المتحدة، ولكنني لست متأكدة من الجامعة أو البرنامج الأنسب لي أحمل درجة البكالوريوس في الهندسة الصناعية، وارغب ببرنامج يركز على تطوير الانظمة او ما يشابهها', 'beneficiary'),
+(2, 1, 2, '2026-04-04 15:43:08', 'وعليكم السلام ورحمة الله وبركاته،  أهلًا بكِ فاطمة. بناءً على خلفيتك الأكاديمية في الهندسة الصناعية واهتمامك بمجال تطوير الانظمة أقدم لك “نمذجة وتحسين النظم” من الجامعات الرائدة عالميًا جامعة إلينوي في أوربانا-شامبين وتُصنّف من أفضل الجامعات في تخصصات الهندسة الصناعية بشكل عام', 'office'),
+(3, 1, 2, '2026-04-04 15:43:38', 'كما أن الجامعة ضمن نطاق خدماتنا ويمكننا إصدار خطاب القبول إذا رغبتي في تقديم طلب! البيانات المطلوبة للتقديم مذكورة في قسم الاسئلة الشائعة', 'office');
 
 -- --------------------------------------------------------
 
@@ -612,7 +622,7 @@ ALTER TABLE `bnf_inv_msg`
 -- AUTO_INCREMENT for table `bnf_off_msg`
 --
 ALTER TABLE `bnf_off_msg`
-  MODIFY `msg_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `msg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `complaints_inquiries`
