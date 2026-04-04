@@ -184,9 +184,9 @@ $contracts = [
             </div>
 
             <ul class="sidebar-menu">
-                <li><a href="Admin_Contracts.php" class="active">إدارة العقود</a></li>
-                <li><a href="complaints.php">الشكاوى والاستفسارات</a></li>
-                <li><a href="users_manage.php">إدارة المستخدمين</a></li>
+                <li><a href="Admin3_Contracts.php" class="active">إدارة العقود</a></li>
+                <li><a href="Admin5_Complaints.php">الشكاوى والاستفسارات</a></li>
+                <li><a href="Admin4_UsersManage.php">إدارة المستخدمين</a></li>
                 <li><a href="Admin2_ EntitiesApproval.php">اعتماد الجهات</a></li>
             </ul>
         </div>

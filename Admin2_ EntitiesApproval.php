@@ -252,8 +252,8 @@ $result = mysqli_query($con, $sql);
 
       <ul class="sidebar-menu">
         <li><a href="Admin3_Contracts.php">إدارة العقود</a></li>
-        <li><a href="complaints.php">الشكاوى والاستفسارات</a></li>
-        <li><a href="users_manage.php">إدارة المستخدمين</a></li>
+        <li><a href="Admin5_Complaints.php">الشكاوى والاستفسارات</a></li>
+        <li><a href="Admin4_UsersManage.php">إدارة المستخدمين</a></li>
         <li><a href="Admin2_ EntitiesApproval.php"class="active">اعتماد الجهات</a></li>
       </ul>
     </div>
@@ -325,20 +325,24 @@ $result = mysqli_query($con, $sql);
                 </span>
               </td>
               <td>
-                <div class="actions">
-                  <form method="post" style="display:inline-block;">
-                    <input type="hidden" name="entity_id" value="<?php echo $row['entity_id']; ?>">
-                    <input type="hidden" name="entity_type" value="<?php echo $row['entity_type']; ?>">
-                    <button type="submit" name="approve" class="btn btn-accept">اعتماد</button>
-                  </form>
+  <?php if ($statusText == "بانتظار المراجعة") { ?>
+    <div class="actions">
+      <form method="post" style="display:inline-block;">
+        <input type="hidden" name="entity_id" value="<?php echo $row['entity_id']; ?>">
+        <input type="hidden" name="entity_type" value="<?php echo $row['entity_type']; ?>">
+        <button type="submit" name="approve" class="btn btn-accept">اعتماد</button>
+      </form>
 
-                  <form method="post" style="display:inline-block;">
-                    <input type="hidden" name="entity_id" value="<?php echo $row['entity_id']; ?>">
-                    <input type="hidden" name="entity_type" value="<?php echo $row['entity_type']; ?>">
-                    <button type="submit" name="reject" class="btn btn-reject">رفض</button>
-                  </form>
-                </div>
-              </td>
+      <form method="post" style="display:inline-block;">
+        <input type="hidden" name="entity_id" value="<?php echo $row['entity_id']; ?>">
+        <input type="hidden" name="entity_type" value="<?php echo $row['entity_type']; ?>">
+        <button type="submit" name="reject" class="btn btn-reject">رفض</button>
+      </form>
+    </div>
+  <?php } else { ?>
+    <span style="color:#aaa;"></span>
+  <?php } ?>
+</td>
             </tr>
 
 
