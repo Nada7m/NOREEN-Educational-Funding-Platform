@@ -66,6 +66,173 @@ if(isset($_POST['submit_request'])){
     <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="CSS01Layout.css?v=3">
     <link rel="stylesheet" href="Style.css"> </head>
+    <style>
+        /* توسيط العنوان */
+.title-center{
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* نص وسط */
+.center-text{
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 25px;
+}
+
+/* مسافات */
+.section-space{
+  margin-top: 40px;
+}
+
+/* البوكس */
+.form-box{
+  max-width: 1100px;
+  margin: auto;
+}
+
+
+
+/* زر كبير */
+.big-btn{
+  padding: 12px 80px;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+/* تنسيق البطاقة الرئيسية للنموذج */
+.scholarship-details-box {
+    width: 100%;
+    max-width: 1000px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+   box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+/* تقسيم المعلومات الشخصية (يمين بيانات - يسار حقول) */
+.personal-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    background: #F9F9F9;
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+/* تنسيق البيانات الثابتة (اليمين) */
+.static-data {
+    order: 1;
+}
+
+.static-data p {
+    margin: 12px 0;
+    font-size: 16px;
+    color: #3E2454;
+    display: flex;
+     font-family: 'Noto Kufi Arabic', sans-serif !important;
+}
+
+.static-data b {
+    color: #70A0AF;
+    display: inline-block;
+    width: 140px;
+     font-family: 'Noto Kufi Arabic', sans-serif !important;
+}
+
+/* تنسيق حقول الإدخال (اليسار) */
+.form-fields {
+    order: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* تنسيق قسم المستندات */
+.docs-section {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.doc-item {
+    text-align: right;
+}
+
+.doc-item label.title-label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: block;
+    color: #333;
+     font-family: 'Noto Kufi Arabic', sans-serif !important;
+}
+
+/* تنسيق حقل الرفع (المربع) */
+.upload-wrapper {
+    border: 1.5px solid #8FB4C9;
+    background-color: #F8F8F8;
+    height: 60px; 
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.3s;
+    border: 2px solid;
+    border-image-source: linear-gradient(90deg, #D6B7E2 0%, #3E2454 64%);
+    border-image-slice: 1;
+    
+    
+    
+}
+
+.upload-wrapper:hover {
+    border-color: #3E2454;
+    background-color: #ececec;
+}
+
+/* تنسيق صورة الرفع الخاصة بك */
+.upload-img {
+    width: 30px; 
+    height: auto;
+}
+
+/* زر الإرسال بالمنتصف */
+.center-btn {
+    text-align: center;
+    margin-top: 40px;
+}
+
+/* النجمة الحمراء */
+.star {
+    color: red !important;
+    font-weight: bold;
+    margin-left: 3px;
+}
+
+
+/* تنسيق خط وزر إرسال الطلب */
+.form-submit-btn {
+    font-family: 'Noto Kufi Arabic', sans-serif !important;
+    font-size: 18px;
+    font-weight: 700;
+    background-color: #70A0AF;
+    color: #ffffff;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+.form-submit-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+</style>
 
 <body>
 <div class="layout">
