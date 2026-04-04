@@ -113,9 +113,194 @@ if (!$row) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- ملف التنسيق -->
-  <link rel="stylesheet" href="CSS01Layout.css?v=3"></head>
-<body>
+ 
+  <!-- التنسيق الأساسي المشترك -->
+  <link rel="stylesheet" href="CSS01Layout.css?v=3">
+
+  <style>
+    /* مساحة الصفحة */
+    .profile-content{
+      padding:35px 40px 55px;
+    }
+
+    /* الصندوق الرئيسي */
+    .edit-wrapper{
+      width:980px;
+      margin:0 auto;
+    }
+
+    /* عنوان الصفحة داخل المحتوى */
+    .form-title{
+      text-align:right;
+      font-size:20px;
+      font-weight:700;
+      color:#222222;
+      margin-bottom:8px;
+    }
+
+    /* الوصف تحت العنوان */
+    .form-subtitle{
+      text-align:right;
+      font-size:14px;
+      font-weight:500;
+      color:#444444;
+      margin-bottom:24px;
+    }
+
+    /* صف اسم الجهة */
+    .org-name-row{
+      margin-bottom:22px;
+    }
+
+    .org-label{
+      display:block;
+      text-align:right;
+      font-size:15px;
+      font-weight:700;
+      color:#333333;
+      margin-bottom:8px;
+    }
+
+    .org-input{
+      width:100%;
+      height:38px;
+      border:1px solid #d8d8d8;
+      background:#FFFFFF;
+      padding:8px 10px;
+      font-size:13px;
+      outline:none;
+    }
+
+    /* الصندوقين */
+    .form-boxes{
+      display:flex;
+      gap:28px;
+      align-items:flex-start;
+    }
+
+    .info-box{
+      flex:1;
+      background:#FFFFFF;
+      border:1px solid #ececec;
+      padding:18px 20px 20px;
+    }
+
+    .info-box-title{
+      text-align:center;
+      font-size:16px;
+      font-weight:700;
+      color:#333333;
+      margin-bottom:18px;
+      padding-bottom:10px;
+      border-bottom:1px solid #e6e6e6;
+    }
+
+    /* كل حقل */
+    .form-group{
+      margin-bottom:18px;
+    }
+
+    .form-label{
+      display:block;
+      text-align:right;
+      font-size:14px;
+      font-weight:600;
+      color:#333333;
+      margin-bottom:7px;
+    }
+
+    .form-input{
+      width:100%;
+      height:38px;
+      border:1px solid #d8d8d8;
+      background:#FFFFFF;
+      padding:8px 10px;
+      font-size:13px;
+      outline:none;
+    }
+
+    .form-input:focus,
+    .org-input:focus{
+      border-color:#70A0AF;
+    }
+
+    /* مربع كلمة المرور */
+    .passBox{
+      position:relative;
+    }
+
+    .passBox .form-input{
+      padding-left:35px;
+    }
+
+    .eye{
+      position:absolute;
+      left:10px;
+      top:50%;
+      transform:translateY(-50%);
+      cursor:pointer;
+      font-size:14px;
+      user-select:none;
+    }
+
+    /* الأزرار */
+    .form-actions{
+      display:flex;
+      justify-content:center;
+      gap:24px;
+      margin-top:28px;
+    }
+
+    .save-btn{
+      background:#63B27A;
+      color:#FFFFFF;
+      border:none;
+      border-radius:8px;
+      padding:12px 28px;
+      font-size:15px;
+      font-weight:600;
+      cursor:pointer;
+    }
+
+    .cancel-btn{
+      background:#B54747;
+      color:#FFFFFF;
+      border:none;
+      border-radius:8px;
+      padding:12px 28px;
+      font-size:15px;
+      font-weight:600;
+      cursor:pointer;
+    }
+
+    /* رسائل الخطأ الصغيرة تحت الحقول */
+    .errorText{
+      color:red;
+      font-size:12px;
+      margin-top:5px;
+      min-height:18px;
+    }
+
+    /* رسالة النظام أعلى النموذج */
+    .message{
+      text-align:center;
+      padding:10px;
+      margin-bottom:20px;
+      border-radius:6px;
+      font-size:13px;
+    }
+
+    .error{
+      background:#fff3f3;
+      color:#b42318;
+    }
+
+    .success{
+      background:#f1fff3;
+      color:#1f7a2e;
+    }
+     </style>
+</head>
 
   <!-- الهيكل العام -->
   <div class="layout">

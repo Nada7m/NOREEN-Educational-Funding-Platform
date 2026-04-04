@@ -41,7 +41,13 @@ $resFinished = mysqli_query($con, $sqlFinished);
 $rowFinished = mysqli_fetch_assoc($resFinished);
 $finishedRequests = $rowFinished['finished_requests'];
 
-$sqlRequests = "SELECT ar.request_id, ar.Result_status, ar.Submit_date, b.f_name, b.l_name
+$sqlRequests = "SELECT 
+                    ar.request_id,
+                    ar.request_status,
+                    ar.Result_status,
+                    ar.Submit_date,
+                    b.f_name,
+                    b.l_name
                 FROM admission_request ar
                 INNER JOIN beneficiary b ON ar.bnf_id = b.bnf_id
                 WHERE ar.office_id = $office_id
@@ -66,7 +72,7 @@ $resRequests = mysqli_query($con, $sqlRequests);
 .stat-processing{color:#E0B25C;}
 .stat-finished{color:#63B68B;}
 .stat-label{font-size:15px; font-weight:600; color:#4b3d5c; font-family:'Noto Kufi Arabic', sans-serif;}
-.table-box{background:#fff; border-radius:12px; box-shadow:0 4px 14px rgba(0,0,0,0.08); overflow:hidden; max-width:1100px; margin:0 auto;}
+.table-box{background:#fff; border-radius:12px; overflow:hidden; max-width:1100px; margin:0 auto;}
 .requests-table{width:100%; border-collapse:collapse; text-align:center; font-family:'Noto Kufi Arabic', sans-serif;}
 .requests-table tr:first-child th{background:#f8f8f8; color:#3E2454; font-size:15px; font-weight:700; padding:14px 10px; border-bottom:1px solid #ddd;}
 .requests-table td{padding:14px 10px; border-bottom:1px solid #eee; font-size:14px; color:#333;}
@@ -152,6 +158,7 @@ $resRequests = mysqli_query($con, $sqlRequests);
                         <th>اسم المستفيد</th>
                         <th>تاريخ الطلب</th>
                         <th>حالة الطلب</th>
+                        <th>حالة النتيجة</th>
                         <th>الإجراءات</th>
                     </tr>
 
@@ -160,17 +167,33 @@ $resRequests = mysqli_query($con, $sqlRequests);
 
                             <?php
                             $fullName = $row['f_name'] . " " . $row['l_name'];
-                            $status = trim($row['Result_status']);
 
-                            if ($status == "" || $status == "قيد المعالجة") {
-                                $statusText = "قيد المعالجة";
-                                $statusClass = "status-processing";
-                            } elseif ($status == "مرفوض") {
-                                $statusText = "مرفوض";
-                                $statusClass = "status-rejected";
+                            /* حالة الطلب */
+                            $request_status = trim($row['request_status']);
+
+                            if ($request_status == "" || $request_status == "في الانتظار") {
+                                $requestStatusText = "في الانتظار";
+                                $requestStatusClass = "status-processing";
+                            } elseif ($request_status == "مرفوض") {
+                                $requestStatusText = "مرفوض";
+                                $requestStatusClass = "status-rejected";
                             } else {
-                                $statusText = $status;
-                                $statusClass = "status-finished";
+                                $requestStatusText = "مقبول";
+                                $requestStatusClass = "status-finished";
+                            }
+
+                            /* حالة النتيجة */
+                            $result_status = trim($row['Result_status']);
+
+                            if ($result_status == "" || $result_status == "قيد المعالجة") {
+                                $resultStatusText = "قيد المعالجة";
+                                $resultStatusClass = "status-processing";
+                            } elseif ($result_status == "مرفوض" || $result_status == "مرفوضة") {
+                                $resultStatusText = "مرفوض";
+                                $resultStatusClass = "status-rejected";
+                            } else {
+                                $resultStatusText = $result_status;
+                                $resultStatusClass = "status-finished";
                             }
                             ?>
 
@@ -178,14 +201,30 @@ $resRequests = mysqli_query($con, $sqlRequests);
                                 <td><?php echo $row['request_id']; ?></td>
                                 <td><?php echo htmlspecialchars($fullName, ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td><?php echo htmlspecialchars($row['Submit_date'], ENT_QUOTES, 'UTF-8'); ?></td>
-                                <td><div class="status-badge <?php echo $statusClass; ?>"><?php echo htmlspecialchars($statusText, ENT_QUOTES, 'UTF-8'); ?></div></td>
-                                <td><a href="Con05_AdmissiontDetails.php?request_id=<?php echo $row['request_id']; ?>" class="details-btn">عرض البيانات</a></td>
+
+                                <td>
+                                    <div class="status-badge <?php echo $requestStatusClass; ?>">
+                                        <?php echo htmlspecialchars($requestStatusText, ENT_QUOTES, 'UTF-8'); ?>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="status-badge <?php echo $resultStatusClass; ?>">
+                                        <?php echo htmlspecialchars($resultStatusText, ENT_QUOTES, 'UTF-8'); ?>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <a href="Con05_AdmissiontDetails.php?request_id=<?php echo $row['request_id']; ?>" class="details-btn">
+                                        عرض البيانات
+                                    </a>
+                                </td>
                             </tr>
 
                         <?php } ?>
                     <?php } else { ?>
                         <tr>
-                            <td colspan="5" class="empty-msg">لا توجد طلبات قبول حالياً</td>
+                            <td colspan="6" class="empty-msg">لا توجد طلبات قبول حالياً</td>
                         </tr>
                     <?php } ?>
                 </table>
