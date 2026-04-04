@@ -113,7 +113,7 @@ $conn->close();
 <li><a href="Ben09_TrackScholarship.php">متابعة المنح</a></li>
 <li><a href="Ben10_Consultants.php" class="active">المكاتب الاستشارية</a></li>
 <li><a href="Ben16_AdmissionList.php">طلبات إصدار القبول</a></li>
-<li><a href="#">الاستشارات</a></li>
+<li><a href="Ben19_Consultations.php">الاستشارات</a></li>
 </ul>
 </div>
 <div class="sidebar-bottom">

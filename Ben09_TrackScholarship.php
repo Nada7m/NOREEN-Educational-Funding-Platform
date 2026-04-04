@@ -114,7 +114,7 @@ if ($request) {
           <li><a href="Ben09_TrackScholarship.php" class="active">متابعة المنح</a></li>
           <li><a href="Ben013_ConsultingOffices.php">المكاتب الاستشارية</a></li>
           <li><a href="Ben16_AdmissionList.php">طلبات إصدار القبول</a></li>
-          <li><a href="#">الاستشارات</a></li>
+          <li><a href="Ben19_Consultations.php">الاستشارات</a></li>
         </ul>
       </div>
       <div class="sidebar-bottom">

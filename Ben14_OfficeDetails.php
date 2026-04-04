@@ -80,6 +80,7 @@ while ($row = $resRate->fetch_assoc()) {
 
 $stmtRate->close();
 $conn->close();
+
 ?>
 
 <!DOCTYPE html>
@@ -336,7 +337,7 @@ $conn->close();
 <li><a href="Ben09_TrackScholarship.php">متابعة المنح</a></li>
 <li><a href="Ben10_Consultants.php" class="active">المكاتب الاستشارية</a></li>
 <li><a href="Ben16_AdmissionList.php">طلبات إصدار القبول</a></li>
-<li><a href="#">الاستشارات</a></li>
+<li><a href="Ben19_Consultations.php">الاستشارات</a></li>
 </ul>
 </div>
 
@@ -399,9 +400,9 @@ $conn->close();
   <div class="midrow">
     <!-- أزرار التنفيذ -->
     <div class="actcol">
-      <button type="button" class="btnlight" onclick="window.location.href='#'">
-        التواصل للاستشارة
-      </button>
+    <a href="Ben18_ContactConsultingOffice.php?off_id=<?php echo $officeId; ?>" class="btnlight" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">
+    التواصل للاستشارة
+</a>>
       <button type="button" class="btndark" onclick="window.location.href='Ben15_AdmissionReq.php?id=<?php echo $office['office_id']; ?>'">
   تقديم طلب إصدار قبول
 </button>

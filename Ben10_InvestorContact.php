@@ -78,8 +78,18 @@ $res_msgs = $con->query("SELECT * FROM bnf_inv_msg WHERE bnf_id = '$current_bnf_
                 <li><a href="Ben04_BrowseScholarships.php">التقديم على المنح</a></li>
                 <li><a href="Ben09_TrackScholarship.php" class="active">متابعة المنح</a></li>
                 <li><a href="Ben013_ConsultingOffices.php">المكاتب الاستشارية</a></li>
+                <li><a href="Ben16_AdmissionList.php">طلبات إصدار القبول</a></li>
+<li><a href="Ben19_Consultations.php">الاستشارات</a></li>
             </ul>
         </div>
+        <div class="sidebar-bottom">
+        <form action="logout.php" method="post">
+            <button type="submit" class="logout-btn">
+                <img src="ايقونة تسجيل الخروج.png" class="logout-icon" alt="خروج">
+                <b>تسجيل الخروج</b>
+            </button>
+        </form>
+      </div>
     </aside>
 
     <div class="main-content">
