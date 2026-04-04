@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Generation Time: 04 أبريل 2026 الساعة 14:46
+-- Host: 127.0.0.1
+-- Generation Time: 04 أبريل 2026 الساعة 21:00
 -- إصدار الخادم: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -72,15 +72,17 @@ CREATE TABLE `admission_request` (
   `univ_name` varchar(100) NOT NULL,
   `Submit_date` date NOT NULL,
   `result_notes` text DEFAULT NULL,
-  `Result_status` enum('قيد المعالجة','أصدرت') NOT NULL DEFAULT 'قيد المعالجة'
+  `Result_status` enum('قيد المعالجة','أصدرت') NOT NULL DEFAULT 'قيد المعالجة',
+  `request_status` enum('في الانتظار','مقبول','مرفوض') NOT NULL DEFAULT 'في الانتظار',
+  `result` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- إرجاع أو استيراد بيانات الجدول `admission_request`
 --
 
-INSERT INTO `admission_request` (`request_id`, `bnf_id`, `office_id`, `program_type`, `major_name`, `univ_name`, `Submit_date`, `result_notes`, `Result_status`) VALUES
-(1, 1, 2, '', 'نمذجة وتحسين النظم الصناعية', 'إلينوي أوربانا شامبين - الولايات المتحدة', '2026-04-02', '', 'قيد المعالجة');
+INSERT INTO `admission_request` (`request_id`, `bnf_id`, `office_id`, `program_type`, `major_name`, `univ_name`, `Submit_date`, `result_notes`, `Result_status`, `request_status`, `result`) VALUES
+(1, 1, 2, 'master', 'نمذجة وتحسين النظم الصناعية', 'إلينوي أوربانا شامبين - الولايات المتحدة', '2026-04-02', 'تم رفع خطاب القبول الرسمي أدناه يرجى مراجعة الملف المرفق والاطلاع على الشروط والأحكام الأكاديمية والمالية قبل اتخاذ أي إجراء لاحق.', 'أصدرت', 'مقبول', 'uploads/admission_results/1_result.pdf');
 
 -- --------------------------------------------------------
 
@@ -181,7 +183,8 @@ CREATE TABLE `bnf_off_msg` (
 INSERT INTO `bnf_off_msg` (`msg_id`, `bnf_id`, `office_id`, `msg_time`, `msg_text`, `sender_type`) VALUES
 (1, 1, 2, '2026-04-04 15:42:12', 'السلام عليكم ورحمة الله وبركاته.  أنا فاطمة الغامدي، أرغب في دراسة الماجستير في الولايات المتحدة، ولكنني لست متأكدة من الجامعة أو البرنامج الأنسب لي أحمل درجة البكالوريوس في الهندسة الصناعية، وارغب ببرنامج يركز على تطوير الانظمة او ما يشابهها', 'beneficiary'),
 (2, 1, 2, '2026-04-04 15:43:08', 'وعليكم السلام ورحمة الله وبركاته،  أهلًا بكِ فاطمة. بناءً على خلفيتك الأكاديمية في الهندسة الصناعية واهتمامك بمجال تطوير الانظمة أقدم لك “نمذجة وتحسين النظم” من الجامعات الرائدة عالميًا جامعة إلينوي في أوربانا-شامبين وتُصنّف من أفضل الجامعات في تخصصات الهندسة الصناعية بشكل عام', 'office'),
-(3, 1, 2, '2026-04-04 15:43:38', 'كما أن الجامعة ضمن نطاق خدماتنا ويمكننا إصدار خطاب القبول إذا رغبتي في تقديم طلب! البيانات المطلوبة للتقديم مذكورة في قسم الاسئلة الشائعة', 'office');
+(3, 1, 2, '2026-04-04 15:43:38', 'كما أن الجامعة ضمن نطاق خدماتنا ويمكننا إصدار خطاب القبول إذا رغبتي في تقديم طلب! البيانات المطلوبة للتقديم مذكورة في قسم الاسئلة الشائعة', 'office'),
+(4, 1, 2, '2026-04-04 16:59:46', 'ممتاز اذا ساقوم برفع طلب  بالمستندات المطلوبة', 'beneficiary');
 
 -- --------------------------------------------------------
 
@@ -288,7 +291,7 @@ CREATE TABLE `investor` (
 --
 
 INSERT INTO `investor` (`inv_id`, `ccr_number`, `email`, `inv_number`, `inv_name`, `password`, `approval_status`, `account_status`) VALUES
-(1, '1010010813', 'InvestorRelations@safco.sabic.com', 530014051, 'سابك - الشركة السعودية للصناعات الأساسية', '$2y$10$/8anVADcwa6r5K6nJk/RCO9Tb6fS7G05m9eUS4FIXm90T2iaJ7c4a', 'بانتظار المراجعة', 'نشط'),
+(1, '1010010813', 'InvestorRelations@safco.sabic.com', 530014051, 'سابك - الشركة السعودية للصناعات الأساسية', '$2y$10$/8anVADcwa6r5K6nJk/RCO9Tb6fS7G05m9eUS4FIXm90T2iaJ7c4a', 'معتمد', 'نشط'),
 (2, '4030175741', 'Baggage.Inquiries@Saudia.com', 2147483647, 'الخطوط السعودية', '$2y$10$46r8y.xFY5El.dVX2RJuN.2ijifWQAc8tZgH6GxcpN.vi5D5hJPby', 'بانتظار المراجعة', 'نشط'),
 (3, '2052101150', 'investor@aramco.com', 567788990, 'أرامكو', '$2y$10$IGfO7u71zWhhE/n3JrK72.0Wh2ZOM9PyPNd.3vGYwGuYarq8SCIT.', 'بانتظار المراجعة', 'نشط');
 
@@ -367,9 +370,17 @@ CREATE TABLE `rating` (
   `rating_id` int(11) NOT NULL,
   `bnf_id` int(11) NOT NULL,
   `office_id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
   `rating_date` datetime DEFAULT current_timestamp(),
   `comment_text` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- إرجاع أو استيراد بيانات الجدول `rating`
+--
+
+INSERT INTO `rating` (`rating_id`, `bnf_id`, `office_id`, `request_id`, `rating_date`, `comment_text`) VALUES
+(4, 1, 2, 1, '2026-04-04 20:40:56', 'تم التعامل مع طلبي باحترافية من البداية وحتى إصدار القبول، أقدّر الجهود المبذولة واشكر المكتب الشكر الجزيل');
 
 -- --------------------------------------------------------
 
@@ -467,8 +478,8 @@ ALTER TABLE `admin`
 --
 ALTER TABLE `admission_request`
   ADD PRIMARY KEY (`request_id`),
-  ADD KEY `office_id` (`office_id`),
-  ADD KEY `bnf_id` (`bnf_id`);
+  ADD KEY `bnf_id` (`bnf_id`),
+  ADD KEY `office_id` (`office_id`);
 
 --
 -- Indexes for table `admission_request_documents`
@@ -552,7 +563,8 @@ ALTER TABLE `payments`
 ALTER TABLE `rating`
   ADD PRIMARY KEY (`rating_id`),
   ADD KEY `bnf_id` (`bnf_id`),
-  ADD KEY `office_id` (`office_id`);
+  ADD KEY `office_id` (`office_id`),
+  ADD KEY `request_id` (`request_id`);
 
 --
 -- Indexes for table `scholarship_opps`
@@ -622,7 +634,7 @@ ALTER TABLE `bnf_inv_msg`
 -- AUTO_INCREMENT for table `bnf_off_msg`
 --
 ALTER TABLE `bnf_off_msg`
-  MODIFY `msg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `msg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `complaints_inquiries`
@@ -658,7 +670,7 @@ ALTER TABLE `payments`
 -- AUTO_INCREMENT for table `rating`
 --
 ALTER TABLE `rating`
-  MODIFY `rating_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `rating_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `scholarship_opps`
@@ -748,7 +760,8 @@ ALTER TABLE `payments`
 --
 ALTER TABLE `rating`
   ADD CONSTRAINT `rating_ibfk_1` FOREIGN KEY (`bnf_id`) REFERENCES `beneficiary` (`bnf_id`),
-  ADD CONSTRAINT `rating_ibfk_2` FOREIGN KEY (`office_id`) REFERENCES `consulting_office` (`office_id`);
+  ADD CONSTRAINT `rating_ibfk_2` FOREIGN KEY (`office_id`) REFERENCES `consulting_office` (`office_id`),
+  ADD CONSTRAINT `rating_ibfk_3` FOREIGN KEY (`request_id`) REFERENCES `admission_request` (`request_id`);
 
 --
 -- قيود الجداول `scholarship_opps`
