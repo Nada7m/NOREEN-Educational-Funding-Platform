@@ -70,6 +70,7 @@ $result = mysqli_query($con, $sql);
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>اعتماد الجهات</title>
 
+
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="CSS01Layout.css">
 
@@ -100,16 +101,23 @@ $result = mysqli_query($con, $sql);
       margin-bottom: 18px;
     }
 
-    
-
     .page-title{
       color: #3E2454;
-      font-size: 42px;
-      font-weight: 500;
       text-align: right;
-      margin-bottom: 30px;
       margin-right: 15px;
+      text-align:right;
+    font-size: 30px;
+    font-weight: 700;
+    margin-top: -50px;
+    margin-bottom: 8px
+
       
+    }
+    .title-line{
+    width: 100%;
+    height: 2px;
+    background: #bfbfbf;
+    margin: 0 0 25px 0;
     }
 
     .table-wrapper{
@@ -119,12 +127,14 @@ $result = mysqli_query($con, $sql);
     }
 
     .table-box{
-      width: 980px;
-      min-height: 610px;
-      border: 1px solid #EEEEEE;
-      background-color: #fff;
-      overflow: hidden;
+      border: 1px solid #d8d8d8;
+      border-radius: 6px;
+      padding: 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+       overflow: hidden;
     }
+     
+        
 
     table{
       width: 100%;
@@ -132,13 +142,25 @@ $result = mysqli_query($con, $sql);
       table-layout: fixed;
     }
 
-    
+    thead th{
+      color: #3E2454;
+      font-size: 17px;
+      font-weight: 700;
+      text-align: center;
+      padding: 16px 12px;
+      background-color: #FBFBFB;
+      border-bottom: 1px solid #CFCFCF;
+    }
+
+    thead th:not(:first-child){
+      border-right: 1px solid #CFCFCF;
+    }
+
     tbody td{
       min-height: 92px;
       text-align: center;
       vertical-align: middle;
-      border-bottom: 1px solid #F2F2F2;
-      border-left: 1px solid #F7F7F7;
+      border-bottom: 1px solid #D9D9D9;
       padding: 18px 12px;
       font-size: 17px;
       font-weight: 400;
@@ -146,7 +168,6 @@ $result = mysqli_query($con, $sql);
       background-color: #fff;
     }
 
-    
     .company-name,
     .data-text{
       color: #595959;
@@ -217,7 +238,7 @@ $result = mysqli_query($con, $sql);
     .col-cr{ width: 20%; }
     .col-status{ width: 18%; }
     .col-actions{ width: 20%; }
-
+</style>
     
   </style>
 </head>
@@ -253,7 +274,8 @@ $result = mysqli_query($con, $sql);
       <a href="admin_profile.php" class="profile-btn">بيانات الحساب</a>
     </div>
 
-    <h1 class="page-title">اعتماد الجهات</h1>
+    <h2 class="page-title">اعتماد الجهات</h2>
+  <div class="title-line"></div>
 
     <div class="table-wrapper">
       <div class="table-box">
