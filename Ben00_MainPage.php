@@ -52,7 +52,7 @@ session_start();
 
             <div class="dropdown-menu">
               <a href="Ben02_Profile.php">الملف الشخصي</a>
-              <a href="Ben03_MyScholarshipWallet.php">محفظة منحتي</a>
+              <a href="Ben20_MyScholarshipWallet.php">محفظة منحتي</a>
               <a href="support.php">تقديم شكوى او استفسار</a>
           </div>
         </div>

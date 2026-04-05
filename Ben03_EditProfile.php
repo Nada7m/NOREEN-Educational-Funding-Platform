@@ -175,6 +175,7 @@ $conn->close();
                     <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="القائمة">
                     <div class="dropdown-menu">
                         <a href="Ben02_Profile.php">الملف الشخصي</a>
+                                      <a href="Ben03_MyScholarshipWallet.php">محفظة منحتي</a>
                         <a href="#">التواصل والدعم</a>
                     </div>
                 </div>

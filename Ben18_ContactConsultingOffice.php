@@ -112,7 +112,7 @@ $res_msgs = $con->query("SELECT * FROM bnf_off_msg WHERE bnf_id = '$current_bnf_
                     <img src="ايقونة قائمة الاعدادات.png" width="30" class="menu-icon" style="cursor:pointer;">
                     <div class="dropdown-menu">
                         <a href="Ben02_Profile.php">الملف الشخصي</a>
-                         <a href=".php">محفظة منحتي </a>
+                                      <a href="Ben20_MyScholarshipWallet.php">محفظة منحتي</a>
                         <a href="support.php">تقديم شكوى أو استفسار</a>
                     </div>
                 </div>
