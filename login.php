@@ -44,7 +44,7 @@ if (isset($_POST['login'])) {
             "table" => "admin",
             "id_field" => "admin_id",
             "session_key" => "admin_id",
-            "redirect" => "Admin00_MainPage.php"
+            "redirect" => "Admin1_profile.php"
         ]
     ];
 

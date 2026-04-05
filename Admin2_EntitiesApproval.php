@@ -6,19 +6,15 @@ $con = mysqli_connect("localhost","root","","noreen");
 mysqli_set_charset($con,"utf8mb4");
 
 /* تحديث الحالة */
-if (isset($_POST['block']) || isset($_POST['activate'])) {
-
-    $id   = (int)$_POST['entity_id'];
+if(isset($_POST['approve']) || isset($_POST['reject'])){
+    $id = (int)$_POST['entity_id'];
     $type = $_POST['entity_type'];
+    $status = isset($_POST['approve']) ? 'معتمد' : 'مرفوض';
 
-    $status = isset($_POST['block']) ? 'محظور' : 'نشط';
-
-    if ($type == 'مستفيد') {
-        mysqli_query($con,"UPDATE beneficiary SET account_status='$status' WHERE bnf_id=$id");
-    } elseif ($type == 'مستثمر') {
-        mysqli_query($con,"UPDATE investor SET account_status='$status' WHERE inv_id=$id");
+    if($type=="مستثمر"){
+        mysqli_query($con,"UPDATE investor SET approval_status='$status' WHERE inv_id=$id");
     } else {
-        mysqli_query($con,"UPDATE consulting_office SET account_status='$status' WHERE office_id=$id");
+        mysqli_query($con,"UPDATE consulting_office SET approval_status='$status' WHERE office_id=$id");
     }
 
     header("Location: ".$_SERVER['PHP_SELF']);
@@ -27,11 +23,9 @@ if (isset($_POST['block']) || isset($_POST['activate'])) {
 
 /* جلب البيانات */
 $result = mysqli_query($con,"
-SELECT bnf_id AS entity_id, CONCAT(f_name,' ',l_name) AS entity_name,'مستفيد' AS entity_type,account_status,'-' AS register_date FROM beneficiary
+SELECT inv_id AS entity_id, inv_name AS entity_name, ccr_number, approval_status,'مستثمر' AS entity_type FROM investor
 UNION ALL
-SELECT inv_id,inv_name,'مستثمر',account_status,'-' FROM investor
-UNION ALL
-SELECT office_id,office_name,'مكتب استشاري',account_status,'-' FROM consulting_office
+SELECT office_id, office_name, ccr_number, approval_status,'مكتب استشاري' FROM consulting_office
 ");
 ?>
 
@@ -39,7 +33,7 @@ SELECT office_id,office_name,'مكتب استشاري',account_status,'-' FROM c
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>إدارة المستخدمين</title>
+<title>اعتماد الجهات</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="CSS01Layout.css">
@@ -60,7 +54,7 @@ body{
     flex:1;
 }
 
-/* الهيدر نفس اعتماد الجهات */
+/* الهيدر */
 .header{
     display:flex;
     justify-content:space-between;
@@ -69,6 +63,7 @@ body{
     border-bottom:1px solid #ddd;
 }
 
+/* العنوان */
 .page-title{
     font-size:22px;
     font-weight:800;
@@ -93,7 +88,7 @@ body{
     padding:40px;
 }
 
-/* نفس جدول اعتماد الجهات */
+/* الجدول (بدون سكرول) */
 .table-box{
     width:100%;
     max-width:1050px;
@@ -113,33 +108,32 @@ thead th{
     padding:15px;
     background:#fafafa;
     border-bottom:1px solid #ddd;
-    font-size:15px;
-    font-weight:700;
-    color:#3E2454;
 }
 
 tbody td{
     padding:16px;
     border-bottom:1px solid #eee;
     text-align:center;
-    font-size:14px;
 }
 
-/* الحالة نفس حجم الأزرار */
+/* الحالة */
 .status{
     display:flex;
     align-items:center;
     justify-content:center;
-    width:100px;
-    height:42px;
+
+    width:100px;     /* نفس عرض الأزرار */
+    height:42px;     /* نفس الطول */
+    
     border-radius:12px;
     color:#fff;
     font-size:14px;
     font-weight:600;
 }
 
-.active{ background:#2E8B57; }
-.blocked{ background:#C23B3B; }
+.pending{ background:#D8B35E; }
+.approved{ background:#2E8B57; }
+.rejected{ background:#C23B3B; }
 
 /* الأزرار */
 .actions{
@@ -155,18 +149,17 @@ tbody td{
     border-radius:12px;
     font-size:14px;
     cursor:pointer;
-    font-weight:600;
 }
 
-.block{
+.accept{
+    background:#fff;
+    border:1px solid #ccc;
+}
+
+.reject{
     background:#A53A3A;
     color:#fff;
     border:none;
-}
-
-.activate{
-    background:#fff;
-    border:1px solid #ccc;
 }
 </style>
 </head>
@@ -183,9 +176,9 @@ tbody td{
         </div>
 
         <ul class="sidebar-menu">
-            <li><a href="Admin2_EntitiesApproval.php">اعتماد الجهات</a></li>
+            <li><a href="Admin2_EntitiesApproval.php" class="active">اعتماد الجهات</a></li>
             <li><a href="Admin3_Contracts.php">إدارة العقود</a></li>
-            <li><a href="Admin4_UsersManage.php" class="active">إدارة المستخدمين</a></li>
+            <li><a href="Admin4_UsersManage.php">إدارة المستخدمين</a></li>
             <li><a href="Admin5_Complaints.php">الشكاوى والاستفسارات</a></li>
         </ul>
     </div>
@@ -204,7 +197,7 @@ tbody td{
 <div class="main-content">
 
     <div class="header">
-        <div class="page-title">إدارة المستخدمين</div>
+        <div class="page-title">اعتماد الجهات</div>
         <a href="Admin1_profile.php" class="profile-btn">بيانات الحساب</a>
     </div>
 
@@ -215,9 +208,9 @@ tbody td{
             <table>
                 <thead>
                     <tr>
-                        <th>اسم المستخدم</th>
-                        <th>نوع الحساب</th>
-                        <th>تاريخ التسجيل</th>
+                        <th>اسم الجهة</th>
+                        <th>النوع</th>
+                        <th>السجل</th>
                         <th>الحالة</th>
                         <th>الإجراءات</th>
                     </tr>
@@ -227,44 +220,39 @@ tbody td{
 
                 <?php while($row=mysqli_fetch_assoc($result)){
 
-                    $status=$row['account_status'];
+                    $status=$row['approval_status'];
 
-                    if($status=="محظور"){ 
-                        $class="blocked"; 
-                        $text="محظور";
-                    }else{ 
-                        $class="active"; 
-                        $text="نشط";
-                    }
+                    if($status=="معتمد"){ $class="approved"; }
+                    elseif($status=="مرفوض"){ $class="rejected"; }
+                    else{ $status="بانتظار"; $class="pending"; }
+
                 ?>
 
                 <tr>
                     <td><?= $row['entity_name'] ?></td>
                     <td><?= $row['entity_type'] ?></td>
-                    <td><?= $row['register_date'] ?></td>
+                    <td><?= $row['ccr_number'] ?></td>
+
+                    <td><span class="status <?= $class ?>"><?= $status ?></span></td>
 
                     <td>
-                        <span class="status <?= $class ?>"><?= $text ?></span>
-                    </td>
-
-                    <td>
+                        <?php if($status=="بانتظار"){ ?>
                         <div class="actions">
 
-                            <?php if($text=="نشط"){ ?>
                             <form method="post">
                                 <input type="hidden" name="entity_id" value="<?= $row['entity_id'] ?>">
                                 <input type="hidden" name="entity_type" value="<?= $row['entity_type'] ?>">
-                                <button name="block" class="btn block">حظر</button>
+                                <button name="approve" class="btn accept">اعتماد</button>
                             </form>
-                            <?php } else { ?>
+
                             <form method="post">
                                 <input type="hidden" name="entity_id" value="<?= $row['entity_id'] ?>">
                                 <input type="hidden" name="entity_type" value="<?= $row['entity_type'] ?>">
-                                <button name="activate" class="btn activate">تنشيط</button>
+                                <button name="reject" class="btn reject">رفض</button>
                             </form>
-                            <?php } ?>
 
                         </div>
+                        <?php } ?>
                     </td>
                 </tr>
 
@@ -278,6 +266,7 @@ tbody td{
     </div>
 
 </div>
+
 </div>
 
 </body>
