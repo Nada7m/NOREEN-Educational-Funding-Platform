@@ -1,12 +1,8 @@
 <?php
-
 $con = mysqli_connect("localhost","root","","noreen");
-
 $msg = "";
 $type = "";
-
 if(isset($_POST["save"])){
-
     $first = $_POST["firstName"];
     $last = $_POST["lastName"];
     $degree = $_POST["degree"];
@@ -14,9 +10,7 @@ if(isset($_POST["save"])){
     $phone = $_POST["phone"];
     $email = $_POST["email"];
     $pass = $_POST["password"];
-
     $checkEmail = mysqli_query($con,"SELECT * FROM beneficiary WHERE email='$email'");
-
     if(mysqli_num_rows($checkEmail) > 0){
         $msg = "البريد الإلكتروني مستخدم مسبقًا.";
         $type = "error";
@@ -45,36 +39,22 @@ if(isset($_POST["save"])){
 <head>
 <meta charset="UTF-8">
 <title>إنشاء حساب مستفيد</title>
-
- 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-
 <link rel="stylesheet" href="Style.css">
-</head>
-
-<body>
-
-<div class="container">
-<div class="box">
+</head> <body> <div class="container"> <div class="box">
 
 <h2>إنشاء حساب <span>مستفيد</span></h2>
-
 <?php if($msg!=""){ ?>
 <div class="message <?php echo $type; ?>">
 <?php echo $msg; ?>
-</div>
-<?php } ?>
-
+</div> <?php } ?>
 <form method="post" onsubmit="return checkForm()">
-
 <div class="row">
-
 <div class="field">
 <label><span class="star">*</span> الاسم الأول</label>
 <input type="text" id="first" name="firstName" placeholder="الرجاء إدخال الاسم الأول">
 <div class="errorText" id="firstError"></div>
 </div>
-
 <div class="field">
 <label><span class="star">*</span> الاسم الأخير</label>
 <input type="text" id="last" name="lastName" placeholder="الرجاء إدخال الاسم الأخير">

@@ -72,7 +72,7 @@ $resRequests = mysqli_query($con, $sqlRequests);
 .stat-processing{color:#E0B25C;}
 .stat-finished{color:#63B68B;}
 .stat-label{font-size:15px; font-weight:600; color:#4b3d5c; font-family:'Noto Kufi Arabic', sans-serif;}
-.table-box{background:#fff; border-radius:12px; overflow:hidden; max-width:1100px; margin:0 auto;}
+.table-box{background:#fff; border-radius:12px; overflow:hidden; max-width:1100px; margin:0 auto; border:0.5px solid #c5c3c3;}
 .requests-table{width:100%; border-collapse:collapse; text-align:center; font-family:'Noto Kufi Arabic', sans-serif;}
 .requests-table tr:first-child th{background:#f8f8f8; color:#3E2454; font-size:15px; font-weight:700; padding:14px 10px; border-bottom:1px solid #ddd;}
 .requests-table td{padding:14px 10px; border-bottom:1px solid #eee; font-size:14px; color:#333;}
@@ -96,9 +96,9 @@ $resRequests = mysqli_query($con, $sqlRequests);
                 <img src="شعار نورين.png" alt="نورين">
             </div>
             <ul class="sidebar-menu">
-                <li><a href="Con00_MainPage.php">الرئيسية</a></li>
-                <li><a href="Con04_AdmissionReq.php" class="active">إدارة طلبات القبول</a></li>
-                <li><a href="Con0_Consultations.php">الاستشارات</a></li>
+             <li><a href="Con00_MainPage.php" >الرئيسية</a></li>
+          <li><a href="Con04_AdmissionReq.php" class="active">إدارة طلبات القبول</a></li>
+          <li><a href="Con03_Consultations.php">الاستشارات</a></li>
           <li><a href="Con08_ReqRating.php">تقييمات المستفيدين</a></li>
             </ul>
         </div>

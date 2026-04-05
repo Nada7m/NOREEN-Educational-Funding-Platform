@@ -289,3 +289,18 @@ body{
   color:#FFFFFF;
 }
 
+/* السؤال */
+.faq-q {
+  font-weight: 700;
+  font-size: 15px;
+  color: #3E2454;
+  margin-top: 12px;
+}
+
+/*  */
+.faq-a {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.8;
+  margin-bottom: 12px;
+}

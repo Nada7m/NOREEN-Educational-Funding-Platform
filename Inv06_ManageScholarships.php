@@ -34,7 +34,7 @@ $result=mysqli_stmt_get_result($stmt);
 .manage-page{padding:35px;}
 /* الكارد الرئيسي    */
 .accepted-card{width:100%;background:#FFFFFF;border:1px solid #CFCFCF;border-radius:8px;padding:20px;display:flex;flex-direction:row-reverse;justify-content:space-between;align-items:center;margin-bottom:20px;box-sizing:border-box;}
-/* معلومات الطالب */
+/* معلومات المستفيد */
 .accepted-info{display:flex;flex-direction:column;gap:10px;text-align:right;}
 .accepted-line{font-size:20px;font-weight:700;color:#111111;}
 .accepted-label{color:#7EA8B7;margin-left:6px;}

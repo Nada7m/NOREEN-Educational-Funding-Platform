@@ -136,9 +136,10 @@ $docLabels = [
 <link rel="stylesheet" href="CSS01Layout.css?v=3">
 <style>
 .page-wrap{padding:14px 18px 18px;}
-.top-bar{display:flex; justify-content:flex-end; align-items:center; margin-bottom:8px; max-width:980px;}
+/* شريط زر الرجوع */
+.top-bar { display:flex; justify-content:flex-end; align-items:center; margin-bottom:8px; max-width:980px; margin-right:80px; }
 .back-btn img{width:38px; height:38px; object-fit:contain;}
-.details-card{background:#fff; border-radius:12px; box-shadow:0 4px 14px rgba(0,0,0,0.08); padding:16px 18px; max-width:980px; margin:0 auto;}
+.details-card{background:#fff; border:0.5px solid #c5c3c3; border-radius:12px; margin-bottom: 40px; padding:16px 18px; max-width:980px; margin:0 auto;}
 .request-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;}
 .section-title{font-size:18px; font-weight:700; color:#3E2454; margin:0; font-family:'Noto Kufi Arabic', sans-serif;}
 .action-box{display:flex; gap:8px; align-items:center;}
@@ -158,7 +159,7 @@ $docLabels = [
 .doc-label{font-size:13px; color:#444; font-weight:700; text-align:right; font-family:'Noto Kufi Arabic', sans-serif;}
 .doc-link{font-size:12px; color:#4b6cb7; text-decoration:underline; text-align:left; word-break:break-word; font-family:'Noto Kufi Arabic', sans-serif;}
 .empty-docs{font-size:13px; color:#777; margin-top:4px; font-family:'Noto Kufi Arabic', sans-serif;}
-.bottom-actions{display:flex; justify-content:flex-start; margin-top:12px;}
+.bottom-actions { display:flex; justify-content:center; margin-top:16px; }
 .upload-result-btn{display:inline-block; text-decoration:none; border:none; border-radius:8px; padding:10px 20px; font-size:13px; font-weight:700; font-family:'Noto Kufi Arabic', sans-serif;}
 .upload-enabled{background:#3E2454; color:#fff;}
 .upload-finished{background:#63B68B; color:#fff; pointer-events:none; cursor:default;}
@@ -176,9 +177,9 @@ $docLabels = [
             </div>
 
             <ul class="sidebar-menu">
-                <li><a href="Con00_MainPage.php">الرئيسية</a></li>
-                <li><a href="Con04_AdmissionReq.php" class="active">إدارة طلبات القبول</a></li>
-                <li><a href="Con0_Consultations.php">الاستشارات</a></li>
+          <li><a href="Con00_MainPage.php">الرئيسية</a></li>
+          <li><a href="Con04_AdmissionReq.php" class="active">إدارة طلبات القبول</a></li>
+          <li><a href="Con03_Consultations.php">الاستشارات</a></li>
           <li><a href="Con08_ReqRating.php">تقييمات المستفيدين</a></li>
             </ul>
         </div>

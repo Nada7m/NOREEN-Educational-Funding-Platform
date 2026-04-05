@@ -39,44 +39,30 @@ $conn->close();
 <style>
 /* الصفحة */
 .page{padding: 40px; font-family: "Noto Kufi Arabic", sans-serif;}
-
 /* صندوق الملف الشخصي */
 .profile-box{background: #fff; max-width: 650px; margin: auto; padding: 35px; border-radius: 14px; box-shadow: 0 3px 10px rgba(0,0,0,0.08);}
-
 /* اسم المستفيد */
 .profile-box h2{text-align: center; margin-bottom: 15px; font-size: 24px; color: #4b2a63;}
-
 /* الخط أسفل الاسم */
 .line{width: 100%; height: 1px; background: #d8cde2; margin: 0 auto 25px;}
-
 /* كل قسم من البيانات */
 .profile-section{margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #eee;}
-
 /* عناوين الأقسام */
 .profile-section h3{margin-bottom: 15px; font-size: 19px; color: #6a3d8f;}
-
 /* نصوص البيانات */
 .profile-section p{margin: 8px 0; font-size: 16px;}
-
 /* صف كلمة المرور */
 .password-box{display: flex; align-items: center; gap: 10px;}
-
 /* زر تعديل البيانات */
 .edit-btn{display: block; margin: 20px auto 0; margin-top: 20px; padding: 10px 22px; border: none; border-radius: 8px; background: #4b2a63; color: #fff; font-size: 15px; cursor: pointer;}
-
 /* تنسيق العناوين داخل البيانات */
 label, .field{font-weight: 600;}
-
 /* إزالة مارجن الفقرة داخل صف كلمة المرور */
 .password-box p{margin: 0;}
-
-</style>
-</head>
-
+</style> </head>
 <body>
 
 <div class="layout">
-
     <!-- الشريط الجانبي -->
     <aside class="sidebar">
         <div class="sidebar-top">

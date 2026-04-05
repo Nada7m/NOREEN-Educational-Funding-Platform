@@ -31,32 +31,19 @@ $result = $con->query($sql);
     <meta charset="UTF-8">
     <title>الاستشارات الواردة - نورين</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="CSS01Layout.css?v=3">
+    <link rel="stylesheet" href="CSS01Layout.css?v=4">
     <style>
-        /* تصفير أي ألوان غريبة لضمان الخلفية البيضاء بالكامل */
-        body, html { background-color: #FFFFFF !important; margin: 0; padding: 0; }
-        .layout { background-color: #FFFFFF !important; }
-        .main-content { background-color: #FFFFFF !important; }
-
         /* تنسيقات الجدول */
-        .content-body { padding: 20px 30px; }
-        .table-container { background: #fff; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow: hidden; margin-top: 20px; border: 1px solid #eee; }
-        table { width: 100%; border-collapse: collapse; }
-        th { background: #fdfdfd; padding: 20px; text-align: right; border-bottom: 2px solid #eee; color: #3E2454; font-weight: 700; }
-        td { padding: 20px; text-align: right; border-bottom: 1px solid #f0f0f0; color: #444; }
-        
-        .btn-action { 
-            background-color: #E5E7EB; color: #000; padding: 8px 20px; border-radius: 8px; 
-            text-decoration: none; font-size: 13px; border: 1px solid #ccc; 
-            display: inline-flex; align-items: center; gap: 10px;
-        }
-
-        .btn-green-alert { 
-            background-color: #D1FAE5 !important; 
-            color: #065F46 !important; 
-            border: 1px solid #10B981 !important; 
-            font-weight: bold;
-        }
+        .content-body { padding: 24px 30px; }
+        .table-wrap { max-width: 1000px; margin: 0 auto; }
+        .table-container {; width: 100%; background: #FFFFFF; border: 1px solid #EAEAEA; border-radius: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden; }
+        table { border:0.5px solid #c5c3c3; width: 100%;  background: #FFFFFF; }
+        th { background: #FFFFFF; padding: 22px 26px; text-align: center; border-bottom: 1px solid #EAEAEA; color: #3E2454; font-size: 16px; font-weight: 700; }
+        td { padding: 24px 26px; text-align: center; border-bottom: 1px solid #F0F0F0; color: #444444; font-size: 15px; }
+        tbody tr:last-child td { border-bottom: none; }
+        .name-cell { font-weight: 600; }
+        .btn-action { background-color: #E5E7EB; color: #000000; padding: 10px 22px; border-radius: 10px; text-decoration: none; font-size: 14px; border: 1px solid #CCCCCC; display: inline-flex; align-items: center; justify-content: center; gap: 10px; font-weight: 600; }
+        .btn-green-alert { background-color: #D1FAE5 !important; color: #065F46 !important; border: 1px solid #10B981 !important; font-weight: 700; }
     </style>
 </head>
 <body>
@@ -66,8 +53,8 @@ $result = $con->query($sql);
             <div class="sidebar-logo"><img src="شعار نورين.png" alt="نورين"></div>
             <ul class="sidebar-menu">
                 <li><a href="Con00_MainPage.php">الرئيسية</a></li>
-                <li><a href="Con0_AdmissionRequests.php">إدارة طلبات القبول</a></li>
-                <li><a href="Con03_Consultations.php" class="active">الاستشارات</a></li>
+          <li><a href="Con04_AdmissionReq.php">إدارة طلبات القبول</a></li>
+          <li><a href="Con03_Consultations.php" class="active">الاستشارات</a></li>
           <li><a href="Con08_ReqRating.php">تقييمات المستفيدين</a></li>
             </ul>
         </div>
@@ -83,7 +70,7 @@ $result = $con->query($sql);
     </aside>
 
     <div class="main-content">
-        <header class="header" style="background-color: #FFFFFF !important;">
+        <header class="header" >
             <div class="page-heading">
                 <div class="page-title" style="font-size: 24px; font-weight: bold; color: #000000;">إدارة الاستشارات والتواصل</div>
                  <p class="page-description" style="color: #000000;">صفحة إدارة طلبات الاستشارات</p>
@@ -99,14 +86,6 @@ $result = $con->query($sql);
                 </div>
             </div>
         </header>
-
-         <div class="page" style="background-color: #FFFFFF !important;">
-            <div class="back-wrap" style="display: flex; justify-content: flex-end; padding: 10px 30px 0;">
-                <a href="Con00_MainPage.php" class="back-btn">
-                    <img src="سهم تراجع.svg" class="back-icon" alt="رجوع" style="width: 45px; height: 45px;">
-                </a>
-            </div>
-
             <div class="content-body">
                 <div class="table-container">
                     <table>

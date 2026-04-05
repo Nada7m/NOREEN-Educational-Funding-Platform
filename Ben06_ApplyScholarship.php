@@ -64,176 +64,48 @@ if(isset($_POST['submit_request'])){
     <meta charset="UTF-8">
     <title>التقديم على المنح</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="CSS01Layout.css?v=3">
+    <link rel="stylesheet" href="CSS01Layout.css?v=4">
     <link rel="stylesheet" href="Style.css"> </head>
     <style>
-        /* توسيط العنوان */
-.title-center{
-  text-align: center;
-  margin-bottom: 30px;
-}
-
+ .page { background-color: #f8f8f8; }
+/* توسيط العنوان */
+.title-center { text-align: center; margin-bottom: 30px; }
 /* نص وسط */
-.center-text{
-  text-align: center;
-  font-weight: bold;
-  margin-bottom: 25px;
-}
-
+.center-text { text-align: center; font-weight: bold; margin-bottom: 25px; }
 /* مسافات */
-.section-space{
-  margin-top: 40px;
-}
-
+.section-space { margin-top: 40px; }
 /* البوكس */
-.form-box{
-  max-width: 1100px;
-  margin: auto;
-}
-
-
-
+.form-box { max-width: 1100px; margin: auto; }
 /* زر كبير */
-.big-btn{
-  padding: 12px 80px;
-  font-size: 17px;
-  font-weight: 700;
-}
-
+.big-btn { padding: 12px 80px; font-size: 17px; font-weight: 700; }
 /* تنسيق البطاقة الرئيسية للنموذج */
-.scholarship-details-box {
-    width: 100%;
-    max-width: 1000px;
-    margin: 20px auto;
-    background: #fff;
-    padding: 30px;
-    border-radius: 12px;
-   box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-}
-
+.scholarship-details-box { width: 100%; max-width: 1000px; margin: 0px auto; padding: 30px; border: 0.5px solid #d4d4d4; border-radius: 12px; box-shadow: none; background: #fff; }
+.back-wrap { display: flex; justify-content: flex-end; margin-bottom: -110px; padding-left: 60px; }
 /* تقسيم المعلومات الشخصية (يمين بيانات - يسار حقول) */
-.personal-info-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-    background: #F9F9F9;
-    padding: 25px;
-    border-radius: 10px;
-    margin-bottom: 30px;
-}
-
+.personal-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; background: #F9F9F9; padding: 25px; border-radius: 10px; margin-bottom: 30px; }
 /* تنسيق البيانات الثابتة (اليمين) */
-.static-data {
-    order: 1;
-}
-
-.static-data p {
-    margin: 12px 0;
-    font-size: 16px;
-    color: #3E2454;
-    display: flex;
-     font-family: 'Noto Kufi Arabic', sans-serif !important;
-}
-
-.static-data b {
-    color: #70A0AF;
-    display: inline-block;
-    width: 140px;
-     font-family: 'Noto Kufi Arabic', sans-serif !important;
-}
-
+.static-data { order: 1; }
+.static-data p { margin: 12px 0; font-size: 16px; color: #3E2454; display: flex; font-family: 'Noto Kufi Arabic', sans-serif !important; }
+.static-data b { color: #70A0AF; display: inline-block; width: 140px; font-family: 'Noto Kufi Arabic', sans-serif !important; }
 /* تنسيق حقول الإدخال (اليسار) */
-.form-fields {
-    order: 2;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
+.form-fields { order: 2; display: flex; flex-direction: column; gap: 20px; }
 /* تنسيق قسم المستندات */
-.docs-section {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.doc-item {
-    text-align: right;
-}
-
-.doc-item label.title-label {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 10px;
-    display: block;
-    color: #333;
-     font-family: 'Noto Kufi Arabic', sans-serif !important;
-}
-
+.docs-section { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 20px; }
+.doc-item { text-align: right; }
+.doc-item label.title-label { font-size: 14px; font-weight: 600; margin-bottom: 10px; display: block; color: #333; font-family: 'Noto Kufi Arabic', sans-serif !important; }
 /* تنسيق حقل الرفع (المربع) */
-.upload-wrapper {
-    border: 1.5px solid #8FB4C9;
-    background-color: #F8F8F8;
-    height: 60px; 
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: 0.3s;
-    border: 2px solid;
-    border-image-source: linear-gradient(90deg, #D6B7E2 0%, #3E2454 64%);
-    border-image-slice: 1;
-    
-    
-    
-}
-
-.upload-wrapper:hover {
-    border-color: #3E2454;
-    background-color: #ececec;
-}
-
+.upload-wrapper { border: 1.5px solid #8FB4C9; background-color: #F8F8F8; height: 30px; width: 160px; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; border: 2px solid; border-image-source: linear-gradient(90deg, #D6B7E2 0%, #3E2454 64%); border-image-slice: 1; }
+.upload-wrapper:hover { border-color: #3E2454; background-color: #ececec; }
 /* تنسيق صورة الرفع الخاصة بك */
-.upload-img {
-    width: 30px; 
-    height: auto;
-}
-
+.upload-img { width: 20px; height: auto; }
 /* زر الإرسال بالمنتصف */
-.center-btn {
-    text-align: center;
-    margin-top: 40px;
-}
-
+.center-btn { text-align: center; margin-top: 40px; }
 /* النجمة الحمراء */
-.star {
-    color: red !important;
-    font-weight: bold;
-    margin-left: 3px;
-}
-
-
+.star { color: red !important; font-weight: bold; margin-left: 3px; }
 /* تنسيق خط وزر إرسال الطلب */
-.form-submit-btn {
-    font-family: 'Noto Kufi Arabic', sans-serif !important;
-    font-size: 18px;
-    font-weight: 700;
-    background-color: #70A0AF;
-    color: #ffffff;
-    cursor: pointer;
-    border: none;
-    border-radius: 4px;
-    transition: 0.3s;
-}
-
-.form-submit-btn:hover {
-    opacity: 0.9;
-    transform: translateY(-2px);
-}
+.form-submit-btn { font-family: 'Noto Kufi Arabic', sans-serif !important; font-size: 16px; font-weight: 700; background-color: #70A0AF; color: #ffffff; cursor: pointer; border: none; border-radius: 4px; transition: 0.3s; padding: 8px 40px; }
+.form-submit-btn:hover { opacity: 0.9; transform: translateY(-2px); }
 </style>
-
 <body>
 <div class="layout">
     <aside class="sidebar">
@@ -254,7 +126,6 @@ if(isset($_POST['submit_request'])){
             </form>
         </div>
     </aside>
-
     <div class="main-content">
         <header class="header">
             <div class="page-heading">
@@ -272,21 +143,16 @@ if(isset($_POST['submit_request'])){
                 </div>
             </div>
         </header>
-
         <div class="page">
-            <div class="back-wrap" style="display: flex; justify-content: flex-end;">
-    <a href="Ben04_BrowseScholarships.php?id=<?php echo $sch_id; ?>" class="back-btn">
+<div class="back-wrap">    <a href="Ben04_BrowseScholarships.php?id=<?php echo $sch_id; ?>" class="back-btn">
         <img src="سهم تراجع.svg" class="back-icon" alt="رجوع" style="width: 45px; height: 45px;">
     </a>
 </div>
-
             <div class="container">
                 <div class="scholarship-details-box">
                     <h2 class="main-title" style="text-align: center; color: #3E2454;">نموذج تقديم طلب منحة</h2>
-                    
                     <form method="POST" enctype="multipart/form-data">
                         <div class="form-subtitle" style="text-align: center; margin-bottom: 25px; color: #3E2454; font-weight: bold;">المعلومات الشخصية</div>
-
                         <div class="personal-info-grid">
                             <div class="static-data">
                                 <p><b>الاسم:</b> <?php echo $userData['f_name'] . " " . $userData['l_name']; ?></p>
@@ -295,7 +161,6 @@ if(isset($_POST['submit_request'])){
                                 <p><b>المؤهل الدراسي:</b> <?php echo $userData['degree_level']; ?></p>
                                 <p><b>البريد الإلكتروني:</b> <?php echo $userData['email']; ?></p>
                             </div>
-
                             <div class="form-fields">
                                 <div class="field">
                                     <label><span class="star">*</span> اسم الجامعة المرغوبة</label>
@@ -307,9 +172,7 @@ if(isset($_POST['submit_request'])){
                                 </div>
                             </div>
                         </div>
-
                         <div class="form-subtitle" style="text-align: center; margin-top: 40px; color: #3E2454; font-weight: bold;">المستندات المطلوبة</div>
-
                         <div class="docs-section">
                             <div class="doc-item">
                                 <label class="title-label"><span class="star">*</span> السيرة الذاتية</label>
@@ -319,7 +182,6 @@ if(isset($_POST['submit_request'])){
                                 </label>
                                 <div class="file-name-display" style="font-size: 11px; color: #70A0AF;"></div>
                             </div>
-
                             <div class="doc-item">
                                 <label class="title-label"><span class="star">*</span> شهادة آخر مؤهل</label>
                                 <label for="cert" class="upload-wrapper">
@@ -366,6 +228,5 @@ function showName(input) {
     }
 }
 </script>
-
 </body>
 </html>

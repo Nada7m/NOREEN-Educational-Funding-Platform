@@ -310,3 +310,21 @@ transform:rotate(180deg);
   border-top:1px solid #E8E0D7;
   line-height:1.9;
 }
+/* نص السؤال داخل  */
+.faq-q{
+  font-size:16px;
+  font-weight:700;
+  color:#3E2454;
+  margin-top:14px;
+  padding-right:8px;
+  border-right:3px solid #70A0AF;
+}
+
+/* نص  */
+.faq-a{
+  font-size:14px;
+  font-weight:500;
+  color:#555555;
+  line-height:1.9;
+  margin:6px 0 12px;
+}

@@ -105,7 +105,7 @@ $res_msgs = $con->query("SELECT * FROM bnf_off_msg WHERE bnf_id = '$current_bnf_
         <header class="header">
             <div class="page-heading">
                 <h1 class="page-title" style="margin:0; font-size: 24px;">المكاتب الاستشارية</h1>
-                <p class="page-description" ">صفحة التواصل مع المكتب الاستشاري</p>
+                <p class="page-description">صفحة التواصل مع المكتب الاستشاري</p>
             </div>
             <div class="header-icons">
                 <div class="settings-dropdown">
@@ -121,8 +121,9 @@ $res_msgs = $con->query("SELECT * FROM bnf_off_msg WHERE bnf_id = '$current_bnf_
 
         <div style="background: #E9DFF1; padding: 12px 25px; margin: 20px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;">
             <div>التواصل مع مكتب : <span style="color: var(--main-purple); font-weight: bold;"><?php echo htmlspecialchars($off_name); ?></span></div>
-            <a href="Ben19_Consultations.php"><img src="سهم تراجع.svg" width="40"></a>
-        </div>
+<a href="javascript:history.back()">
+    <img src="سهم تراجع.svg" width="40">
+</a>        </div>
 
         <div class="chat-container">
             <?php if($res_msgs && $res_msgs->num_rows > 0): 

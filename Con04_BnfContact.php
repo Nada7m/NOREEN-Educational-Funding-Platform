@@ -24,8 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send_msg'])) {
     }
 }
 
-// 4. جلب اسم الطالب
-$bnf_name = "الطالب المستفيد";
+// 4. جلب اسم المستفيد
+$bnf_name = "المستفيد المستفيد";
 $bnf_res = $con->query("SELECT f_name, l_name FROM beneficiary WHERE bnf_id = '$target_bnf_id'");
 if ($bnf_res && $row_bnf = $bnf_res->fetch_assoc()) {
     $bnf_name = $row_bnf['f_name'] . " " . $row_bnf['l_name'];
@@ -41,7 +41,7 @@ $res_msgs = $con->query("SELECT * FROM bnf_off_msg WHERE bnf_id = '$target_bnf_i
     <meta charset="UTF-8">
     <title>نورين - التواصل مع المستفيد</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="CSS01Layout.css">
+    <link rel="stylesheet" href="CSS01Layout.css?v=4">
     <style>
         :root { --main-purple: #3E2454; --chat-bg: #F5F5F5; }
         body { background-color: #FFFFFF; margin: 0; font-family: 'Noto Kufi Arabic', sans-serif; }
@@ -72,8 +72,8 @@ $res_msgs = $con->query("SELECT * FROM bnf_off_msg WHERE bnf_id = '$target_bnf_i
         <div class="sidebar-logo"><img src="شعار نورين.png"></div>
         <ul class="sidebar-menu">
           <li><a href="Con00_MainPage.php">الرئيسية</a></li>
-          <li><a href="Con0_AdmissionRequests.php">إدارة طلبات القبول</a></li>
-          <li><a href="Con0_Consultations.php" class="active">الاستشارات</a></li>
+          <li><a href="Con04_AdmissionReq.php">إدارة طلبات القبول</a></li>
+          <li><a href="Con03_Consultations.php" class="active">الاستشارات</a></li>
           <li><a href="Con08_ReqRating.php">تقييمات المستفيدين</a></li>
         </ul>
       </div>
