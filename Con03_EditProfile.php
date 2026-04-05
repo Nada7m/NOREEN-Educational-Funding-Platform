@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-/* التحقق من تسجيل دخول المستثمر */
-if (!isset($_SESSION['inv_id'])) {
+/* التحقق من تسجيل دخول المكتب */
+if (!isset($_SESSION['office_id'])) {
     header("Location: login.php");
     exit();
 }
@@ -15,8 +15,8 @@ if ($conn->connect_error) {
 }
 $conn->set_charset("utf8mb4");
 
-/* رقم المستثمر الحالي */
-$inv_id = $_SESSION['inv_id'];
+/* رقم المكتب الحالي */
+$office_id = $_SESSION['office_id'];
 
 $msg = "";
 $type = "";
@@ -24,31 +24,38 @@ $type = "";
 /* عند حفظ التعديلات */
 if (isset($_POST["save"])) {
 
-    $name  = trim($_POST["orgName"]);
-    $ccr   = trim($_POST["commercial"]);
-    $phone = trim($_POST["phone"]);
-    $email = trim($_POST["email"]);
+    $office_name = trim($_POST["office_name"]);
+    $ccr_number  = trim($_POST["ccr_number"]);
+    $phone       = trim($_POST["phone"]);
+    $email       = trim($_POST["email"]);
+    $description = trim($_POST["office_description"]);
+
+    $bachelor_fee = trim($_POST["bachelor_fee"]);
+    $masters_fee  = trim($_POST["masters_fee"]);
+    $phd_fee      = trim($_POST["phd_fee"]);
+
+    $countries_text = trim($_POST["countries"]);
 
     $currentPass = trim($_POST["currentPassword"]);
     $newPass     = trim($_POST["newPassword"]);
     $confirmPass = trim($_POST["confirmPassword"]);
 
-    /* التحقق من البريد إذا كان مستخدمًا من مستثمر آخر */
-    $checkEmail = $conn->prepare("SELECT inv_id FROM investor WHERE email = ? AND inv_id != ?");
-    $checkEmail->bind_param("si", $email, $inv_id);
+    /* التحقق من البريد */
+    $checkEmail = $conn->prepare("SELECT office_id FROM consulting_office WHERE email = ? AND office_id != ?");
+    $checkEmail->bind_param("si", $email, $office_id);
     $checkEmail->execute();
     $emailResult = $checkEmail->get_result();
 
-    /* التحقق من السجل التجاري إذا كان مستخدمًا من مستثمر آخر */
-    $checkCcr = $conn->prepare("SELECT inv_id FROM investor WHERE ccr_number = ? AND inv_id != ?");
-    $checkCcr->bind_param("si", $ccr, $inv_id);
+    /* التحقق من السجل التجاري */
+    $checkCcr = $conn->prepare("SELECT office_id FROM consulting_office WHERE ccr_number = ? AND office_id != ?");
+    $checkCcr->bind_param("si", $ccr_number, $office_id);
     $checkCcr->execute();
     $ccrResult = $checkCcr->get_result();
 
-    if ($name == "" || $ccr == "" || $phone == "" || $email == "") {
+    if ($office_name == "" || $ccr_number == "" || $phone == "" || $email == "" || $description == "") {
         $msg = "يرجى تعبئة جميع الحقول الأساسية.";
         $type = "error";
-    } elseif (!preg_match("/^[0-9]{10}$/", $ccr)) {
+    } elseif (!preg_match("/^[0-9]{10}$/", $ccr_number)) {
         $msg = "رقم السجل التجاري يجب أن يكون 10 أرقام.";
         $type = "error";
     } elseif (!preg_match("/^[0-9]{10}$/", $phone)) {
@@ -57,29 +64,63 @@ if (isset($_POST["save"])) {
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $msg = "يرجى إدخال بريد إلكتروني صحيح.";
         $type = "error";
+    } elseif (!is_numeric($bachelor_fee) || $bachelor_fee < 0 || !is_numeric($masters_fee) || $masters_fee < 0 || !is_numeric($phd_fee) || $phd_fee < 0) {
+        $msg = "يرجى إدخال رسوم صحيحة.";
+        $type = "error";
     } elseif ($emailResult->num_rows > 0) {
         $msg = "البريد الإلكتروني مستخدم مسبقًا.";
         $type = "error";
     } elseif ($ccrResult->num_rows > 0) {
-        $msg = "رقم السجل التجاري مسجل مسبقًا.";
+        $msg = "رقم السجل التجاري مستخدم مسبقًا.";
         $type = "error";
     } else {
 
         /* تحديث البيانات الأساسية */
         $update = $conn->prepare("
-            UPDATE investor
-            SET inv_name = ?, ccr_number = ?, inv_number = ?, email = ?
-            WHERE inv_id = ?
+            UPDATE consulting_office
+            SET office_name = ?, ccr_number = ?, email = ?, office_description = ?, Bachelor_fee = ?, Masters_fee = ?, Phd_fee = ?, phone = ?
+            WHERE office_id = ?
         ");
-        $update->bind_param("ssssi", $name, $ccr, $phone, $email, $inv_id);
+        $update->bind_param(
+            "ssssdddsi",
+            $office_name,
+            $ccr_number,
+            $email,
+            $description,
+            $bachelor_fee,
+            $masters_fee,
+            $phd_fee,
+            $phone,
+            $office_id
+        );
         $update->execute();
         $update->close();
+
+        /* تحديث الدول */
+        $deleteCountries = $conn->prepare("DELETE FROM office_country WHERE office_id = ?");
+        $deleteCountries->bind_param("i", $office_id);
+        $deleteCountries->execute();
+        $deleteCountries->close();
+
+        if ($countries_text != "") {
+            $countries_array = explode(",", $countries_text);
+
+            $insertCountry = $conn->prepare("INSERT INTO office_country (office_id, con_name) VALUES (?, ?)");
+            foreach ($countries_array as $country) {
+                $country = trim($country);
+                if ($country != "") {
+                    $insertCountry->bind_param("is", $office_id, $country);
+                    $insertCountry->execute();
+                }
+            }
+            $insertCountry->close();
+        }
 
         /* إذا أراد تغيير كلمة المرور */
         if ($currentPass != "" || $newPass != "" || $confirmPass != "") {
 
-            $getPass = $conn->prepare("SELECT password FROM investor WHERE inv_id = ?");
-            $getPass->bind_param("i", $inv_id);
+            $getPass = $conn->prepare("SELECT password FROM consulting_office WHERE office_id = ?");
+            $getPass->bind_param("i", $office_id);
             $getPass->execute();
             $passResult = $getPass->get_result();
             $user = $passResult->fetch_assoc();
@@ -98,8 +139,8 @@ if (isset($_POST["save"])) {
             } else {
                 $hashedPass = password_hash($newPass, PASSWORD_DEFAULT);
 
-                $updatePass = $conn->prepare("UPDATE investor SET password = ? WHERE inv_id = ?");
-                $updatePass->bind_param("si", $hashedPass, $inv_id);
+                $updatePass = $conn->prepare("UPDATE consulting_office SET password = ? WHERE office_id = ?");
+                $updatePass->bind_param("si", $hashedPass, $office_id);
                 $updatePass->execute();
                 $updatePass->close();
 
@@ -117,22 +158,43 @@ if (isset($_POST["save"])) {
     $checkCcr->close();
 }
 
-/* جلب بيانات المستثمر الحالية */
+/* جلب بيانات المكتب الحالية */
 $stmt = $conn->prepare("
-    SELECT inv_name, ccr_number, inv_number, email
-    FROM investor
-    WHERE inv_id = ?
+    SELECT office_name, ccr_number, email, office_description, Bachelor_fee, Masters_fee, Phd_fee, phone
+    FROM consulting_office
+    WHERE office_id = ?
 ");
-$stmt->bind_param("i", $inv_id);
+$stmt->bind_param("i", $office_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
-    $investor = $result->fetch_assoc();
+    $office = $result->fetch_assoc();
 } else {
-    die("لم يتم العثور على بيانات المستثمر");
+    die("لم يتم العثور على بيانات المكتب");
 }
 $stmt->close();
+
+/* جلب الدول الحالية */
+$countryStmt = $conn->prepare("
+    SELECT con_name
+    FROM office_country
+    WHERE office_id = ?
+");
+$countryStmt->bind_param("i", $office_id);
+$countryStmt->execute();
+$countryResult = $countryStmt->get_result();
+
+$countries = [];
+
+while ($row = $countryResult->fetch_assoc()) {
+    $countries[] = $row['con_name'];
+}
+
+$countryStmt->close();
+
+$countries_text = implode(", ", $countries);
+
 $conn->close();
 ?>
 
@@ -156,13 +218,13 @@ $conn->close();
     <aside class="sidebar">
         <div class="sidebar-top">
             <div class="sidebar-logo">
-                <img src="شعار نورين.png" alt="نورين">
+                <img src="شعار نورين.png" alt="شعار نورين">
             </div>
             <ul class="sidebar-menu">
-                <li><a href="Inv00_MainPage.php">الرئيسية</a></li>
-                <li><a href="Inv04_CreateScholarship.php">عرض المنح</a></li>
-                <li><a href="Inv06_ManageScholarships.php">إدارة المنح</a></li>
-                <li><a href="#">المدفوعات</a></li>
+                <li><a href="Con00_MainPage.php">الرئيسية</a></li>
+                <li><a href="Con04_AdmissionReq.php">إدارة طلبات القبول</a></li>
+                <li><a href="Con03_Consultations.php">الاستشارات</a></li>
+                <li><a href="Con08_ReqRating.php">تقييمات المستفيدين</a></li>
             </ul>
         </div>
         <div class="sidebar-bottom">
@@ -182,7 +244,7 @@ $conn->close();
                 <div class="settings-dropdown">
                     <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="القائمة">
                     <div class="dropdown-menu">
-                        <a href="Inv02_Profile.php">الملف الشخصي</a>
+                        <a href="Off02_Profile.php">الملف الشخصي</a>
                         <a href="support.php">تقديم شكوى او استفسار</a>
                     </div>
                 </div>
@@ -191,7 +253,7 @@ $conn->close();
 
         <div class="page">
             <div class="box">
-                <h2>تعديل <span>بيانات المستثمر</span></h2>
+                <h2>تعديل <span>بيانات المكتب الاستشاري</span></h2>
 
                 <?php if($msg != ""){ ?>
                 <div class="message <?php echo $type; ?>">
@@ -203,26 +265,59 @@ $conn->close();
 
                     <div class="row">
                         <div class="field">
-                            <label><span class="star">*</span> اسم الجهة</label>
-                            <input type="text" name="orgName" value="<?php echo htmlspecialchars($investor['inv_name']); ?>">
+                            <label><span class="star">*</span> اسم المكتب</label>
+                            <input type="text" name="office_name" value="<?php echo htmlspecialchars($office['office_name']); ?>">
                         </div>
 
                         <div class="field">
-                            <label><span class="star">*</span> رقم السجل التجاري</label>
-                            <input type="text" name="commercial" value="<?php echo htmlspecialchars($investor['ccr_number']); ?>">
+                            <label><span class="star">*</span> السجل التجاري</label>
+                            <input type="text" name="ccr_number" value="<?php echo htmlspecialchars($office['ccr_number']); ?>">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="field">
                             <label><span class="star">*</span> رقم الهاتف</label>
-                            <input type="text" name="phone" value="<?php echo htmlspecialchars($investor['inv_number']); ?>">
+                            <input type="text" name="phone" value="<?php echo htmlspecialchars($office['phone']); ?>">
                         </div>
 
                         <div class="field">
                             <label><span class="star">*</span> البريد الإلكتروني</label>
-                            <input type="email" name="email" value="<?php echo htmlspecialchars($investor['email']); ?>">
+                            <input type="email" name="email" value="<?php echo htmlspecialchars($office['email']); ?>">
                         </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="field">
+                            <label><span class="star">*</span> وصف المكتب</label>
+                            <input type="text" name="office_description" value="<?php echo htmlspecialchars($office['office_description']); ?>">
+                        </div>
+
+                        <div class="field">
+                            <label>الدول المتاحة</label>
+                            <input type="text" name="countries" value="<?php echo htmlspecialchars($countries_text); ?>">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="field">
+                            <label><span class="star">*</span> رسوم البكالوريوس</label>
+                            <input type="number" step="0.01" name="bachelor_fee" value="<?php echo htmlspecialchars($office['Bachelor_fee']); ?>">
+                        </div>
+
+                        <div class="field">
+                            <label><span class="star">*</span> رسوم الماجستير</label>
+                            <input type="number" step="0.01" name="masters_fee" value="<?php echo htmlspecialchars($office['Masters_fee']); ?>">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="field">
+                            <label><span class="star">*</span> رسوم الدكتوراه</label>
+                            <input type="number" step="0.01" name="phd_fee" value="<?php echo htmlspecialchars($office['Phd_fee']); ?>">
+                        </div>
+
+                        <div class="field"></div>
                     </div>
 
                     <div class="row">
@@ -260,7 +355,7 @@ $conn->close();
                         <button type="submit" class="btn" name="save">حفظ التعديلات</button>
 
                         <button type="button" class="btn"
-                        onclick="window.location.href='Inv02_Profile.php'"
+                        onclick="window.location.href='Off02_Profile.php'"
                         style="background:#888;margin-right:10px;">
                         إلغاء
                         </button>

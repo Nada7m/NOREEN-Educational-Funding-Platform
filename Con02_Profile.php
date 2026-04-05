@@ -267,7 +267,7 @@ $conn->close();
                 </div>
 
                 <div class="edit-wrap">
-                    <button type="button" class="edit-btn" onclick="window.location.href='Off03_EditProfile.php'">
+                    <button type="button" class="edit-btn" onclick="window.location.href='Con03_EditProfile.php'">
                         تعديل البيانات
                     </button>
                 </div>

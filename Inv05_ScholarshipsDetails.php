@@ -589,13 +589,13 @@ while ($row = mysqli_fetch_assoc($app_result)) {
                           <form method="post" style="margin:0;">
                             <input type="hidden" name="request_id" value="<?php echo $applicant['request_id']; ?>">
                             <input type="hidden" name="action_type" value="accept">
-                            <button type="submit" class="action-btn accept-btn">قبول</button>
+                            <button type="submit" class="action-btn accept-btn">مقبول</button>
                           </form>
 
                           <form method="post" style="margin:0;">
                             <input type="hidden" name="request_id" value="<?php echo $applicant['request_id']; ?>">
                             <input type="hidden" name="action_type" value="reject">
-                            <button type="submit" class="action-btn reject-btn">رفض</button>
+                            <button type="submit" class="action-btn reject-btn">مرفوض</button>
                           </form>
 
                         </div>
