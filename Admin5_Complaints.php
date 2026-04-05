@@ -9,6 +9,28 @@ if (!$con) {
 }
 
 mysqli_set_charset($con, "utf8mb4");
+/* حفظ الرد بدون صفحة ثانية */
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ticket_id'])) {
+
+    $ticket_id = (int) $_POST['ticket_id'];
+    $reply = trim($_POST['admin_reply']);
+
+    if ($ticket_id > 0 && $reply != "") {
+
+        $stmt = mysqli_prepare($con, "
+            UPDATE complaints_inquiries 
+            SET admin_reply = ?, status = 'تم الرد'
+            WHERE ticket_id = ?
+        ");
+
+        mysqli_stmt_bind_param($stmt, "si", $reply, $ticket_id);
+        mysqli_stmt_execute($stmt);
+    }
+
+    // تحديث الصفحة بدون إعادة إرسال
+    header("Location: Admin5_Complaints.php?tab=replied");
+    exit();
+}
 
 /* تحديد التبويب الحالي */
 $tab = isset($_GET['tab']) ? $_GET['tab'] : 'pending';
@@ -110,14 +132,14 @@ $result = mysqli_query($con, $sql);
             font-weight: 700;
         }
 
-        /* التبويبات */
         .tabs-box{
             display: flex;
             width: 100%;
-            border: 1px solid #d0d0d0;
-            background: #f3f3f3;
-            margin-bottom: 18px;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
             overflow: hidden;
+            margin-bottom: 20px;
+            background: #e9e9e9;
         }
 
         .tab-btn{
@@ -125,9 +147,10 @@ $result = mysqli_query($con, $sql);
             text-align: center;
             padding: 14px 10px;
             text-decoration: none;
-            color: #3E2454;
+            font-family: "Noto Kufi Arabic", sans-serif;
             font-size: 15px;
-            font-weight: 700;
+            font-weight: 600;
+            color: #3E2454;
             background: #ffffff;
             border-left: 1px solid #d0d0d0;
             transition: 0.2s;
@@ -138,7 +161,7 @@ $result = mysqli_query($con, $sql);
         }
 
         .tab-btn.active{
-            background: #F2F2F2;
+            background: #f2f2f2;
         }
 
         .permissions-card{
@@ -217,29 +240,193 @@ $result = mysqli_query($con, $sql);
             padding: 25px 10px !important;
         }
 
+        /* الخلفية السوداء الشفافة */
+        .reply-modal{
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.35);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* الصندوق الأبيض */
+        .reply-modal-content{
+            width: 800px;
+            max-width: 92%;
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 28px 26px 24px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+            position: relative;
+            direction: rtl;
+        }
+
+        /* زر الإغلاق */
+        .close-modal{
+            position: absolute;
+            top: 14px;
+            left: 16px;
+            background: transparent;
+            border: none;
+            font-size: 28px;
+            color: #3E2454;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        /* عنوان القسم */
+        .reply-title{
+            color: #3E2454;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 18px;
+            text-align: right;
+        }
+
+        /* صف المربعات */
+        .ticket-info-grid{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+            margin-bottom: 24px;
+        }
+
+        .ticket-info-box{
+            background: #70A0AF;
+            border-radius: 8px;
+            padding: 18px 22px;
+            color: #fff;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .ticket-info-row{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .ticket-info-value{
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* عنوان المحتوى */
+        .section-label{
+            color: #000;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-align: right;
+        }
+
+        /* صندوق محتوى الرسالة */
+        .ticket-message-box{
+            background: #F0F0F0;
+            border-radius: 8px;
+            padding: 22px 24px;
+            color: #3E2454;
+            font-size: 15px;
+            line-height: 2;
+            margin-bottom: 26px;
+            min-height: 110px;
+        }
+
+        /* سجل الردود */
+        .reply-log-title{
+            color: #3E2454;
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            text-align: right;
+        }
+
+        /* عنوان الرد الإداري */
+        .admin-reply-label{
+            color: #000;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-align: right;
+        }
+
+        /* مربع النص */
+        .reply-textarea{
+            width: 100%;
+            min-height: 160px;
+            border: 1px solid #70A0AF;
+            border-radius: 0;
+            outline: none;
+            resize: none;
+            padding: 16px 18px;
+            font-family: "Noto Kufi Arabic", sans-serif;
+            font-size: 15px;
+            color: #3E2454;
+            background: #fff;
+            box-sizing: border-box;
+            margin-bottom: 24px;
+        }
+
+        .reply-textarea::placeholder{
+            color: #c9c9c9;
+        }
+
+        /* زر الإرسال */
+        .send-reply-btn{
+            display: block;
+            width: 320px;
+            max-width: 100%;
+            margin: 0 auto;
+            background: #3E2454;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 14px 20px;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: "Noto Kufi Arabic", sans-serif;
+            cursor: pointer;
+        }
+
         @media (max-width: 1100px){
             .permissions-container{
                 margin-right: 0;
                 padding: 20px;
             }
         }
+
+        @media (max-width: 700px){
+            .ticket-info-grid{
+                grid-template-columns: 1fr;
+            }
+
+            .reply-modal-content{
+                padding: 24px 16px 20px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- السايدبار -->
     <aside class="sidebar">
         <div class="sidebar-top">
-
             <div class="sidebar-logo">
                 <img src="شعار نورين.png" alt="شعار نورين">
             </div>
 
-                <ul class="sidebar-menu">
+            <ul class="sidebar-menu">
                 <li><a href="Admin3_Contracts.php">إدارة العقود</a></li>
-                <li><a href="Admin5_Complaints.php"class="active">الشكاوى والاستفسارات</a></li>
-                <li><a href="Admin4_UsersManage.php" >إدارة المستخدمين</a></li>
-                <li><a href="Admin2_ EntitiesApproval.php">اعتماد الجهات</a></li>
+                <li><a href="Admin5_Complaints.php" class="active">الشكاوى والاستفسارات</a></li>
+                <li><a href="Admin4_UsersManage.php">إدارة المستخدمين</a></li>
+                <li><a href="Admin2_EntitiesApproval.php">اعتماد الجهات</a></li>
             </ul>
         </div>
 
@@ -253,7 +440,6 @@ $result = mysqli_query($con, $sql);
         </div>
     </aside>
 
-    <!-- المحتوى -->
     <div class="permissions-container">
 
         <div class="top-bar">
@@ -263,17 +449,15 @@ $result = mysqli_query($con, $sql);
         <h2 class="permissions-title">الشكاوى والاستفسارات</h2>
         <div class="title-line"></div>
 
-        <!-- التبويبات -->
         <div class="tabs-box">
-            <a href="Admin5_Complaints.php?tab=replied" class="tab-btn <?php echo ($tab == 'replied') ? 'active' : ''; ?>">
+            <a href="?tab=replied" class="tab-btn <?php echo ($tab == 'replied') ? 'active' : ''; ?>">
                 تم الرد
             </a>
-            <a href="Admin5_Complaints.php?tab=pending" class="tab-btn <?php echo ($tab == 'pending') ? 'active' : ''; ?>">
+            <a href="?tab=pending" class="tab-btn <?php echo ($tab == 'pending') ? 'active' : ''; ?>">
                 بانتظار الرد
             </a>
         </div>
 
-        <!-- الجدول -->
         <div class="permissions-card">
             <table class="permissions-table">
                 <thead>
@@ -298,7 +482,18 @@ $result = mysqli_query($con, $sql);
                         <td class="ticket-subject"><?php echo htmlspecialchars($row['subject']); ?></td>
                         <td>
                             <?php if ($tab == 'pending') { ?>
-                                <a href="Admin4_ReplyTicket.php?id=<?php echo $row['ticket_id']; ?>" class="btn btn-outline">الرد على التذكرة</a>
+                                <button type="button"
+                                    class="btn btn-outline"
+                                    onclick='openReplyModal(<?php echo json_encode([
+                                        "ticket_id" => "TKT-" . str_pad($row["ticket_id"], 3, "0", STR_PAD_LEFT),
+                                        "sender_name" => $row["sender_name"],
+                                        "ticket_type" => "شكوى / استفسار",
+                                        "submission_date" => $row["submission_date"],
+                                        "message" => $row["message"],
+                                        "raw_id" => $row["ticket_id"]
+                                    ], JSON_UNESCAPED_UNICODE); ?>)'>
+                                    الرد على التذكرة
+                                </button>
                             <?php } else { ?>
                                 <a href="Admin4_ViewReply.php?id=<?php echo $row['ticket_id']; ?>" class="btn btn-outline">عرض</a>
                             <?php } ?>
@@ -315,13 +510,82 @@ $result = mysqli_query($con, $sql);
                     <tr class="empty-row"><td colspan="5"></td></tr>
                     <tr class="empty-row"><td colspan="5"></td></tr>
                     <tr class="empty-row"><td colspan="5"></td></tr>
-
                     <?php } ?>
                 </tbody>
             </table>
         </div>
 
     </div>
+
+    <!-- النافذة المنبثقة -->
+    <div class="reply-modal" id="replyModal">
+        <div class="reply-modal-content">
+
+            <button class="close-modal" type="button" onclick="closeReplyModal()">×</button>
+
+            <div class="reply-title">بيانات التذكرة</div>
+
+            <div class="ticket-info-grid">
+                <div class="ticket-info-box">
+                    <div class="ticket-info-row">
+                        <span>اسم المرسل</span>
+                        <span class="ticket-info-value" id="senderName"></span>
+                    </div>
+                    <div class="ticket-info-row">
+                        <span>نوع التذكرة</span>
+                        <span class="ticket-info-value" id="ticketType"></span>
+                    </div>
+                </div>
+
+                <div class="ticket-info-box">
+                    <div class="ticket-info-row">
+                        <span>رقم التذكرة</span>
+                        <span class="ticket-info-value" id="ticketId"></span>
+                    </div>
+                    <div class="ticket-info-row">
+                        <span>تاريخ الإرسال</span>
+                        <span class="ticket-info-value" id="date"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-label">محتوى الشكوى / الاستفسار</div>
+            <div class="ticket-message-box" id="message"></div>
+
+            <div class="reply-log-title">سجل الردود</div>
+            <div class="admin-reply-label">الرد الإداري</div>
+
+            <form method="post">
+                <input type="hidden" name="ticket_id" id="rawId">
+                <textarea name="admin_reply" class="reply-textarea" placeholder="أدخل ردك هنا .." required></textarea>
+                <button type="submit" class="send-reply-btn">إرسال الرد</button>
+            </form>
+
+        </div>
+    </div>
+
+    <script>
+    function openReplyModal(data){
+        document.getElementById("ticketId").textContent = data.ticket_id;
+        document.getElementById("senderName").textContent = data.sender_name;
+        document.getElementById("ticketType").textContent = data.ticket_type;
+        document.getElementById("date").textContent = data.submission_date;
+        document.getElementById("message").textContent = data.message;
+        document.getElementById("rawId").value = data.raw_id;
+        document.getElementById("replyModal").style.display = "flex";
+    }
+
+    function closeReplyModal(){
+        document.getElementById("replyModal").style.display = "none";
+    }
+
+    window.onclick = function(e){
+        let modal = document.getElementById("replyModal");
+        if(e.target === modal){
+            modal.style.display = "none";
+        }
+    }
+    </script>
 
 </body>
 </html>
