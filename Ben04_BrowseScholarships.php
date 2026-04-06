@@ -224,9 +224,11 @@ $selected_field = isset($_POST['sch_field']) ? $_POST['sch_field'] : '';
         <div class="conditions-text"><?php echo nl2br($opp['requirements']); ?></div>
     </div>
 
-    <button class="btn-action" style="width: 250px; margin: 40px auto 0; display: block;" onclick="window.location.href='Ben06_ApplyScholarship.php?id=<?php echo $opp['scholarship_id']; ?>'">
-        التقديم الآن
-    </button>
+<a href="Ben06_ApplyScholarship.php?sch_id=<?php echo $opp['scholarship_id']; ?>" 
+   class="btn-action"
+   style="width: 250px; margin: 40px auto 0; display: block; text-align: center; text-decoration: none;">
+    التقديم الآن
+</a>
 </div>
             <?php endif; ?>
         </div>

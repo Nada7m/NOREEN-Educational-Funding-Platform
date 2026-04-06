@@ -32,12 +32,16 @@ $programTitles = [
     "phd" => "نموذج تقديم طلب إصدار القبول الجامعي – دكتوراه"
 ];
 
-/* المستندات المشتركة */
+/* المستندات المشتركة المطلوبة */
 $commonDocs = [
     "cv_file" => ["type" => "CV", "label" => "السيرة الذاتية"],
     "passport_file" => ["type" => "Passport", "label" => "جواز السفر"],
     "language_file" => ["type" => "Language Certificate", "label" => "شهادة اللغة"],
-    "recommendation_file" => ["type" => "Recommendation Letters", "label" => "خطابات التوصية"],
+    "recommendation_file" => ["type" => "Recommendation Letters", "label" => "خطابات التوصية"]
+];
+
+/* المستند الاختياري */
+$optionalDocs = [
     "other_file" => ["type" => "Other Certificates", "label" => "شهادات أخرى"]
 ];
 
@@ -113,7 +117,9 @@ if (isset($_POST['submit_request'])) {
         $type = "error";
     } else {
 
+        /* الملفات المطلوبة فقط */
         $requiredDocs = array_merge($commonDocs, $programDocs[$program]);
+
         $missingFile = false;
         $wrongType = false;
 
@@ -127,6 +133,14 @@ if (isset($_POST['submit_request'])) {
             if (!str_ends_with($fileName, ".pdf")) {
                 $wrongType = true;
                 break;
+            }
+        }
+
+        /* التحقق من الملف الاختياري إذا تم رفعه */
+        if (isset($_FILES["other_file"]) && !empty($_FILES["other_file"]["name"])) {
+            $otherFileName = strtolower($_FILES["other_file"]["name"]);
+            if (!str_ends_with($otherFileName, ".pdf")) {
+                $wrongType = true;
             }
         }
 
@@ -156,14 +170,15 @@ if (isset($_POST['submit_request'])) {
                     mkdir($uploadDir, 0777, true);
                 }
 
+                /* رفع الملفات المطلوبة */
                 foreach ($requiredDocs as $inputName => $docData) {
                     uploadAdmissionFile($inputName, $requestId, $docData["type"], $uploadDir, $conn);
                 }
 
-                echo "<script>
-                        alert('تم تقديم طلبك بنجاح');
-                        window.location.href='Ben16_AdmissionRequests.php';
-                      </script>";
+                /* رفع شهادات أخرى إذا وُجدت */
+                uploadAdmissionFile("other_file", $requestId, "Other Certificates", $uploadDir, $conn);
+
+                header("Location: Ben16_AdmissionList.php?success=1");
                 exit();
 
             } else {
@@ -177,7 +192,7 @@ if (isset($_POST['submit_request'])) {
 /* بيانات للجافاسكربت */
 $jsPrograms = [];
 foreach ($programDocs as $programKey => $docs) {
-    $mergedDocs = array_merge($commonDocs, $docs);
+    $mergedDocs = array_merge($commonDocs, $docs, $optionalDocs);
     $docList = [];
 
     foreach ($mergedDocs as $inputName => $docData) {
@@ -204,42 +219,79 @@ foreach ($programDocs as $programKey => $docs) {
 
 <style>
 .scholarship-details-box{ width:100%; max-width:850px; margin:20px auto; background:#fff; padding:20px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.05); }
+
 .form-fields{ display:flex; flex-direction:column; gap:14px; }
+
 .field{ margin-bottom:12px; }
-.field label{ display:block; margin-bottom:6px; color:#333; font-size:14px; font-weight:600; font-family:'Noto Kufi Arabic',   }
-.field input{ width:100%; height:40px; border:1.5px solid #8FB4C9; background:#fff; padding:8px 10px; font-size:13px; color:#000; outline:none; font-family:'Noto Kufi Arabic',   border-radius:4px; }
+
+.field label{ display:block; margin-bottom:6px; color:#333; font-size:14px; font-weight:600; font-family:'Noto Kufi Arabic'; }
+
+.field input{ width:100%; height:40px; border:1.5px solid #8FB4C9; background:#fff; padding:8px 10px; font-size:13px; color:#000; outline:none; font-family:'Noto Kufi Arabic'; border-radius:4px; }
+
 .field input::placeholder{ color:#9b9b9b; }
-.field select{ width:100%; height:40px; border:1.5px solid #8FB4C9; background:#fff; padding:8px 10px; font-size:13px; color:#000; outline:none; font-family:'Noto Kufi Arabic',   border-radius:4px; }
+
+.field select{ width:100%; height:40px; border:1.5px solid #8FB4C9; background:#fff; padding:8px 10px; font-size:13px; color:#000; outline:none; font-family:'Noto Kufi Arabic'; border-radius:4px; }
+
 .field select option{ color:#000; }
-.form-subtitle{ text-align:center; margin-bottom:18px; color:#3E2454; font-weight:bold; font-size:18px; font-family:'Noto Kufi Arabic',   }
-.docs-title{ text-align:center; margin-bottom:18px; color:#3E2454; font-weight:bold; font-size:18px; font-family:'Noto Kufi Arabic',   }
+
+.form-subtitle{ text-align:center; margin-bottom:18px; color:#3E2454; font-weight:bold; font-size:18px; font-family:'Noto Kufi Arabic'; }
+
+.docs-title{ text-align:center; margin-bottom:18px; color:#3E2454; font-weight:bold; font-size:18px; font-family:'Noto Kufi Arabic'; }
+
 .docs-section{ display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin-top:14px; }
+
 .doc-item{ text-align:right; }
-.doc-item .title-label{ font-size:13px; font-weight:600; margin-bottom:8px; display:block; color:#333; font-family:'Noto Kufi Arabic',   min-height:38px; line-height:1.6; }
+
+.doc-item .title-label{ font-size:13px; font-weight:600; margin-bottom:8px; display:block; color:#333; font-family:'Noto Kufi Arabic'; min-height:38px; line-height:1.6; }
+
 .upload-wrapper{ border:2px solid; border-image-source:linear-gradient(90deg, #D6B7E2 0%, #3E2454 64%); border-image-slice:1; background-color:#F8F8F8; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:0.3s; }
+
 .upload-wrapper:hover{ background-color:#ececec; }
+
 .upload-img{ width:20px; height:auto; }
-.file-name-display{ display:none; font-size:10px; color:#70A0AF; height:34px; padding:6px 8px; margin-top:0; text-align:center; word-break:break-word; font-family:'Noto Kufi Arabic',   border:2px solid; border-image-source:linear-gradient(90deg, #D6B7E2 0%, #3E2454 64%); border-image-slice:1; background:#F8F8F8; align-items:center; justify-content:center; cursor:pointer; }
+
+.file-name-display{ display:none; font-size:10px; color:#70A0AF; height:34px; padding:6px 8px; margin-top:0; text-align:center; word-break:break-word; font-family:'Noto Kufi Arabic'; border:2px solid; border-image-source:linear-gradient(90deg, #D6B7E2 0%, #3E2454 64%); border-image-slice:1; background:#F8F8F8; align-items:center; justify-content:center; cursor:pointer; }
+
 .big-btn{ padding:10px 55px; font-size:15px; font-weight:700; }
+
 .center-btn{ text-align:center; margin-top:30px; }
-.msg{ max-width:850px; margin:0 auto 14px; padding:12px; border-radius:6px; text-align:center; font-size:14px; font-family:'Noto Kufi Arabic',   }
+
+.msg{ max-width:850px; margin:0 auto 14px; padding:12px; border-radius:6px; text-align:center; font-size:14px; font-family:'Noto Kufi Arabic'; }
+
 .msg.error{ background:#fff1f1; color:#b42318; border:1px solid #efb4b4; }
+
 .page{ padding:18px 30px 30px; }
+
 .back-wrap{ display:flex; justify-content:flex-end; max-width:850px; margin:0 auto 10px; }
+
 .back-btn{ width:50px; height:50px; display:flex; align-items:center; justify-content:center; }
+
 .back-icon{ width:46px; height:46px; object-fit:contain; }
+
 .star{ color:red !important; font-weight:bold; margin-left:3px; }
-.form-submit-btn{ font-family:'Noto Kufi Arabic', font-size:18px; font-weight:700; background-color:#70A0AF; color:#ffffff; cursor:pointer; border:none; border-radius:4px;  }
+
+.form-submit-btn{ font-family:'Noto Kufi Arabic'; font-size:18px; font-weight:700; background-color:#70A0AF; color:#ffffff; cursor:pointer; border:none; border-radius:4px; }
+
 .pay-modal{ display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:3000; justify-content:center; align-items:center; }
+
 .pay-card{ width:700px; max-width:92%; background:#fff; border-radius:10px; padding:30px 24px; box-shadow:0 8px 24px rgba(0,0,0,0.18); }
-.pay-title{ text-align:center; color:#d46a6a; font-size:22px; font-weight:700; margin-bottom:18px; font-family:'Noto Kufi Arabic',   }
+
+.pay-title{ text-align:center; color:#d46a6a; font-size:22px; font-weight:700; margin-bottom:18px; font-family:'Noto Kufi Arabic'; }
+
 .pay-box{ width:78%; margin:0 auto; border:1px solid #e0e0e0; border-radius:10px; padding:18px; }
-.pay-box-title{ text-align:center; font-size:20px; font-weight:700; color:#333; margin-bottom:16px; font-family:'Noto Kufi Arabic',   }
+
+.pay-box-title{ text-align:center; font-size:20px; font-weight:700; color:#333; margin-bottom:16px; font-family:'Noto Kufi Arabic'; }
+
 .pay-field{ margin-bottom:14px; }
-.pay-field input{ width:100%; height:46px; border:1px solid #d1d1d1; border-radius:6px; padding:8px 12px; font-size:14px; font-family:'Noto Kufi Arabic',   outline:none; }
+
+.pay-field input{ width:100%; height:46px; border:1px solid #d1d1d1; border-radius:6px; padding:8px 12px; font-size:14px; font-family:'Noto Kufi Arabic'; outline:none; }
+
 .pay-row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-.pay-confirm{ width:100%; height:46px; border:none; border-radius:6px; background:#70A0AF; color:#fff; font-size:18px; font-weight:700; font-family:'Noto Kufi Arabic',   cursor:pointer; margin-top:10px; }
-.close-btn{ display:block; margin:12px auto 0; background:none; border:none; color:#777; font-size:14px; font-family:'Noto Kufi Arabic',   cursor:pointer; }
+
+.pay-confirm{ width:100%; height:46px; border:none; border-radius:6px; background:#70A0AF; color:#fff; font-size:18px; font-weight:700; font-family:'Noto Kufi Arabic'; cursor:pointer; margin-top:10px; }
+
+.close-btn{ display:block; margin:12px auto 0; background:none; border:none; color:#777; font-size:14px; font-family:'Noto Kufi Arabic'; cursor:pointer; }
+
 .hidden{ display:none; }
 </style>
 </head>
@@ -256,7 +308,7 @@ foreach ($programDocs as $programKey => $docs) {
                 <li><a href="Ben04_BrowseScholarships.php">التقديم على المنح</a></li>
                 <li><a href="Ben09_TrackScholarship.php">متابعة المنح</a></li>
                 <li><a href="Ben013_ConsultingOffices.php" class="active">المكاتب الاستشارية</a></li>
-                 <li><a href="Ben16_AdmissionList.php">طلبات إصدار القبول</a></li>
+                <li><a href="Ben16_AdmissionList.php">طلبات إصدار القبول</a></li>
                 <li><a href="Ben19_Consultations.php">الاستشارات</a></li>
             </ul>
         </div>
@@ -280,16 +332,16 @@ foreach ($programDocs as $programKey => $docs) {
             </div>
 
             <div class="header-icons">
-    <div class="settings-dropdown">
-<img src="ايقونة قائمة الاعدادات.png" class="menu-icon">
-<div class="dropdown-menu">
-<a href="Ben02_Profile.php">الملف الشخصي</a>
-                                      <a href="Ben20_MyScholarshipWallet.php">محفظة منحتي</a>
-<a href="support.php">تقديم شكوى او استفسار</a>
-</div>
-</div>
-</div>
-</header>
+                <div class="settings-dropdown">
+                    <img src="ايقونة قائمة الاعدادات.png" class="menu-icon">
+                    <div class="dropdown-menu">
+                        <a href="Ben02_Profile.php">الملف الشخصي</a>
+                        <a href="Ben20_MyScholarshipWallet.php">محفظة منحتي</a>
+                        <a href="support.php">تقديم شكوى او استفسار</a>
+                    </div>
+                </div>
+            </div>
+        </header>
 
         <div class="page">
 
@@ -328,12 +380,12 @@ foreach ($programDocs as $programKey => $docs) {
                             <div class="form-fields">
                                 <div class="field">
                                     <label><b class="star">*</b> اسم الجامعة المرغوبة</label>
-                                <input type="text" name="univ_name" id="univ_name" placeholder="ادخل اسم الجامعة" value="<?php echo htmlspecialchars($univ_name, ENT_QUOTES, 'UTF-8'); ?>" required>
+                                    <input type="text" name="univ_name" id="univ_name" placeholder="ادخل اسم الجامعة" value="<?php echo htmlspecialchars($univ_name, ENT_QUOTES, 'UTF-8'); ?>" required>
                                 </div>
 
                                 <div class="field">
                                     <label><b class="star">*</b> التخصص الدراسي المرغوب</label>
-                                    <input type="text" name="major_name" id="major_name" placeholder="ادخل التخصص الدراسي المرغوب" value="<?php echo htmlspecialchars($major_name, ENT_QUOTES, 'UTF-8');  ?>" required>
+                                    <input type="text" name="major_name" id="major_name" placeholder="ادخل التخصص الدراسي المرغوب" value="<?php echo htmlspecialchars($major_name, ENT_QUOTES, 'UTF-8'); ?>" required>
                                 </div>
                             </div>
                         </div>
@@ -413,8 +465,13 @@ function buildDocs(program){
     const docItem = document.createElement("div");
     docItem.className = "doc-item";
 
+    let star = '<b class="star">*</b> ';
+    if(doc.name === "other_file"){
+      star = "";
+    }
+
     docItem.innerHTML =
-      '<label class="title-label"><b class="star">*</b> ' + doc.label + '</label>' +
+      '<label class="title-label">' + star + doc.label + '</label>' +
       '<label for="' + doc.name + '" class="upload-wrapper"><img src="upload.png" class="upload-img" alt="رفع"></label>' +
       '<input type="file" name="' + doc.name + '" id="' + doc.name + '" accept=".pdf" style="display:none;" onchange="showFileName(this)">' +
       '<div class="file-name-display" onclick="openSelectedFile(this)"></div>';
@@ -461,6 +518,19 @@ function validateVisibleSection(){
   const fileInputs = docsSection.querySelectorAll('input[type="file"]');
 
   for(let i = 0; i < fileInputs.length; i++){
+    const inputName = fileInputs[i].name;
+
+    if(inputName === "other_file"){
+      if(fileInputs[i].files.length > 0){
+        const optionalFileName = fileInputs[i].files[0].name.toLowerCase();
+        if(!optionalFileName.endsWith(".pdf")){
+          alert("جميع الملفات يجب أن تكون PDF فقط.");
+          return false;
+        }
+      }
+      continue;
+    }
+
     if(fileInputs[i].files.length === 0){
       alert("يرجى رفع جميع الملفات المطلوبة.");
       return false;

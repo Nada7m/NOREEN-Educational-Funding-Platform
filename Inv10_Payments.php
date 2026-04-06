@@ -70,24 +70,6 @@ $result = mysqli_stmt_get_result($stmt);
 <link rel="stylesheet" href="CSS01Layout.css?v=3">
 
 <style>
-/* الهيدر */
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.page-heading{
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;
-  text-align:right;
-}
-
-.header-icons{
-  display:flex;
-  align-items:center;
-}
 
 /* مساحة الصفحة */
 .payments-page{
@@ -240,34 +222,6 @@ $result = mysqli_stmt_get_result($stmt);
   color:#777777;
 }
 
-/* تجاوب */
-@media (max-width: 950px){
-  .payments-page{
-    padding:25px 20px 35px;
-  }
-
-  .table-head,
-  .table-row{
-    grid-template-columns:1fr;
-  }
-
-  .head-cell{
-    border-left:none;
-    border-bottom:1px solid #d9d9d9;
-  }
-
-  .head-cell:last-child{
-    border-bottom:none;
-  }
-
-  .table-cell{
-    border-bottom:1px solid #efefef;
-  }
-
-  .table-row .table-cell:last-child{
-    border-bottom:none;
-  }
-}
 </style>
 </head>
 
@@ -285,8 +239,8 @@ $result = mysqli_stmt_get_result($stmt);
 
       <ul class="sidebar-menu">
         <li><a href="Inv00_MainPage.php">الرئيسية</a></li>
+                <li><a href="Inv04_CreateScholarship.php">عرض المنح</a></li>
         <li><a href="Inv06_ManageScholarships.php">إدارة المنح</a></li>
-        <li><a href="Inv04_CreateScholarship.php">عرض المنح</a></li>
         <li><a href="Inv10_Payments.php" class="active">المدفوعات</a></li>
       </ul>
 
@@ -308,6 +262,10 @@ $result = mysqli_stmt_get_result($stmt);
     <!-- الهيدر -->
     <header class="header">
 
+      <div class="page-heading">
+        <h1 class="page-title">المدفوعات</h1>
+      </div>
+
       <div class="header-icons">
         <div class="settings-dropdown">
           <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="الإعدادات">
@@ -319,23 +277,10 @@ $result = mysqli_stmt_get_result($stmt);
         </div>
       </div>
 
-      <div class="page-heading">
-        <h1 class="page-title">المدفوعات</h1>
-      </div>
-
     </header>
 
     <!-- محتوى الصفحة -->
     <section class="payments-page">
-
-      <!-- زر الرجوع -->
-      <div class="page-top">
-        <div></div>
-
-        <a href="Inv00_MainPage.php">
-          <img src="سهم تراجع.svg" width="40" alt="رجوع">
-        </a>
-      </div>
 
       <div class="inner-title">قائمة المستفيدين من برامجك التمويلية</div>
 
