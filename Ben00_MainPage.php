@@ -1,22 +1,58 @@
 <?php
 session_start();
+
+$conn = new mysqli("localhost", "root", "", "noreen");
+
+if ($conn->connect_error) {
+  die("فشل الاتصال بقاعدة البيانات: " . $conn->connect_error);
+}
+
+$conn->set_charset("utf8mb4");
+
+$userName = 'المستفيد';
+
+if (isset($_SESSION['bnf_id'])) {
+  $bnf_id = $_SESSION['bnf_id'];
+
+  $stmt = $conn->prepare("SELECT f_name FROM beneficiary WHERE bnf_id = ?");
+  $stmt->bind_param("i", $bnf_id);
+  $stmt->execute();
+  $result = $stmt->get_result();
+
+  if ($row = $result->fetch_assoc()) {
+    $userName = $row['f_name'];
+  }
+
+  $stmt->close();
+}
 ?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<meta charset="UTF-8">
 <head>
+  <meta charset="UTF-8">
   <title>نورين - الرئيسية</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="CSS01Layout.css?v=4">  <link rel="stylesheet" href="CSS02Home.css?v=2">
+  <link rel="stylesheet" href="CSS01Layout.css?v=4">
+  <link rel="stylesheet" href="CSS02Home.css?v=2">
+  <style>
+    .page-subtitle {
+      font-size: 16px;
+      color: #6E6E6E;
+      margin-top: 6px;
+      font-weight: 500;
+    }
+  </style>
 </head>
 <body>
   <div class="layout">
+
     <!-- الشريط الجانبي -->
     <aside class="sidebar">
       <div class="sidebar-top">
         <div class="sidebar-logo">
           <img src="شعار نورين.png">
         </div>
+
         <ul class="sidebar-menu">
           <li><a href="Ben00_MainPage.php" class="active">الرئيسية</a></li>
           <li><a href="Ben04_BrowseScholarships.php">التقديم على المنح</a></li>
@@ -26,14 +62,15 @@ session_start();
           <li><a href="Ben19_Consultations.php">الاستشارات</a></li>
         </ul>
       </div>
- <div class="sidebar-bottom">
-  <form action="logout.php" method="post">
-    <button type="submit" class="logout-btn">
-      <img src="ايقونة تسجيل الخروج.png" class="logout-icon">
-      <b>تسجيل الخروج</b>
-    </button>
-  </form>
-</div>
+
+      <div class="sidebar-bottom">
+        <form action="logout.php" method="post">
+          <button type="submit" class="logout-btn">
+            <img src="ايقونة تسجيل الخروج.png" class="logout-icon">
+            <b>تسجيل الخروج</b>
+          </button>
+        </form>
+      </div>
     </aside>
 
     <!-- المحتوى الرئيسي -->
@@ -41,10 +78,14 @@ session_start();
 
       <!-- الهيدر -->
       <header class="header">
-
         <div class="page-heading">
           <div class="page-title">الرئيسية</div>
-        </div>
+<div class="welcome-box">
+  <div class="welcome-text">
+    أهلًا بك، <?php echo htmlspecialchars($userName); ?>
+  </div>
+ 
+</div>        </div>
 
         <div class="header-icons">
           <div class="settings-dropdown">
@@ -54,9 +95,9 @@ session_start();
               <a href="Ben02_Profile.php">الملف الشخصي</a>
               <a href="Ben20_MyScholarshipWallet.php">محفظة منحتي</a>
               <a href="support.php">تقديم شكوى او استفسار</a>
+            </div>
           </div>
         </div>
-
       </header>
 
       <!-- محتوى الصفحة -->
@@ -64,7 +105,6 @@ session_start();
 
         <!-- القسم الرئيسي -->
         <section class="intro">
-
           <div class="int-cnt">
 
             <div class="int-txt">
@@ -81,7 +121,6 @@ session_start();
             </div>
 
           </div>
-
         </section>
 
         <div class="gap"></div>
@@ -90,7 +129,6 @@ session_start();
         <section class="ab-sec" id="about">
 
           <div class="ab-card">
-
             <div class="ab-ico">
               <img src="بوابة نورين.svg">
             </div>
@@ -102,7 +140,6 @@ session_start();
                 والمكاتب الاستشارية لتسهيل الحصول على المنح الدراسية.
               </p>
             </div>
-
           </div>
 
           <div class="ab-row">
@@ -203,49 +240,82 @@ session_start();
 
           <div class="faq-list">
 
- <details class="faq-item">
-  <summary>
-    المستفيد
-    <img src="سهم مدبل.svg">
-  </summary>
+            <details class="faq-item">
+              <summary>
+                المستفيد
+                <img src="سهم مدبل.svg">
+              </summary>
 
-  <div class="faq-ans">
+              <div class="faq-ans">
 
-    <div class="faq-q">سؤال 1: كيف أتقدم على منحة من مستثمر؟</div>
-    <div class="faq-a"> يمكنك استعراض المنح من صفحة "التقديم على المنح"، ثم اختيار المنحة المناسبة والتقديم عليها.</div>
-    <div class="faq-q">سؤال 2: ماذا يحدث بعد التقديم على المنحة؟</div>
-    <div class="faq-a"> يتم مراجعة طلبك من قبل المستثمر، وفي حال القبول يتم التواصل معك لاستكمال الإجراءات.</div>
-    <div class="faq-q">سؤال 3: كيف أعرف أنني تم قبولي؟</div>
-    <div class="faq-a"> يتم تحديث حالة الطلب في صفحة "متابعة المنح"الى مقبول .</div>
-    <div class="faq-q">سؤال 4: كيف أطلب إصدار قبول جامعي؟</div>
-    <div class="faq-a"> يمكنك الدخول إلى صفحة "طلبات إصدار القبول"، اختيار المكتب المناسب، ثم تعبئة الطلب ورفع المستندات المطلوبة.</div>
-    <div class="faq-q">سؤال 5: ماذا يحدث بعد إرسال طلب القبول؟</div>
-    <div class="faq-a"> يقوم المكتب بمراجعة طلبك، ثم يتم قبول الطلب أو رفضه، وفي حال القبول يتم العمل على إصدار القبول الجامعي.</div>
-    <div class="faq-q">سؤال 6: كيف أتابع حالة طلب القبول؟</div>
-    <div class="faq-a"> يمكنك متابعة حالة الطلب من صفحة "طلبات إصدار القبول"، حيث تظهر حالة الطلب والتحديثات.</div>
-    <div class="faq-q">سؤال 7: ما هي المستندات المطلوبة عند التقديم على المنح؟</div>
-     <div class="faq-a">
-   عند التقديم على المنح يجب رفع السيرة الذاتية، شهادة آخر مؤهل، خطابات التوصية، وخطاب القبول الجامعي من الجامعة المرغوبة.</div>
-    <!-- المستندات -->
-    <div class="faq-q">سؤال 8: ما هي المستندات المطلوبة لكل برنامج في طلب القبول؟</div>
-    <div class="faq-a">
-  البكالوريوس:<br>
-  شهادة الثانوية العامة، السيرة الذاتية، جواز السفر، شهادة اللغة، خطابات التوصية، خطاب النوايا<br>
-  الماجستير:<br>
-  الشهادة الجامعية، السجل الأكاديمي، جواز السفر، السيرة الذاتية، شهادة اللغة، خطابات التوصية، خطاب الغرض الدراسي<br>
-  الدكتوراه:<br>
-  الشهادات الأكاديمية، السجل الأكاديمي، جواز السفر، السيرة الذاتية، شهادة اللغة، خطابات التوصية، خطاب الغرض الدراسي، المقترح البحثي<br>
-</div>
+                <div class="faq-q">سؤال 1: كيف أتقدم على منحة من مستثمر؟</div>
+                <div class="faq-a">
+                  يمكنك استعراض المنح من صفحة "التقديم على المنح"، ثم اختيار المنحة المناسبة والاطلاع على تفاصيلها قبل إرسال الطلب.
+                </div>
 
-    <!-- أسئلة عامة -->
-    <div class="faq-q">سؤال 9: هل يمكنني تقديم أكثر من منحة / طلب؟</div>
-    <div class="faq-a"> لا يمكنك التقديم على أكثر من منحة ولكن يمكن التقديم على أكثر من طلب قبول حسب رغبتك.</div>
-    <div class="faq-q">سؤال 10: هل يمكنني تعديل الطلب بعد إرساله؟</div>
-    <div class="faq-a"> لا، لا يمكن تعديل الطلب بعد إرساله، لذلك يجب التأكد من البيانات قبل الإرسال.</div>
+                <div class="faq-q">سؤال 2: ماذا يحدث بعد التقديم على المنحة؟</div>
+                <div class="faq-a">
+                  يتم استقبال طلبك ومراجعته من قبل المستثمر، وفي حال القبول يتم إشعارك لاستكمال الإجراءات المرتبطة بالمنحة.
+                </div>
 
+                <div class="faq-q">سؤال 3: كيف أعرف أنني تم قبولي؟</div>
+                <div class="faq-a">
+                  يمكنك معرفة حالة الطلب من خلال صفحة "متابعة المنح"، حيث يتم تحديث الحالة إلى "مقبول" أو غير ذلك بحسب نتيجة المراجعة.
+                </div>
 
-  </div>
-</details>
+                <div class="faq-q">سؤال 4: كيف أطلب إصدار قبول جامعي؟</div>
+                <div class="faq-a">
+                  يمكنك الدخول إلى صفحة "طلبات إصدار القبول"، ثم اختيار المكتب المناسب وتعبئة الطلب وإرفاق المستندات المطلوبة حسب البرنامج الدراسي.
+                </div>
+
+                <div class="faq-q">سؤال 5: ماذا يحدث بعد إرسال طلب القبول؟</div>
+                <div class="faq-a">
+                  يقوم المكتب بمراجعة الطلب والمستندات، ثم يتم اتخاذ القرار المناسب. وفي حال القبول يبدأ العمل على إجراءات إصدار القبول الجامعي.
+                </div>
+
+                <div class="faq-q">سؤال 6: كيف أتابع حالة طلب القبول؟</div>
+                <div class="faq-a">
+                  يمكنك متابعة حالة الطلب من صفحة "طلبات إصدار القبول"، حيث تظهر حالة الطلب وآخر التحديثات المرتبطة به.
+                </div>
+
+                <div class="faq-q">سؤال 7: ما هي المستندات المطلوبة عند التقديم على المنح؟</div>
+                <div class="faq-a">
+                  عند التقديم على المنح يجب رفع السيرة الذاتية، وشهادة آخر مؤهل، وخطابات التوصية، إضافة إلى خطاب القبول الجامعي من الجهة التعليمية المرغوبة.
+                </div>
+
+                <div class="faq-q">سؤال 8: ما هي المستندات المطلوبة لكل برنامج في طلب القبول؟</div>
+                <div class="faq-a">
+                  البكالوريوس:<br>
+                  شهادة الثانوية العامة، السيرة الذاتية، جواز السفر، شهادة اللغة، خطابات التوصية، خطاب النوايا<br><br>
+
+                  الماجستير:<br>
+                  الشهادة الجامعية، السجل الأكاديمي، جواز السفر، السيرة الذاتية، شهادة اللغة، خطابات التوصية، خطاب الغرض الدراسي<br><br>
+
+                  الدكتوراه:<br>
+                  الشهادات الأكاديمية، السجل الأكاديمي، جواز السفر، السيرة الذاتية، شهادة اللغة، خطابات التوصية، خطاب الغرض الدراسي، المقترح البحثي
+                </div>
+
+                <div class="faq-q">سؤال 9: هل يمكنني تقديم أكثر من منحة أو طلب؟</div>
+                <div class="faq-a">
+                  لا يمكنك التقديم على أكثر من منحة في الوقت نفسه، بينما يمكنك التقديم على أكثر من طلب إصدار قبول وفقًا لاحتياجك.
+                </div>
+
+                <div class="faq-q">سؤال 10: هل يمكنني تعديل الطلب بعد إرساله؟</div>
+                <div class="faq-a">
+                  لا، لا يمكن تعديل الطلب بعد إرساله، لذلك يجب مراجعة جميع البيانات والمرفقات بعناية قبل تنفيذ الإرسال.
+                </div>
+
+                <div class="faq-q">سؤال 11: كيف يمكنني إنهاء المنحة إذا واجهت بعض المشاكل؟</div>
+                <div class="faq-a">
+                  يمكنك طلب إنهاء منحة من خلال صفحة "تقديم شكوى أو استفسار" مع التأكد من تضمن الطلب رقم العقد المرتبط بالمنحة، مع توضيح المشكلة بشكل واضح و ستتم مراجعة الطلب من الجهة المختصة، واتخاذ الإجراء المناسب وفقًا لشروط العقد والسياسات المعتمدة.
+                </div>
+
+              </div>
+            </details>
+
+          </div>
+
+        </section>
 
       </div>
 

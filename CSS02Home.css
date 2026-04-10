@@ -328,3 +328,12 @@ transform:rotate(180deg);
   line-height:1.9;
   margin:6px 0 12px;
 }
+.welcome-box {
+  margin-top: 8px;
+}
+
+.welcome-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #3E2454;
+}

@@ -1,16 +1,25 @@
 <?php
 session_start();
 
+if (!isset($_SESSION['admin_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
 /* الاتصال */
 $con = mysqli_connect("localhost","root","","noreen");
+
+if (!$con) {
+    die("فشل الاتصال بقاعدة البيانات");
+}
+
 mysqli_set_charset($con,"utf8mb4");
 
 /* تحديث الحالة */
 if (isset($_POST['block']) || isset($_POST['activate'])) {
 
-    $id   = (int)$_POST['entity_id'];
+    $id = (int)$_POST['entity_id'];
     $type = $_POST['entity_type'];
-
     $status = isset($_POST['block']) ? 'محظور' : 'نشط';
 
     if ($type == 'مستفيد') {
@@ -27,11 +36,11 @@ if (isset($_POST['block']) || isset($_POST['activate'])) {
 
 /* جلب البيانات */
 $result = mysqli_query($con,"
-SELECT bnf_id AS entity_id, CONCAT(f_name,' ',l_name) AS entity_name,'مستفيد' AS entity_type,account_status,'-' AS register_date FROM beneficiary
+SELECT bnf_id AS entity_id, CONCAT(f_name,' ',l_name) AS entity_name, 'مستفيد' AS entity_type, account_status, '-' AS register_date FROM beneficiary
 UNION ALL
-SELECT inv_id,inv_name,'مستثمر',account_status,'-' FROM investor
+SELECT inv_id, inv_name, 'مستثمر', account_status, '-' FROM investor
 UNION ALL
-SELECT office_id,office_name,'مكتب استشاري',account_status,'-' FROM consulting_office
+SELECT office_id, office_name, 'مكتب استشاري', account_status, '-' FROM consulting_office
 ");
 ?>
 
@@ -39,135 +48,107 @@ SELECT office_id,office_name,'مكتب استشاري',account_status,'-' FROM c
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>إدارة المستخدمين</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="CSS01Layout.css">
+<link rel="stylesheet" href="CSS_AdminLayout.css">
 
 <style>
-body{
-    margin:0;
-    background:#ffffff;
-    font-family:"Noto Kufi Arabic", sans-serif;
-}
-
-.layout{
-    display:flex;
-    min-height:100vh;
-}
-
-.main-content{
-    flex:1;
-}
-
-/* الهيدر نفس اعتماد الجهات */
-.header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:25px 30px;
-    border-bottom:1px solid #ddd;
-}
-
-.page-title{
-    font-size:22px;
-    font-weight:800;
-    color:#3E2454;
-}
-
-/* زر الحساب */
-.profile-btn{
-    background:#efe7da;
-    color:#6fa5be;
-    border:1px solid #b9b1a5;
-    border-radius:16px;
-    padding:8px 18px;
-    text-decoration:none;
-    font-size:14px;
-    font-weight:700;
-    white-space:nowrap;
-}
-
-/* المحتوى */
 .page-wrapper{
-    padding:40px;
+  padding:40px;
 }
 
-/* نفس جدول اعتماد الجهات */
 .table-box{
-    width:100%;
-    max-width:1050px;
-    margin:0 auto;
-    background:#fff;
-    border:1px solid #e6e0e6;
-    border-radius:8px;
-    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+  width:100%;
+  max-width:1050px;
+  margin:0 auto;
+  background:#FFFFFF;
+  border:1px solid #E6E0E6;
+  border-radius:8px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.05);
+  overflow:hidden;
 }
 
 table{
-    width:100%;
-    border-collapse:collapse;
+  width:100%;
+  border-collapse:collapse;
 }
 
 thead th{
-    padding:15px;
-    background:#fafafa;
-    border-bottom:1px solid #ddd;
-    font-size:15px;
-    font-weight:700;
-    color:#3E2454;
+  padding:15px;
+  background:#FAFAFA;
+  border-bottom:1px solid #DDDDDD;
+  font-size:15px;
+  font-weight:700;
+  color:#3E2454;
+  text-align:center;
 }
 
 tbody td{
-    padding:16px;
-    border-bottom:1px solid #eee;
-    text-align:center;
-    font-size:14px;
+  padding:16px;
+  border-bottom:1px solid #EEEEEE;
+  text-align:center;
+  font-size:14px;
+  color:#444444;
 }
 
-/* الحالة نفس حجم الأزرار */
 .status{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    width:100px;
-    height:42px;
-    border-radius:12px;
-    color:#fff;
-    font-size:14px;
-    font-weight:600;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100px;
+  height:42px;
+  margin:0 auto;
+  border-radius:12px;
+  color:#FFFFFF;
+  font-size:14px;
+  font-weight:600;
 }
 
-.active{ background:#2E8B57; }
-.blocked{ background:#C23B3B; }
+.status-active{
+  background:#2E8B57;
+}
 
-/* الأزرار */
+.status-blocked{
+  background:#C23B3B;
+}
+
 .actions{
-    display:flex;
-    justify-content:center;
-    gap:10px;
-    flex-wrap:nowrap;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+  flex-wrap:nowrap;
+}
+
+.actions form{
+  margin:0;
 }
 
 .btn{
-    width:100px;
-    height:42px;
-    border-radius:12px;
-    font-size:14px;
-    cursor:pointer;
-    font-weight:600;
+  width:100px;
+  height:42px;
+  border-radius:12px;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  font-family:"Noto Kufi Arabic",sans-serif;
 }
 
 .block{
-    background:#A53A3A;
-    color:#fff;
-    border:none;
+  background:#A53A3A;
+  color:#FFFFFF;
+  border:none;
 }
 
 .activate{
-    background:#fff;
-    border:1px solid #ccc;
+  background:#FFFFFF;
+  color:#333333;
+  border:1px solid #CCCCCC;
 }
+
+
 </style>
 </head>
 
@@ -175,109 +156,105 @@ tbody td{
 
 <div class="layout">
 
-<!-- السايدبار -->
-<aside class="sidebar">
+  <aside class="sidebar">
     <div class="sidebar-top">
-        <div class="sidebar-logo">
-            <img src="شعار نورين.png">
-        </div>
+      <div class="sidebar-logo">
+        <img src="شعار نورين بنفسجي.svg" alt="شعار نورين">
+      </div>
 
-        <ul class="sidebar-menu">
-            <li><a href="Admin2_EntitiesApproval.php">اعتماد الجهات</a></li>
-            <li><a href="Admin3_Contracts.php">إدارة العقود</a></li>
-            <li><a href="Admin4_UsersManage.php" class="active">إدارة المستخدمين</a></li>
-            <li><a href="Admin5_Complaints.php">الشكاوى والاستفسارات</a></li>
-        </ul>
+      <ul class="sidebar-menu">
+        <li><a href="Admin2_EntitiesApproval.php">اعتماد الجهات</a></li>
+        <li><a href="Admin3_Contracts.php">إدارة العقود</a></li>
+        <li><a href="Admin4_UsersManage.php" class="active">إدارة المستخدمين</a></li>
+        <li><a href="Admin5_Complaints.php">الشكاوى والاستفسارات</a></li>
+      </ul>
     </div>
 
     <div class="sidebar-bottom">
-        <form action="logout.php" method="post">
-            <button type="submit" class="logout-btn">
-                <img src="ايقونة تسجيل الخروج.png" class="logout-icon">
-                <b>تسجيل الخروج</b>
-            </button>
-        </form>
+      <form action="logout.php" method="post">
+        <button type="submit" class="logout-btn">
+          <img src="ايقونة تسجيل الخروج.png" class="logout-icon" alt="خروج">
+          تسجيل الخروج
+        </button>
+      </form>
     </div>
-</aside>
+  </aside>
 
-<!-- المحتوى -->
-<div class="main-content">
+  <div class="main-content">
 
-    <div class="header">
+    <header class="header">
+      <div class="page-heading">
         <div class="page-title">إدارة المستخدمين</div>
-        <a href="Admin1_profile.php" class="profile-btn">بيانات الحساب</a>
-    </div>
+        <div class="page-description">عرض حسابات النظام وإدارة حالة المستخدمين</div>
+      </div>
 
-    <div class="page-wrapper">
+      <div class="header-left">
+        <a href="Admin1_profile.php" class="profile-btn">لوحة التحكم</a>
+      </div>
+    </header>
+
+    <div class="page">
+      <div class="page-wrapper">
 
         <div class="table-box">
+          <table>
+            <thead>
+              <tr>
+                <th>اسم المستخدم</th>
+                <th>نوع الحساب</th>
+                <th>الحالة</th>
+                <th>الإجراءات</th>
+              </tr>
+            </thead>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>اسم المستخدم</th>
-                        <th>نوع الحساب</th>
-                        <th>تاريخ التسجيل</th>
-                        <th>الحالة</th>
-                        <th>الإجراءات</th>
-                    </tr>
-                </thead>
+            <tbody>
+              <?php while($row = mysqli_fetch_assoc($result)){
 
-                <tbody>
+                $status = $row['account_status'];
 
-                <?php while($row=mysqli_fetch_assoc($result)){
+                if($status == "محظور"){
+                  $class = "status-blocked";
+                  $text = "محظور";
+                } else {
+                  $class = "status-active";
+                  $text = "نشط";
+                }
+              ?>
+              <tr>
+                <td><?= $row['entity_name'] ?></td>
+                <td><?= $row['entity_type'] ?></td>
 
-                    $status=$row['account_status'];
+                <td>
+                  <span class="status <?= $class ?>"><?= $text ?></span>
+                </td>
 
-                    if($status=="محظور"){ 
-                        $class="blocked"; 
-                        $text="محظور";
-                    }else{ 
-                        $class="active"; 
-                        $text="نشط";
-                    }
-                ?>
-
-                <tr>
-                    <td><?= $row['entity_name'] ?></td>
-                    <td><?= $row['entity_type'] ?></td>
-                    <td><?= $row['register_date'] ?></td>
-
-                    <td>
-                        <span class="status <?= $class ?>"><?= $text ?></span>
-                    </td>
-
-                    <td>
-                        <div class="actions">
-
-                            <?php if($text=="نشط"){ ?>
-                            <form method="post">
-                                <input type="hidden" name="entity_id" value="<?= $row['entity_id'] ?>">
-                                <input type="hidden" name="entity_type" value="<?= $row['entity_type'] ?>">
-                                <button name="block" class="btn block">حظر</button>
-                            </form>
-                            <?php } else { ?>
-                            <form method="post">
-                                <input type="hidden" name="entity_id" value="<?= $row['entity_id'] ?>">
-                                <input type="hidden" name="entity_type" value="<?= $row['entity_type'] ?>">
-                                <button name="activate" class="btn activate">تنشيط</button>
-                            </form>
-                            <?php } ?>
-
-                        </div>
-                    </td>
-                </tr>
-
-                <?php } ?>
-
-                </tbody>
-            </table>
-
+                <td>
+                  <div class="actions">
+                    <?php if($text == "نشط"){ ?>
+                    <form method="post">
+                      <input type="hidden" name="entity_id" value="<?= $row['entity_id'] ?>">
+                      <input type="hidden" name="entity_type" value="<?= $row['entity_type'] ?>">
+                      <button type="submit" name="block" class="btn block">حظر</button>
+                    </form>
+                    <?php } else { ?>
+                    <form method="post">
+                      <input type="hidden" name="entity_id" value="<?= $row['entity_id'] ?>">
+                      <input type="hidden" name="entity_type" value="<?= $row['entity_type'] ?>">
+                      <button type="submit" name="activate" class="btn activate">تنشيط</button>
+                    </form>
+                    <?php } ?>
+                  </div>
+                </td>
+              </tr>
+              <?php } ?>
+            </tbody>
+          </table>
         </div>
 
+      </div>
     </div>
 
-</div>
+  </div>
 </div>
 
 </body>

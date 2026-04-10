@@ -47,215 +47,136 @@ if ($q3) {
 <title>بيانات الحساب</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="CSS01Layout.css">
+<link rel="stylesheet" href="CSS_AdminLayout.css">
 
 <style>
-body{
-    margin:0;
-    background:#FFFDFB;
-    font-family:'Noto Kufi Arabic', sans-serif;
-}
-
-.layout{
-    display:flex;
-    min-height:100vh;
-}
-
-/* المحتوى */
-.main-content{
-    flex:1;
-    background:#FFFDFB;
-}
-
-/* الهيدر العلوي */
-.header{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    padding:28px 34px 20px;
-    border-bottom:1px solid #d3d3d3;
-    background:#FFFDFB;
-}
-
-.page-heading{
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-}
-
-.page-title{
-    font-size:22px;
-    font-weight:800;
-    color:#3E2454;
-}
-
-.page-subtitle{
-    font-size:16px;
-    color:#333;
-    line-height:1.9;
-}
-
-/* زر بيانات الحساب */
-.profile-btn{
-    background:#F3ECDD;
-    color:#78A7B8;
-    border:1px solid #bfb6a7;
-    border-radius:18px;
-    padding:8px 18px;
-    text-decoration:none;
-    font-size:14px;
-    font-weight:700;
-    box-shadow:0 1px 2px rgba(0,0,0,0.08);
-}
-
-/* محتوى الصفحة */
 .page-wrapper{
-    padding:45px 55px;
+  padding:45px 55px;
 }
 
-/* نص الترحيب */
 .welcome-box{
-    text-align:center;
-    margin-bottom:35px;
+  text-align:center;
+  margin-bottom:35px;
 }
 
 .welcome-box p{
-    margin:0;
-    font-size:18px;
-    color:#222;
-    line-height:2;
+  margin:0;
+  font-size:18px;
+  color:#222222;
+  line-height:2;
 }
 
-/* الكروت */
 .cards{
-    display:grid;
-    grid-template-columns:repeat(3, 1fr);
-    gap:35px;
-    max-width:980px;
-    margin:0 auto;
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:35px;
+  max-width:980px;
+  margin:0 auto;
 }
 
 .card{
-    background:#fff;
-    min-height:250px;
-    border:1px solid #ece6e6;
-    box-shadow:0 2px 8px rgba(0,0,0,0.06);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:flex-start;
-    text-align:center;
-    padding:28px 20px;
+  background:#FFFFFF;
+  min-height:250px;
+  border:1px solid #ECE6E6;
+  box-shadow:0 2px 8px rgba(0,0,0,0.06);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  text-align:center;
+  padding:28px 20px;
 }
 
 .card-title{
-    font-size:17px;
-    font-weight:700;
-    color:#111;
-    line-height:1.9;
-    min-height:70px;
+  font-size:17px;
+  font-weight:700;
+  color:#111111;
+  line-height:1.9;
+  min-height:70px;
 }
 
 .card-number{
-    margin-top:55px;
-    font-size:18px;
-    font-weight:700;
-    color:#76A8B9;
+  margin-top:55px;
+  font-size:18px;
+  font-weight:700;
+  color:#70A0AF;
 }
 
-@media (max-width:1100px){
-    .cards{
-        grid-template-columns:1fr;
-        max-width:450px;
-    }
 
-    .page-wrapper{
-        padding:30px 20px;
-    }
-
-    .header{
-        padding:20px;
-        flex-direction:column;
-        gap:15px;
-        align-items:flex-start;
-    }
-}
 </style>
 </head>
 <body>
 
 <div class="layout">
 
-    <!-- الشريط الجانبي -->
-    <aside class="sidebar">
-        <div class="sidebar-top">
-            <div class="sidebar-logo">
-                <img src="شعار نورين.png" alt="نورين">
-            </div>
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-logo">
+        <img src="شعار نورين بنفسجي.svg" alt="نورين">
+      </div>
 
-            <ul class="sidebar-menu">
-                <li><a href="Admin1_profile.php" class="active">الملف الشخصي</a></li>
-                <li><a href="Admin2_EntitiesApproval.php">اعتماد الجهات</a></li>
-                <li><a href="Admin3_Contracts.php">إدارة العقود</a></li>
-                <li><a href="Admin4_UsersManage.php">إدارة المستخدمين</a></li>
-                <li><a href="Admin5_Complaints.php">الشكاوى والاستفسارات</a></li>
-            </ul>
-        </div>
-
-        <div class="sidebar-bottom">
-            <form action="logout.php" method="post">
-                <button type="submit" class="logout-btn">
-                    <img src="ايقونة تسجيل الخروج.png" class="logout-icon" alt="خروج">
-                    <b>تسجيل الخروج</b>
-                </button>
-            </form>
-        </div>
-    </aside>
-
-    <!-- المحتوى -->
-    <div class="main-content">
-
-        <!-- الهيدر -->
-        <header class="header">
-            <div class="page-heading">
-                <div class="page-title">بيانات الحساب</div>
-                        </div>
-
-            <a href="Admin1_profile.php" class="profile-btn">بيانات الحساب</a>
-        </header>
-
-        <!-- محتوى الصفحة -->
-        <div class="page-wrapper">
-
-            <div class="welcome-box">
-                <p>
-                    أهلاً بك،<br>
-                   فيما يلي إحصائية بعدد المستخدمين المسجلين في النظام.
-                </p>
-            </div>
-
-            <div class="cards">
-
-                <div class="card">
-                    <div class="card-title">إجمالي المستفيدين المسجلين</div>
-                    <div class="card-number"><?php echo $beneficiaries_count; ?></div>
-                </div>
-
-                <div class="card">
-                    <div class="card-title">إجمالي المستثمرين المسجلين</div>
-                    <div class="card-number"><?php echo $investors_count; ?></div>
-                </div>
-
-                <div class="card">
-                    <div class="card-title">إجمالي المكاتب الاستشارية المسجلة</div>
-                    <div class="card-number"><?php echo $offices_count; ?></div>
-                </div>
-
-            </div>
-
-        </div>
-
+      <ul class="sidebar-menu">
+        <li><a href="Admin2_EntitiesApproval.php">اعتماد الجهات</a></li>
+        <li><a href="Admin3_Contracts.php">إدارة العقود</a></li>
+        <li><a href="Admin4_UsersManage.php">إدارة المستخدمين</a></li>
+        <li><a href="Admin5_Complaints.php">الشكاوى والاستفسارات</a></li>
+      </ul>
     </div>
+
+    <div class="sidebar-bottom">
+      <form action="logout.php" method="post">
+        <button type="submit" class="logout-btn">
+          <img src="ايقونة تسجيل الخروج.png" class="logout-icon" alt="خروج">
+          <b>تسجيل الخروج</b>
+        </button>
+      </form>
+    </div>
+  </aside>
+
+  <div class="main-content">
+
+    <header class="header">
+      <div class="page-heading">
+        <div class="page-title">بيانات الحساب</div>
+        <div class="page-description">عرض إحصائي مختصر للمستخدمين المسجلين في النظام</div>
+      </div>
+
+      <div class="header-left">
+        <a href="Admin1_profile.php" class="profile-btn">لوحة التحكم</a>
+      </div>
+    </header>
+
+    <div class="page">
+      <div class="page-wrapper">
+
+        <div class="welcome-box">
+          <p>
+            أهلاً بك،<br>
+            فيما يلي إحصائية بعدد المستخدمين المسجلين في النظام.
+          </p>
+        </div>
+
+        <div class="cards">
+          <div class="card">
+            <div class="card-title">إجمالي المستفيدين المسجلين</div>
+            <div class="card-number"><?php echo $beneficiaries_count; ?></div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">إجمالي المستثمرين المسجلين</div>
+            <div class="card-number"><?php echo $investors_count; ?></div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">إجمالي المكاتب الاستشارية المسجلة</div>
+            <div class="card-number"><?php echo $offices_count; ?></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
 </div>
 
 </body>
