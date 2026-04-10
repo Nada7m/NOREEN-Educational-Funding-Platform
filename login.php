@@ -71,6 +71,12 @@ if (isset($_POST['login'])) {
 
           if (password_verify($password, $user['password'])) {
 
+          
+            if (isset($user['account_status']) && $user['account_status'] == 'محظور') {
+        $error = "تم حظر الحساب";
+        break;
+    }
+
     /* =========================
        التحقق من الاعتماد (فقط للمستثمر والمكتب)
     ========================= */
@@ -103,7 +109,9 @@ if (isset($_POST['login'])) {
     }
 
     // إذا انتهت الحلقة ولم يتم التوجيه، فهذا يعني أن البيانات خاطئة
+    if (empty($error)) {
     $error = "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+}
 }
 ?>
 
