@@ -39,134 +39,132 @@ $result = mysqli_query($con, $sql);
 <link rel="stylesheet" href="CSS01Layout.css?v=3">
 
 <style>
-/* زر إنشاء منحة */
-.create-btn-box{
-  margin-top:10px;
+.create-btn-box {
+  margin-top: 10px;
 }
 
-.create-btn{
-  background:#3E2454;
-  color:white;
-  padding:10px 20px;
-  border-radius:4px;
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  font-size:14px;
-  font-weight:600;
+.create-btn {
+  background: #3E2454;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
 }
 
-.create-btn:hover{
-  opacity:.95;
+.create-btn:hover {
+  opacity: .95;
 }
 
-/* مكان السهم وزر الإنشاء */
-.page-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:0 40px;
-  margin-top:15px;
+.page-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  margin-top: 15px;
 }
 
-/* الكروت */
-.scholarships-list{
-  padding:0 40px 40px;
-  position:relative;
+.scholarships-list {
+  padding: 0 40px 40px;
 }
 
-.empty-state{
-  text-align:center;
-  margin-top:220px;
-  color:#cfcfcf;
-  font-size:28px;
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
+.scholarships-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 25px;
+  align-items: stretch;
 }
 
-.scholarship-card{
-  width:460px;
-  background:#fff;
-  border:1.5px solid #E3E3E3;
-  border-radius:6px;
-  padding:32px 28px 24px;
-  margin:20px 0 20px auto;
-  text-align:right;
-  box-sizing:border-box;
+.empty-state {
+  text-align: center;
+  margin-top: 220px;
+  color: #cfcfcf;
+  font-size: 28px;
 }
 
-.scholarship-title{
-  font-size:20px;
-  font-weight:700;
-  color:#3E2454;
-  text-align:center;
-  margin-bottom:22px;
+.scholarship-card {
+  background: #fff;
+  border: 1.5px solid #E3E3E3;
+  border-radius: 10px;
+  padding: 25px;
+  text-align: right;
+  box-sizing: border-box;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
-.info-row{
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:20px;
+.scholarship-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #3E2454;
+  text-align: center;
+  line-height: 1.8;
+  min-height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
 }
 
-.label{
-  font-size:16px;
-  color:#777;
-  margin-bottom:6px;
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
 }
 
-.value{
-  font-size:18px;
-  font-weight:600;
-  color:#70A0AF;
+.card-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.specializations{
-  margin-top:10px;
-  margin-bottom:22px;
+.card-label {
+  color: #777;
+  font-size: 14px;
+  font-weight: 600;
 }
 
-.specializations .label{
-  margin-bottom:8px;
+.card-value {
+  color: #70A0AF;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.8;
+  word-break: break-word;
 }
 
-.specializations p{
-  color:#70A0AF;
-  font-size:16px;
-  line-height:2;
-  margin:0;
+.specializations-block {
+  min-height: 90px;
 }
 
-.divider{
-  border-top:1px solid #E5E5E5;
-  margin:22px 0 16px;
+.card-divider {
+  border-top: 1px solid #E5E5E5;
+  margin: 18px 0 16px;
 }
 
-.deadline{
-  display:flex;
-  justify-content:flex-start;
-  align-items:center;
-  gap:6px;
-  font-size:16px;
-  color:#555;
-  margin-bottom:18px;
+.deadline-block {
+  margin-top: auto;
+  margin-bottom: 18px;
 }
 
-.details-btn{
-  width:100%;
-  height:46px;
-  background:#70A0AF;
-  color:#fff;
-  border-radius:6px;
-  font-size:16px;
-  font-weight:600;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-decoration:none;
-
+.details-btn {
+  width: 100%;
+  height: 46px;
+  background: #70A0AF;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
 }
 </style>
 </head>
@@ -177,7 +175,6 @@ $result = mysqli_query($con, $sql);
 
 <aside class="sidebar">
   <div class="sidebar-top">
-
     <div class="sidebar-logo">
       <img src="شعار نورين.png" alt="نورين">
     </div>
@@ -186,9 +183,8 @@ $result = mysqli_query($con, $sql);
       <li><a href="Inv00_MainPage.php">الرئيسية</a></li>
       <li><a href="Inv04_CreateScholarship.php" class="active">عرض المنح</a></li>
       <li><a href="Inv06_ManageScholarships.php">إدارة المنح</a></li>
-<li><a href="Inv10_Payments.php">المدفوعات</a></li>
+      <li><a href="Inv10_Payments.php">المدفوعات</a></li>
     </ul>
-
   </div>
 
   <div class="sidebar-bottom">
@@ -204,7 +200,7 @@ $result = mysqli_query($con, $sql);
 <div class="main-content">
 
 <header class="header">
- <div class="page-heading">
+  <div class="page-heading">
     <h1 class="page-title">عرض المنح</h1>
     <p class="page-description">صفحة تقديم عروض فرص المنح</p>
   </div>
@@ -222,7 +218,6 @@ $result = mysqli_query($con, $sql);
 </header>
 
 <div class="page-top">
-
   <div class="create-btn-box">
     <a href="Inv04_CreateScholarshipForm.php" class="create-btn">
       <span>+</span>
@@ -235,50 +230,57 @@ $result = mysqli_query($con, $sql);
 
 <?php if(mysqli_num_rows($result) > 0){ ?>
 
-<?php while($row = mysqli_fetch_assoc($result)){ ?>
+  <div class="scholarships-grid">
 
-<div class="scholarship-card">
+    <?php while($row = mysqli_fetch_assoc($result)){ ?>
 
-<h2 class="scholarship-title">
-<?php echo htmlspecialchars($row['sch_name']); ?>
-</h2>
+      <div class="scholarship-card">
 
-<div class="info-row">
-  <div>
-    <div class="label">المجال الرئيسي:</div>
-    <div class="value"><?php echo htmlspecialchars($row['sch_field']); ?></div>
+        <div class="scholarship-title">
+          <?php echo htmlspecialchars($row['sch_name']); ?>
+        </div>
+
+        <div class="card-content">
+
+          <div class="card-item">
+            <div class="card-label">المجال الرئيسي:</div>
+            <div class="card-value"><?php echo htmlspecialchars($row['sch_field']); ?></div>
+          </div>
+
+          <div class="card-item">
+            <div class="card-label">الدرجة المستهدفة:</div>
+            <div class="card-value"><?php echo htmlspecialchars($row['study_level']); ?></div>
+          </div>
+
+          <div class="card-item specializations-block">
+            <div class="card-label">التخصصات الدقيقة:</div>
+            <div class="card-value"><?php echo nl2br(htmlspecialchars($row['Specializations'])); ?></div>
+          </div>
+
+        </div>
+
+        <div class="card-divider"></div>
+
+        <div class="card-item deadline-block">
+          <div class="card-label">آخر موعد للتقديم:</div>
+          <div class="card-value"><?php echo date("Y-m-d", strtotime($row['app_deadline'])); ?></div>
+        </div>
+
+        <a href="Inv05_ScholarshipsDetails.php?id=<?php echo $row['scholarship_id']; ?>" class="details-btn">
+          عرض تفاصيل أكثر
+        </a>
+
+      </div>
+
+    <?php } ?>
+
   </div>
-
-  <div>
-    <div class="label">الدرجة المستهدفة:</div>
-    <div class="value"><?php echo htmlspecialchars($row['study_level']); ?></div>
-  </div>
-</div>
-
-<div class="specializations">
-  <div class="label">التخصصات الدقيقة:</div>
-  <p><?php echo nl2br(htmlspecialchars($row['Specializations'])); ?></p>
-</div>
-
-<div class="divider"></div>
-
-<div class="deadline">
-  <span>آخر موعد للتقديم: <?php echo date("Y-m-d", strtotime($row['app_deadline'])); ?></span>
-</div>
-
-<a href="Inv05_ScholarshipsDetails.php?id=<?php echo $row['scholarship_id']; ?>" class="details-btn">
-عرض تفاصيل أكثر
-</a>
-
-</div>
-
-<?php } ?>
 
 <?php } else { ?>
 
-<div class="empty-state">
-لم تقم بنشر منحة حتى الآن
-</div>
+  <div class="empty-state">
+    لم تقم بنشر منحة حتى الآن
+  </div>
 
 <?php } ?>
 
