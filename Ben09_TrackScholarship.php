@@ -14,13 +14,15 @@ if (!isset($_SESSION['bnf_id'])) {
 
 $bnf_id = (int) $_SESSION['bnf_id'];
 $request_id = isset($_GET['request_id']) ? (int) $_GET['request_id'] : 0;
+$tab = isset($_GET['tab']) ? $_GET['tab'] : 'current';
 
 $successMsg = "";
 if (isset($_GET['success']) && $_GET['success'] == "1") {
     $successMsg = "تم تقديم طلبك بنجاح";
 }
 
-$request = null;
+$current_request = null;
+$previous_requests = [];
 
 /* إذا جاء request_id من صفحة التقديم نعرضه مباشرة */
 if ($request_id > 0) {
@@ -42,7 +44,9 @@ if ($request_id > 0) {
             ON sr.scholarship_id = s.scholarship_id
         LEFT JOIN e_contract c
             ON sr.request_id = c.request_id
-        WHERE sr.request_id = ? AND sr.bnf_id = ?
+        WHERE sr.request_id = ?
+          AND sr.bnf_id = ?
+          AND sr.request_status IN ('قيد المراجعة', 'في انتظار المعالجة', 'مقبول')
         LIMIT 1
     ";
 
@@ -52,12 +56,12 @@ if ($request_id > 0) {
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        $request = $result->fetch_assoc();
+        $current_request = $result->fetch_assoc();
     }
 }
 
-/* إذا لم يوجد request_id أو لم نجد الطلب، نعرض آخر طلب */
-if (!$request) {
+/* إذا لم يوجد request_id أو لم نجد الطلب، نعرض آخر طلب حالي */
+if (!$current_request) {
     $sql = "
         SELECT
             sr.request_id,
@@ -76,6 +80,7 @@ if (!$request) {
         LEFT JOIN e_contract c
             ON sr.request_id = c.request_id
         WHERE sr.bnf_id = ?
+          AND sr.request_status IN ('قيد المراجعة', 'في انتظار المعالجة', 'مقبول')
         ORDER BY sr.request_id DESC
         LIMIT 1
     ";
@@ -86,8 +91,35 @@ if (!$request) {
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        $request = $result->fetch_assoc();
+        $current_request = $result->fetch_assoc();
     }
+}
+
+/* جلب الطلبات السابقة */
+$sql_previous = "
+    SELECT
+        sr.request_id,
+        sr.scholarship_id,
+        sr.request_status,
+        sr.major_name,
+        sr.univ_name,
+        s.inv_id,
+        s.sch_name
+    FROM scholarship_requests sr
+    INNER JOIN scholarship_opps s
+        ON sr.scholarship_id = s.scholarship_id
+    WHERE sr.bnf_id = ?
+      AND sr.request_status IN ('مرفوض', 'منتهية')
+    ORDER BY sr.request_id DESC
+";
+
+$stmt_previous = $conn->prepare($sql_previous);
+$stmt_previous->bind_param("i", $bnf_id);
+$stmt_previous->execute();
+$result_previous = $stmt_previous->get_result();
+
+while ($row = $result_previous->fetch_assoc()) {
+    $previous_requests[] = $row;
 }
 
 /* تحديد حالة الأزرار */
@@ -96,26 +128,29 @@ $reportsEnabled = false;
 $statusText = "";
 $statusClass = "";
 
-if ($request) {
-    $dbStatus = $request['request_status'];
+if ($current_request) {
+    $dbStatus = $current_request['request_status'];
 
     if ($dbStatus === "مقبول") {
         $statusText = "مقبول";
         $statusClass = "st-accepted";
 
-        if (!empty($request['contract_id'])) {
+        if (!empty($current_request['contract_id'])) {
             $contractEnabled = true;
         }
 
-        if ($request['approval_status'] === 'تمت الموافقة') {
+        if ($current_request['approval_status'] === 'تمت الموافقة') {
             $reportsEnabled = true;
         }
 
+    } elseif ($dbStatus === "قيد المراجعة" || $dbStatus === "في انتظار المعالجة") {
+        $statusText = "قيد المراجعة";
+        $statusClass = "st-pending";
     } elseif ($dbStatus === "مرفوض") {
         $statusText = "مرفوض";
         $statusClass = "st-rejected";
     } else {
-        $statusText = "في انتظار المراجعة";
+        $statusText = $dbStatus;
         $statusClass = "st-pending";
     }
 }
@@ -128,45 +163,230 @@ if ($request) {
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="CSS01Layout.css?v=3">
   <style>
-.track-wrap{ padding:30px 20px; }
+.track-wrap{
+    padding:30px 20px;
+}
 
-.track-card{ background:#FFFFFF; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.08); padding:28px 22px; max-width:900px; margin:auto; border:1px solid #ececec; }
+.msg.success{
+    max-width:1000px;
+    margin:0 auto 15px;
+    background:#edf8ee;
+    color:#256b2a;
+    border:1px solid #b7dfba;
+    padding:12px;
+    border-radius:6px;
+    text-align:center;
+    font-family:'Noto Kufi Arabic', sans-serif;
+}
 
-.track-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:30px; flex-wrap:wrap; }
+.track-tabs{
+    max-width:1000px;
+    margin:0 auto 22px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    border:1px solid #d9d9d9;
+}
 
-.status-box{ min-width:240px; max-width:240px; height:40px; border-radius:4px; display:flex; align-items:center; justify-content:center; color:#FFFFFF; font-size:16px; font-weight:700; }
+.track-tab{
+    height:50px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    font-size:18px;
+    font-weight:700;
+    color:#3E2454;
+    border-left:1px solid #d9d9d9;
+    background-color:#fff;
+}
 
-.st-pending{ background:#E6BC6A; }
 
-.st-accepted{ background:#69B38A; }
+.track-tab.active{
+    background:#F8F5FB;
+}
 
-.st-rejected{ background:#C96B6B; }
+.track-panel{
+    max-width:1000px;
+    margin:auto;
+    border:none;
+}
 
-.track-info{ flex:1; min-width:280px; }
 
-.track-title{ font-size:18px; font-weight:700; color:#222222; margin-bottom:14px; }
+.track-card{
+    background:#FFFFFF;
+    border-radius:12px;
+    padding:10px 12px;
+    border:1px solid #d6d0d6;
+  padding: 22px 30px;
+}
 
-.info-line{ margin-bottom:8px; font-size:15px; color:#777777; line-height:1.9; }
+.track-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:30px;
+    flex-wrap:wrap;
+}
 
-.info-line b{ color:#8EB4C2; font-size:16px; margin-left:6px; }
+.status-box{
+    min-width:220px;
+    max-width:220px;
+    height:42px;
+    border-radius:4px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#FFFFFF;
+    font-size:16px;
+    font-weight:700;
+}
 
-.track-divider{ border:none; border-top:1px solid #dddddd; margin:24px 0 18px; }
+.st-pending{
+    background:#E6BC6A;
+}
 
-.track-actions{ display:flex; gap:14px; flex-wrap:wrap; }
+.st-accepted{
+    background:#69B38A;
+}
 
-.track-btn{ min-width:180px; height:40px; border:none; border-radius:4px; font-family:"Noto Kufi Arabic", sans-serif; font-size:15px; font-weight:700; cursor:pointer; text-decoration:none; display:flex; align-items:center; justify-content:center; transition:0.2s; }
+.st-rejected{
+    background:#C96B6B;
+}
 
-.btn-disabled{ background:#A9A9A9; color:#FFFFFF; pointer-events:none; cursor:default; }
+.st-ended{
+    background:#8D8D8D;
+}
 
-.btn-contact{ background:#C9ADD8; color:#FFFFFF; }
+.track-info{
+    flex:1;
+    min-width:280px;
+}
 
-.btn-contract{ background:#5A2D74; color:#FFFFFF; }
+.track-title{
+    font-size:18px;
+    font-weight:700;
+    color:#222222;
+    margin-bottom:14px;
+}
 
-.btn-reports{ background:#70A0AF; color:#FFFFFF; }
+.info-line{
+    margin-bottom:8px;
+    font-size:15px;
+    color:#777777;
+    line-height:1.9;
+}
 
-.no-request{ max-width:900px; margin:auto; background:#FFFFFF; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.08); padding:30px; text-align:center; color:#666666; font-size:16px; border:1px solid #ececec; }
+.info-line b{
+    color:#8EB4C2;
+    font-size:16px;
+    margin-left:6px;
+}
 
-.msg.success{ max-width:900px; margin:0 auto 15px; background:#edf8ee; color:#256b2a; border:1px solid #b7dfba; padding:12px; border-radius:6px; text-align:center; font-family:'Noto Kufi Arabic', sans-serif; }
+.track-divider{
+    border:none;
+    border-top:1px solid #dddddd;
+    margin:24px 0 18px;
+}
+
+.track-actions{
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+       justify-content:center; 
+}
+
+.track-btn{
+    min-width:180px;
+    height:40px;
+    border:none;
+    border-radius:4px;
+    font-family:"Noto Kufi Arabic", sans-serif;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:0.2s;
+}
+
+.btn-disabled{
+    background:#A9A9A9;
+    color:#FFFFFF;
+    pointer-events:none;
+    cursor:default;
+}
+
+.btn-contact{
+    background:#C9ADD8;
+    color:#FFFFFF;
+}
+
+.btn-contract{
+    background:#5A2D74;
+    color:#FFFFFF;
+}
+
+.btn-reports{
+    background:#70A0AF;
+    color:#FFFFFF;
+}
+
+.empty-box{
+    background:#FFFFFF;
+    border-radius:12px;
+    padding:30px;
+    text-align:center;
+    color:#666666;
+    font-size:16px;
+    border:1px solid #ececec;
+}
+
+.old-requests-list{
+    display:grid;
+    gap:14px;
+}
+
+.old-request-card{
+    background:#FFFFFF;
+    border-radius:12px;
+    padding:18px 20px;
+    border:1px solid #d9d0da;
+}
+
+.old-request-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.old-request-info{
+    flex:1;
+    min-width:250px;
+}
+
+.old-request-title{
+    font-size:16px;
+    font-weight:700;
+    color:#222222;
+    margin-bottom:10px;
+}
+
+.old-request-status{
+    min-width:170px;
+    height:36px;
+    border-radius:4px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#FFFFFF;
+    font-size:14px;
+    font-weight:700;
+}
+
   </style>
 </head>
 <body>
@@ -198,12 +418,12 @@ if ($request) {
       <header class="header">
         <div class="page-heading">
           <div class="page-title">متابعة المنح</div>
-          <div class="page-description">صفحة متابعة طلبات المنح الحالية</div>
+          <div class="page-description">صفحة متابعة طلبات المنح الحالية والسابقة</div>
         </div>
 
         <div class="header-icons">
           <div class="settings-dropdown">
-            <img src="ايقونة قائمة الاعدادات.png" class="menu-icon">
+            <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="الإعدادات">
             <div class="dropdown-menu">
               <a href="Ben02_Profile.php">الملف الشخصي</a>
               <a href="Ben20_MyScholarshipWallet.php">محفظة منحتي</a>
@@ -220,43 +440,85 @@ if ($request) {
             <div class="msg success"><?php echo $successMsg; ?></div>
           <?php } ?>
 
-          <?php if ($request) { ?>
-            <div class="track-card">
-              <div class="track-top">
-                <div class="track-info">
-                  <div class="track-title">تفاصيل المنحة الحالية</div>
-                  <div class="info-line"><b>رقم الطلب:</b> <?php echo $request['request_id']; ?></div>
-                  <div class="info-line"><b>المنحة:</b> <?php echo $request['sch_name']; ?></div>
-                  <div class="info-line"><b>التخصص:</b> <?php echo $request['major_name']; ?></div>
-                  <div class="info-line"><b>الجامعة:</b> <?php echo $request['univ_name']; ?></div>
+          <div class="track-tabs">
+            <a href="Ben09_TrackScholarship.php?tab=current" class="track-tab <?php echo $tab === 'current' ? 'active' : ''; ?>">الطلبات الحالية</a>
+            <a href="Ben09_TrackScholarship.php?tab=previous" class="track-tab <?php echo $tab === 'previous' ? 'active' : ''; ?>">الطلبات السابقة</a>
+          </div>
+
+          <div class="track-panel">
+
+            <?php if ($tab === 'previous') { ?>
+
+              <?php if (!empty($previous_requests)) { ?>
+                <div class="old-requests-list">
+                  <?php foreach ($previous_requests as $old_request) { ?>
+                    <?php
+                      $oldStatusText = $old_request['request_status'];
+                      $oldStatusClass = ($old_request['request_status'] === 'مرفوض') ? 'st-rejected' : 'st-ended';
+                    ?>
+                    <div class="old-request-card">
+                      <div class="old-request-top">
+                        <div class="old-request-info">
+                          <div class="old-request-title"><?php echo $old_request['sch_name']; ?></div>
+                          <div class="info-line"><b>رقم الطلب:</b> <?php echo $old_request['request_id']; ?></div>
+                          <div class="info-line"><b>التخصص:</b> <?php echo $old_request['major_name']; ?></div>
+                          <div class="info-line"><b>الجامعة:</b> <?php echo $old_request['univ_name']; ?></div>
+                        </div>
+
+                        <div class="old-request-status <?php echo $oldStatusClass; ?>">
+                          <?php echo $oldStatusText; ?>
+                        </div>
+                      </div>
+                    </div>
+                  <?php } ?>
                 </div>
+              <?php } else { ?>
+                <div class="empty-box">لا توجد طلبات سابقة</div>
+              <?php } ?>
 
-                <div class="status-box <?php echo $statusClass; ?>">
-                  <?php echo $statusText; ?>
+            <?php } else { ?>
+
+              <?php if ($current_request) { ?>
+                <div class="track-card">
+                  <div class="track-top">
+                    <div class="track-info">
+                      <div class="track-title">تفاصيل المنحة الحالية</div>
+                      <div class="info-line"><b>رقم الطلب:</b> <?php echo $current_request['request_id']; ?></div>
+                      <div class="info-line"><b>المنحة:</b> <?php echo $current_request['sch_name']; ?></div>
+                      <div class="info-line"><b>التخصص:</b> <?php echo $current_request['major_name']; ?></div>
+                      <div class="info-line"><b>الجامعة:</b> <?php echo $current_request['univ_name']; ?></div>
+                    </div>
+
+                    <div class="status-box <?php echo $statusClass; ?>">
+                      <?php echo $statusText; ?>
+                    </div>
+                  </div>
+
+                  <hr class="track-divider">
+
+                  <div class="track-actions">
+                    <a href="Ben10_InvestorContact.php?inv_id=<?php echo $current_request['inv_id']; ?>" class="track-btn btn-contact">التواصل</a>
+
+                    <?php if ($reportsEnabled) { ?>
+                      <a href="Ben11_ReportsPayments.php?request_id=<?php echo $current_request['request_id']; ?>" class="track-btn btn-reports">التقارير والدفعات</a>
+                    <?php } else { ?>
+                      <a href="#" class="track-btn btn-disabled">التقارير والدفعات</a>
+                    <?php } ?>
+
+                    <?php if ($contractEnabled) { ?>
+                      <a href="Ben12_EContract.php?request_id=<?php echo $current_request['request_id']; ?>" class="track-btn btn-contract">العقد الإلكتروني</a>
+                    <?php } else { ?>
+                      <a href="#" class="track-btn btn-disabled">العقد الإلكتروني</a>
+                    <?php } ?>
+                  </div>
                 </div>
-              </div>
+              <?php } else { ?>
+                <div class="empty-box">لا توجد طلبات حتى الآن</div>
+              <?php } ?>
 
-              <hr class="track-divider">
+            <?php } ?>
 
-              <div class="track-actions">
-                <a href="Ben10_InvestorContact.php?inv_id=<?php echo $request['inv_id']; ?>" class="track-btn btn-contact">التواصل</a>
-
-                <?php if ($reportsEnabled) { ?>
-                  <a href="Ben11_ReportsPayments.php?request_id=<?php echo $request['request_id']; ?>" class="track-btn btn-reports">التقارير والدفعات</a>
-                <?php } else { ?>
-                  <a href="#" class="track-btn btn-disabled">التقارير والدفعات</a>
-                <?php } ?>
-
-                <?php if ($contractEnabled) { ?>
-                  <a href="Ben12_EContract.php?request_id=<?php echo $request['request_id']; ?>" class="track-btn btn-contract">العقد الإلكتروني</a>
-                <?php } else { ?>
-                  <a href="#" class="track-btn btn-disabled">العقد الإلكتروني</a>
-                <?php } ?>
-              </div>
-            </div>
-          <?php } else { ?>
-            <div class="no-request">لا يوجد طلب منحة حالي لعرضه.</div>
-          <?php } ?>
+          </div>
 
         </div>
       </div>

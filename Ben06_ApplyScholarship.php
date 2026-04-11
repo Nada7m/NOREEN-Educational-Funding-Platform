@@ -241,7 +241,7 @@ if (isset($_POST['submit_request'])) {
 
         <div class="page">
             <div class="back-wrap">
-                <a href="Ben04_BrowseScholarships.php" class="back-btn">
+                <a href="Ben05_ScholarshipDetails.php" class="back-btn">
                     <img src="سهم تراجع.svg" class="back-icon" alt="رجوع" style="width: 45px; height: 45px;">
                 </a>
             </div>

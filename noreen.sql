@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 04 أبريل 2026 الساعة 21:00
+-- Generation Time: 11 أبريل 2026 الساعة 16:38
 -- إصدار الخادم: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -38,6 +38,14 @@ CREATE TABLE `academic_report` (
   `report_appoval` enum('معتمد','غير معتمد','','') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- إرجاع أو استيراد بيانات الجدول `academic_report`
+--
+
+INSERT INTO `academic_report` (`report_id`, `bnf_id`, `contract_id`, `payment_id`, `report_file`, `report_upload`, `submit_date`, `report_appoval`) VALUES
+(1, 1, 1, 1, 'uploads/1775414890_Admission_Result.pdf.pdf', 'مرفوع', '2026-04-05', 'غير معتمد'),
+(2, 3, 3, 5, 'uploads/1775474531_Fatima_Alghamdi_CV.pdf', 'مرفوع', '2026-04-06', 'معتمد');
+
 -- --------------------------------------------------------
 
 --
@@ -55,7 +63,7 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`admin_id`, `admin_name`, `password`) VALUES
-(1, 'noreenAdmin', 'Admin@123');
+(1, 'noreenAdmin', '$2y$12$QiwXOpLzO08yFHv9kyLsEOcrUCgpUJ0yOVfjVshq706TO9M3p.NtG');
 
 -- --------------------------------------------------------
 
@@ -82,7 +90,8 @@ CREATE TABLE `admission_request` (
 --
 
 INSERT INTO `admission_request` (`request_id`, `bnf_id`, `office_id`, `program_type`, `major_name`, `univ_name`, `Submit_date`, `result_notes`, `Result_status`, `request_status`, `result`) VALUES
-(1, 1, 2, 'master', 'نمذجة وتحسين النظم الصناعية', 'إلينوي أوربانا شامبين - الولايات المتحدة', '2026-04-02', 'تم رفع خطاب القبول الرسمي أدناه يرجى مراجعة الملف المرفق والاطلاع على الشروط والأحكام الأكاديمية والمالية قبل اتخاذ أي إجراء لاحق.', 'أصدرت', 'مقبول', 'uploads/admission_results/1_result.pdf');
+(1, 1, 2, 'master', 'نمذجة وتحسين النظم الصناعية', 'إلينوي أوربانا شامبين - الولايات المتحدة', '2026-04-02', 'تم رفع خطاب القبول الرسمي أدناه يرجى مراجعة الملف المرفق والاطلاع على الشروط والأحكام الأكاديمية والمالية قبل اتخاذ أي إجراء لاحق.', 'أصدرت', 'مقبول', 'uploads/admission_results/1_result.pdf'),
+(3, 3, 3, 'bachelor', 'هندسة الطيران', 'جامعة إمبري ريدل للطيران', '2026-04-06', 'مبارك', 'أصدرت', 'مقبول', 'uploads/admission_results/3_result.pdf');
 
 -- --------------------------------------------------------
 
@@ -110,7 +119,13 @@ INSERT INTO `admission_request_documents` (`doc_id`, `request_id`, `doc_type`, `
 (5, 1, 'Other Certificates', 'Fatima_Alghamdi_Other_Certificates.pdf.pdf', 'uploads/admission_requests/1_other_file.pdf'),
 (6, 1, 'University Degree Certificate', 'Fatima_Alghamdi_University_Degree.pdf', 'uploads/admission_requests/1_degree_file.pdf'),
 (7, 1, 'Academic Transcript', 'Fatima_Alghamdi_Transcript.pdf', 'uploads/admission_requests/1_transcript_file.pdf'),
-(8, 1, 'Statement of Purpose', 'Fatima_Alghamdi_SOP.pdf', 'uploads/admission_requests/1_sop_file.pdf');
+(8, 1, 'Statement of Purpose', 'Fatima_Alghamdi_SOP.pdf', 'uploads/admission_requests/1_sop_file.pdf'),
+(15, 3, 'CV', 'Tasneem_Alharbi_CV.pdf.pdf', 'uploads/admission_requests/3_cv_file.pdf'),
+(16, 3, 'Passport', 'Passport_Tasneem.pdf', 'uploads/admission_requests/3_passport_file.pdf'),
+(17, 3, 'Language Certificate', 'IELTS_Tasneem.pdf.pdf', 'uploads/admission_requests/3_language_file.pdf'),
+(18, 3, 'Recommendation Letters', 'SOP_Tasneem.pdf', 'uploads/admission_requests/3_recommendation_file.pdf'),
+(19, 3, 'High School Certificate', 'HS_Certificate_Tasneem.pdf.pdf', 'uploads/admission_requests/3_highschool_file.pdf'),
+(20, 3, 'Letter of Intent', 'SOP_Tasneem.pdf', 'uploads/admission_requests/3_intent_file.pdf');
 
 -- --------------------------------------------------------
 
@@ -136,7 +151,8 @@ CREATE TABLE `beneficiary` (
 
 INSERT INTO `beneficiary` (`bnf_id`, `email`, `f_name`, `l_name`, `phone_num`, `password`, `sch_field`, `degree_level`, `account_status`) VALUES
 (1, 'FatmaAlghamdi@gmail.com', 'فاطمة', 'الغامدي', '0502508284', '$2y$10$vS2J608Dv/DImLLpfl9Vu.PcHg0YtAsR2HX8IgX87Lj9Bh1AMhQlS', 'صناعي و تشغيلي', 'بكالوريوس', 'نشط'),
-(3, 'Tasneem@gmail.com', 'تسنيم', 'الحربي', '0535246000', '$2y$10$6AxmbjZBFFpd8KP8K.9jWuFUkZ0ifxmunNsiRxq3pzNng6mvo2RhW', 'لا يوجد', 'ثانوي', 'نشط');
+(3, 'Tasneem@gmail.com', 'تسنيم', 'الحربي', '0535246000', '$2y$10$6AxmbjZBFFpd8KP8K.9jWuFUkZ0ifxmunNsiRxq3pzNng6mvo2RhW', '', 'ثانوي', 'نشط'),
+(4, 'noorAlfif99@gmail.com', 'نور', 'الفيفي', '0559800107', '$2y$10$7Ym4vCgxDdZbi7ELxvoDReX0CbOud1XYHol8HNeJ0/UdogqE3Vv/W', 'صحي', 'ثانوي', 'نشط');
 
 -- --------------------------------------------------------
 
@@ -184,7 +200,9 @@ INSERT INTO `bnf_off_msg` (`msg_id`, `bnf_id`, `office_id`, `msg_time`, `msg_tex
 (1, 1, 2, '2026-04-04 15:42:12', 'السلام عليكم ورحمة الله وبركاته.  أنا فاطمة الغامدي، أرغب في دراسة الماجستير في الولايات المتحدة، ولكنني لست متأكدة من الجامعة أو البرنامج الأنسب لي أحمل درجة البكالوريوس في الهندسة الصناعية، وارغب ببرنامج يركز على تطوير الانظمة او ما يشابهها', 'beneficiary'),
 (2, 1, 2, '2026-04-04 15:43:08', 'وعليكم السلام ورحمة الله وبركاته،  أهلًا بكِ فاطمة. بناءً على خلفيتك الأكاديمية في الهندسة الصناعية واهتمامك بمجال تطوير الانظمة أقدم لك “نمذجة وتحسين النظم” من الجامعات الرائدة عالميًا جامعة إلينوي في أوربانا-شامبين وتُصنّف من أفضل الجامعات في تخصصات الهندسة الصناعية بشكل عام', 'office'),
 (3, 1, 2, '2026-04-04 15:43:38', 'كما أن الجامعة ضمن نطاق خدماتنا ويمكننا إصدار خطاب القبول إذا رغبتي في تقديم طلب! البيانات المطلوبة للتقديم مذكورة في قسم الاسئلة الشائعة', 'office'),
-(4, 1, 2, '2026-04-04 16:59:46', 'ممتاز اذا ساقوم برفع طلب  بالمستندات المطلوبة', 'beneficiary');
+(4, 1, 2, '2026-04-04 16:59:46', 'ممتاز اذا ساقوم برفع طلب  بالمستندات المطلوبة', 'beneficiary'),
+(5, 3, 3, '2026-04-06 14:18:14', 'السلام عليكم', 'beneficiary'),
+(6, 3, 3, '2026-04-06 14:18:26', 'وعليكم السلام', 'office');
 
 -- --------------------------------------------------------
 
@@ -201,7 +219,7 @@ CREATE TABLE `complaints_inquiries` (
   `submission_date` datetime DEFAULT current_timestamp(),
   `subject` text NOT NULL,
   `message` text NOT NULL,
-  `status` enum('بانتظار الرد','تم الرد عليها') DEFAULT 'بانتظار الرد'
+  `status` enum('بانتظار الرد','تم الرد') DEFAULT 'بانتظار الرد'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -209,11 +227,9 @@ CREATE TABLE `complaints_inquiries` (
 --
 
 INSERT INTO `complaints_inquiries` (`ticket_id`, `office_id`, `bnf_id`, `inv_id`, `admin_reply`, `submission_date`, `subject`, `message`, `status`) VALUES
-(31, NULL, 1, NULL, NULL, '2026-03-17 12:33:09', 'مشكله', 'ممممم', 'بانتظار الرد'),
-(32, NULL, 1, NULL, NULL, '2026-03-17 12:35:12', 'مشكله', '...', 'بانتظار الرد'),
-(33, NULL, 3, NULL, NULL, '2026-03-18 06:04:25', 'اواجه مشكلة في رفع الملفات', 'لا استطيع رفع الملفات عبر خانة التقديم على فرص المنح المعروضة', 'بانتظار الرد'),
+(33, NULL, 3, NULL, 'تم معالجة الخلل يرجى اعادة الرفغ', '2026-03-18 06:04:25', 'اواجه مشكلة في رفع الملفات', 'لا استطيع رفع الملفات عبر خانة التقديم على فرص المنح المعروضة', 'تم الرد'),
 (34, 2, NULL, NULL, NULL, '2026-03-18 06:15:15', 'الطلبات الجديدة تظهر بدون اسم', 'الطلبات المقدمة من المستفيدين تظهر بدون اسم المستخدم\r\nما السبب؟ وما الحل؟', 'بانتظار الرد'),
-(35, NULL, NULL, 1, NULL, '2026-03-18 06:20:11', 'ارغب في انهاء منحة', 'ارغب في انهاء منحة احد المستفيدين بسبب بعض المشاكل، هل يمكنني ذلك ؟ وماهي البيانات المطلوبة؟', 'بانتظار الرد');
+(35, NULL, NULL, 1, NULL, '2026-03-18 06:20:11', 'ارغب في انهاء منحة', 'ارغب في انهاء منحة احد الطلاب بسبب بعض المشاكل، هل يمكنني ذلك ؟ وماهي البيانات المطلوبة؟', 'بانتظار الرد');
 
 -- --------------------------------------------------------
 
@@ -241,9 +257,9 @@ CREATE TABLE `consulting_office` (
 --
 
 INSERT INTO `consulting_office` (`office_id`, `ccr_number`, `email`, `office_name`, `office_description`, `Bachelor_fee`, `Masters_fee`, `Phd_fee`, `password`, `phone`, `approval_status`, `account_status`) VALUES
-(2, ' 101989710', 'info@asasstudyabroad.com', 'أساس للدراسة بالخارج', 'مكتب رائد في مجال الاستشارات التعليمية والقبول الجامعي، نخدم المستفيدين في أكثر من 15 دولة حول العالم، مستشارينا معتمدين من التعليم البريطاني، والتعليم الكندي والتعليم الامريكي ومنظمة ICEF ومؤهلين لتقديم النصيحة والاستشارة المناسبة لكل طالب ونسعى لتقديم النصيحة الأمينة حسب متطلبات الجامعات  ومؤهلات الطلب لضمان انسب خيارات الدراسة لكل طالب.\r\nوكلاء افضل الجامعات والمعاهد في أمريكا، بريطانيا، استراليا، نيوزيلندا، أيرلندا، كندا، ماليزيا، اسبانيا، ايطاليا، فرنسا، الهند، مالطا، جنوب افريقيا، تركيا، وغيرها من الدول، تقديم سهل وسريع على المعاهد والجامعات لضمان توفير القبول المناسب بأسرع وقت ممكن.', 300, 200, 600, '$2y$10$Nb3JPrsRVArQ8nZ1saNTYux42WPRTBnIJPg5kMEEDzR706mx98pVu', '0541722808', 'معتمد', 0),
-(3, '1029836153', 'gecs.edu.@outlook.com', 'مكتب الخليج', 'مكتب متخصص في الاستشارات الأكاديمية ومساعدة المستفيدين في إجراءات القبول الجامعي نقدّم خدمات تقييم المؤهلات الأكاديمية، ترشيح الجامعات والتخصصات المناسبة، وإرسال طلبات القبول إلى الجامعات\r\nكما نتولى متابعة حالة الطلب حتى صدور قرار القبول، مع تقديم إرشادات حول اختيار الدولة والبرنامج الدراسي الأنسب للطالب', 150, 200, 300, '$2y$10$ha7iXPVAeiRjM0bpPDo5GufT.cvp2awdRfogP0z/bIojRWUy0d4nu', '0549778902', 'بانتظار المراجعة', 0),
-(4, '4030257841', ' info@almasarconsult.com', 'المسار الدولي', 'مكتبنا يقدم خدمات الإرشاد الأكاديمي للطلاب الراغبين في الدراسة في الجامعات الآسيوية والعربية ويتضمن في مساعدة المستفيد لاختيار الدولة والبرنامج الدراسي المناسب، توضيح متطلبات القبول في الجامعات، وترتيب خطوات التقديم بشكل منظم، إضافة إلى متابعة الطلبات مع الجهات التعليمية حتى استكمال إجراءات القبول.', 200, 300, 500, '$2y$10$cLcV5hj8mNTQ9QFyMZ1ZU.g4kLS02k5VXBwn9LV4vKcbhrJxQ1KS2', '0551234567', 'بانتظار المراجعة', 0);
+(2, ' 101989710', 'info@asasstudyabroad.com', 'أساس للدراسة بالخارج', 'مكتب رائد في مجال الاستشارات التعليمية والقبول الجامعي، نخدم الطلاب في أكثر من 15 دولة حول العالم، مستشارينا معتمدين من التعليم البريطاني، والتعليم الكندي والتعليم الامريكي ومنظمة ICEF ومؤهلين لتقديم النصيحة والاستشارة المناسبة لكل طالب ونسعى لتقديم النصيحة الأمينة حسب متطلبات الجامعات  ومؤهلات الطلب لضمان انسب خيارات الدراسة لكل طالب.\r\nوكلاء افضل الجامعات والمعاهد في أمريكا، بريطانيا، استراليا، نيوزيلندا، أيرلندا، كندا، ماليزيا، اسبانيا، ايطاليا، فرنسا، الهند، مالطا، جنوب افريقيا، تركيا، وغيرها من الدول، تقديم سهل وسريع على المعاهد والجامعات لضمان توفير القبول المناسب بأسرع وقت ممكن.', 300, 200, 600, '$2y$10$Nb3JPrsRVArQ8nZ1saNTYux42WPRTBnIJPg5kMEEDzR706mx98pVu', '0541722808', 'معتمد', 0),
+(3, '1029836153', 'gecs.edu.@outlook.com', 'مكتب الخليج', 'مكتب متخصص في الاستشارات الأكاديمية ومساعدة الطلاب في إجراءات القبول الجامعي نقدّم خدمات تقييم المؤهلات الأكاديمية، ترشيح الجامعات والتخصصات المناسبة، وإرسال طلبات القبول إلى الجامعات\r\nكما نتولى متابعة حالة الطلب حتى صدور قرار القبول، مع تقديم إرشادات حول اختيار الدولة والبرنامج الدراسي الأنسب للطالب', 150, 200, 300, '$2y$10$ha7iXPVAeiRjM0bpPDo5GufT.cvp2awdRfogP0z/bIojRWUy0d4nu', '0549778902', 'معتمد', 0),
+(4, '4030257841', ' info@almasarconsult.com', 'المسار الدولي', 'مكتبنا يقدم خدمات الإرشاد الأكاديمي للطلاب الراغبين في الدراسة في الجامعات الآسيوية والعربية ويتضمن في مساعدة الطالب لاختيار الدولة والبرنامج الدراسي المناسب، توضيح متطلبات القبول في الجامعات، وترتيب خطوات التقديم بشكل منظم، إضافة إلى متابعة الطلبات مع الجهات التعليمية حتى استكمال إجراءات القبول.', 200, 300, 500, '$2y$10$cLcV5hj8mNTQ9QFyMZ1ZU.g4kLS02k5VXBwn9LV4vKcbhrJxQ1KS2', '0551234567', 'معتمد', 0);
 
 -- --------------------------------------------------------
 
@@ -259,15 +275,17 @@ CREATE TABLE `e_contract` (
   `ctr_status` enum('نشط','ملغي') NOT NULL,
   `terms` text NOT NULL,
   `amount` decimal(10,2) NOT NULL,
-  `approval_status` enum('انتظار الموافقة','تمت الموافقة') DEFAULT 'انتظار الموافقة'
+  `approval_status` enum('انتظار الموافقة','تمت الموافقة') DEFAULT 'انتظار الموافقة',
+  `inv_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- إرجاع أو استيراد بيانات الجدول `e_contract`
 --
 
-INSERT INTO `e_contract` (`contract_id`, `request_id`, `payments_count`, `funding_duration`, `ctr_status`, `terms`, `amount`, `approval_status`) VALUES
-(1, 2, 2, 1, 'نشط', 'أولاً: التوظيف بعد التخرج\r\nيلتزم المستفيد بعد إتمام البرنامج الأكاديمي بنجاح بالعمل لدى سابك او إحدى الشركات التابعة لها لمدة لا تقل عن سنتين وذلك وفق عقد عمل مستقل يُبرم بعد التخرج، و في حال امتناع المستفيد عن الالتحاق بالوظيفة دون سبب مشروع تقبله الجهة الممولة، يحق للمستثمر المطالبة باسترداد كامل مبالغ التمويل المصروفة.\r\n\r\nثانياً: باستمرارية الدراسة  2) يلتزم المستفيد بالاستمرار في الدراسة حتى إتمام البرنامج المحدد في هذا العقد، وعدم الانسحاب أو تأجيل الدراسة إلا بموافقة مسبقة.  3) في حال الانسحاب أو الفصل الأكاديمي بسبب تقصير من المستفيد، يحق للمستثمر إيقاف التمويل فورًا والمطالبة باسترداد المبالغ المصروفة.\r\n\r\nثالثاً: استخدام أموال المنحة  4) يقر المستفيد بأن جميع المبالغ المصروفة بموجب هذا العقد مخصصة فقط لتغطية الرسوم الدراسية والمصاريف التعليمية المرتبطة بالبرنامج المحدد، وفي حال ثبوت استخدام أي جزء من المبالغ لأغراض غير تعليمية أو تقديم مستندات غير صحيحة، يعد ذلك إخلالًا فوريًا بالعقد ويعرض المستفيد للمساءلة القانونية.', 147540.00, 'انتظار الموافقة');
+INSERT INTO `e_contract` (`contract_id`, `request_id`, `payments_count`, `funding_duration`, `ctr_status`, `terms`, `amount`, `approval_status`, `inv_id`) VALUES
+(1, 2, 2, 1, 'نشط', 'أولاً: التوظيف بعد التخرج\r\nيلتزم المستفيد بعد إتمام البرنامج الأكاديمي بنجاح بالعمل لدى سابك او إحدى الشركات التابعة لها لمدة لا تقل عن سنتين وذلك وفق عقد عمل مستقل يُبرم بعد التخرج، و في حال امتناع المستفيد عن الالتحاق بالوظيفة دون سبب مشروع تقبله الجهة الممولة، يحق للمستثمر المطالبة باسترداد كامل مبالغ التمويل المصروفة.\r\n\r\nثانياً: باستمرارية الدراسة  2) يلتزم المستفيد بالاستمرار في الدراسة حتى إتمام البرنامج المحدد في هذا العقد، وعدم الانسحاب أو تأجيل الدراسة إلا بموافقة مسبقة.  3) في حال الانسحاب أو الفصل الأكاديمي بسبب تقصير من المستفيد، يحق للمستثمر إيقاف التمويل فورًا والمطالبة باسترداد المبالغ المصروفة.\r\n\r\nثالثاً: استخدام أموال المنحة  4) يقر المستفيد بأن جميع المبالغ المصروفة بموجب هذا العقد مخصصة فقط لتغطية الرسوم الدراسية والمصاريف التعليمية المرتبطة بالبرنامج المحدد، وفي حال ثبوت استخدام أي جزء من المبالغ لأغراض غير تعليمية أو تقديم مستندات غير صحيحة، يعد ذلك إخلالًا فوريًا بالعقد ويعرض المستفيد للمساءلة القانونية.', 147540.00, 'تمت الموافقة', 1),
+(3, 5, 5, 3, 'نشط', '1\r\n2\r\n3', 5000000.00, 'تمت الموافقة', 2);
 
 -- --------------------------------------------------------
 
@@ -291,9 +309,9 @@ CREATE TABLE `investor` (
 --
 
 INSERT INTO `investor` (`inv_id`, `ccr_number`, `email`, `inv_number`, `inv_name`, `password`, `approval_status`, `account_status`) VALUES
-(1, '1010010813', 'InvestorRelations@safco.sabic.com', 530014051, 'سابك - الشركة السعودية للصناعات الأساسية', '$2y$10$/8anVADcwa6r5K6nJk/RCO9Tb6fS7G05m9eUS4FIXm90T2iaJ7c4a', 'معتمد', 'نشط'),
-(2, '4030175741', 'Baggage.Inquiries@Saudia.com', 2147483647, 'الخطوط السعودية', '$2y$10$46r8y.xFY5El.dVX2RJuN.2ijifWQAc8tZgH6GxcpN.vi5D5hJPby', 'بانتظار المراجعة', 'نشط'),
-(3, '2052101150', 'investor@aramco.com', 567788990, 'أرامكو', '$2y$10$IGfO7u71zWhhE/n3JrK72.0Wh2ZOM9PyPNd.3vGYwGuYarq8SCIT.', 'بانتظار المراجعة', 'نشط');
+(1, '1010010813', 'InvestorRelations@safco.sabic.com', 530014051, 'سابك - الشركة السعودية للصناعات', '$2y$10$/8anVADcwa6r5K6nJk/RCO9Tb6fS7G05m9eUS4FIXm90T2iaJ7c4a', 'معتمد', 'محظور'),
+(2, '4030175741', 'Baggage.Inquiries@Saudia.com', 2147483647, 'الخطوط الجوية السعودية', '$2y$10$46r8y.xFY5El.dVX2RJuN.2ijifWQAc8tZgH6GxcpN.vi5D5hJPby', 'معتمد', 'نشط'),
+(3, '2052101150', 'investor@aramco.com', 567788990, 'أرامكو', '$2y$10$IGfO7u71zWhhE/n3JrK72.0Wh2ZOM9PyPNd.3vGYwGuYarq8SCIT.', 'مرفوض', 'نشط');
 
 -- --------------------------------------------------------
 
@@ -360,6 +378,19 @@ CREATE TABLE `payments` (
   `payment_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- إرجاع أو استيراد بيانات الجدول `payments`
+--
+
+INSERT INTO `payments` (`payment_id`, `contract_id`, `installment_number`, `payment_amount`, `payment_status`, `payment_date`) VALUES
+(1, 1, 1, 73770, 'بانتظار الدفع', '2026-04-05 18:43:24'),
+(2, 1, 2, 73770, 'بانتظار الدفع', '2026-04-05 18:43:24'),
+(5, 3, 1, 1000000, '', '2026-04-06 11:23:42'),
+(6, 3, 2, 1000000, 'بانتظار الدفع', '2026-04-06 11:21:56'),
+(7, 3, 3, 1000000, 'بانتظار الدفع', '2026-04-06 11:21:56'),
+(8, 3, 4, 1000000, 'بانتظار الدفع', '2026-04-06 11:21:56'),
+(9, 3, 5, 1000000, 'بانتظار الدفع', '2026-04-06 11:21:56');
+
 -- --------------------------------------------------------
 
 --
@@ -380,7 +411,8 @@ CREATE TABLE `rating` (
 --
 
 INSERT INTO `rating` (`rating_id`, `bnf_id`, `office_id`, `request_id`, `rating_date`, `comment_text`) VALUES
-(4, 1, 2, 1, '2026-04-04 20:40:56', 'تم التعامل مع طلبي باحترافية من البداية وحتى إصدار القبول، أقدّر الجهود المبذولة واشكر المكتب الشكر الجزيل');
+(4, 1, 2, 1, '2026-04-04 20:40:56', 'تم التعامل مع طلبي باحترافية من البداية وحتى إصدار القبول، أقدّر الجهود المبذولة واشكر المكتب الشكر الجزيل'),
+(6, 3, 3, 3, '2026-04-06 14:18:45', 'شكرا على خدمتكم');
 
 -- --------------------------------------------------------
 
@@ -404,7 +436,9 @@ CREATE TABLE `scholarship_opps` (
 --
 
 INSERT INTO `scholarship_opps` (`scholarship_id`, `sch_field`, `inv_id`, `sch_name`, `requirements`, `study_level`, `Specializations`, `app_deadline`) VALUES
-(1, 'صناعي وتشغيلي', 1, 'برنامج سابك - تطوير الأنظمة الصناعية المتقدمة', 'أن يكون المتقدم سعودي الجنسية.\r\nحاصل على بكالوريوس في الهندسة الصناعية بمعدل لا يقل عن 3.5 من 4.\r\nخبرة عملية لا تقل عن سنة في مجال ذات صلة (للماجستير).\r\nالالتزام بالعمل في سابك بعد التخرج لمدة محددة.', 'بكالوريوس', 'تحسين العمليات الصناعية، سلاسل الامداد، نظم الدعم الشاملة', '2026-04-15 00:00:00');
+(1, 'صناعي وتشغيلي', 1, 'تطوير الأنظمة الصناعية المتقدمة', 'أن يكون المتقدم سعودي الجنسية.\r\nحاصل على بكالوريوس في الهندسة الصناعية بمعدل لا يقل عن 3.5 من 4.\r\nخبرة عملية لا تقل عن سنة في مجال ذات صلة (للماجستير).\r\nالالتزام بالعمل في سابك بعد التخرج لمدة محددة.', 'بكالوريوس', 'تحسين العمليات الصناعية، سلاسل الامداد، نظم الدعم الشاملة', '2026-04-15 00:00:00'),
+(4, 'صناعي وتشغيلي', 2, 'منح هندسة وصيانة الطائرات', '•	موزونة ثلاثية لا تقل عن 98%\r\n•	شهادة لغة إنجليزية ستيب لا تقل عن 75% أو ما يعادلها (ايلتس ، توفل)\r\n•	لياقة طبية معتمدة', 'بكالوريوس', 'هندسة الطيران •	هندسة الصيانة الجوية •	هندسة الأنظمة الصناعية', '2026-08-10 00:00:00'),
+(5, 'ادراي', 2, 'برنامج SOAR ', '- أن يكون المتقدم سعودي الجنسية.\r\n- حاصل على درجة البكالوريوس بمعدل (2.75 من 4 أو 3.75 من 5) ، أو درجة الماجستير بمعدل (2.75 من 4 أو 3.75 من 5).\r\n- حديثي التخرج (خبرة سنتين على الأقل).\r\n- درجة اختبار اللغة الإنجليزية (STEP 75) أو  (ايتلس 5.5) أو (توفل 46 iBT أو 475 PBT).', 'ماجستير', 'ادارة الاعمال - ادارة الطيران - ادارة الجودة - ادارة المخاطر - التسويق - العلاقات العامة - المالية - المحاسبة - الموارد البشرية', '2026-06-24 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -417,7 +451,7 @@ CREATE TABLE `scholarship_requests` (
   `scholarship_id` int(11) NOT NULL,
   `bnf_id` int(11) NOT NULL,
   `Submit_date` date NOT NULL,
-  `request_status` enum('مقبول','مرفوض','في انتظار المراجعة','') NOT NULL DEFAULT 'في انتظار المراجعة',
+  `request_status` enum('مقبول','مرفوض','في انتظار المراجعة','منتهية') NOT NULL DEFAULT 'في انتظار المراجعة',
   `major_name` varchar(100) NOT NULL,
   `univ_name` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -427,7 +461,10 @@ CREATE TABLE `scholarship_requests` (
 --
 
 INSERT INTO `scholarship_requests` (`request_id`, `scholarship_id`, `bnf_id`, `Submit_date`, `request_status`, `major_name`, `univ_name`) VALUES
-(2, 1, 1, '2026-03-25', 'مقبول', 'نمذجة وتحسين النظم الصناعية', 'إلينوي أوربانا شامبين - الولايات المتحدة');
+(2, 1, 1, '2026-03-25', 'مقبول', 'نمذجة وتحسين النظم الصناعية', 'إلينوي أوربانا شامبين - الولايات المتحدة'),
+(5, 4, 3, '2026-04-06', 'مقبول', 'هندسة الطيران', 'انديانا'),
+(6, 4, 1, '2026-04-11', 'مرفوض', 'نمذجة وتحسين النظم الصناعية', 'إلينوي أوربانا شامبين - الولايات المتحدة'),
+(7, 5, 1, '2026-04-11', 'منتهية', 'نمذجة وتحسين النظم الصناعية', 'إلينوي أوربانا شامبين - الولايات المتحدة');
 
 -- --------------------------------------------------------
 
@@ -451,7 +488,19 @@ INSERT INTO `scholarship_request_documents` (`doc_id`, `request_id`, `doc_type`,
 (1, 2, 'CV', '1774446178_Fatimah_Alhammadi_CV.pdf', '1774446178_Fatimah_Alhammadi_CV.pdf'),
 (2, 2, 'Certificate', '1774446178_DegreeCertificate.pdf', '1774446178_DegreeCertificate.pdf'),
 (3, 2, 'Recommendation', '1774446178_Fatimah_Alhammadi_Recommendation.pdf', '1774446178_Fatimah_Alhammadi_Recommendation.pdf'),
-(4, 2, 'Acceptance', '1774446178_AcceptanceLetter.pdf', '1774446178_AcceptanceLetter.pdf');
+(4, 2, 'Acceptance', '1774446178_AcceptanceLetter.pdf', '1774446178_AcceptanceLetter.pdf'),
+(9, 5, 'CV', 'Tasneem_Alharbi_CV.pdf.pdf', 'uploads/scholarship_requests/5_cv_file.pdf'),
+(10, 5, 'Certificate', 'HS_Certificate_Tasneem.pdf.pdf', 'uploads/scholarship_requests/5_cert_file.pdf'),
+(11, 5, 'Recommendation', 'Recommendation_Tasneem.pdf', 'uploads/scholarship_requests/5_rec_file.pdf'),
+(12, 5, 'Acceptance', 'Admission_Letter_Tasneem.pdf', 'uploads/scholarship_requests/5_accept_file.pdf'),
+(13, 6, 'CV', 'Fatima_Alghamdi_CV.pdf', 'uploads/scholarship_requests/6_cv_file.pdf'),
+(14, 6, 'Certificate', 'Fatima_Alghamdi_University_Degree.pdf', 'uploads/scholarship_requests/6_cert_file.pdf'),
+(15, 6, 'Recommendation', 'Fatima_Alghamdi_Recommendation_Letters.pdf', 'uploads/scholarship_requests/6_rec_file.pdf'),
+(16, 6, 'Acceptance', 'Admission_Result.pdf.pdf', 'uploads/scholarship_requests/6_accept_file.pdf'),
+(17, 7, 'CV', 'Fatima_Alghamdi_CV.pdf', 'uploads/scholarship_requests/7_cv_file.pdf'),
+(18, 7, 'Certificate', 'Fatima_Alghamdi_University_Degree.pdf', 'uploads/scholarship_requests/7_cert_file.pdf'),
+(19, 7, 'Recommendation', 'Fatima_Alghamdi_Recommendation_Letters.pdf', 'uploads/scholarship_requests/7_rec_file.pdf'),
+(20, 7, 'Acceptance', 'Admission_Result.pdf.pdf', 'uploads/scholarship_requests/7_accept_file.pdf');
 
 --
 -- Indexes for dumped tables
@@ -533,7 +582,8 @@ ALTER TABLE `consulting_office`
 --
 ALTER TABLE `e_contract`
   ADD PRIMARY KEY (`contract_id`),
-  ADD KEY `request_id` (`request_id`);
+  ADD KEY `request_id` (`request_id`),
+  ADD KEY `inv_id` (`inv_id`);
 
 --
 -- Indexes for table `investor`
@@ -598,7 +648,7 @@ ALTER TABLE `scholarship_request_documents`
 -- AUTO_INCREMENT for table `academic_report`
 --
 ALTER TABLE `academic_report`
-  MODIFY `report_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `report_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `admin`
@@ -610,31 +660,31 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `admission_request`
 --
 ALTER TABLE `admission_request`
-  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `admission_request_documents`
 --
 ALTER TABLE `admission_request_documents`
-  MODIFY `doc_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `doc_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `beneficiary`
 --
 ALTER TABLE `beneficiary`
-  MODIFY `bnf_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `bnf_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `bnf_inv_msg`
 --
 ALTER TABLE `bnf_inv_msg`
-  MODIFY `msg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `msg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `bnf_off_msg`
 --
 ALTER TABLE `bnf_off_msg`
-  MODIFY `msg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `msg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `complaints_inquiries`
@@ -652,7 +702,7 @@ ALTER TABLE `consulting_office`
 -- AUTO_INCREMENT for table `e_contract`
 --
 ALTER TABLE `e_contract`
-  MODIFY `contract_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `contract_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `investor`
@@ -664,31 +714,31 @@ ALTER TABLE `investor`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `rating`
 --
 ALTER TABLE `rating`
-  MODIFY `rating_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `rating_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `scholarship_opps`
 --
 ALTER TABLE `scholarship_opps`
-  MODIFY `scholarship_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `scholarship_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `scholarship_requests`
 --
 ALTER TABLE `scholarship_requests`
-  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `scholarship_request_documents`
 --
 ALTER TABLE `scholarship_request_documents`
-  MODIFY `doc_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `doc_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- قيود الجداول المُلقاة.
@@ -741,7 +791,8 @@ ALTER TABLE `complaints_inquiries`
 -- قيود الجداول `e_contract`
 --
 ALTER TABLE `e_contract`
-  ADD CONSTRAINT `e_contract_ibfk_1` FOREIGN KEY (`request_id`) REFERENCES `scholarship_requests` (`request_id`);
+  ADD CONSTRAINT `e_contract_ibfk_1` FOREIGN KEY (`request_id`) REFERENCES `scholarship_requests` (`request_id`),
+  ADD CONSTRAINT `e_contract_ibfk_2` FOREIGN KEY (`inv_id`) REFERENCES `investor` (`inv_id`);
 
 --
 -- قيود الجداول `office_country`
