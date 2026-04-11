@@ -1,15 +1,42 @@
-<?php
-/* بيانات تجريبية */
-$contracts = [
-    [
-        "scholarship_name"   => "منحة تطوير المهارات الرقمية",
-        "investor_name"      => "مؤسسة أفق",
-        "beneficiary_name"   => "نور الجهني",
-        "date"               => "15-12-2025",
-        "status"             => "نشط"
-    ]
-];
+يا  <?php
+$con = mysqli_connect("localhost","root","","noreen");
+mysqli_set_charset($con,"utf8mb4");
+
+/* إنهاء العقد */
+if(isset($_POST['end_contract'])){
+    $contract_id = $_POST['contract_id'];
+    $request_id  = $_POST['request_id'];
+
+    // تحديث العقد
+    mysqli_query($con,"UPDATE e_contract SET ctr_status='ملغي' WHERE contract_id='$contract_id'");
+
+    // تحديث الطلب المرتبط
+    mysqli_query($con,"UPDATE scholarship_requests SET request_status='منتهي' WHERE request_id='$request_id'");
+
+    header("Location: Admin3_Contracts.php");
+    exit();
+}
+
+/* جلب البيانات */
+$sql = "
+SELECT 
+    c.contract_id,
+    c.ctr_status,
+    c.request_id,
+    i.inv_name,
+    CONCAT(b.f_name,' ',b.l_name) AS beneficiary_name
+
+FROM e_contract c
+JOIN investor i ON c.inv_id = i.inv_id
+JOIN scholarship_requests r ON c.request_id = r.request_id
+JOIN beneficiary b ON r.bnf_id = b.bnf_id
+
+ORDER BY c.contract_id DESC
+";
+
+$result = mysqli_query($con,$sql);
 ?>
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -21,43 +48,9 @@ $contracts = [
 <link rel="stylesheet" href="CSS_AdminLayout.css">
 
 <style>
+
 .page-wrapper{
   padding:40px;
-}
-
-.search-box{
-  width:100%;
-  max-width:1050px;
-  margin:0 auto 18px;
-  position:relative;
-}
-
-.search-box input{
-  width:100%;
-  height:48px;
-  border:1px solid #D8D8D8;
-  border-radius:8px;
-  padding:0 18px;
-  padding-right:48px;
-  color:#595959;
-  font-size:14px;
-  outline:none;
-  background:#FFFFFF;
-  font-family:"Noto Kufi Arabic",sans-serif;
-}
-
-.search-box input::placeholder{
-  color:#B8B8B8;
-}
-
-.search-box::before{
-  content:"⌕";
-  position:absolute;
-  right:16px;
-  top:50%;
-  transform:translateY(-50%);
-  color:#8B6F99;
-  font-size:18px;
 }
 
 .table-box{
@@ -98,7 +91,7 @@ tbody td{
   color:#595959;
   background:#FFFFFF;
 }
-
+/* الحالة */
 .status{
   display:inline-flex;
   align-items:center;
@@ -109,7 +102,16 @@ tbody td{
   color:#FFFFFF;
   font-size:14px;
   font-weight:600;
+}
+
+/* أخضر */
+.status-active{
   background:#2E8B57;
+}
+
+/* أحمر */
+.status-cancel{
+  background:#C4474F;
 }
 
 .btn{
@@ -181,48 +183,69 @@ tbody td{
     <div class="page">
       <div class="page-wrapper">
 
-        <div class="search-box">
-          <input type="text" placeholder="أدخل اسم المنحة">
-        </div>
+        <!-- تم حذف البحث هنا -->
 
         <div class="table-box">
           <table>
             <thead>
               <tr>
-                <th>اسم المنحة</th>
+                <th>رقم المنحة</th>
                 <th>اسم المستثمر</th>
                 <th>اسم المستفيد</th>
-                <th>التاريخ</th>
                 <th>حالة العقد</th>
                 <th>الإجراءات</th>
               </tr>
             </thead>
 
             <tbody>
-              <?php foreach($contracts as $row): ?>
-              <tr>
-                <td><?= $row["scholarship_name"] ?></td>
-                <td><?= $row["investor_name"] ?></td>
-                <td><?= $row["beneficiary_name"] ?></td>
-                <td><?= $row["date"] ?></td>
-                <td><span class="status"><?= $row["status"] ?></span></td>
-                <td>
-                  <button class="btn btn-delete">إنهاء العقد</button>
-                </td>
-              </tr>
-              <?php endforeach; ?>
+<?php while($row = mysqli_fetch_assoc($result)) { 
 
-              <tr class="empty-row"><td colspan="6"></td></tr>
-              <tr class="empty-row"><td colspan="6"></td></tr>
-              <tr class="empty-row"><td colspan="6"></td></tr>
-            </tbody>
+$status = $row['ctr_status'];
+$class = "status-active";
+
+if($status == "ملغي"){
+    $class = "status-cancel";
+}
+?>
+<tr>
+
+  <td><?= $row['request_id'] ?></td>
+  <td><?= $row['inv_name'] ?></td>
+  <td><?= $row['beneficiary_name'] ?></td>
+
+  <td>
+    <span class="status <?= $class ?>">
+      <?= $status ?>
+    </span>
+  </td>
+
+  <td>
+    <?php if($status != 'ملغي'){ ?>
+    <form method="POST">
+      <input type="hidden" name="contract_id" value="<?= $row['contract_id'] ?>">
+      <input type="hidden" name="request_id" value="<?= $row['request_id'] ?>">
+      <button class="btn btn-delete" name="end_contract">إنهاء العقد</button>
+    </form>
+    <?php } else { ?>
+      <span style="color:#999;">منتهي</span>
+    <?php } ?>
+  </td>
+
+</tr>
+<?php } ?>
+
+<tr class="empty-row"><td colspan="5"></td></tr>
+<tr class="empty-row"><td colspan="5"></td></tr>
+<tr class="empty-row"><td colspan="5"></td></tr>
+
+</tbody> 
           </table>
         </div>
 
       </div>
     </div>
 
-  </div>
+  </div>    
 </div>
 
 </body>
