@@ -97,6 +97,7 @@ $result = mysqli_query($con, $sql);
   display: flex;
   flex-direction: column;
   height: 100%;
+  margin-top: 10px;
 }
 
 .scholarship-title {
