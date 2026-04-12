@@ -46,7 +46,7 @@ if ($request_id > 0) {
             ON sr.request_id = c.request_id
         WHERE sr.request_id = ?
           AND sr.bnf_id = ?
-          AND sr.request_status IN ('قيد المراجعة', 'في انتظار المعالجة', 'مقبول')
+          AND sr.request_status IN ('في انتظار المراجعة', 'مقبول')
         LIMIT 1
     ";
 
@@ -80,7 +80,7 @@ if (!$current_request) {
         LEFT JOIN e_contract c
             ON sr.request_id = c.request_id
         WHERE sr.bnf_id = ?
-          AND sr.request_status IN ('قيد المراجعة', 'في انتظار المعالجة', 'مقبول')
+          AND sr.request_status IN ('في انتظار المراجعة', 'مقبول')
         ORDER BY sr.request_id DESC
         LIMIT 1
     ";
@@ -109,7 +109,7 @@ $sql_previous = "
     INNER JOIN scholarship_opps s
         ON sr.scholarship_id = s.scholarship_id
     WHERE sr.bnf_id = ?
-      AND sr.request_status IN ('مرفوض', 'منتهية')
+      AND sr.request_status IN ('مرفوض', 'منتهي')
     ORDER BY sr.request_id DESC
 ";
 
@@ -143,12 +143,18 @@ if ($current_request) {
             $reportsEnabled = true;
         }
 
-    } elseif ($dbStatus === "قيد المراجعة" || $dbStatus === "في انتظار المعالجة") {
-        $statusText = "قيد المراجعة";
+    } elseif ($dbStatus === "في انتظار المراجعة") {
+        $statusText = "في انتظار المراجعة";
         $statusClass = "st-pending";
+
     } elseif ($dbStatus === "مرفوض") {
         $statusText = "مرفوض";
         $statusClass = "st-rejected";
+
+    } elseif ($dbStatus === "منتهي") {
+        $statusText = "منتهي";
+        $statusClass = "st-ended";
+
     } else {
         $statusText = $dbStatus;
         $statusClass = "st-pending";
@@ -200,7 +206,6 @@ if ($current_request) {
     background-color:#fff;
 }
 
-
 .track-tab.active{
     background:#F8F5FB;
 }
@@ -211,13 +216,11 @@ if ($current_request) {
     border:none;
 }
 
-
 .track-card{
     background:#FFFFFF;
     border-radius:12px;
-    padding:10px 12px;
     border:1px solid #d6d0d6;
-  padding: 22px 30px;
+    padding:22px 30px;
 }
 
 .track-top{
@@ -292,7 +295,7 @@ if ($current_request) {
     display:flex;
     gap:14px;
     flex-wrap:wrap;
-       justify-content:center; 
+    justify-content:center;
 }
 
 .track-btn{
@@ -386,7 +389,6 @@ if ($current_request) {
     font-size:14px;
     font-weight:700;
 }
-
   </style>
 </head>
 <body>

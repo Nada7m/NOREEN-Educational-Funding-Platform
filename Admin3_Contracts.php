@@ -1,4 +1,4 @@
-يا  <?php
+<?php
 $con = mysqli_connect("localhost","root","","noreen");
 mysqli_set_charset($con,"utf8mb4");
 
@@ -7,10 +7,7 @@ if(isset($_POST['end_contract'])){
     $contract_id = $_POST['contract_id'];
     $request_id  = $_POST['request_id'];
 
-    // تحديث العقد
     mysqli_query($con,"UPDATE e_contract SET ctr_status='ملغي' WHERE contract_id='$contract_id'");
-
-    // تحديث الطلب المرتبط
     mysqli_query($con,"UPDATE scholarship_requests SET request_status='منتهي' WHERE request_id='$request_id'");
 
     header("Location: Admin3_Contracts.php");
@@ -25,12 +22,11 @@ SELECT
     c.request_id,
     i.inv_name,
     CONCAT(b.f_name,' ',b.l_name) AS beneficiary_name
-
 FROM e_contract c
-JOIN investor i ON c.inv_id = i.inv_id
 JOIN scholarship_requests r ON c.request_id = r.request_id
 JOIN beneficiary b ON r.bnf_id = b.bnf_id
-
+JOIN scholarship_opps s ON r.scholarship_id = s.scholarship_id
+JOIN investor i ON s.inv_id = i.inv_id
 ORDER BY c.contract_id DESC
 ";
 
@@ -91,7 +87,7 @@ tbody td{
   color:#595959;
   background:#FFFFFF;
 }
-/* الحالة */
+
 .status{
   display:inline-flex;
   align-items:center;
@@ -104,12 +100,10 @@ tbody td{
   font-weight:600;
 }
 
-/* أخضر */
 .status-active{
   background:#2E8B57;
 }
 
-/* أحمر */
 .status-cancel{
   background:#C4474F;
 }
@@ -135,7 +129,6 @@ tbody td{
   background:#FFFFFF;
   border-bottom:1px solid #EEEEEE;
 }
-
 
 </style>
 </head>
@@ -183,13 +176,12 @@ tbody td{
     <div class="page">
       <div class="page-wrapper">
 
-        <!-- تم حذف البحث هنا -->
-
         <div class="table-box">
           <table>
             <thead>
               <tr>
-                <th>رقم المنحة</th>
+                <th>رقم الطلب</th>
+                <th>رقم العقد</th>
                 <th>اسم المستثمر</th>
                 <th>اسم المستفيد</th>
                 <th>حالة العقد</th>
@@ -208,8 +200,8 @@ if($status == "ملغي"){
 }
 ?>
 <tr>
-
   <td><?= $row['request_id'] ?></td>
+  <td><?= $row['contract_id'] ?></td>
   <td><?= $row['inv_name'] ?></td>
   <td><?= $row['beneficiary_name'] ?></td>
 
@@ -230,22 +222,21 @@ if($status == "ملغي"){
       <span style="color:#999;">منتهي</span>
     <?php } ?>
   </td>
-
 </tr>
 <?php } ?>
 
-<tr class="empty-row"><td colspan="5"></td></tr>
-<tr class="empty-row"><td colspan="5"></td></tr>
-<tr class="empty-row"><td colspan="5"></td></tr>
+<tr class="empty-row"><td colspan="6"></td></tr>
+<tr class="empty-row"><td colspan="6"></td></tr>
+<tr class="empty-row"><td colspan="6"></td></tr>
 
-</tbody> 
+</tbody>
           </table>
         </div>
 
       </div>
     </div>
 
-  </div>    
+  </div>
 </div>
 
 </body>
