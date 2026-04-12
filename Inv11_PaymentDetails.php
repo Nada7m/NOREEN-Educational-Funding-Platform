@@ -58,9 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["approve_report"])) {
 
     if (mysqli_num_rows($check_result) > 0) {
 
-        /* تحديث حالة اعتماد التقرير
-           استخدمت القيمة "معتمد"
-           إذا كانت القيمة الفعلية في جدولك مختلفة بدليها هنا */
+        /* تحديث حالة اعتماد التقرير */
         $update_sql = "UPDATE academic_report
                        SET report_appoval = 'معتمد'
                        WHERE report_id = ?";
@@ -88,19 +86,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["approve_report"])) {
 ===================================================== */
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirm_payment"])) {
 
-    $payment_id = (int)$_POST["payment_id"];
-    $card_name  = trim($_POST["card_name"]);
-    $card_number = trim($_POST["card_number"]);
-    $exp_date = trim($_POST["exp_date"]);
-    $cvv = trim($_POST["cvv"]);
+    $payment_id   = (int)$_POST["payment_id"];
+    $card_name    = trim($_POST["card_name"]);
+    $card_number  = preg_replace('/\D/', '', $_POST["card_number"]);
+    $exp_date     = trim($_POST["exp_date"]);
+    $cvv          = preg_replace('/\D/', '', $_POST["cvv"]);
 
-    /* تحقق بسيط من تعبئة الحقول */
+    /* تحقق نظري من بيانات البطاقة */
     if ($card_name == "" || $card_number == "" || $exp_date == "" || $cvv == "") {
         $msg = "يرجى تعبئة جميع بيانات الدفع.";
         $type = "error";
+
+    } elseif (!preg_match('/^[\p{Arabic}a-zA-Z\s]{3,100}$/u', $card_name)) {
+        $msg = "اسم حامل البطاقة غير صحيح.";
+        $type = "error";
+
+    } elseif (!preg_match('/^\d{16}$/', $card_number)) {
+        $msg = "رقم البطاقة يجب أن يكون 16 رقم.";
+        $type = "error";
+
+    } elseif (!preg_match('/^(0[1-9]|1[0-2])\/\d{2}$/', $exp_date)) {
+        $msg = "تاريخ الانتهاء يجب أن يكون بالشكل MM/YY.";
+        $type = "error";
+
+    } elseif (!preg_match('/^\d{3}$/', $cvv)) {
+        $msg = "رمز الأمان يجب أن يكون 3 أرقام.";
+        $type = "error";
+
     } else {
 
-        /* لا يمكن الدفع إلا إذا كان تقرير هذه الدفعة معتمد */
+        /* التحقق أن الدفعة تخص هذا المستثمر وأن التقرير معتمد ولم تُدفع سابقًا */
         $pay_check_sql = "SELECT payments.payment_id
                           FROM payments
                           INNER JOIN e_contract
@@ -115,7 +130,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirm_payment"])) {
                           AND scholarship_requests.request_id = ?
                           AND scholarship_opps.inv_id = ?
                           AND academic_report.report_appoval = 'معتمد'
-                          AND payments.payment_status != 'مكتملة'";
+                          AND payments.payment_status != 'تم الدفع'";
 
         $pay_check_stmt = mysqli_prepare($con, $pay_check_sql);
         mysqli_stmt_bind_param($pay_check_stmt, "iii", $payment_id, $request_id, $inv_id);
@@ -124,9 +139,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirm_payment"])) {
 
         if (mysqli_num_rows($pay_check_result) > 0) {
 
-            /* تحديث حالة الدفعة */
+            /* تحديث حالة الدفعة فقط بدون تخزين بيانات البطاقة */
             $pay_sql = "UPDATE payments
-                        SET payment_status = 'مكتملة',
+                        SET payment_status = 'تم الدفع',
                             payment_date = NOW()
                         WHERE payment_id = ?";
 
@@ -493,6 +508,7 @@ while ($row = mysqli_fetch_assoc($details_result)) {
   font-size:15px;
   outline:none;
   font-family:"Noto Kufi Arabic",sans-serif;
+  box-sizing:border-box;
 }
 
 .confirm-pay-btn{
@@ -682,7 +698,7 @@ while ($row = mysqli_fetch_assoc($details_result)) {
 
                 <!-- حالة الدفع -->
                 <td>
-                  <?php if($item['payment_status'] == "مكتملة"): ?>
+                  <?php if($item['payment_status'] == "تم الدفع"): ?>
                     <span class="badge badge-green">مدفوعة</span>
                   <?php else: ?>
                     <span class="badge badge-yellow">غير مدفوعة</span>
@@ -691,7 +707,7 @@ while ($row = mysqli_fetch_assoc($details_result)) {
 
                 <!-- زر الدفع -->
                 <td>
-                  <?php if($item['payment_status'] == "مكتملة"): ?>
+                  <?php if($item['payment_status'] == "تم الدفع"): ?>
                     <button class="pay-btn" disabled>تم السداد</button>
 
                   <?php elseif($item['report_appoval'] == "معتمد"): ?>
@@ -723,28 +739,28 @@ while ($row = mysqli_fetch_assoc($details_result)) {
   <div class="modal-content">
     <div class="modal-title">رجاء قم بإدخال بيانات البطاقة لسداد دفعة المنحة للطالب</div>
 
-    <form method="post" class="pay-form">
+    <form method="post" class="pay-form" id="paymentForm">
       <input type="hidden" name="payment_id" id="modal_payment_id">
 
       <div class="pay-field">
         <label>الاسم على البطاقة</label>
-        <input type="text" name="card_name">
+        <input type="text" name="card_name" id="card_name" maxlength="100">
       </div>
 
       <div class="pay-field">
         <label>رقم البطاقة</label>
-        <input type="text" name="card_number">
+        <input type="text" name="card_number" id="card_number" maxlength="16" inputmode="numeric">
       </div>
 
       <div class="pay-row">
         <div class="pay-field">
           <label>تاريخ الانتهاء</label>
-          <input type="text" name="exp_date" placeholder="MM/YY">
+          <input type="text" name="exp_date" id="exp_date" placeholder="MM/YY" maxlength="5" inputmode="numeric">
         </div>
 
         <div class="pay-field">
           <label>CVV</label>
-          <input type="text" name="cvv">
+          <input type="text" name="cvv" id="cvv" maxlength="3" inputmode="numeric">
         </div>
       </div>
 
@@ -760,6 +776,10 @@ const modal = document.getElementById("paymentModal");
 const modalPaymentId = document.getElementById("modal_payment_id");
 const openButtons = document.querySelectorAll(".openPayModal");
 const closeModal = document.getElementById("closeModal");
+const paymentForm = document.getElementById("paymentForm");
+const cardNumberInput = document.getElementById("card_number");
+const expDateInput = document.getElementById("exp_date");
+const cvvInput = document.getElementById("cvv");
 
 openButtons.forEach(function(btn){
   btn.addEventListener("click", function(){
@@ -775,6 +795,65 @@ closeModal.addEventListener("click", function(){
 window.addEventListener("click", function(e){
   if(e.target === modal){
     modal.style.display = "none";
+  }
+});
+
+/* رقم البطاقة أرقام فقط */
+cardNumberInput.addEventListener("input", function(){
+  this.value = this.value.replace(/\D/g, "").slice(0, 16);
+});
+
+/* CVV أرقام فقط */
+cvvInput.addEventListener("input", function(){
+  this.value = this.value.replace(/\D/g, "").slice(0, 3);
+});
+
+/* تنسيق تاريخ الانتهاء MM/YY */
+expDateInput.addEventListener("input", function(){
+  let value = this.value.replace(/\D/g, "").slice(0, 4);
+
+  if (value.length >= 3) {
+    this.value = value.slice(0, 2) + "/" + value.slice(2);
+  } else {
+    this.value = value;
+  }
+});
+
+/* تحقق نظري قبل الإرسال */
+paymentForm.addEventListener("submit", function(e){
+  const cardName = document.getElementById("card_name").value.trim();
+  const cardNumber = document.getElementById("card_number").value.trim();
+  const expDate = document.getElementById("exp_date").value.trim();
+  const cvv = document.getElementById("cvv").value.trim();
+
+  if (cardName === "" || cardNumber === "" || expDate === "" || cvv === "") {
+    alert("يرجى تعبئة جميع بيانات الدفع.");
+    e.preventDefault();
+    return;
+  }
+
+  if (!/^[\u0600-\u06FFa-zA-Z\s]{3,100}$/.test(cardName)) {
+    alert("اسم حامل البطاقة غير صحيح.");
+    e.preventDefault();
+    return;
+  }
+
+  if (!/^\d{16}$/.test(cardNumber)) {
+    alert("رقم البطاقة يجب أن يكون 16 رقم.");
+    e.preventDefault();
+    return;
+  }
+
+  if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expDate)) {
+    alert("تاريخ الانتهاء يجب أن يكون بالشكل MM/YY.");
+    e.preventDefault();
+    return;
+  }
+
+  if (!/^\d{3}$/.test(cvv)) {
+    alert("رمز الأمان يجب أن يكون 3 أرقام.");
+    e.preventDefault();
+    return;
   }
 });
 </script>
