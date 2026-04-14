@@ -46,7 +46,7 @@ if ($request_id > 0) {
             ON sr.request_id = c.request_id
         WHERE sr.request_id = ?
           AND sr.bnf_id = ?
-          AND sr.request_status IN ('في انتظار المراجعة', 'مقبول')
+          AND sr.request_status IN ('تحت المراجعة', 'مقبول')
         LIMIT 1
     ";
 
@@ -60,7 +60,7 @@ if ($request_id > 0) {
     }
 }
 
-/* إذا لم يوجد request_id أو لم نجد الطلب، نعرض آخر طلب حالي */
+/* إذا لم يوجد request_id أو لم نجد الطلب، نعرض آخر طلب نشط */
 if (!$current_request) {
     $sql = "
         SELECT
@@ -80,7 +80,7 @@ if (!$current_request) {
         LEFT JOIN e_contract c
             ON sr.request_id = c.request_id
         WHERE sr.bnf_id = ?
-          AND sr.request_status IN ('في انتظار المراجعة', 'مقبول')
+          AND sr.request_status IN ('تحت المراجعة', 'مقبول')
         ORDER BY sr.request_id DESC
         LIMIT 1
     ";
@@ -95,7 +95,7 @@ if (!$current_request) {
     }
 }
 
-/* جلب الطلبات السابقة */
+/* جلب سجل الطلبات */
 $sql_previous = "
     SELECT
         sr.request_id,
@@ -109,7 +109,7 @@ $sql_previous = "
     INNER JOIN scholarship_opps s
         ON sr.scholarship_id = s.scholarship_id
     WHERE sr.bnf_id = ?
-      AND sr.request_status IN ('مرفوض', 'منتهي')
+      AND sr.request_status IN ('مرفوض', 'منتهي', 'ملغى')
     ORDER BY sr.request_id DESC
 ";
 
@@ -143,8 +143,8 @@ if ($current_request) {
             $reportsEnabled = true;
         }
 
-    } elseif ($dbStatus === "في انتظار المراجعة") {
-        $statusText = "في انتظار المراجعة";
+    } elseif ($dbStatus === "تحت المراجعة") {
+        $statusText = "تحت المراجعة";
         $statusClass = "st-pending";
 
     } elseif ($dbStatus === "مرفوض") {
@@ -154,6 +154,10 @@ if ($current_request) {
     } elseif ($dbStatus === "منتهي") {
         $statusText = "منتهي";
         $statusClass = "st-ended";
+
+    } elseif ($dbStatus === "ملغى") {
+        $statusText = "ملغى";
+        $statusClass = "st-cancelled";
 
     } else {
         $statusText = $dbStatus;
@@ -258,6 +262,10 @@ if ($current_request) {
 
 .st-ended{
     background:#8D8D8D;
+}
+
+.st-cancelled{
+    background:#7A7A7A;
 }
 
 .track-info{
@@ -420,7 +428,7 @@ if ($current_request) {
       <header class="header">
         <div class="page-heading">
           <div class="page-title">متابعة المنح</div>
-          <div class="page-description">صفحة متابعة طلبات المنح الحالية والسابقة</div>
+          <div class="page-description">صفحة عرض الطلب النشط وسجل الطلبات</div>
         </div>
 
         <div class="header-icons">
@@ -443,8 +451,8 @@ if ($current_request) {
           <?php } ?>
 
           <div class="track-tabs">
-            <a href="Ben09_TrackScholarship.php?tab=current" class="track-tab <?php echo $tab === 'current' ? 'active' : ''; ?>">الطلبات الحالية</a>
-            <a href="Ben09_TrackScholarship.php?tab=previous" class="track-tab <?php echo $tab === 'previous' ? 'active' : ''; ?>">الطلبات السابقة</a>
+            <a href="Ben09_TrackScholarship.php?tab=current" class="track-tab <?php echo $tab === 'current' ? 'active' : ''; ?>">الطلب النشط</a>
+            <a href="Ben09_TrackScholarship.php?tab=previous" class="track-tab <?php echo $tab === 'previous' ? 'active' : ''; ?>">سجل الطلبات</a>
           </div>
 
           <div class="track-panel">
@@ -456,7 +464,14 @@ if ($current_request) {
                   <?php foreach ($previous_requests as $old_request) { ?>
                     <?php
                       $oldStatusText = $old_request['request_status'];
-                      $oldStatusClass = ($old_request['request_status'] === 'مرفوض') ? 'st-rejected' : 'st-ended';
+
+                      if ($old_request['request_status'] === 'مرفوض') {
+                          $oldStatusClass = 'st-rejected';
+                      } elseif ($old_request['request_status'] === 'منتهي') {
+                          $oldStatusClass = 'st-ended';
+                      } else {
+                          $oldStatusClass = 'st-cancelled';
+                      }
                     ?>
                     <div class="old-request-card">
                       <div class="old-request-top">
@@ -475,7 +490,7 @@ if ($current_request) {
                   <?php } ?>
                 </div>
               <?php } else { ?>
-                <div class="empty-box">لا توجد طلبات سابقة</div>
+                <div class="empty-box">لا يوجد سجل طلبات</div>
               <?php } ?>
 
             <?php } else { ?>
@@ -484,7 +499,7 @@ if ($current_request) {
                 <div class="track-card">
                   <div class="track-top">
                     <div class="track-info">
-                      <div class="track-title">تفاصيل المنحة الحالية</div>
+                      <div class="track-title">تفاصيل الطلب النشط</div>
                       <div class="info-line"><b>رقم الطلب:</b> <?php echo $current_request['request_id']; ?></div>
                       <div class="info-line"><b>المنحة:</b> <?php echo $current_request['sch_name']; ?></div>
                       <div class="info-line"><b>التخصص:</b> <?php echo $current_request['major_name']; ?></div>
@@ -515,7 +530,7 @@ if ($current_request) {
                   </div>
                 </div>
               <?php } else { ?>
-                <div class="empty-box">لا توجد طلبات حتى الآن</div>
+                <div class="empty-box">لا يوجد طلب نشط حاليًا</div>
               <?php } ?>
 
             <?php } ?>

@@ -101,10 +101,10 @@ if (isset($_POST['submit_request'])) {
             $safeUniv = $con->real_escape_string($univ);
             $safeMajor = $con->real_escape_string($major);
 
-            $sql_req = "INSERT INTO scholarship_requests
-                        (scholarship_id, bnf_id, Submit_date, request_status, major_name, univ_name)
-                        VALUES
-                        ('$sch_id', '$bnf_id', '$today', 'قيد المراجعة', '$safeMajor', '$safeUniv')";
+     $sql_req = "INSERT INTO scholarship_requests
+            (scholarship_id, bnf_id, Submit_date, request_status, major_name, univ_name)
+            VALUES
+            ('$sch_id', '$bnf_id', '$today', 'تحت المراجعة', '$safeMajor', '$safeUniv')";
 
             if ($con->query($sql_req)) {
 

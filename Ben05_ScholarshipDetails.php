@@ -49,21 +49,21 @@ $provider_name = !empty($opp['inv_name']) ? $opp['inv_name'] : 'غير محدد'
 $can_apply = true;
 $apply_message = "";
 
-$accepted_sql = "
+$active_sql = "
     SELECT request_id
     FROM scholarship_requests
     WHERE bnf_id = ?
-      AND request_status = 'مقبول'
+      AND request_status IN ('مقبول', 'تحت المراجعة')
     LIMIT 1
 ";
-$stmt_accepted = $conn->prepare($accepted_sql);
-$stmt_accepted->bind_param("i", $bnf_id);
-$stmt_accepted->execute();
-$accepted_result = $stmt_accepted->get_result();
+$stmt_active = $conn->prepare($active_sql);
+$stmt_active->bind_param("i", $bnf_id);
+$stmt_active->execute();
+$active_result = $stmt_active->get_result();
 
-if ($accepted_result->num_rows > 0) {
+if ($active_result->num_rows > 0) {
     $can_apply = false;
-    $apply_message = "لا يمكنك التقديم لوجود منحة سارية لديك حاليًا";
+    $apply_message = "لا يمكنك التقديم لوجود طلب نشط لديك حاليًا";
 }
 
 if ($can_apply && $student) {

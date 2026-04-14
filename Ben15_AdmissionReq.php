@@ -101,7 +101,6 @@ if (isset($_POST['submit_request'])) {
     $program = isset($_POST['program']) ? trim($_POST['program']) : "";
     $univ_name = isset($_POST['univ_name']) ? trim($_POST['univ_name']) : "";
     $major_name = isset($_POST['major_name']) ? trim($_POST['major_name']) : "";
-    $payment_done = isset($_POST['payment_done']) ? trim($_POST['payment_done']) : "0";
 
     if ($program == "") {
         $msg = "يرجى اختيار نوع البرنامج.";
@@ -111,9 +110,6 @@ if (isset($_POST['submit_request'])) {
         $type = "error";
     } elseif ($univ_name == "" || $major_name == "") {
         $msg = "جميع الحقول مطلوبة.";
-        $type = "error";
-    } elseif ($payment_done != "1") {
-        $msg = "لا يمكن تقديم الطلب قبل إتمام الدفع.";
         $type = "error";
     } else {
 
@@ -145,21 +141,22 @@ if (isset($_POST['submit_request'])) {
         }
 
         if ($missingFile) {
-            $msg = "يجب رفع جميع الملفات المطلوبة.";
+            $msg = "يجب تعبئة جميع الحقول ورفع جميع الملفات المطلوبة.";
             $type = "error";
         } elseif ($wrongType) {
             $msg = "جميع الملفات يجب أن تكون PDF فقط.";
             $type = "error";
         } else {
 
+            $safeProgram = $conn->real_escape_string($program);
             $safeUniv = $conn->real_escape_string($univ_name);
             $safeMajor = $conn->real_escape_string($major_name);
             $today = date("Y-m-d");
 
             $sqlReq = "INSERT INTO admission_request
-                       (bnf_id, office_id, major_name, univ_name, Submit_date, result_notes, Result_status)
+                       (bnf_id, office_id, program_type, major_name, univ_name, Submit_date, result_notes, Result_status, request_status)
                        VALUES
-                       ('$bnf_id', '$office_id', '$safeMajor', '$safeUniv', '$today','', '')";
+                       ('$bnf_id', '$office_id', '$safeProgram', '$safeMajor', '$safeUniv', '$today', '', 'قيد المعالجة', 'في الانتظار')";
 
             if ($conn->query($sqlReq)) {
 
@@ -272,26 +269,6 @@ foreach ($programDocs as $programKey => $docs) {
 
 .form-submit-btn{ font-family:'Noto Kufi Arabic'; font-size:18px; font-weight:700; background-color:#70A0AF; color:#ffffff; cursor:pointer; border:none; border-radius:4px; }
 
-.pay-modal{ display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:3000; justify-content:center; align-items:center; }
-
-.pay-card{ width:700px; max-width:92%; background:#fff; border-radius:10px; padding:30px 24px; box-shadow:0 8px 24px rgba(0,0,0,0.18); }
-
-.pay-title{ text-align:center; color:#d46a6a; font-size:22px; font-weight:700; margin-bottom:18px; font-family:'Noto Kufi Arabic'; }
-
-.pay-box{ width:78%; margin:0 auto; border:1px solid #e0e0e0; border-radius:10px; padding:18px; }
-
-.pay-box-title{ text-align:center; font-size:20px; font-weight:700; color:#333; margin-bottom:16px; font-family:'Noto Kufi Arabic'; }
-
-.pay-field{ margin-bottom:14px; }
-
-.pay-field input{ width:100%; height:46px; border:1px solid #d1d1d1; border-radius:6px; padding:8px 12px; font-size:14px; font-family:'Noto Kufi Arabic'; outline:none; }
-
-.pay-row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-
-.pay-confirm{ width:100%; height:46px; border:none; border-radius:6px; background:#70A0AF; color:#fff; font-size:18px; font-weight:700; font-family:'Noto Kufi Arabic'; cursor:pointer; margin-top:10px; }
-
-.close-btn{ display:block; margin:12px auto 0; background:none; border:none; color:#777; font-size:14px; font-family:'Noto Kufi Arabic'; cursor:pointer; }
-
 .hidden{ display:none; }
 </style>
 </head>
@@ -371,8 +348,6 @@ foreach ($programDocs as $programKey => $docs) {
                         </select>
                     </div>
 
-                    <input type="hidden" name="payment_done" id="payment_done" value="0">
-
                     <div id="programArea" class="<?php echo ($program == "") ? 'hidden' : ''; ?>">
                         <div class="form-subtitle" id="programTitle"></div>
 
@@ -395,7 +370,7 @@ foreach ($programDocs as $programKey => $docs) {
                     </div>
 
                     <div class="center-btn">
-                        <button type="button" id="openPaymentBtn" class="form-submit-btn big-btn">حفظ وتقديم الطلب</button>
+                        <button type="button" id="submitBtn" class="form-submit-btn big-btn">حفظ وتقديم الطلب</button>
                     </div>
 
                     <button type="submit" name="submit_request" id="realSubmitBtn" style="display:none;"></button>
@@ -406,46 +381,12 @@ foreach ($programDocs as $programKey => $docs) {
     </div>
 </div>
 
-<div class="pay-modal" id="paymentModal">
-    <div class="pay-card">
-        <div class="pay-title">لاعتماد الطلب ومتابعة الإجراءات يرجى إتمام عملية الدفع</div>
-
-        <div class="pay-box">
-            <div class="pay-box-title">بيانات تأكيد الدفع</div>
-
-            <div class="pay-field">
-                <input type="text" id="cardName" placeholder="NAME ON CARD">
-            </div>
-
-            <div class="pay-field">
-                <input type="text" id="cardNumber" placeholder="CARD NUMBER">
-            </div>
-
-            <div class="pay-row">
-                <div class="pay-field">
-                    <input type="text" id="expDate" placeholder="MM/YY">
-                </div>
-                <div class="pay-field">
-                    <input type="text" id="cvv" placeholder="CVV">
-                </div>
-            </div>
-
-            <button type="button" class="pay-confirm" id="confirmPaymentBtn">اضغط لتأكيد الدفع</button>
-            <button type="button" class="close-btn" id="closePaymentBtn">إغلاق</button>
-        </div>
-    </div>
-</div>
-
 <script>
 const programSelect = document.getElementById("programSelect");
 const programArea = document.getElementById("programArea");
 const programTitle = document.getElementById("programTitle");
 const docsSection = document.getElementById("docsSection");
-const openPaymentBtn = document.getElementById("openPaymentBtn");
-const paymentModal = document.getElementById("paymentModal");
-const closePaymentBtn = document.getElementById("closePaymentBtn");
-const confirmPaymentBtn = document.getElementById("confirmPaymentBtn");
-const paymentDone = document.getElementById("payment_done");
+const submitBtn = document.getElementById("submitBtn");
 const realSubmitBtn = document.getElementById("realSubmitBtn");
 
 const programsData = <?php echo json_encode($jsPrograms, JSON_UNESCAPED_UNICODE); ?>;
@@ -536,11 +477,6 @@ function validateVisibleSection(){
       return false;
     }
 
-    const fileName = fileInputs[i].files[0].name.toLowerCase();
-    if(!fileName.endsWith(".pdf")){
-      alert("جميع الملفات يجب أن تكون PDF فقط.");
-      return false;
-    }
   }
 
   return true;
@@ -552,43 +488,13 @@ if(programSelect){
   });
 }
 
-if(openPaymentBtn){
-  openPaymentBtn.addEventListener("click", function(){
+if(submitBtn){
+  submitBtn.addEventListener("click", function(){
     if(validateVisibleSection()){
-      paymentModal.style.display = "flex";
+      realSubmitBtn.click();
     }
   });
 }
-
-if(closePaymentBtn){
-  closePaymentBtn.addEventListener("click", function(){
-    paymentModal.style.display = "none";
-  });
-}
-
-if(confirmPaymentBtn){
-  confirmPaymentBtn.addEventListener("click", function(){
-    const cardName = document.getElementById("cardName").value.trim();
-    const cardNumber = document.getElementById("cardNumber").value.trim();
-    const expDate = document.getElementById("expDate").value.trim();
-    const cvv = document.getElementById("cvv").value.trim();
-
-    if(cardName === "" || cardNumber === "" || expDate === "" || cvv === ""){
-      alert("يرجى تعبئة جميع بيانات الدفع.");
-      return;
-    }
-
-    paymentDone.value = "1";
-    paymentModal.style.display = "none";
-    realSubmitBtn.click();
-  });
-}
-
-window.addEventListener("click", function(e){
-  if(e.target === paymentModal){
-    paymentModal.style.display = "none";
-  }
-});
 
 buildDocs(programSelect.value);
 </script>
