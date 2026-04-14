@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 11 أبريل 2026 الساعة 16:38
+-- Generation Time: 15 أبريل 2026 الساعة 00:13
 -- إصدار الخادم: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -82,6 +82,7 @@ CREATE TABLE `admission_request` (
   `result_notes` text DEFAULT NULL,
   `Result_status` enum('قيد المعالجة','أصدرت') NOT NULL DEFAULT 'قيد المعالجة',
   `request_status` enum('في الانتظار','مقبول','مرفوض') NOT NULL DEFAULT 'في الانتظار',
+  `payment_status` enum('غير مدفوع','مدفوع','بانتظار الدفع') NOT NULL DEFAULT 'غير مدفوع',
   `result` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -89,9 +90,10 @@ CREATE TABLE `admission_request` (
 -- إرجاع أو استيراد بيانات الجدول `admission_request`
 --
 
-INSERT INTO `admission_request` (`request_id`, `bnf_id`, `office_id`, `program_type`, `major_name`, `univ_name`, `Submit_date`, `result_notes`, `Result_status`, `request_status`, `result`) VALUES
-(1, 1, 2, 'master', 'نمذجة وتحسين النظم الصناعية', 'إلينوي أوربانا شامبين - الولايات المتحدة', '2026-04-02', 'تم رفع خطاب القبول الرسمي أدناه يرجى مراجعة الملف المرفق والاطلاع على الشروط والأحكام الأكاديمية والمالية قبل اتخاذ أي إجراء لاحق.', 'أصدرت', 'مقبول', 'uploads/admission_results/1_result.pdf'),
-(3, 3, 3, 'bachelor', 'هندسة الطيران', 'جامعة إمبري ريدل للطيران', '2026-04-06', 'مبارك', 'أصدرت', 'مقبول', 'uploads/admission_results/3_result.pdf');
+INSERT INTO `admission_request` (`request_id`, `bnf_id`, `office_id`, `program_type`, `major_name`, `univ_name`, `Submit_date`, `result_notes`, `Result_status`, `request_status`, `payment_status`, `result`) VALUES
+(1, 1, 2, 'master', 'نمذجة وتحسين النظم الصناعية', 'إلينوي أوربانا شامبين - الولايات المتحدة', '2026-04-02', 'تم رفع خطاب القبول الرسمي أدناه يرجى مراجعة الملف المرفق والاطلاع على الشروط والأحكام الأكاديمية والمالية قبل اتخاذ أي إجراء لاحق.', 'أصدرت', 'مقبول', 'مدفوع', 'uploads/admission_results/1_result.pdf'),
+(3, 3, 3, 'bachelor', 'هندسة الطيران', 'جامعة إمبري ريدل للطيران', '2026-04-06', 'مبارك', 'أصدرت', 'مقبول', 'مدفوع', 'uploads/admission_results/3_result.pdf'),
+(4, 3, 3, 'bachelor', 'هندسة الطيران', 'جامعة إمبري ريدل للطيران', '2026-04-14', '', 'قيد المعالجة', 'في الانتظار', 'بانتظار الدفع', NULL);
 
 -- --------------------------------------------------------
 
@@ -125,7 +127,13 @@ INSERT INTO `admission_request_documents` (`doc_id`, `request_id`, `doc_type`, `
 (17, 3, 'Language Certificate', 'IELTS_Tasneem.pdf.pdf', 'uploads/admission_requests/3_language_file.pdf'),
 (18, 3, 'Recommendation Letters', 'SOP_Tasneem.pdf', 'uploads/admission_requests/3_recommendation_file.pdf'),
 (19, 3, 'High School Certificate', 'HS_Certificate_Tasneem.pdf.pdf', 'uploads/admission_requests/3_highschool_file.pdf'),
-(20, 3, 'Letter of Intent', 'SOP_Tasneem.pdf', 'uploads/admission_requests/3_intent_file.pdf');
+(20, 3, 'Letter of Intent', 'SOP_Tasneem.pdf', 'uploads/admission_requests/3_intent_file.pdf'),
+(21, 4, 'CV', 'Tasneem_Alharbi_CV.pdf.pdf', 'uploads/admission_requests/4_cv_file.pdf'),
+(22, 4, 'Passport', 'Passport_Tasneem.pdf', 'uploads/admission_requests/4_passport_file.pdf'),
+(23, 4, 'Language Certificate', 'IELTS_Tasneem.pdf.pdf', 'uploads/admission_requests/4_language_file.pdf'),
+(24, 4, 'Recommendation Letters', 'Recommendation_Tasneem.pdf', 'uploads/admission_requests/4_recommendation_file.pdf'),
+(25, 4, 'High School Certificate', 'HS_Certificate_Tasneem.pdf.pdf', 'uploads/admission_requests/4_highschool_file.pdf'),
+(26, 4, 'Letter of Intent', 'SOP_Tasneem.pdf', 'uploads/admission_requests/4_intent_file.pdf');
 
 -- --------------------------------------------------------
 
@@ -451,7 +459,7 @@ CREATE TABLE `scholarship_requests` (
   `scholarship_id` int(11) NOT NULL,
   `bnf_id` int(11) NOT NULL,
   `Submit_date` date NOT NULL,
-  `request_status` enum('مقبول','مرفوض','في انتظار المراجعة','منتهية') NOT NULL DEFAULT 'في انتظار المراجعة',
+  `request_status` enum('مقبول','مرفوض','تحت المراجعة','منتهي','ملغي') NOT NULL DEFAULT 'تحت المراجعة',
   `major_name` varchar(100) NOT NULL,
   `univ_name` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -463,8 +471,7 @@ CREATE TABLE `scholarship_requests` (
 INSERT INTO `scholarship_requests` (`request_id`, `scholarship_id`, `bnf_id`, `Submit_date`, `request_status`, `major_name`, `univ_name`) VALUES
 (2, 1, 1, '2026-03-25', 'مقبول', 'نمذجة وتحسين النظم الصناعية', 'إلينوي أوربانا شامبين - الولايات المتحدة'),
 (5, 4, 3, '2026-04-06', 'مقبول', 'هندسة الطيران', 'انديانا'),
-(6, 4, 1, '2026-04-11', 'مرفوض', 'نمذجة وتحسين النظم الصناعية', 'إلينوي أوربانا شامبين - الولايات المتحدة'),
-(7, 5, 1, '2026-04-11', 'منتهية', 'نمذجة وتحسين النظم الصناعية', 'إلينوي أوربانا شامبين - الولايات المتحدة');
+(6, 4, 1, '2026-04-11', 'مرفوض', 'نمذجة وتحسين النظم الصناعية', 'إلينوي أوربانا شامبين - الولايات المتحدة');
 
 -- --------------------------------------------------------
 
@@ -496,11 +503,7 @@ INSERT INTO `scholarship_request_documents` (`doc_id`, `request_id`, `doc_type`,
 (13, 6, 'CV', 'Fatima_Alghamdi_CV.pdf', 'uploads/scholarship_requests/6_cv_file.pdf'),
 (14, 6, 'Certificate', 'Fatima_Alghamdi_University_Degree.pdf', 'uploads/scholarship_requests/6_cert_file.pdf'),
 (15, 6, 'Recommendation', 'Fatima_Alghamdi_Recommendation_Letters.pdf', 'uploads/scholarship_requests/6_rec_file.pdf'),
-(16, 6, 'Acceptance', 'Admission_Result.pdf.pdf', 'uploads/scholarship_requests/6_accept_file.pdf'),
-(17, 7, 'CV', 'Fatima_Alghamdi_CV.pdf', 'uploads/scholarship_requests/7_cv_file.pdf'),
-(18, 7, 'Certificate', 'Fatima_Alghamdi_University_Degree.pdf', 'uploads/scholarship_requests/7_cert_file.pdf'),
-(19, 7, 'Recommendation', 'Fatima_Alghamdi_Recommendation_Letters.pdf', 'uploads/scholarship_requests/7_rec_file.pdf'),
-(20, 7, 'Acceptance', 'Admission_Result.pdf.pdf', 'uploads/scholarship_requests/7_accept_file.pdf');
+(16, 6, 'Acceptance', 'Admission_Result.pdf.pdf', 'uploads/scholarship_requests/6_accept_file.pdf');
 
 --
 -- Indexes for dumped tables
@@ -582,8 +585,7 @@ ALTER TABLE `consulting_office`
 --
 ALTER TABLE `e_contract`
   ADD PRIMARY KEY (`contract_id`),
-  ADD KEY `request_id` (`request_id`),
-  ADD KEY `inv_id` (`inv_id`);
+  ADD KEY `request_id` (`request_id`);
 
 --
 -- Indexes for table `investor`
@@ -660,13 +662,13 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `admission_request`
 --
 ALTER TABLE `admission_request`
-  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `admission_request_documents`
 --
 ALTER TABLE `admission_request_documents`
-  MODIFY `doc_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `doc_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `beneficiary`
@@ -732,13 +734,13 @@ ALTER TABLE `scholarship_opps`
 -- AUTO_INCREMENT for table `scholarship_requests`
 --
 ALTER TABLE `scholarship_requests`
-  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `scholarship_request_documents`
 --
 ALTER TABLE `scholarship_request_documents`
-  MODIFY `doc_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `doc_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- قيود الجداول المُلقاة.
