@@ -99,7 +99,7 @@ $res_msgs = $con->query("SELECT * FROM bnf_inv_msg WHERE bnf_id = '$current_bnf_
                 <img src="ايقونة قائمة الاعدادات.png" id="menuBtn" class="menu-icon-img">
                 <div class="dropdown-menu" id="myDropdown">
                 <a href="Ben02_Profile.php">الملف الشخصي</a>
-                                      <a href="Ben20_MyScholarshipWallet.php">محفظة منحتي</a>
+                <a href="Ben20_MyScholarshipWallet.php">محفظة منحتي</a>
                 <a href="support.php">تقديم شكوى او استفسار</a></div>
             </div>
         </header>

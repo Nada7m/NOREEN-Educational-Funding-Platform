@@ -427,23 +427,6 @@ if (isset($_POST['submit_result'])) {
     border: 1px solid #efb4b4;
 }
 
-@media (max-width: 900px){
-    .form-grid{
-        grid-template-columns: 1fr;
-    }
-
-    .upload-card{
-        padding: 25px 20px;
-    }
-
-    .card-title{
-        font-size: 20px;
-    }
-
-    .student-name{
-        font-size: 20px;
-    }
-}
 </style>
 </head>
 <body>

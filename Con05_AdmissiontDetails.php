@@ -133,11 +133,11 @@ $docLabels = [
 <meta charset="UTF-8">
 <title>تفاصيل طلب القبول</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="CSS01Layout.css?v=3">
+<link rel="stylesheet" href="CSS01Layout.css?v=5">
 <style>
 .page-wrap{padding:14px 18px 18px;}
 /* شريط زر الرجوع */
-.top-bar { display:flex; justify-content:flex-end; align-items:center; margin-bottom:8px; max-width:980px; margin-right:80px; }
+.top-bar { display:flex; justify-content:flex-end; align-items:center; margin-bottom:8px; max-width:980px; margin-right:170px; }
 .back-btn img{width:38px; height:38px; object-fit:contain;}
 .details-card{background:#fff; border:0.5px solid #c5c3c3; border-radius:12px; margin-bottom: 40px; padding:16px 18px; max-width:980px; margin:0 auto;}
 .request-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;}
@@ -164,6 +164,8 @@ $docLabels = [
 .upload-enabled{background:#3E2454; color:#fff;}
 .upload-finished{background:#63B68B; color:#fff; pointer-events:none; cursor:default;}
 .upload-disabled{background:#d4d4d4; color:#7a7a7a; cursor:not-allowed; pointer-events:none;}
+        .page-description{ width:100%; direction:rtl; text-align:right;}
+
 </style>
 </head>
 
