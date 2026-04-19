@@ -441,8 +441,18 @@ $result = mysqli_query($con, $sql);
                       الرد على التذكرة
                     </button>
                   <?php } else { ?>
-                    <a href="Admin4_ViewReply.php?id=<?php echo $row['ticket_id']; ?>" class="btn btn-outline">عرض</a>
-                  <?php } ?>
+<button
+  type="button"
+  class="btn btn-outline"
+  onclick='openViewModal(<?php echo json_encode([
+    "ticket_id" => "TKT-" . str_pad($row["ticket_id"], 3, "0", STR_PAD_LEFT),
+    "sender_name" => $row["sender_name"],
+    "submission_date" => $row["submission_date"],
+    "message" => $row["message"],
+    "admin_reply" => $row["admin_reply"]
+  ], JSON_UNESCAPED_UNICODE); ?>)'>
+  عرض
+</button>               <?php } ?>
                 </td>
               </tr>
               <?php
@@ -511,6 +521,45 @@ $result = mysqli_query($con, $sql);
 
   </div>
 </div>
+<div class="reply-modal" id="viewModal">
+  <div class="reply-modal-content">
+
+    <button class="close-modal" type="button" onclick="closeViewModal()">×</button>
+
+    <div class="reply-title">بيانات التذكرة</div>
+
+    <div class="ticket-info-grid">
+      <div class="ticket-info-box">
+        <div class="ticket-info-row">
+          <span>اسم المرسل</span>
+          <span class="ticket-info-value" id="v_senderName"></span>
+        </div>
+        <div class="ticket-info-row">
+          <span>نوع التذكرة</span>
+          <span class="ticket-info-value">شكوى / استفسار</span>
+        </div>
+      </div>
+
+      <div class="ticket-info-box">
+        <div class="ticket-info-row">
+          <span>رقم التذكرة</span>
+          <span class="ticket-info-value" id="v_ticketId"></span>
+        </div>
+        <div class="ticket-info-row">
+          <span>تاريخ الإرسال</span>
+          <span class="ticket-info-value" id="v_date"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">محتوى الشكوى / الاستفسار</div>
+    <div class="ticket-message-box" id="v_message"></div>
+
+    <div class="section-label">رد مدير النظام</div>
+    <div class="ticket-message-box" id="v_reply"></div>
+
+  </div>
+</div>
 
 <script>
 function openReplyModal(data){
@@ -525,6 +574,19 @@ function openReplyModal(data){
 
 function closeReplyModal(){
   document.getElementById("replyModal").style.display = "none";
+}
+function openViewModal(data){
+  document.getElementById("v_ticketId").textContent = data.ticket_id;
+  document.getElementById("v_senderName").textContent = data.sender_name;
+  document.getElementById("v_date").textContent = data.submission_date;
+  document.getElementById("v_message").textContent = data.message;
+  document.getElementById("v_reply").textContent = data.admin_reply ? data.admin_reply : "لا يوجد رد";
+
+  document.getElementById("viewModal").style.display = "flex";
+}
+
+function closeViewModal(){
+  document.getElementById("viewModal").style.display = "none";
 }
 
 window.onclick = function(e){
