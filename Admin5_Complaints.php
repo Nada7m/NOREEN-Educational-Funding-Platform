@@ -217,6 +217,7 @@ $result = mysqli_query($con, $sql);
         <div class="permissions-card">
           <table class="permissions-table">
 
+<<<<<<< HEAD
             <tr class="table-head">
               <th>رقم التذكرة</th>
               <th>المرسل</th>
@@ -279,6 +280,60 @@ $result = mysqli_query($con, $sql);
             <tr class="empty-row"><td colspan="5"></td></tr>
             <?php } ?>
 
+=======
+            <tbody>
+              <?php
+              if ($result && mysqli_num_rows($result) > 0) {
+                  while($row = mysqli_fetch_assoc($result)) {
+              ?>
+              <tr>
+                <td><?php echo "TKT-" . str_pad($row['ticket_id'], 3, "0", STR_PAD_LEFT); ?></td>
+                <td><?php echo htmlspecialchars($row['sender_name']); ?></td>
+                <td><?php echo htmlspecialchars($row['submission_date']); ?></td>
+                <td class="ticket-subject"><?php echo htmlspecialchars($row['subject']); ?></td>
+                <td>
+                  <?php if ($tab == 'pending') { ?>
+                    <button
+                      type="button"
+                      class="btn btn-outline"
+                      onclick='openReplyModal(<?php echo json_encode([
+                        "ticket_id" => "TKT-" . str_pad($row["ticket_id"], 3, "0", STR_PAD_LEFT),
+                        "sender_name" => $row["sender_name"],
+                        "ticket_type" => "شكوى / استفسار",
+                        "submission_date" => $row["submission_date"],
+                        "message" => $row["message"],
+                        "raw_id" => $row["ticket_id"]
+                      ], JSON_UNESCAPED_UNICODE); ?>)'>
+                      الرد على التذكرة
+                    </button>
+                  <?php } else { ?>
+<button
+  type="button"
+  class="btn btn-outline"
+  onclick='openViewModal(<?php echo json_encode([
+    "ticket_id" => "TKT-" . str_pad($row["ticket_id"], 3, "0", STR_PAD_LEFT),
+    "sender_name" => $row["sender_name"],
+    "submission_date" => $row["submission_date"],
+    "message" => $row["message"],
+    "admin_reply" => $row["admin_reply"]
+  ], JSON_UNESCAPED_UNICODE); ?>)'>
+  عرض
+</button>               <?php } ?>
+                </td>
+              </tr>
+              <?php
+                  }
+              } else {
+              ?>
+              <tr>
+                <td colspan="5" class="no-data">لا توجد تذاكر في هذا القسم</td>
+              </tr>
+              <tr class="empty-row"><td colspan="5"></td></tr>
+              <tr class="empty-row"><td colspan="5"></td></tr>
+              <tr class="empty-row"><td colspan="5"></td></tr>
+              <?php } ?>
+            </tbody>
+>>>>>>> 9d7f0457c0598ef2ecc968791ec28a136047ce30
           </table>
         </div>
 
@@ -311,6 +366,45 @@ $result = mysqli_query($con, $sql);
 
   </div>
 </div>
+<div class="reply-modal" id="viewModal">
+  <div class="reply-modal-content">
+
+    <button class="close-modal" type="button" onclick="closeViewModal()">×</button>
+
+    <div class="reply-title">بيانات التذكرة</div>
+
+    <div class="ticket-info-grid">
+      <div class="ticket-info-box">
+        <div class="ticket-info-row">
+          <span>اسم المرسل</span>
+          <span class="ticket-info-value" id="v_senderName"></span>
+        </div>
+        <div class="ticket-info-row">
+          <span>نوع التذكرة</span>
+          <span class="ticket-info-value">شكوى / استفسار</span>
+        </div>
+      </div>
+
+      <div class="ticket-info-box">
+        <div class="ticket-info-row">
+          <span>رقم التذكرة</span>
+          <span class="ticket-info-value" id="v_ticketId"></span>
+        </div>
+        <div class="ticket-info-row">
+          <span>تاريخ الإرسال</span>
+          <span class="ticket-info-value" id="v_date"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">محتوى الشكوى / الاستفسار</div>
+    <div class="ticket-message-box" id="v_message"></div>
+
+    <div class="section-label">رد مدير النظام</div>
+    <div class="ticket-message-box" id="v_reply"></div>
+
+  </div>
+</div>
 
 <script>
 function openReplyModal(data){
@@ -339,6 +433,19 @@ function openReplyModal(data){
 
 function closeReplyModal(){
   document.getElementById("replyModal").style.display = "none";
+}
+function openViewModal(data){
+  document.getElementById("v_ticketId").textContent = data.ticket_id;
+  document.getElementById("v_senderName").textContent = data.sender_name;
+  document.getElementById("v_date").textContent = data.submission_date;
+  document.getElementById("v_message").textContent = data.message;
+  document.getElementById("v_reply").textContent = data.admin_reply ? data.admin_reply : "لا يوجد رد";
+
+  document.getElementById("viewModal").style.display = "flex";
+}
+
+function closeViewModal(){
+  document.getElementById("viewModal").style.display = "none";
 }
 
 window.onclick = function(e){
