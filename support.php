@@ -60,11 +60,11 @@ $page = isset($_GET['page']) ? $_GET['page'] : "list";
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic&display=swap" rel="stylesheet">
 
 <style>
-body { font-family: 'Noto Kufi Arabic', sans-serif; background-color: #F8F9FA; margin: 0; }
+body { font-family: 'Noto Kufi Arabic', sans-serif; background-color: #F4F4F4; margin: 0; }
 .wrapper { max-width: 1000px; margin: 30px auto; padding: 20px; }
 .page-top { display: flex; justify-content: flex-end; margin-bottom: 5px; }
 .back-btn-details img { width: 60px; height: 60px; display: block; }
-.content-box { background: white; border-radius: 12px; padding: 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); min-height: 400px; }
+.content-box { background: white; border-radius: 12px; padding: 40px;  min-height: 400px; }
 .btn-purple { background: #3E2454; color: white; padding: 12px 25px; border-radius: 6px; text-decoration: none; border: none; cursor: pointer; float: left; margin-bottom: 25px; }
 table { width: 100%; border-collapse: collapse; }
 th, td { padding: 15px; border: 1px solid #EEEEEE; text-align: center; }

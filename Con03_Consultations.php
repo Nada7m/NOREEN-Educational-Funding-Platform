@@ -35,11 +35,7 @@ $result = $con->query($sql);
     <style>
         /* تنسيقات الجدول */
         .content-body { padding: 24px 30px; }
-        .page-description{
-  width:100%;
-  direction:rtl;
-  text-align:right;
-}
+        .page-description{ width:100%; direction:rtl; text-align:right;}
         .table-wrap { max-width: 1000px; margin: 0 auto; }
         .table-container {; width: 100%; background: #FFFFFF; border: 1px solid #EAEAEA; border-radius: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden; }
         table { border:0.5px solid #c5c3c3; width: 100%;  background: #FFFFFF; }

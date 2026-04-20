@@ -214,22 +214,22 @@ $conn->close();
 
                         <div class="field">
                             <label><span class="star">*</span> المجال الدراسي</label>
-                            <select name="major">
-                                <option <?php if($beneficiary['sch_field']=="اختر المجال الدراسي من القائمة أدناه") echo "selected"; ?>>اختر المجال الدراسي من القائمة أدناه</option>
-                                <option <?php if($beneficiary['sch_field']=="تقني وحوسبي") echo "selected"; ?>>تقني وحوسبي</option>
-                                <option <?php if($beneficiary['sch_field']=="علوم طبيعية") echo "selected"; ?>>علوم طبيعية</option>
-                                <option <?php if($beneficiary['sch_field']=="صناعي وتشغيلي") echo "selected"; ?>>صناعي وتشغيلي</option>
-                                <option <?php if($beneficiary['sch_field']=="إداري") echo "selected"; ?>>إداري</option>
-                                <option <?php if($beneficiary['sch_field']=="قانوني") echo "selected"; ?>>قانوني</option>
-                                <option <?php if($beneficiary['sch_field']=="اجتماعي وإنساني") echo "selected"; ?>>اجتماعي وإنساني</option>
-                                <option <?php if($beneficiary['sch_field']=="تصميمي") echo "selected"; ?>>تصميمي</option>
-                                <option <?php if($beneficiary['sch_field']=="صحي") echo "selected"; ?>>صحي</option>
-                                <option <?php if($beneficiary['sch_field']=="اقتصادي") echo "selected"; ?>>اقتصادي</option>
-                                <option <?php if($beneficiary['sch_field']=="بيئي") echo "selected"; ?>>بيئي</option>
-                                <option <?php if($beneficiary['sch_field']=="لوجستي") echo "selected"; ?>>لوجستي</option>
-                                <option <?php if($beneficiary['sch_field']=="إعلامي") echo "selected"; ?>>إعلامي</option>
-                                <option <?php if($beneficiary['sch_field']=="لا يوجد") echo "selected"; ?>>لا يوجد</option>
-                            </select>
+                        <select name="major">
+    <option <?php if($beneficiary['sch_field']=="اختر المجال الدراسي من القائمة أدناه") echo "selected"; ?>>اختر المجال الدراسي من القائمة أدناه</option>
+    <option <?php if($beneficiary['sch_field']=="تقني وحاسوبي") echo "selected"; ?>>تقني وحاسوبي</option>
+    <option <?php if($beneficiary['sch_field']=="علوم طبيعية") echo "selected"; ?>>علوم طبيعية</option>
+    <option <?php if($beneficiary['sch_field']=="صناعي وتشغيلي") echo "selected"; ?>>صناعي وتشغيلي</option>
+    <option <?php if($beneficiary['sch_field']=="اداري") echo "selected"; ?>>اداري</option>
+    <option <?php if($beneficiary['sch_field']=="قانوني") echo "selected"; ?>>قانوني</option>
+    <option <?php if($beneficiary['sch_field']=="اجتماعي وانساني") echo "selected"; ?>>اجتماعي وانساني</option>
+    <option <?php if($beneficiary['sch_field']=="تصميمي") echo "selected"; ?>>تصميمي</option>
+    <option <?php if($beneficiary['sch_field']=="اقتصادي") echo "selected"; ?>>اقتصادي</option>
+    <option <?php if($beneficiary['sch_field']=="إعلامي") echo "selected"; ?>>إعلامي</option>
+    <option <?php if($beneficiary['sch_field']=="بيئي") echo "selected"; ?>>بيئي</option>
+    <option <?php if($beneficiary['sch_field']=="لوجيستي") echo "selected"; ?>>لوجيستي</option>
+    <option <?php if($beneficiary['sch_field']=="صحي") echo "selected"; ?>>صحي</option>
+    <option <?php if($beneficiary['sch_field']=="لا يوجد") echo "selected"; ?>>لا يوجد</option>
+</select>
                         </div>
 
                     </div>

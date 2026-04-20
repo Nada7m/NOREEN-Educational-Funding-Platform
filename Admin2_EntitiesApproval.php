@@ -38,127 +38,59 @@ UNION ALL
 SELECT office_id, office_name, ccr_number, approval_status, 'مكتب استشاري' FROM consulting_office
 ");
 ?>
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>اعتماد الجهات</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="CSS_AdminLayout.css">
+<link rel="stylesheet" href="CSS_AdminLayout.css?v=3">
 
 <style>
-.page-wrapper{
-  padding:40px;
-}
 
-.table-box{
-  width:100%;
-  max-width:1050px;
-  margin:0 auto;
-  background:#FFFFFF;
-  border:1px solid #E6E0E6;
-  border-radius:8px;
-  box-shadow:0 2px 10px rgba(0,0,0,0.05);
-  overflow:hidden;
-}
+/* الحاوية العامة */
+.page-wrapper{ padding:40px; }
 
-table{
-  width:100%;
-  border-collapse:collapse;
-}
+/* صندوق الجدول */
+.table-box{ width:100%; max-width:1050px; margin:0 auto; background:#FFFFFF; border:1px solid #E6E0E6; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,0.05); overflow:hidden; }
 
-thead th{
-  padding:15px;
-  background:#FAFAFA;
-  border-bottom:1px solid #DDDDDD;
-  color:#3E2454;
-  font-size:15px;
-  font-weight:700;
-  text-align:center;
-}
+/* الجدول */
+table{ width:100%; border-collapse:collapse; }
 
-tbody td{
-  padding:16px;
-  border-bottom:1px solid #EEEEEE;
-  text-align:center;
-  color:#444444;
-  font-size:14px;
-}
+/* صف العناوين */
+.table-head th{ padding:15px; background:#FAFAFA; border-bottom:1px solid #DDDDDD; color:#3E2454; font-size:15px; font-weight:700; text-align:center; }
 
-.status{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:100px;
-  height:42px;
-  margin:0 auto;
-  border-radius:12px;
-  color:#FFFFFF;
-  font-size:14px;
-  font-weight:600;
-}
+/* خلايا الجدول */
+table td{ padding:16px; border-bottom:1px solid #EEEEEE; text-align:center; color:#444444; font-size:14px; }
 
-.pending{
-  background:#D8B35E;
-}
+/* شكل الحالة */
+.status{ display:flex; align-items:center; justify-content:center; width:100px; height:42px; margin:0 auto; border-radius:12px; color:#FFFFFF; font-size:14px; font-weight:600; }
 
-.approved{
-  background:#2E8B57;
-}
+/* بانتظار */
+.pending{ background:#D8B35E; }
 
-.rejected{
-  background:#C23B3B;
-}
+/* معتمد */
+.approved{ background:#2E8B57; }
 
-.actions{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:10px;
-  flex-wrap:nowrap;
-}
+/* مرفوض */
+.rejected{ background:#C23B3B; }
 
-.actions form{
-  margin:0;
-}
+/* الأزرار */
+.actions{ display:flex; justify-content:center; align-items:center; gap:10px; }
 
-.btn{
-  width:100px;
-  height:42px;
-  border-radius:12px;
-  font-size:14px;
-  font-weight:600;
-  cursor:pointer;
-}
+/* الفورم */
+.actions form{ margin:0; }
 
-.accept{
-  background:#FFFFFF;
-  border:1px solid #CCCCCC;
-  color:#333333;
-}
+/* زر عام */
+.btn{ width:100px; height:42px; border-radius:12px; font-size:14px; font-weight:600; cursor:pointer; }
 
-.reject{
-  background:#A53A3A;
-  color:#FFFFFF;
-  border:none;
-}
+/* زر اعتماد */
+.accept{ background:#FFFFFF; border:1px solid #CCCCCC; color:#333333; }
 
-@media (max-width:1100px){
-  .page-wrapper{
-    padding:25px 20px;
-  }
+/* زر رفض */
+.reject{ background:#A53A3A; color:#FFFFFF; border:none; }
 
-  .table-box{
-    overflow-x:auto;
-  }
-
-  table{
-    min-width:700px;
-  }
-}
 </style>
 </head>
 
@@ -208,59 +140,57 @@ tbody td{
 
         <div class="table-box">
           <table>
-            <thead>
-              <tr>
-                <th>اسم الجهة</th>
-                <th>النوع</th>
-                <th>السجل</th>
-                <th>الحالة</th>
-                <th>الإجراءات</th>
-              </tr>
-            </thead>
 
-            <tbody>
-              <?php while($row = mysqli_fetch_assoc($result)) {
+            <tr class="table-head">
+              <th>اسم الجهة</th>
+              <th>النوع</th>
+              <th>السجل</th>
+              <th>الحالة</th>
+              <th>الإجراءات</th>
+            </tr>
 
-                $status = $row['approval_status'];
+            <?php while($row = mysqli_fetch_assoc($result)) {
 
-                if($status == "معتمد"){
-                  $class = "approved";
-                } elseif($status == "مرفوض"){
-                  $class = "rejected";
-                } else {
-                  $status = "بانتظار";
-                  $class = "pending";
-                }
-              ?>
-              <tr>
-                <td><?= $row['entity_name'] ?></td>
-                <td><?= $row['entity_type'] ?></td>
-                <td><?= $row['ccr_number'] ?></td>
-                <td>
-                  <span class="status <?= $class ?>"><?= $status ?></span>
-                </td>
-                <td>
-                  <?php if($status == "بانتظار"){ ?>
-                  <div class="actions">
+              $status = $row['approval_status'];
 
-                    <form method="post">
-                      <input type="hidden" name="entity_id" value="<?= $row['entity_id'] ?>">
-                      <input type="hidden" name="entity_type" value="<?= $row['entity_type'] ?>">
-                      <button type="submit" name="approve" class="btn accept">اعتماد</button>
-                    </form>
+              if($status == "معتمد"){
+                $class = "approved";
+              } elseif($status == "مرفوض"){
+                $class = "rejected";
+              } else {
+                $status = "بانتظار";
+                $class = "pending";
+              }
+            ?>
+            <tr>
+              <td><?= $row['entity_name'] ?></td>
+              <td><?= $row['entity_type'] ?></td>
+              <td><?= $row['ccr_number'] ?></td>
+              <td>
+                <span class="status <?= $class ?>"><?= $status ?></span>
+              </td>
+              <td>
+                <?php if($status == "بانتظار"){ ?>
+                <div class="actions">
 
-                    <form method="post">
-                      <input type="hidden" name="entity_id" value="<?= $row['entity_id'] ?>">
-                      <input type="hidden" name="entity_type" value="<?= $row['entity_type'] ?>">
-                      <button type="submit" name="reject" class="btn reject">رفض</button>
-                    </form>
+                  <form method="post">
+                    <input type="hidden" name="entity_id" value="<?= $row['entity_id'] ?>">
+                    <input type="hidden" name="entity_type" value="<?= $row['entity_type'] ?>">
+                    <button type="submit" name="approve" class="btn accept">اعتماد</button>
+                  </form>
 
-                  </div>
-                  <?php } ?>
-                </td>
-              </tr>
-              <?php } ?>
-            </tbody>
+                  <form method="post">
+                    <input type="hidden" name="entity_id" value="<?= $row['entity_id'] ?>">
+                    <input type="hidden" name="entity_type" value="<?= $row['entity_type'] ?>">
+                    <button type="submit" name="reject" class="btn reject">رفض</button>
+                  </form>
+
+                </div>
+                <?php } ?>
+              </td>
+            </tr>
+            <?php } ?>
+
           </table>
         </div>
 

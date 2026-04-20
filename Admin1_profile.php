@@ -47,61 +47,29 @@ if ($q3) {
 <title>بيانات الحساب</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="CSS_AdminLayout.css">
+<link rel="stylesheet" href="CSS_AdminLayout.css?v=3">
 
 <style>
-.page-wrapper{
-  padding:45px 55px;
-}
+/* الحاوية العامة */
+.page-wrapper{ padding:40px 45px; }
 
-.welcome-box{
-  text-align:center;
-  margin-bottom:35px;
-}
+/* صندوق الترحيب */
+.welcome-box{ text-align:center; margin-bottom:30px; }
 
-.welcome-box p{
-  margin:0;
-  font-size:18px;
-  color:#222222;
-  line-height:2;
-}
+/* نص الترحيب */
+.welcome-box p{ margin:0; font-size:18px; color:#222222; line-height:2; }
 
-.cards{
-  display:grid;
-  grid-template-columns:repeat(3, 1fr);
-  gap:35px;
-  max-width:980px;
-  margin:0 auto;
-}
+/* قريد الكروت */
+.cards{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; max-width:820px; margin:0 auto; }
 
-.card{
-  background:#FFFFFF;
-  min-height:250px;
-  border:1px solid #ECE6E6;
-  box-shadow:0 2px 8px rgba(0,0,0,0.06);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:flex-start;
-  text-align:center;
-  padding:28px 20px;
-}
+/* الكرت */
+.card{ background:#FFFFFF; min-height:200px; border:1px solid #ECE6E6; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; text-align:center; padding:22px 15px; border-radius:12px; }
 
-.card-title{
-  font-size:17px;
-  font-weight:700;
-  color:#111111;
-  line-height:1.9;
-  min-height:70px;
-}
+/* عنوان الكرت */
+.card-title{ font-size:16px; font-weight:700; color:#111111; line-height:1.8; min-height:60px; }
 
-.card-number{
-  margin-top:55px;
-  font-size:18px;
-  font-weight:700;
-  color:#70A0AF;
-}
-
+/* رقم الإحصائية */
+.card-number{ margin-top:35px; font-size:38px; font-weight:700; color:#70A0AF; line-height:1; }
 
 </style>
 </head>
@@ -134,13 +102,11 @@ if ($q3) {
   </aside>
 
   <div class="main-content">
-
     <header class="header">
       <div class="page-heading">
         <div class="page-title">بيانات الحساب</div>
         <div class="page-description">عرض إحصائي مختصر للمستخدمين المسجلين في النظام</div>
       </div>
-
       <div class="header-left">
         <a href="Admin1_profile.php" class="profile-btn">لوحة التحكم</a>
       </div>
@@ -148,36 +114,29 @@ if ($q3) {
 
     <div class="page">
       <div class="page-wrapper">
-
         <div class="welcome-box">
           <p>
             أهلاً بك،<br>
             فيما يلي إحصائية بعدد المستخدمين المسجلين في النظام.
           </p>
         </div>
-
         <div class="cards">
           <div class="card">
             <div class="card-title">إجمالي المستفيدين المسجلين</div>
             <div class="card-number"><?php echo $beneficiaries_count; ?></div>
           </div>
-
           <div class="card">
             <div class="card-title">إجمالي المستثمرين المسجلين</div>
             <div class="card-number"><?php echo $investors_count; ?></div>
           </div>
-
           <div class="card">
             <div class="card-title">إجمالي المكاتب الاستشارية المسجلة</div>
             <div class="card-number"><?php echo $offices_count; ?></div>
           </div>
         </div>
-
       </div>
     </div>
-
   </div>
 </div>
-
 </body>
 </html>

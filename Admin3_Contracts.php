@@ -41,7 +41,7 @@ $result = mysqli_query($con,$sql);
 <title>إدارة العقود</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="CSS_AdminLayout.css">
+<link rel="stylesheet" href="CSS_AdminLayout.css?v=3">
 
 <style>
 

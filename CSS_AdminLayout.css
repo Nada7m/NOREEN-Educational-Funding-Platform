@@ -1,3 +1,4 @@
+/* إعدادات عامة */
 *{
   margin:0;
   padding:0;
@@ -6,16 +7,19 @@
   text-decoration:none;
 }
 
+/* تنسيق الصفحة */
 body{
   background:#F4F4F4;
   direction:rtl;
 }
 
+/* الهيكل العام */
 .layout{
   display:flex;
   min-height:100vh;
 }
 
+/* الشريط الجانبي */
 .sidebar{
   width:250px;
   height:100vh;
@@ -30,10 +34,12 @@ body{
   z-index:1000;
 }
 
+/* الجزء العلوي من الشريط */
 .sidebar-top{
   width:100%;
 }
 
+/* صندوق الشعار */
 .sidebar-logo{
   height:115px;
   display:flex;
@@ -43,22 +49,26 @@ body{
   padding:10px;
 }
 
+/* صورة الشعار */
 .sidebar-logo img{
   width:145px;
   height:auto;
   object-fit:contain;
 }
 
+/* قائمة الروابط */
 .sidebar-menu{
   list-style:none;
   margin-top:18px;
   padding:0;
 }
 
+/* عنصر القائمة */
 .sidebar-menu li{
   margin-bottom:6px;
 }
 
+/* روابط القائمة */
 .sidebar-menu a{
   display:block;
   padding:18px 26px;
@@ -70,14 +80,17 @@ body{
   transition:.25s;
 }
 
+/* تأثير المرور على الرابط */
 .sidebar-menu a:hover{
   color:#70A0AF;
 }
 
+/* الرابط النشط */
 .sidebar-menu a.active{
   color:#70A0AF;
 }
 
+/* الخط أسفل الرابط النشط */
 .sidebar-menu a.active::after{
   content:"";
   position:absolute;
@@ -89,6 +102,7 @@ body{
   border-radius:2px;
 }
 
+/* الجزء السفلي من الشريط */
 .sidebar-bottom{
   padding:18px 20px 20px;
   border-top:1px solid #E5D8C7;
@@ -96,6 +110,7 @@ body{
   justify-content:center;
 }
 
+/* زر تسجيل الخروج */
 .logout-btn{
   background:transparent;
   border:none;
@@ -110,16 +125,19 @@ body{
   transition:.25s;
 }
 
+/* تأثير المرور على زر الخروج */
 .logout-btn:hover{
   color:#C94B4B;
 }
 
+/* أيقونة الخروج */
 .logout-icon{
   width:18px;
   height:18px;
   object-fit:contain;
 }
 
+/* المحتوى الرئيسي */
 .main-content{
   margin-right:250px;
   width:calc(100% - 250px);
@@ -129,6 +147,7 @@ body{
   background:#F4F4F4;
 }
 
+/* الهيدر */
 .header{
   min-height:115px;
   background:#F4F4F4;
@@ -139,6 +158,7 @@ body{
   padding:0 36px;
 }
 
+/* عنوان الصفحة ووصفها */
 .page-heading{
   display:flex;
   flex-direction:column;
@@ -146,14 +166,16 @@ body{
   text-align:left;
 }
 
+/* عنوان الصفحة */
 .page-title{
-  font-size:37px;
+  font-size:27px;
   font-weight:700;
   color:#3E2454;
   line-height:1.5;
   text-align:left;
 }
 
+/* وصف الصفحة */
 .page-description{
   font-size:15px;
   font-weight:500;
@@ -163,12 +185,14 @@ body{
   text-align:left;
 }
 
+/* الجزء الأيسر من الهيدر */
 .header-left{
   display:flex;
   align-items:center;
   gap:12px;
 }
 
+/* زر لوحة التحكم */
 .profile-btn{
   background:#FDF4E5;
   color:#70A0AF;
@@ -180,22 +204,26 @@ body{
   transition:.25s;
 }
 
+/* تأثير المرور على زر لوحة التحكم */
 .profile-btn:hover{
   background:#70A0AF;
   color:#FFFFFF;
   border-color:#70A0AF;
 }
 
+/* أيقونات الهيدر */
 .header-icons{
   display:flex;
   align-items:center;
   gap:10px;
 }
 
+/* محتوى الصفحة */
 .page{
   padding:24px 36px 30px;
 }
 
+/* الشريط العلوي داخل الصفحة */
 .page-top{
   display:flex;
   justify-content:space-between;
@@ -203,6 +231,7 @@ body{
   margin-bottom:20px;
 }
 
+/* زر الرجوع */
 .backbtn{
   width:42px;
   height:42px;
@@ -211,6 +240,7 @@ body{
   justify-content:center;
 }
 
+/* أيقونة الرجوع */
 .backicon{
   width:42px;
   height:42px;

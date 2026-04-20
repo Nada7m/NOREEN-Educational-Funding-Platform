@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+/* التحقق من دخول الأدمن */
 if (!isset($_SESSION['admin_id'])) {
     header("Location: login.php");
     exit();
@@ -15,7 +16,7 @@ if (!$con) {
 
 mysqli_set_charset($con, "utf8mb4");
 
-/* حفظ الرد وتحديث الحالة */
+/* حفظ الرد وتحديث حالة التذكرة */
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ticket_id'])) {
 
     $ticket_id = (int)$_POST['ticket_id'];
@@ -50,7 +51,7 @@ if ($tab == 'replied') {
     $tab = 'pending';
 }
 
-/* جلب الشكاوى والاستفسارات مع اسم المرسل */
+/* جلب التذاكر */
 $sql = "
 SELECT
     c.ticket_id,
@@ -88,266 +89,80 @@ $result = mysqli_query($con, $sql);
 <title>الشكاوى والاستفسارات</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="CSS_AdminLayout.css">
+<link rel="stylesheet" href="CSS_AdminLayout.css?v=3">
 
 <style>
-.page-wrapper{
-  padding:40px;
-}
 
-.tabs-box{
-  display:flex;
-  width:100%;
-  max-width:1050px;
-  margin:0 auto 20px;
-  border:1px solid #D9D9D9;
-  border-radius:4px;
-  overflow:hidden;
-  background:#E9E9E9;
-}
+/* الحاوية العامة */
+.page-wrapper{ padding:40px; }
 
-.tab-btn{
-  flex:1;
-  text-align:center;
-  padding:14px 10px;
-  font-size:15px;
-  font-weight:600;
-  color:#3E2454;
-  background:#FFFFFF;
-  border-left:1px solid #D0D0D0;
-  transition:.2s;
-}
+/* صندوق التبويبات */
+.tabs-box{ display:flex; width:100%; max-width:1050px; margin:0 auto 20px; border:1px solid #D9D9D9; border-radius:4px; overflow:hidden; background:#E9E9E9; }
 
-.tab-btn:last-child{
-  border-left:none;
-}
+/* زر التبويب */
+.tab-btn{ flex:1; text-align:center; padding:14px 10px; font-size:15px; font-weight:600; color:#3E2454; background:#FFFFFF; border-left:1px solid #D0D0D0; transition:.2s; text-decoration:none; }
 
-.tab-btn.active{
-  background:#F2F2F2;
-}
+/* التبويب النشط */
+.tab-btn.active{ background:#F2F2F2; }
 
-.permissions-card{
-  width:100%;
-  max-width:1050px;
-  margin:0 auto;
-  background:#FFFFFF;
-  border:1px solid #D8D8D8;
-  border-radius:6px;
-  box-shadow:0 2px 8px rgba(0,0,0,0.06);
-  overflow:hidden;
-}
+/* كرت الجدول */
+.permissions-card{ width:100%; max-width:1050px; margin:0 auto; background:#FFFFFF; border:1px solid #D8D8D8; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.06); overflow:hidden; }
 
-.permissions-table{
-  width:100%;
-  border-collapse:collapse;
-  text-align:center;
-  table-layout:fixed;
-}
+/* الجدول */
+.permissions-table{ width:100%; border-collapse:collapse; text-align:center; table-layout:fixed; }
 
-.permissions-table thead th{
-  color:#3E2454;
-  font-size:15px;
-  font-weight:700;
-  padding:16px 10px;
-  background-color:#FBFBFB;
-  border-bottom:1px solid #CFCFCF;
-}
+/* صف العناوين */
+.table-head th{ color:#3E2454; font-size:15px; font-weight:700; padding:16px 10px; background:#FBFBFB; border-bottom:1px solid #CFCFCF; }
 
-.permissions-table thead th:not(:last-child){
-  border-left:1px solid #CFCFCF;
-}
+/* خلايا الجدول */
+.permissions-table td{ color:#595959; font-size:14px; font-weight:500; padding:18px 10px; background:#FFFFFF; vertical-align:middle; border-bottom:1px solid #D9D9D9; }
 
-.permissions-table tbody td{
-  color:#595959;
-  font-size:14px;
-  font-weight:500;
-  padding:18px 10px;
-  background-color:#FFFFFF;
-  vertical-align:middle;
-  border-bottom:1px solid #D9D9D9;
-}
+/* عنوان التذكرة */
+.ticket-subject{ line-height:1.9; word-break:break-word; }
 
-.ticket-subject{
-  line-height:1.9;
-  word-break:break-word;
-}
+/* زر عام */
+.btn{ border:none; padding:10px 18px; border-radius:12px; cursor:pointer; font-size:13px;  font-weight:600; display:inline-block; min-width:130px; text-align:center; text-decoration:none; }
 
-.btn{
-  border:none;
-  padding:10px 18px;
-  border-radius:12px;
-  cursor:pointer;
-  font-size:13px;
-  font-family:"Noto Kufi Arabic",sans-serif;
-  font-weight:600;
-  display:inline-block;
-  min-width:130px;
-  text-align:center;
-}
+/* زر خارجي */
+.btn-outline{ background:#FFFFFF; color:#3E2454; border:1px solid #8F8F8F; }
 
-.btn-outline{
-  background:#FFFFFF;
-  color:#3E2454;
-  border:1px solid #8F8F8F;
-}
+/* صفوف فارغة */
+.empty-row td{ height:62px; background:#FFFFFF; border-bottom:1px solid #D9D9D9; }
 
-.empty-row td{
-  height:62px;
-  background-color:#FFFFFF;
-  border-bottom:1px solid #D9D9D9;
-}
+/* لا توجد بيانات */
+.no-data{ color:#8D8D8D; font-size:14px; padding:25px 10px !important; }
 
-.no-data{
-  color:#8D8D8D;
-  font-size:14px;
-  padding:25px 10px !important;
-}
 
-.reply-modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.35);
-  z-index:9999;
-  justify-content:center;
-  align-items:center;
-}
+/* خلفية المودال */
+.reply-modal{ display:none; position:fixed; inset:0; z-index:9999; justify-content:center; align-items:center; }
 
-.reply-modal-content{
-  width:800px;
-  max-width:92%;
-  background:#FFFFFF;
-  border-radius:10px;
-  padding:28px 26px 24px;
-  box-shadow:0 6px 24px rgba(0,0,0,0.18);
-  position:relative;
-  direction:rtl;
-}
+/* صندوق المودال */
+.reply-modal-content{ width:760px; max-width:92%; background:#FFFFFF; border-radius:10px; padding:28px 26px 24px; box-shadow:0 6px 24px rgba(0,0,0,0.18); position:relative; direction:rtl; }
 
-.close-modal{
-  position:absolute;
-  top:14px;
-  left:16px;
-  background:transparent;
-  border:none;
-  font-size:28px;
-  color:#3E2454;
-  cursor:pointer;
-  font-family:inherit;
-}
+/* زر الإغلاق */
+.close-modal{ position:absolute; top:14px; left:16px; background:transparent; border:none; font-size:28px; color:#3E2454; cursor:pointer; font-family:inherit; }
 
-.reply-title{
-  color:#3E2454;
-  font-size:18px;
-  font-weight:700;
-  margin-bottom:18px;
-  text-align:right;
-}
+/* عنوان المودال */
+.reply-title{ color:#3E2454; font-size:18px; font-weight:700; margin-bottom:18px; text-align:right; }
 
-.ticket-info-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:22px;
-  margin-bottom:24px;
-}
+/* عنوان القسم */
+.section-label{ color:#000000; font-size:16px; font-weight:700; margin-bottom:12px; text-align:right; }
 
-.ticket-info-box{
-  background:#70A0AF;
-  border-radius:8px;
-  padding:18px 22px;
-  color:#FFFFFF;
-  min-height:120px;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  gap:16px;
-}
+/* صندوق الشكوى */
+.ticket-message-box{ background:#F0F0F0; border-radius:8px; padding:22px 24px; color:#3E2454; font-size:15px; line-height:2; margin-bottom:24px; min-height:110px; }
 
-.ticket-info-row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  font-size:15px;
-  font-weight:700;
-}
+/* حقل الرد */
+.reply-textarea{ width:100%; min-height:160px; border:1px solid #70A0AF; border-radius:0; outline:none; resize:none; padding:16px 18px; font-size:15px; color:#3E2454; background:#FFFFFF; box-sizing:border-box; margin-bottom:24px; }
 
-.ticket-info-value{
-  color:#FFFFFF;
-  font-weight:600;
-}
+/* نص placeholder */
+.reply-textarea::placeholder{ color:#C9C9C9; }
 
-.section-label{
-  color:#000000;
-  font-size:16px;
-  font-weight:700;
-  margin-bottom:12px;
-  text-align:right;
-}
+/* صندوق الرد المعروض */
+.reply-view-box{ width:100%; min-height:50px; border:1px solid #70A0AF; padding:16px 18px;  font-size:15px; color:#3E2454; background:#FFFFFF; box-sizing:border-box; line-height:2; margin-bottom:24px; }
 
-.ticket-message-box{
-  background:#F0F0F0;
-  border-radius:8px;
-  padding:22px 24px;
-  color:#3E2454;
-  font-size:15px;
-  line-height:2;
-  margin-bottom:26px;
-  min-height:110px;
-}
+/* زر إرسال الرد */
+.send-reply-btn{ display:block; width:320px; max-width:100%; margin:0 auto; background:#3E2454; color:#FFFFFF; border:none; border-radius:4px; padding:14px 20px; font-size:16px; font-weight:700; cursor:pointer; }
 
-.reply-log-title{
-  color:#3E2454;
-  font-size:17px;
-  font-weight:700;
-  margin-bottom:14px;
-  text-align:right;
-}
-
-.admin-reply-label{
-  color:#000000;
-  font-size:16px;
-  font-weight:700;
-  margin-bottom:10px;
-  text-align:right;
-}
-
-.reply-textarea{
-  width:100%;
-  min-height:160px;
-  border:1px solid #70A0AF;
-  border-radius:0;
-  outline:none;
-  resize:none;
-  padding:16px 18px;
-  font-family:"Noto Kufi Arabic",sans-serif;
-  font-size:15px;
-  color:#3E2454;
-  background:#FFFFFF;
-  box-sizing:border-box;
-  margin-bottom:24px;
-}
-
-.reply-textarea::placeholder{
-  color:#C9C9C9;
-}
-
-.send-reply-btn{
-  display:block;
-  width:320px;
-  max-width:100%;
-  margin:0 auto;
-  background:#3E2454;
-  color:#FFFFFF;
-  border:none;
-  border-radius:4px;
-  padding:14px 20px;
-  font-size:16px;
-  font-weight:700;
-  font-family:"Noto Kufi Arabic",sans-serif;
-  cursor:pointer;
-
-}
 </style>
 </head>
 <body>
@@ -395,68 +210,75 @@ $result = mysqli_query($con, $sql);
       <div class="page-wrapper">
 
         <div class="tabs-box">
-          <a href="?tab=replied" class="tab-btn <?php echo ($tab == 'replied') ? 'active' : ''; ?>">
-            تم الرد
-          </a>
-          <a href="?tab=pending" class="tab-btn <?php echo ($tab == 'pending') ? 'active' : ''; ?>">
-            بانتظار الرد
-          </a>
+          <a href="?tab=replied" class="tab-btn <?php echo ($tab == 'replied') ? 'active' : ''; ?>">تم الرد</a>
+          <a href="?tab=pending" class="tab-btn <?php echo ($tab == 'pending') ? 'active' : ''; ?>">بانتظار الرد</a>
         </div>
 
         <div class="permissions-card">
           <table class="permissions-table">
-            <thead>
-              <tr>
-                <th>رقم التذكرة</th>
-                <th>المرسل</th>
-                <th>تاريخ الإرسال</th>
-                <th>العنوان</th>
-                <th>الإجراءات</th>
-              </tr>
-            </thead>
 
-            <tbody>
-              <?php
-              if ($result && mysqli_num_rows($result) > 0) {
-                  while($row = mysqli_fetch_assoc($result)) {
-              ?>
-              <tr>
-                <td><?php echo "TKT-" . str_pad($row['ticket_id'], 3, "0", STR_PAD_LEFT); ?></td>
-                <td><?php echo htmlspecialchars($row['sender_name']); ?></td>
-                <td><?php echo htmlspecialchars($row['submission_date']); ?></td>
-                <td class="ticket-subject"><?php echo htmlspecialchars($row['subject']); ?></td>
-                <td>
-                  <?php if ($tab == 'pending') { ?>
-                    <button
-                      type="button"
-                      class="btn btn-outline"
-                      onclick='openReplyModal(<?php echo json_encode([
-                        "ticket_id" => "TKT-" . str_pad($row["ticket_id"], 3, "0", STR_PAD_LEFT),
-                        "sender_name" => $row["sender_name"],
-                        "ticket_type" => "شكوى / استفسار",
-                        "submission_date" => $row["submission_date"],
-                        "message" => $row["message"],
-                        "raw_id" => $row["ticket_id"]
-                      ], JSON_UNESCAPED_UNICODE); ?>)'>
-                      الرد على التذكرة
-                    </button>
-                  <?php } else { ?>
-                    <a href="Admin4_ViewReply.php?id=<?php echo $row['ticket_id']; ?>" class="btn btn-outline">عرض</a>
-                  <?php } ?>
-                </td>
-              </tr>
-              <?php
-                  }
-              } else {
-              ?>
-              <tr>
-                <td colspan="5" class="no-data">لا توجد تذاكر في هذا القسم</td>
-              </tr>
-              <tr class="empty-row"><td colspan="5"></td></tr>
-              <tr class="empty-row"><td colspan="5"></td></tr>
-              <tr class="empty-row"><td colspan="5"></td></tr>
-              <?php } ?>
-            </tbody>
+            <tr class="table-head">
+              <th>رقم التذكرة</th>
+              <th>المرسل</th>
+              <th>تاريخ الإرسال</th>
+              <th>العنوان</th>
+              <th>الإجراءات</th>
+            </tr>
+
+            <?php
+            /* عرض التذاكر */
+            if ($result && mysqli_num_rows($result) > 0) {
+                while($row = mysqli_fetch_assoc($result)) {
+            ?>
+            <tr>
+              <td><?php echo "TKT-" . str_pad($row['ticket_id'], 3, "0", STR_PAD_LEFT); ?></td>
+              <td><?php echo htmlspecialchars($row['sender_name']); ?></td>
+              <td><?php echo htmlspecialchars($row['submission_date']); ?></td>
+              <td class="ticket-subject"><?php echo htmlspecialchars($row['subject']); ?></td>
+              <td>
+                <?php
+                /* في التذاكر بانتظار الرد يفتح المودال مع خانة الرد */
+                if ($tab == 'pending') {
+                ?>
+                <button
+                  type="button"
+                  class="btn btn-outline"
+                  onclick='openReplyModal(<?php echo json_encode([
+                    "mode" => "pending",
+                    "message" => $row["message"],
+                    "raw_id" => $row["ticket_id"]
+                  ], JSON_UNESCAPED_UNICODE); ?>)'>
+                  الرد على التذكرة
+                </button>
+                <?php
+                /* في التذاكر المردود عليها يفتح نفس المودال مع الرد المحفوظ */
+                } else {
+                ?>
+                <button
+                  type="button"
+                  class="btn btn-outline"
+                  onclick='openReplyModal(<?php echo json_encode([
+                    "mode" => "replied",
+                    "message" => $row["message"],
+                    "admin_reply" => $row["admin_reply"]
+                  ], JSON_UNESCAPED_UNICODE); ?>)'>
+                  عرض
+                </button>
+                <?php } ?>
+              </td>
+            </tr>
+            <?php
+                }
+            } else {
+            ?>
+            <tr>
+              <td colspan="5" class="no-data">لا توجد تذاكر في هذا القسم</td>
+            </tr>
+            <tr class="empty-row"><td colspan="5"></td></tr>
+            <tr class="empty-row"><td colspan="5"></td></tr>
+            <tr class="empty-row"><td colspan="5"></td></tr>
+            <?php } ?>
+
           </table>
         </div>
 
@@ -471,42 +293,20 @@ $result = mysqli_query($con, $sql);
 
     <button class="close-modal" type="button" onclick="closeReplyModal()">×</button>
 
-    <div class="reply-title">بيانات التذكرة</div>
+    <div class="reply-title" id="modalTitle">الرد على التذكرة</div>
 
-    <div class="ticket-info-grid">
-      <div class="ticket-info-box">
-        <div class="ticket-info-row">
-          <span>اسم المرسل</span>
-          <span class="ticket-info-value" id="senderName"></span>
-        </div>
-        <div class="ticket-info-row">
-          <span>نوع التذكرة</span>
-          <span class="ticket-info-value" id="ticketType"></span>
-        </div>
-      </div>
-
-      <div class="ticket-info-box">
-        <div class="ticket-info-row">
-          <span>رقم التذكرة</span>
-          <span class="ticket-info-value" id="ticketId"></span>
-        </div>
-        <div class="ticket-info-row">
-          <span>تاريخ الإرسال</span>
-          <span class="ticket-info-value" id="date"></span>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-label">محتوى الشكوى / الاستفسار</div>
+    <div class="section-label">الشكوى / الاستفسار</div>
     <div class="ticket-message-box" id="message"></div>
 
-    <div class="reply-log-title">سجل الردود</div>
-    <div class="admin-reply-label">الرد الإداري</div>
-
-    <form method="post">
+    <form method="post" id="replyForm">
       <input type="hidden" name="ticket_id" id="rawId">
-      <textarea name="admin_reply" class="reply-textarea" placeholder="أدخل ردك هنا .." required></textarea>
-      <button type="submit" class="send-reply-btn">إرسال الرد</button>
+
+      <div class="section-label">الرد الإداري</div>
+      <textarea name="admin_reply" class="reply-textarea" id="replyTextarea" placeholder="أدخل ردك هنا .." required></textarea>
+
+      <div class="reply-view-box" id="replyViewBox" style="display:none;"></div>
+
+      <button type="submit" class="send-reply-btn" id="sendReplyBtn">إرسال الرد</button>
     </form>
 
   </div>
@@ -514,12 +314,26 @@ $result = mysqli_query($con, $sql);
 
 <script>
 function openReplyModal(data){
-  document.getElementById("ticketId").textContent = data.ticket_id;
-  document.getElementById("senderName").textContent = data.sender_name;
-  document.getElementById("ticketType").textContent = data.ticket_type;
-  document.getElementById("date").textContent = data.submission_date;
   document.getElementById("message").textContent = data.message;
-  document.getElementById("rawId").value = data.raw_id;
+
+  if(data.mode === "pending"){
+    document.getElementById("modalTitle").textContent = "الرد على التذكرة";
+    document.getElementById("rawId").value = data.raw_id;
+    document.getElementById("replyTextarea").value = "";
+    document.getElementById("replyTextarea").style.display = "block";
+    document.getElementById("replyViewBox").style.display = "none";
+    document.getElementById("sendReplyBtn").style.display = "block";
+    document.getElementById("replyTextarea").required = true;
+  }else{
+    document.getElementById("modalTitle").textContent = "عرض الرد";
+    document.getElementById("rawId").value = "";
+    document.getElementById("replyTextarea").style.display = "none";
+    document.getElementById("replyViewBox").style.display = "block";
+    document.getElementById("replyViewBox").textContent = data.admin_reply ? data.admin_reply : "لا يوجد رد";
+    document.getElementById("sendReplyBtn").style.display = "none";
+    document.getElementById("replyTextarea").required = false;
+  }
+
   document.getElementById("replyModal").style.display = "flex";
 }
 
