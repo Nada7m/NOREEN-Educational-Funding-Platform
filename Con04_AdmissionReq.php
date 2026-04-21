@@ -74,9 +74,7 @@ $resRequests = mysqli_query($con, $sqlRequests);
 .stat-number{font-size:22px; font-weight:700; margin-bottom:8px; font-family:'Noto Kufi Arabic', sans-serif;}
 
 .stat-total{color:#3E2454;}
-
 .stat-processing{color:#E0B25C;}
-
 .stat-finished{color:#63B68B;}
 
 .stat-label{font-size:15px; font-weight:600; color:#4b3d5c; font-family:'Noto Kufi Arabic', sans-serif;}
@@ -94,10 +92,15 @@ $resRequests = mysqli_query($con, $sqlRequests);
 .status-badge{display:inline-block; min-width:120px; padding:7px 14px; border-radius:20px; color:#fff; font-size:13px; font-weight:700; font-family:'Noto Kufi Arabic', sans-serif;}
 
 .status-processing{background:#E9BE66;}
-
 .status-finished{background:#63B68B;}
-
 .status-rejected{background:#D96C6C;}
+
+/* ✅ الإضافة */
+.status-plain{
+  background:#FFFFFF;
+  color:#444444;
+  border:1px solid #DDDDDD;
+}
 
 .details-btn{display:inline-block; padding:8px 18px; border:1px solid #999; border-radius:10px; background:#fff; color:#3E2454; text-decoration:none; font-size:13px; font-weight:600; font-family:'Noto Kufi Arabic', sans-serif; transition:0.3s;}
 
@@ -110,169 +113,151 @@ $resRequests = mysqli_query($con, $sqlRequests);
 <body>
 <div class="layout">
 
-    <aside class="sidebar">
-        <div class="sidebar-top">
-            <div class="sidebar-logo">
-                <img src="شعار نورين.png" alt="نورين">
-            </div>
+<aside class="sidebar">
+<div class="sidebar-top">
+<div class="sidebar-logo">
+<img src="شعار نورين.png" alt="نورين">
+</div>
 
-            <ul class="sidebar-menu">
-                <li><a href="Con00_MainPage.php">الرئيسية</a></li>
-                <li><a href="Con04_AdmissionReq.php" class="active">إدارة طلبات القبول</a></li>
-                <li><a href="Con03_Consultations.php">الاستشارات</a></li>
-                <li><a href="Con08_ReqRating.php">تقييمات المستفيدين</a></li>
-            </ul>
-        </div>
+<ul class="sidebar-menu">
+<li><a href="Con00_MainPage.php">الرئيسية</a></li>
+<li><a href="Con04_AdmissionReq.php" class="active">إدارة طلبات القبول</a></li>
+<li><a href="Con03_Consultations.php">الاستشارات</a></li>
+<li><a href="Con08_ReqRating.php">تقييمات المستفيدين</a></li>
+</ul>
+</div>
 
-        <div class="sidebar-bottom">
-            <form action="logout.php" method="post">
-                <button type="submit" class="logout-btn">
-                    <img src="ايقونة تسجيل الخروج.png" class="logout-icon" alt="خروج">
-                    <b>تسجيل الخروج</b>
-                </button>
-            </form>
-        </div>
-    </aside>
+<div class="sidebar-bottom">
+<form action="logout.php" method="post">
+<button type="submit" class="logout-btn">
+<img src="ايقونة تسجيل الخروج.png" class="logout-icon" alt="خروج">
+<b>تسجيل الخروج</b>
+</button>
+</form>
+</div>
+</aside>
 
-    <div class="main-content">
+<div class="main-content">
 
-        <header class="header">
-            <div class="page-heading">
-                <div class="page-title">إدارة طلبات القبول</div>
-                <div class="page-description">صفحة متابعة طلبات القبول المقدمة</div>
-            </div>
+<header class="header">
+<div class="page-heading">
+<div class="page-title">إدارة طلبات القبول</div>
+<div class="page-description">صفحة متابعة طلبات القبول المقدمة</div>
+</div>
 
-            <div class="header-icons">
-                <div class="settings-dropdown">
-                    <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="الإعدادات">
-                    <div class="dropdown-menu">
-                        <a href="Con02_Profile.php">الملف الشخصي</a>
-                        <a href="support.php">تقديم شكوى او استفسار</a>
-                    </div>
-                </div>
-            </div>
-        </header>
+<div class="header-icons">
+<div class="settings-dropdown">
+<img src="ايقونة قائمة الاعدادات.png" class="menu-icon">
+<div class="dropdown-menu">
+<a href="Con02_Profile.php">الملف الشخصي</a>
+<a href="support.php">تقديم شكوى او استفسار</a>
+</div>
+</div>
+</div>
+</header>
 
-        <div class="dashboard-section">
+<div class="dashboard-section">
 
-            <div class="stats-boxes">
-                <div class="stat-card">
-                    <div class="stat-number stat-total"><?php echo $totalRequests; ?></div>
-                    <div class="stat-label">إجمالي الطلبات</div>
-                </div>
+<div class="table-box">
+<table class="requests-table">
 
-                <div class="stat-card">
-                    <div class="stat-number stat-processing"><?php echo $processingRequests; ?></div>
-                    <div class="stat-label">قيد المعالجة</div>
-                </div>
+<tr>
+<th>رقم الطلب</th>
+<th>اسم المستفيد</th>
+<th>تاريخ الطلب</th>
+<th>حالة الطلب</th>
+<th>حالة النتيجة</th>
+<th>حالة الدفع</th>
+<th>الإجراءات</th>
+</tr>
 
-                <div class="stat-card">
-                    <div class="stat-number stat-finished"><?php echo $finishedRequests; ?></div>
-                    <div class="stat-label">تم إصدار النتيجة</div>
-                </div>
-            </div>
+<?php while ($row = mysqli_fetch_assoc($resRequests)) { ?>
 
-            <div class="table-box">
-                <table class="requests-table">
-                    <tr>
-                        <th>رقم الطلب</th>
-                        <th>اسم المستفيد</th>
-                        <th>تاريخ الطلب</th>
-                        <th>حالة الطلب</th>
-                        <th>حالة النتيجة</th>
-                        <th>حالة الدفع</th>
-                        <th>الإجراءات</th>
-                    </tr>
+<?php
+$fullName = $row['f_name']." ".$row['l_name'];
+$request_status = trim($row['request_status']);
+$result_status = trim($row['Result_status']);
 
-                    <?php if ($resRequests && mysqli_num_rows($resRequests) > 0) { ?>
-                        <?php while ($row = mysqli_fetch_assoc($resRequests)) { ?>
+if ($request_status == "" || $request_status == "في الانتظار") {
+    $requestStatusText = "في الانتظار";
+    $requestStatusClass = "status-processing";
+} elseif ($request_status == "مرفوض") {
+    $requestStatusText = "مرفوض";
+    $requestStatusClass = "status-rejected";
+} else {
+    $requestStatusText = "مقبول";
+    $requestStatusClass = "status-finished";
+}
 
-                            <?php
-                            $fullName = $row['f_name'] . " " . $row['l_name'];
+/* ✅ التعديل الوحيد هنا */
+if ($request_status == "مرفوض") {
+    $resultStatusText = "لم تُصدر";
+    $resultStatusClass = "status-plain";
+} elseif ($result_status == "" || $result_status == "قيد المعالجة") {
+    $resultStatusText = "قيد المعالجة";
+    $resultStatusClass = "status-processing";
+} elseif ($result_status == "أُصدرت" || $result_status == "أصدرت") {
+    $resultStatusText = "أُصدرت";
+    $resultStatusClass = "status-finished";
+} else {
+    $resultStatusText = $result_status;
+    $resultStatusClass = "status-finished";
+}
 
-                            $request_status = trim($row['request_status']);
+$payment_status = trim($row['payment_status']);
 
-                            if ($request_status == "" || $request_status == "في الانتظار") {
-                                $requestStatusText = "في الانتظار";
-                                $requestStatusClass = "status-processing";
-                            } elseif ($request_status == "مرفوض") {
-                                $requestStatusText = "مرفوض";
-                                $requestStatusClass = "status-rejected";
-                            } else {
-                                $requestStatusText = "مقبول";
-                                $requestStatusClass = "status-finished";
-                            }
+if ($request_status == "مرفوض") {
+    $paymentStatusText = "لم يتم الدفع";
+    $paymentStatusClass = "status-rejected";
+} elseif ($payment_status == "مدفوع") {
+    $paymentStatusText = "تم الدفع";
+    $paymentStatusClass = "status-finished";
+} else {
+    $paymentStatusText = "بإنتظار الدفع";
+    $paymentStatusClass = "status-processing";
+}
+?>
 
-                            $result_status = trim($row['Result_status']);
+<tr>
+<td><?php echo $row['request_id']; ?></td>
 
-                            if ($result_status == "" || $result_status == "قيد المعالجة") {
-                                $resultStatusText = "قيد المعالجة";
-                                $resultStatusClass = "status-processing";
-                            } elseif ($result_status == "مرفوض" || $result_status == "مرفوضة") {
-                                $resultStatusText = "مرفوض";
-                                $resultStatusClass = "status-rejected";
-                            } else {
-                                $resultStatusText = $result_status;
-                                $resultStatusClass = "status-finished";
-                            }
+<td><?php echo htmlspecialchars($fullName); ?></td>
 
-                            $payment_status = trim($row['payment_status']);
+<td><?php echo htmlspecialchars($row['Submit_date']); ?></td>
 
-                            if ($request_status == "مرفوض") {
-                                $paymentStatusText = "لم يتم الدفع";
-                                $paymentStatusClass = "status-rejected";
-                            } elseif ($payment_status == "مدفوع") {
-                                $paymentStatusText = "تم الدفع";
-                                $paymentStatusClass = "status-finished";
-                            } else {
-                                $paymentStatusText = "بإنتظار الدفع";
-                                $paymentStatusClass = "status-processing";
-                            }
-                            ?>
+<td>
+<div class="status-badge <?php echo $requestStatusClass; ?>">
+<?php echo $requestStatusText; ?>
+</div>
+</td>
 
-                            <tr>
-                                <td><?php echo $row['request_id']; ?></td>
+<td>
+<div class="status-badge <?php echo $resultStatusClass; ?>">
+<?php echo $resultStatusText; ?>
+</div>
+</td>
 
-                                <td><?php echo htmlspecialchars($fullName, ENT_QUOTES, 'UTF-8'); ?></td>
+<td>
+<div class="status-badge <?php echo $paymentStatusClass; ?>">
+<?php echo $paymentStatusText; ?>
+</div>
+</td>
 
-                                <td><?php echo htmlspecialchars($row['Submit_date'], ENT_QUOTES, 'UTF-8'); ?></td>
-
-                                <td>
-                                    <div class="status-badge <?php echo $requestStatusClass; ?>">
-                                        <?php echo htmlspecialchars($requestStatusText, ENT_QUOTES, 'UTF-8'); ?>
-                                    </div>
-                                </td>
-
-                                <td>
-                                    <div class="status-badge <?php echo $resultStatusClass; ?>">
-                                        <?php echo htmlspecialchars($resultStatusText, ENT_QUOTES, 'UTF-8'); ?>
-                                    </div>
-                                </td>
-
-                                <td>
-                                    <div class="status-badge <?php echo $paymentStatusClass; ?>">
-                                        <?php echo htmlspecialchars($paymentStatusText, ENT_QUOTES, 'UTF-8'); ?>
-                                    </div>
-                                </td>
-
-                                <td>
-                                  <a href="Con05_AdmissiontDetails.php?request_id=<?php echo $row['request_id']; ?>" class="details-btn">
-    عرض البيانات
+<td>
+<a href="Con05_AdmissiontDetails.php?request_id=<?php echo $row['request_id']; ?>" class="details-btn">
+عرض البيانات
 </a>
-                                </td>
-                            </tr>
+</td>
 
-                        <?php } ?>
-                    <?php } else { ?>
-                        <tr>
-                            <td colspan="7" class="empty-msg">لا توجد طلبات قبول حالياً</td>
-                        </tr>
-                    <?php } ?>
-                </table>
-            </div>
+</tr>
 
-        </div>
-    </div>
+<?php } ?>
+
+</table>
+</div>
+
+</div>
+</div>
 </div>
 </body>
 </html>
