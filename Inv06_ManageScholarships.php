@@ -97,7 +97,7 @@ $result=mysqli_stmt_get_result($stmt);
 <div class="accepted-actions">
   <a href="Inv07_StudentDetails.php?request_id=<?php echo $row['request_id']; 
   ?>" class="manage-btn btn-view">عرض البيانات</a>
-<a href="Inv08_ContactBeneficiary.php" class="manage-btn btn-contact">التواصل</a>
+<a href="Inv08_ContactBeneficiary.php?bnf_id=<?php echo $row['bnf_id']; ?>" class="contact-btn">التواصل</a>
 <a href="Inv09_create_contract.php?request_id=<?php echo $row['request_id']; ?>" class="manage-btn btn-contract">
     العقد الإلكتروني
 </a></div>
