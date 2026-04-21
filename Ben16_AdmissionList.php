@@ -107,6 +107,11 @@ $result = $conn->query($sql);
 .pay-confirm{ width:100%; height:46px; border:none; border-radius:6px; background:#70A0AF; color:#fff; font-size:18px; font-weight:700; font-family:'Noto Kufi Arabic'; cursor:pointer; margin-top:10px; }
 
 .close-btn{ display:block; margin:12px auto 0; background:none; border:none; color:#777; font-size:14px; font-family:'Noto Kufi Arabic'; cursor:pointer; }
+.status-plain{
+  background:#FFFFFF;
+  color:#444444;
+  border:1px solid #DDDDDD;
+}
 </style>
 </head>
 <body>
@@ -192,19 +197,21 @@ $result = $conn->query($sql);
                                     $requestStatusClass = "status-done";
                                 }
 
-                                $result_status = trim($row['Result_status']);
+                               $result_status = trim($row['Result_status']);
 
-                                if ($result_status == "" || $result_status == "قيد المعالجة") {
-                                    $resultStatusText = "قيد المعالجة";
-                                    $resultStatusClass = "status-processing";
-                                } elseif ($result_status == "مرفوض" || $result_status == "مرفوضة") {
-                                    $resultStatusText = "مرفوض";
-                                    $resultStatusClass = "status-rejected";
-                                } else {
-                                    $resultStatusText = $result_status;
-                                    $resultStatusClass = "status-done";
-                                }
-
+if ($request_status == "مرفوض") {
+    $resultStatusText = "لم تُصدر";
+    $resultStatusClass = "status-plain";
+} elseif ($result_status == "" || $result_status == "قيد المعالجة") {
+    $resultStatusText = "قيد المعالجة";
+    $resultStatusClass = "status-processing";
+} elseif ($result_status == "أُصدرت" || $result_status == "أصدرت") {
+    $resultStatusText = "أُصدرت";
+    $resultStatusClass = "status-done";
+} else {
+    $resultStatusText = $result_status;
+    $resultStatusClass = "status-done";
+}
                                 $payment_status = trim($row['payment_status']);
 
                                 if ($request_status == "مرفوض") {
