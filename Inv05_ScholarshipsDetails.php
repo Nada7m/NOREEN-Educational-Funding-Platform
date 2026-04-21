@@ -104,11 +104,9 @@ while ($row = mysqli_fetch_assoc($app_result)) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- التنسيق الأساسي المشترك -->
   <link rel="stylesheet" href="CSS01Layout.css?v=3">
 
   <style>
-    /* زر الرجوع */
     .back-btn{
       width:34px;
       height:34px;
@@ -123,7 +121,6 @@ while ($row = mysqli_fetch_assoc($app_result)) {
       object-fit:contain;
     }
 
-    /* التبويبات */
     .tabs-row{
       width:90%;
       margin:0 auto 18px;
@@ -151,7 +148,6 @@ while ($row = mysqli_fetch_assoc($app_result)) {
       background:#F2F2F2;
     }
 
-    /* إظهار وإخفاء محتوى التبويب */
     .tab-content{
       display:none;
     }
@@ -160,7 +156,6 @@ while ($row = mysqli_fetch_assoc($app_result)) {
       display:block;
     }
 
-    /* صندوق تفاصيل المنحة */
     .scholarship-details-box{
       width:90%;
       min-height:430px;
@@ -172,7 +167,6 @@ while ($row = mysqli_fetch_assoc($app_result)) {
       box-sizing:border-box;
     }
 
-    /* الصف العلوي */
     .top-info-row{
       display:flex;
       flex-direction:row-reverse;
@@ -181,7 +175,6 @@ while ($row = mysqli_fetch_assoc($app_result)) {
       gap:40px;
     }
 
-    /* بيانات المنحة */
     .main-info-box{
       width:68%;
       text-align:right;
@@ -238,7 +231,6 @@ while ($row = mysqli_fetch_assoc($app_result)) {
       font-weight:500;
     }
 
-    /* صندوق التاريخ */
     .deadline-box{
       width:28%;
       text-align:right;
@@ -269,7 +261,6 @@ while ($row = mysqli_fetch_assoc($app_result)) {
       display:inline-block;
     }
 
-    /* خط الفاصل */
     .section-divider{
       width:100%;
       height:1px;
@@ -277,7 +268,6 @@ while ($row = mysqli_fetch_assoc($app_result)) {
       margin:28px 0 22px;
     }
 
-    /* الشروط */
     .conditions-box{
       text-align:right;
     }
@@ -302,14 +292,12 @@ while ($row = mysqli_fetch_assoc($app_result)) {
       margin-bottom:2px;
     }
 
-    /* تاريخ الطلبات في الجدول */
     .date-cell{
       direction:ltr;
       unicode-bidi:isolate;
       white-space:nowrap;
     }
 
-    /* صندوق الطلبات */
     .requests-box{
       width:90%;
       margin:0 auto;
@@ -355,11 +343,11 @@ while ($row = mysqli_fetch_assoc($app_result)) {
       padding:30px 10px;
     }
 
-    /* أزرار الإجراءات */
     .actions-box{
       display:flex;
       gap:8px;
       flex-wrap:wrap;
+      justify-content:center;
     }
 
     .action-btn{
@@ -382,10 +370,125 @@ while ($row = mysqli_fetch_assoc($app_result)) {
       color:#FFFFFF;
     }
 
-    /* نص الحالة */
+    .view-btn{
+      background:#3E2454;
+      color:#FFFFFF;
+      min-width:110px;
+    }
+
     .status-text{
       font-weight:700;
       color:#3E2454;
+    }
+
+    /* النافذة المنبثقة */
+    .modal-overlay{
+      display:none;
+      position:fixed;
+      top:0;
+      right:0;
+      width:100%;
+      height:100%;
+      background:rgba(0,0,0,0.45);
+      z-index:9999;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      box-sizing:border-box;
+    }
+
+    .modal-overlay.show{
+      display:flex;
+    }
+
+    .modal-box{
+      width:100%;
+      max-width:760px;
+      max-height:90vh;
+      overflow-y:auto;
+      background:#FFFFFF;
+      border-radius:12px;
+      padding:26px;
+      box-sizing:border-box;
+      position:relative;
+    }
+
+    .modal-close{
+      position:absolute;
+      top:14px;
+      left:14px;
+      width:36px;
+      height:36px;
+      border:none;
+      border-radius:50%;
+      background:#F0F0F0;
+      color:#3E2454;
+      font-size:20px;
+      cursor:pointer;
+      font-family:"Noto Kufi Arabic",sans-serif;
+    }
+
+    .modal-title{
+      margin:0 0 20px 0;
+      font-size:22px;
+      font-weight:700;
+      color:#3E2454;
+      text-align:right;
+    }
+
+    .details-grid{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:14px;
+      margin-bottom:20px;
+    }
+
+    .detail-card{
+      background:#FAFAFA;
+      border:1px solid #E7E7E7;
+      border-radius:8px;
+      padding:14px;
+      box-sizing:border-box;
+      text-align:right;
+    }
+
+    .detail-label{
+      display:block;
+      font-size:14px;
+      color:#777777;
+      margin-bottom:6px;
+      font-weight:500;
+    }
+
+    .detail-value{
+      display:block;
+      font-size:16px;
+      color:#3E2454;
+      font-weight:700;
+      line-height:1.8;
+      word-break:break-word;
+    }
+
+    .modal-actions{
+      display:flex;
+      gap:10px;
+      justify-content:flex-start;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+
+    .modal-actions form{
+      margin:0;
+    }
+
+    @media (max-width:700px){
+      .details-grid{
+        grid-template-columns:1fr;
+      }
+
+      .modal-box{
+        padding:22px 16px;
+      }
     }
   </style>
 </head>
@@ -393,26 +496,20 @@ while ($row = mysqli_fetch_assoc($app_result)) {
 <body>
   <div class="layout">
 
-    <!-- الشريط الجانبي -->
     <aside class="sidebar">
       <div class="sidebar-top">
-
-        <!-- الشعار -->
         <div class="sidebar-logo">
           <img src="شعار نورين.png" alt="نورين">
         </div>
 
-        <!-- روابط القائمة -->
         <ul class="sidebar-menu">
           <li><a href="Inv00_MainPage.php">الرئيسية</a></li>
           <li><a href="Inv04_CreateScholarship.php" class="active">عرض المنح</a></li>
-             <li><a href="Inv06_ManageScholarships.php">إدارة المنح</a></li>  
-<li><a href="Inv10_Payments.php">المدفوعات</a></li>
+          <li><a href="Inv06_ManageScholarships.php">إدارة المنح</a></li>  
+          <li><a href="Inv10_Payments.php">المدفوعات</a></li>
         </ul>
-
       </div>
 
-      <!-- زر تسجيل الخروج -->
       <div class="sidebar-bottom">
         <form action="logout.php" method="post">
           <button type="submit" class="logout-btn">
@@ -423,12 +520,10 @@ while ($row = mysqli_fetch_assoc($app_result)) {
       </div>
     </aside>
 
-    <!-- المحتوى الرئيسي -->
     <div class="main-content">
 
-      <!-- الهيدر -->
       <header class="header">
-   <div class="page-heading">
+        <div class="page-heading">
           <h1 class="page-title">عرض المنح</h1>
           <p class="page-description">صفحة تقديم عروض فرص المنح</p>
         </div>
@@ -442,40 +537,30 @@ while ($row = mysqli_fetch_assoc($app_result)) {
             </div>
           </div>
         </div>
-
-    
       </header>
 
       <section class="page">
 
-        <!-- زر الرجوع -->
         <div class="page-top">
           <div></div>
-
           <div class="back-btn">
             <a href="Inv04_CreateScholarship.php">
-        <img src="سهم تراجع.svg" width="40">
+              <img src="سهم تراجع.svg" width="40">
             </a>
           </div>
         </div>
 
-        <!-- التبويبات -->
         <div class="tabs-row">
-
-          <!-- تبويب تفاصيل المنحة -->
           <div class="tab tab-active" data-target="scholarship-tab">
             تفاصيل المنحة
           </div>
 
-          <!-- تبويب تفاصيل المتقدمين -->
           <div class="tab" data-target="requests-tab">
             تفاصيل المتقدمين
           </div>
-
         </div>
-        <!-- تبويب تفاصيل المنحة -->
-        <div id="scholarship-tab" class="tab-content active">
 
+        <div id="scholarship-tab" class="tab-content active">
           <div class="scholarship-details-box">
             <div class="top-info-row">              
               <div class="deadline-box">
@@ -483,14 +568,12 @@ while ($row = mysqli_fetch_assoc($app_result)) {
                 <span class="deadline-value"><?php echo date("d-m-Y", strtotime($scholarship['app_deadline'])); ?></span>
               </div>
 
-              <!-- بيانات المنحة -->
               <div class="main-info-box">
                 <h2 class="main-title">
                   <?php echo htmlspecialchars($scholarship['sch_name']); ?>
                 </h2>
 
                 <div class="double-info-row">
-
                   <div class="info-item">
                     <span class="info-label">المجال الرئيسي:</span>
                     <span class="info-value">
@@ -504,7 +587,6 @@ while ($row = mysqli_fetch_assoc($app_result)) {
                       <?php echo htmlspecialchars($scholarship['study_level']); ?>
                     </span>
                   </div>
-
                 </div>
 
                 <div class="specialization-line">
@@ -514,17 +596,14 @@ while ($row = mysqli_fetch_assoc($app_result)) {
                   </span>
                 </div>
               </div>
-
             </div>
 
             <div class="section-divider"></div>
 
-            <!-- الشروط -->
             <div class="conditions-box">
               <h3 class="conditions-title">الشروط:</h3>
 
               <?php
-              /* تحويل كل سطر في الشروط إلى نقطة مستقلة */
               $requirements_lines = preg_split("/\r\n|\n|\r/", $scholarship['requirements']);
               ?>
 
@@ -536,13 +615,10 @@ while ($row = mysqli_fetch_assoc($app_result)) {
                 <?php endforeach; ?>
               </ul>
             </div>
-
           </div>
         </div>
 
-        <!-- تبويب تفاصيل المتقدمين -->
         <div id="requests-tab" class="tab-content">
-
           <div class="requests-box">
 
             <h2 class="requests-title">تفاصيل المتقدمين على هذه المنحة</h2>
@@ -569,7 +645,6 @@ while ($row = mysqli_fetch_assoc($app_result)) {
 
                   <?php foreach ($applicants as $applicant): ?>
                     <tr>
-
                       <td><?php echo htmlspecialchars($applicant['f_name']); ?></td>
                       <td><?php echo htmlspecialchars($applicant['l_name']); ?></td>
                       <td><?php echo htmlspecialchars($applicant['univ_name']); ?></td>
@@ -585,22 +660,21 @@ while ($row = mysqli_fetch_assoc($app_result)) {
 
                       <td>
                         <div class="actions-box">
-
-                          <form method="post" style="margin:0;">
-                            <input type="hidden" name="request_id" value="<?php echo $applicant['request_id']; ?>">
-                            <input type="hidden" name="action_type" value="accept">
-                            <button type="submit" class="action-btn accept-btn">مقبول</button>
-                          </form>
-
-                          <form method="post" style="margin:0;">
-                            <input type="hidden" name="request_id" value="<?php echo $applicant['request_id']; ?>">
-                            <input type="hidden" name="action_type" value="reject">
-                            <button type="submit" class="action-btn reject-btn">مرفوض</button>
-                          </form>
-
+                          <button
+                            type="button"
+                            class="action-btn view-btn open-details-btn"
+                            data-request-id="<?php echo $applicant['request_id']; ?>"
+                            data-fname="<?php echo htmlspecialchars($applicant['f_name'], ENT_QUOTES, 'UTF-8'); ?>"
+                            data-lname="<?php echo htmlspecialchars($applicant['l_name'], ENT_QUOTES, 'UTF-8'); ?>"
+                            data-univ="<?php echo htmlspecialchars($applicant['univ_name'], ENT_QUOTES, 'UTF-8'); ?>"
+                            data-major="<?php echo htmlspecialchars($applicant['major_name'], ENT_QUOTES, 'UTF-8'); ?>"
+                            data-status="<?php echo htmlspecialchars($applicant['request_status'], ENT_QUOTES, 'UTF-8'); ?>"
+                            data-date="<?php echo date("d-m-Y", strtotime($applicant['Submit_date'])); ?>"
+                          >
+                            عرض الإجراءات
+                          </button>
                         </div>
                       </td>
-
                     </tr>
                   <?php endforeach; ?>
 
@@ -610,11 +684,65 @@ while ($row = mysqli_fetch_assoc($app_result)) {
             <?php endif; ?>
 
           </div>
-
         </div>
 
       </section>
 
+    </div>
+  </div>
+
+  <!-- النافذة المنبثقة -->
+  <div class="modal-overlay" id="detailsModal">
+    <div class="modal-box">
+      <button type="button" class="modal-close" id="closeModalBtn">×</button>
+
+      <h2 class="modal-title">تفاصيل تقديم الطلب</h2>
+
+      <div class="details-grid">
+        <div class="detail-card">
+          <span class="detail-label">رقم الطلب</span>
+          <span class="detail-value" id="modalRequestId">-</span>
+        </div>
+
+        <div class="detail-card">
+          <span class="detail-label">الاسم الكامل</span>
+          <span class="detail-value" id="modalFullName">-</span>
+        </div>
+
+        <div class="detail-card">
+          <span class="detail-label">الجامعة</span>
+          <span class="detail-value" id="modalUniversity">-</span>
+        </div>
+
+        <div class="detail-card">
+          <span class="detail-label">التخصص</span>
+          <span class="detail-value" id="modalMajor">-</span>
+        </div>
+
+        <div class="detail-card">
+          <span class="detail-label">حالة الطلب الحالية</span>
+          <span class="detail-value" id="modalStatus">-</span>
+        </div>
+
+        <div class="detail-card">
+          <span class="detail-label">تاريخ التقديم</span>
+          <span class="detail-value" id="modalSubmitDate">-</span>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <form method="post">
+          <input type="hidden" name="request_id" id="acceptRequestId" value="">
+          <input type="hidden" name="action_type" value="accept">
+          <button type="submit" class="action-btn accept-btn">قبول الطلب</button>
+        </form>
+
+        <form method="post">
+          <input type="hidden" name="request_id" id="rejectRequestId" value="">
+          <input type="hidden" name="action_type" value="reject">
+          <button type="submit" class="action-btn reject-btn">رفض الطلب</button>
+        </form>
+      </div>
     </div>
   </div>
 
@@ -625,7 +753,6 @@ while ($row = mysqli_fetch_assoc($app_result)) {
 
     tabs.forEach(function(tab){
       tab.addEventListener("click", function(){
-
         tabs.forEach(function(item){
           item.classList.remove("tab-active");
         });
@@ -639,6 +766,55 @@ while ($row = mysqli_fetch_assoc($app_result)) {
         const targetId = tab.getAttribute("data-target");
         document.getElementById(targetId).classList.add("active");
       });
+    });
+
+    /* النافذة المنبثقة */
+    const modal = document.getElementById("detailsModal");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    const openButtons = document.querySelectorAll(".open-details-btn");
+
+    const modalRequestId = document.getElementById("modalRequestId");
+    const modalFullName = document.getElementById("modalFullName");
+    const modalUniversity = document.getElementById("modalUniversity");
+    const modalMajor = document.getElementById("modalMajor");
+    const modalStatus = document.getElementById("modalStatus");
+    const modalSubmitDate = document.getElementById("modalSubmitDate");
+
+    const acceptRequestId = document.getElementById("acceptRequestId");
+    const rejectRequestId = document.getElementById("rejectRequestId");
+
+    openButtons.forEach(function(btn){
+      btn.addEventListener("click", function(){
+        const requestId = this.getAttribute("data-request-id");
+        const fName = this.getAttribute("data-fname");
+        const lName = this.getAttribute("data-lname");
+        const univ = this.getAttribute("data-univ");
+        const major = this.getAttribute("data-major");
+        const status = this.getAttribute("data-status");
+        const submitDate = this.getAttribute("data-date");
+
+        modalRequestId.textContent = requestId;
+        modalFullName.textContent = fName + " " + lName;
+        modalUniversity.textContent = univ;
+        modalMajor.textContent = major;
+        modalStatus.textContent = status;
+        modalSubmitDate.textContent = submitDate;
+
+        acceptRequestId.value = requestId;
+        rejectRequestId.value = requestId;
+
+        modal.classList.add("show");
+      });
+    });
+
+    closeModalBtn.addEventListener("click", function(){
+      modal.classList.remove("show");
+    });
+
+    modal.addEventListener("click", function(e){
+      if (e.target === modal) {
+        modal.classList.remove("show");
+      }
     });
   </script>
 
