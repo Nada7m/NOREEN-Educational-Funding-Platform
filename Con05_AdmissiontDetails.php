@@ -137,7 +137,7 @@ $docLabels = [
 <style>
 .page-wrap{padding:14px 18px 18px;}
 /* شريط زر الرجوع */
-.top-bar { display:flex; justify-content:flex-end; align-items:center; margin-bottom:8px; max-width:980px; margin-right:170px; }
+.top-bar { display:flex; justify-content:flex-end; align-items:center; margin-bottom:8px; max-width:980px; margin-right:300px; }
 .back-btn img{width:38px; height:38px; object-fit:contain;}
 .details-card{background:#fff; border:0.5px solid #c5c3c3; border-radius:12px; margin-bottom: 40px; padding:16px 18px; max-width:980px; margin:0 auto;}
 .request-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;}
