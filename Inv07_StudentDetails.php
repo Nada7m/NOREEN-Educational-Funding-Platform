@@ -20,6 +20,19 @@ if (!isset($_GET['request_id']) || $_GET['request_id'] == "") {
 }
 /* تحويل رقم الطلب إلى عدد صحيح */
 $request_id = (int)$_GET['request_id'];
+
+/* دالة تجهيز رابط الملف */
+function file_link($file){
+    $file = trim($file);
+    if($file == ""){
+        return "";
+    }
+    if(strpos($file, 'uploads/') === 0 || strpos($file, 'http://') === 0 || strpos($file, 'https://') === 0){
+        return $file;
+    }
+    return 'uploads/' . $file;
+}
+
 /* جلب بيانات الطلب مع بيانات المستفيد وبيانات المنحة */
 $sql = "SELECT
 scholarship_requests.request_id,
@@ -288,7 +301,7 @@ width:100%;
 <div class="info-label">السيرة الذاتية:</div>
 <div class="info-value">
 <?php if ($cv_file != ""): ?>
-<a class="file-link" href="<?php echo htmlspecialchars($cv_file); ?>" target="_blank"><?php echo htmlspecialchars($cv_file); ?></a>
+<a class="file-link" href="<?php echo htmlspecialchars(file_link($cv_file)); ?>" target="_blank"><?php echo htmlspecialchars($cv_file); ?></a>
 <?php else: ?>
 <span class="no-file">لا يوجد ملف</span>
 <?php endif; ?>
@@ -298,7 +311,7 @@ width:100%;
 <div class="info-label">الشهادة الجامعية / شهادة آخر مؤهل:</div>
 <div class="info-value">
 <?php if ($certificate_file != ""): ?>
-<a class="file-link" href="<?php echo htmlspecialchars($certificate_file); ?>" target="_blank"><?php echo htmlspecialchars($certificate_file); ?></a>
+<a class="file-link" href="<?php echo htmlspecialchars(file_link($certificate_file)); ?>" target="_blank"><?php echo htmlspecialchars($certificate_file); ?></a>
 <?php else: ?>
 <span class="no-file">لا يوجد ملف</span>
 <?php endif; ?>
@@ -308,7 +321,7 @@ width:100%;
 <div class="info-label">خطابات التوصية (التركية):</div>
 <div class="info-value">
 <?php if ($recommendation_file != ""): ?>
-<a class="file-link" href="<?php echo htmlspecialchars($recommendation_file); ?>" target="_blank"><?php echo htmlspecialchars($recommendation_file); ?></a>
+<a class="file-link" href="<?php echo htmlspecialchars(file_link($recommendation_file)); ?>" target="_blank"><?php echo htmlspecialchars($recommendation_file); ?></a>
 <?php else: ?>
 <span class="no-file">لا يوجد ملف</span>
 <?php endif; ?>
@@ -318,7 +331,7 @@ width:100%;
 <div class="info-label">خطاب القبول الجامعي من الجامعة المرغوبة:</div>
 <div class="info-value">
 <?php if ($acceptance_file != ""): ?>
-<a class="file-link" href="<?php echo htmlspecialchars($acceptance_file); ?>" target="_blank"><?php echo htmlspecialchars($acceptance_file); ?></a>
+<a class="file-link" href="<?php echo htmlspecialchars(file_link($acceptance_file)); ?>" target="_blank"><?php echo htmlspecialchars($acceptance_file); ?></a>
 <?php else: ?>
 <span class="no-file">لا يوجد ملف</span>
 <?php endif; ?>
