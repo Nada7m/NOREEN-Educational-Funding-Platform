@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 22 أبريل 2026 الساعة 11:13
+-- Generation Time: 22 أبريل 2026 الساعة 19:54
 -- إصدار الخادم: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -305,7 +305,7 @@ CREATE TABLE `investor` (
   `inv_id` int(11) NOT NULL,
   `ccr_number` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `inv_number` int(11) NOT NULL,
+  `inv_number` varchar(11) NOT NULL,
   `inv_name` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `approval_status` enum('بانتظار المراجعة','معتمد','مرفوض') NOT NULL DEFAULT 'بانتظار المراجعة',
@@ -317,9 +317,9 @@ CREATE TABLE `investor` (
 --
 
 INSERT INTO `investor` (`inv_id`, `ccr_number`, `email`, `inv_number`, `inv_name`, `password`, `approval_status`, `account_status`) VALUES
-(1, '1010010813', 'InvestorRelations@safco.sabic.com', 530014051, 'سابك - الشركة السعودية للصناعات', '$2y$10$/8anVADcwa6r5K6nJk/RCO9Tb6fS7G05m9eUS4FIXm90T2iaJ7c4a', 'معتمد', 'نشط'),
-(2, '4030175741', 'Baggage.Inquiries@Saudia.com', 2147483647, 'الخطوط الجوية السعودية', '$2y$10$46r8y.xFY5El.dVX2RJuN.2ijifWQAc8tZgH6GxcpN.vi5D5hJPby', 'معتمد', 'نشط'),
-(3, '2052101150', 'investor@aramco.com', 567788990, 'أرامكو', '$2y$10$IGfO7u71zWhhE/n3JrK72.0Wh2ZOM9PyPNd.3vGYwGuYarq8SCIT.', 'مرفوض', 'نشط');
+(1, '1010010814', 'InvestorRelations@safco.sabic.com', '0530014051', 'سابك - الشركة السعودية للصناعات', '$2y$10$/8anVADcwa6r5K6nJk/RCO9Tb6fS7G05m9eUS4FIXm90T2iaJ7c4a', 'معتمد', 'نشط'),
+(2, '4030175741', 'Baggage.Inquiries@Saudia.com', '0557159469', 'الخطوط الجوية السعودية', '$2y$10$46r8y.xFY5El.dVX2RJuN.2ijifWQAc8tZgH6GxcpN.vi5D5hJPby', 'معتمد', 'نشط'),
+(3, '2052101150', 'investor@aramco.com', '0521075839', 'أرامكو', '$2y$10$IGfO7u71zWhhE/n3JrK72.0Wh2ZOM9PyPNd.3vGYwGuYarq8SCIT.', 'مرفوض', 'نشط');
 
 -- --------------------------------------------------------
 
