@@ -1,20 +1,15 @@
 <?php
-
 // الاتصال بقاعدة البيانات
 $con = mysqli_connect("localhost", "root", "", "noreen");
-
 // متغيرات لرسالة التنبيه ونوعها
 $msg = "";
 $type = "";
-
 // لو فشل الاتصال يوقف الصفحة ويظهر رسالة
 if (!$con) {
     die("فشل الاتصال بقاعدة البيانات");
 }
-
 // يشتغل هذا الجزء فقط إذا المستخدم ضغط زر "إنشاء حساب"
 if (isset($_POST["save"])) {
-
     // أخذ القيم من الفورم
     $name  = $_POST["orgName"];
     $ccr   = $_POST["commercial"];
@@ -27,28 +22,23 @@ if (isset($_POST["save"])) {
     mysqli_stmt_bind_param($stmt1, "s", $email);
     mysqli_stmt_execute($stmt1);
     mysqli_stmt_store_result($stmt1);
-
     // التحقق هل رقم السجل التجاري مستخدم من قبل
     $stmt2 = mysqli_prepare($con, "SELECT inv_id FROM investor WHERE ccr_number = ?");
     mysqli_stmt_bind_param($stmt2, "s", $ccr);
     mysqli_stmt_execute($stmt2);
     mysqli_stmt_store_result($stmt2);
-
     // إذا البريد موجود مسبقًا
     if (mysqli_stmt_num_rows($stmt1) > 0) {
         $msg = "البريد الإلكتروني مستخدم مسبقًا.";
         $type = "error";
     }
-
     // إذا السجل التجاري موجود مسبقًا
     elseif (mysqli_stmt_num_rows($stmt2) > 0) {
         $msg = "رقم السجل التجاري مسجل مسبقًا.";
         $type = "error";
     }
-
     // إذا كل شيء سليم، نخزن البيانات
     else {
-
         // تشفير كلمة المرور قبل حفظها
         $newpass = password_hash($pass, PASSWORD_DEFAULT);
 
@@ -58,9 +48,7 @@ if (isset($_POST["save"])) {
             "INSERT INTO investor (inv_name, ccr_number, email, inv_number, password)
              VALUES (?, ?, ?, ?, ?)"
         );
-
         mysqli_stmt_bind_param($stmt3, "sssss", $name, $ccr, $email, $phone, $newpass);
-
         // إذا تم الحفظ بنجاح ينتقل لصفحة تسجيل الدخول
         if (mysqli_stmt_execute($stmt3)) {
             header("Location: login.php");
@@ -73,61 +61,47 @@ if (isset($_POST["save"])) {
 }
 
 ?>
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <title>إنشاء حساب مستثمر</title>
-
-    <!-- استدعاء الخط -->
+    <!--  الخط -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic&display=swap" rel="stylesheet">
-
     <!-- ملف التنسيق الخارجي -->
     <link rel="stylesheet" href="Style.css">
 </head>
-
 <body>
-
     <!-- الصندوق الرئيسي -->
     <div class="container">
         <div class="box">
-
             <!-- عنوان الصفحة -->
             <h2>إنشاء حساب <span>مستثمر</span></h2>
-
             <!-- تظهر الرسالة فقط إذا كان فيها نص -->
             <?php if ($msg != "") { ?>
                 <div class="message <?php echo $type; ?>">
                     <?php echo $msg; ?>
                 </div>
             <?php } ?>
-
             <!-- الفورم -->
             <form method="post" onsubmit="return checkForm()">
-
                 <!-- الصف الأول -->
                 <div class="row">
-
                     <!-- اسم الجهة -->
                     <div class="field">
                         <label>* اسم الجهة</label>
                         <input type="text" id="name" name="orgName">
                         <div class="errorText" id="nameError"></div>
                     </div>
-
                     <!-- رقم السجل التجاري -->
                     <div class="field">
                         <label>* رقم السجل التجاري</label>
                         <input type="text" id="ccr" name="commercial">
                         <div class="errorText" id="ccrError"></div>
                     </div>
-
                 </div>
-
                 <!-- الصف الثاني -->
                 <div class="row">
-
                     <!-- البريد الإلكتروني -->
                     <div class="field">
                         <label>* البريد الإلكتروني</label>
@@ -168,7 +142,6 @@ if (isset($_POST["save"])) {
                     </div>
 
                 </div>
-
                 <!-- زر الإنشاء -->
                 <div class="center">
                     <button type="submit" class="btn" name="save">إنشاء حساب</button>
@@ -178,7 +151,6 @@ if (isset($_POST["save"])) {
 
         </div>
     </div>
-
     <script>
         // هذه الدالة تبدل بين إخفاء وإظهار كلمة المرور
         function showPass(id) {
@@ -190,7 +162,6 @@ if (isset($_POST["save"])) {
                 input.type = "password";
             }
         }
-
         // هذه الدالة تتأكد أن البيانات صحيحة قبل إرسال الفورم
         function checkForm() {
 
@@ -201,7 +172,6 @@ if (isset($_POST["save"])) {
             document.getElementById("phoneError").innerText = "";
             document.getElementById("passError").innerText = "";
             document.getElementById("pass2Error").innerText = "";
-
             // نقرأ القيم من الحقول
             var name  = document.getElementById("name").value;
             var ccr   = document.getElementById("ccr").value;
@@ -215,29 +185,24 @@ if (isset($_POST["save"])) {
                 document.getElementById("nameError").innerText = "يرجى إدخال اسم الجهة.";
                 return false;
             }
-
             // التحقق من السجل التجاري
             if (ccr == "") {
                 document.getElementById("ccrError").innerText = "يرجى إدخال رقم السجل التجاري.";
                 return false;
             }
-
             if (ccr.length != 10 || isNaN(ccr)) {
                 document.getElementById("ccrError").innerText = "يرجى إدخال رقم سجل تجاري مكوّن من 10 أرقام.";
                 return false;
             }
-
             // التحقق من البريد
             if (email == "") {
                 document.getElementById("emailError").innerText = "يرجى إدخال البريد الإلكتروني.";
                 return false;
             }
-
             if (email.indexOf("@") == -1) {
                 document.getElementById("emailError").innerText = "يرجى إدخال بريد إلكتروني صحيح.";
                 return false;
             }
-
             // التحقق من الجوال
             if (phone == "") {
                 document.getElementById("phoneError").innerText = "يرجى إدخال رقم الهاتف.";

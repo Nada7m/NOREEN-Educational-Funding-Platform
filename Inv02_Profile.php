@@ -119,27 +119,20 @@ $conn->close();
     display:inline-block;
     transition:0.3s;
 }
-
 .edit-btn:hover{
     opacity:0.9;
 }
 </style>
 </head>
-
 <body>
-
 <div class="layout">
-
     <!-- الشريط الجانبي -->
     <aside class="sidebar">
-
         <div class="sidebar-top">
-
             <!-- الشعار -->
             <div class="sidebar-logo">
                 <img src="شعار نورين.png" alt="شعار نورين">
             </div>
-
             <!-- روابط التنقل -->
             <ul class="sidebar-menu">
                 <li><a href="Inv00_MainPage.php">الرئيسية</a></li>
@@ -149,7 +142,6 @@ $conn->close();
             </ul>
 
         </div>
-
         <!-- زر تسجيل الخروج -->
         <div class="sidebar-bottom">
             <form action="logout.php" method="post">
@@ -160,17 +152,14 @@ $conn->close();
             </form>
         </div>
     </aside>
-
     <!-- محتوى الصفحة -->
     <div class="main-content">
-
         <!-- الهيدر -->
   <header class="header">
 
   <div class="page-heading">
     <div class="page-title">الملف الشخصي</div>
   </div>
-
   <div class="header-icons">
     <div class="settings-dropdown">
       <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="الإعدادات">
@@ -181,41 +170,31 @@ $conn->close();
       </div>
     </div>
   </div>
-
 </header>
-
         <!-- محتوى الصفحة -->
         <div class="page">
-
             <div class="profile-box">
-
                 <!-- اسم الشركة -->
                 <h2><?php echo htmlspecialchars($investor['inv_name']); ?></h2>
-
                 <!-- خط فاصل -->
                 <div class="line"></div>
-
                 <!-- بيانات الشركة -->
                 <div class="profile-section">
                     <h3>بيانات الشركة</h3>
                     <p><strong>رقم السجل التجاري:</strong> <?php echo htmlspecialchars($investor['ccr_number']); ?></p>
                     <p><strong>رقم الهاتف:</strong> <?php echo htmlspecialchars($investor['inv_number']); ?></p>
                 </div>
-
                 <!-- بيانات الحساب -->
                 <div class="profile-section">
                     <h3>بيانات الحساب</h3>
                     <p><strong>البريد الإلكتروني:</strong> <?php echo htmlspecialchars($investor['email']); ?></p>
-
                     <div class="password-box">
                         <label>كلمة المرور:</label>
                         <p>********</p>
                     </div>
                 </div>
-
                 <!-- زر التعديل -->
                 <a href="Inv03_EditProfile.php" class="edit-btn">تعديل البيانات</a>
-
             </div>
 
         </div>

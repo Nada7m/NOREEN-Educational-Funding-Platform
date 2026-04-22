@@ -1,32 +1,43 @@
 <?php
 session_start();
-if(!isset($_SESSION['inv_id'])){header("Location: login.php");exit();}
+if(!isset($_SESSION['inv_id'])){
+    header("Location: login.php");
+    exit();
+}
+
+/* الاتصال بقاعدة البيانات */
 $con=mysqli_connect("localhost","root","","noreen");
-if(!$con){die("فشل الاتصال بقاعدة البيانات");}
+if(!$con){
+    die("فشل الاتصال بقاعدة البيانات");
+}
 mysqli_set_charset($con,"utf8mb4");
+
+/* رقم المستثمر الحالي */
 $inv_id=$_SESSION['inv_id'];
-if(!isset($_GET['id'])||$_GET['id']==""){die("رقم المنحة غير موجود.");}
+
+/* رقم المنحة */
+if(!isset($_GET['id'])||$_GET['id']==""){
+    die("رقم المنحة غير موجود.");
+}
 $scholarship_id=(int)$_GET['id'];
 
-function e($text){return htmlspecialchars($text ?? "",ENT_QUOTES,"UTF-8");}
-
-/* تجهيز رابط الملف النهائي من PHP */
-function build_open_link($file){
-    $file=trim($file);
-    if($file==""){return "";}
-    if(preg_match('/^https?:\/\//i',$file)){return $file;}
-    if(strpos($file,'uploads/')===0){return $file;}
-    if(strpos($file,'/')===0){return ltrim($file,'/');}
-    return "uploads/".$file;
+/* اختصار لطباعة النص بأمان */
+function e($text){
+    return htmlspecialchars($text ?? "",ENT_QUOTES,"UTF-8");
 }
 
 /* قبول أو رفض الطلب */
-if($_SERVER["REQUEST_METHOD"]=="POST"&&isset($_POST["action_type"])&&isset($_POST["request_id"])){
+if($_SERVER["REQUEST_METHOD"]=="POST" && isset($_POST["action_type"]) && isset($_POST["request_id"])){
     $request_id=(int)$_POST["request_id"];
     $action_type=$_POST["action_type"];
     $new_status="";
-    if($action_type=="accept"){$new_status="مقبول";}
-    elseif($action_type=="reject"){$new_status="مرفوض";}
+
+    if($action_type=="accept"){
+        $new_status="مقبول";
+    }elseif($action_type=="reject"){
+        $new_status="مرفوض";
+    }
+
     if($new_status!=""){
         $update_stmt=mysqli_prepare($con,"
             UPDATE scholarship_requests sr
@@ -49,9 +60,12 @@ mysqli_stmt_bind_param($stmt,"ii",$scholarship_id,$inv_id);
 mysqli_stmt_execute($stmt);
 $result=mysqli_stmt_get_result($stmt);
 $scholarship=mysqli_fetch_assoc($result);
-if(!$scholarship){die("لم يتم العثور على بيانات هذه المنحة.");}
 
-/* المتقدمون */
+if(!$scholarship){
+    die("لم يتم العثور على بيانات هذه المنحة.");
+}
+
+/* جلب المتقدمين */
 $applicants=[];
 $app_stmt=mysqli_prepare($con,"
     SELECT
@@ -77,6 +91,8 @@ mysqli_stmt_execute($app_stmt);
 $app_result=mysqli_stmt_get_result($app_stmt);
 
 while($row=mysqli_fetch_assoc($app_result)){
+
+    /* ملفات هذا الطلب */
     $documents=[];
     $doc_stmt=mysqli_prepare($con,"
         SELECT doc_id,doc_type,file_name,file
@@ -89,7 +105,6 @@ while($row=mysqli_fetch_assoc($app_result)){
     $doc_result=mysqli_stmt_get_result($doc_stmt);
 
     while($doc_row=mysqli_fetch_assoc($doc_result)){
-        $doc_row["open_link"]=build_open_link($doc_row["file"]);
         $documents[]=$doc_row;
     }
 
@@ -166,7 +181,11 @@ while($row=mysqli_fetch_assoc($app_result)){
 .modal-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
 .modal-actions form{margin:0}
 .hidden-form{display:none}
-@media (max-width:700px){.modal-box{padding:18px 14px}.file-item{align-items:flex-start}.modal-actions form,.modal-actions button{width:100%}}
+@media (max-width:700px){
+  .modal-box{padding:18px 14px}
+  .file-item{align-items:flex-start}
+  .modal-actions form,.modal-actions button{width:100%}
+}
 </style>
 </head>
 <body>
@@ -246,7 +265,9 @@ while($row=mysqli_fetch_assoc($app_result)){
 </div>
 </div>
 </div>
+
 <div class="section-divider"></div>
+
 <div class="conditions-box">
 <h3 class="conditions-title">الشروط:</h3>
 <?php $requirements_lines=preg_split("/\r\n|\n|\r/",$scholarship['requirements']); ?>
@@ -264,6 +285,7 @@ while($row=mysqli_fetch_assoc($app_result)){
 <div id="requests-tab" class="tab-content">
 <div class="requests-box">
 <h2 class="requests-title">تفاصيل المتقدمين على هذه المنحة</h2>
+
 <?php if(count($applicants)==0): ?>
 <div class="empty-requests">لا يوجد متقدمون على هذه المنحة حتى الآن.</div>
 <?php else: ?>
@@ -290,20 +312,7 @@ while($row=mysqli_fetch_assoc($app_result)){
 <td class="date-cell"><?php echo date("d-m-Y",strtotime($applicant['Submit_date'])); ?></td>
 <td>
 <div class="actions-box">
-<?php $documents_json=e(json_encode($applicant["documents"],JSON_UNESCAPED_UNICODE)); ?>
-<button type="button" class="action-btn view-btn open-details-btn"
-data-request-id="<?php echo $applicant['request_id']; ?>"
-data-fname="<?php echo e($applicant['f_name']); ?>"
-data-lname="<?php echo e($applicant['l_name']); ?>"
-data-email="<?php echo e($applicant['email']); ?>"
-data-phone="<?php echo e($applicant['phone_num']); ?>"
-data-field="<?php echo e($applicant['sch_field']); ?>"
-data-degree="<?php echo e($applicant['degree_level']); ?>"
-data-univ="<?php echo e($applicant['univ_name']); ?>"
-data-major="<?php echo e($applicant['major_name']); ?>"
-data-status="<?php echo e($applicant['request_status']); ?>"
-data-date="<?php echo date("d-m-Y",strtotime($applicant['Submit_date'])); ?>"
-data-documents="<?php echo $documents_json; ?>">
+<button type="button" class="action-btn view-btn open-details-btn" data-modal="modal_<?php echo $applicant['request_id']; ?>">
 عرض الإجراءات
 </button>
 </div>
@@ -319,148 +328,107 @@ data-documents="<?php echo $documents_json; ?>">
 </div>
 </div>
 
-<div class="modal-overlay" id="detailsModal">
-<div class="modal-box">
-<div class="modal-head">
-<h2 class="modal-title">تفاصيل تقديم الطلب</h2>
-<button type="button" class="modal-close" id="closeModalBtn">×</button>
-</div>
+<?php foreach($applicants as $applicant): ?>
+<div class="modal-overlay" id="modal_<?php echo $applicant['request_id']; ?>">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2 class="modal-title">تفاصيل تقديم الطلب</h2>
+      <button type="button" class="modal-close close-modal-btn">×</button>
+    </div>
 
-<div class="info-box">
-<div class="info-row"><span class="info-label-modal">الاسم الكامل:</span><span id="modalFullName">-</span></div>
-<div class="info-row"><span class="info-label-modal">البريد الإلكتروني:</span><span id="modalEmail">-</span></div>
-<div class="info-row"><span class="info-label-modal">رقم الجوال:</span><span id="modalPhone">-</span></div>
-<div class="info-row"><span class="info-label-modal">المجال الدراسي:</span><span id="modalField">-</span></div>
-<div class="info-row"><span class="info-label-modal">الدرجة الحالية:</span><span id="modalDegree">-</span></div>
-<div class="info-row"><span class="info-label-modal">الجامعة:</span><span id="modalUniversity">-</span></div>
-<div class="info-row"><span class="info-label-modal">التخصص:</span><span id="modalMajor">-</span></div>
-<div class="info-row"><span class="info-label-modal">تاريخ التقديم:</span><span id="modalSubmitDate">-</span></div>
-</div>
+    <div class="info-box">
+      <div class="info-row"><span class="info-label-modal">الاسم الكامل:</span><span><?php echo e($applicant['f_name']." ".$applicant['l_name']); ?></span></div>
+      <div class="info-row"><span class="info-label-modal">البريد الإلكتروني:</span><span><?php echo e($applicant['email']); ?></span></div>
+      <div class="info-row"><span class="info-label-modal">رقم الجوال:</span><span><?php echo e($applicant['phone_num']); ?></span></div>
+      <div class="info-row"><span class="info-label-modal">المجال الدراسي:</span><span><?php echo e($applicant['sch_field']); ?></span></div>
+      <div class="info-row"><span class="info-label-modal">الدرجة الحالية:</span><span><?php echo e($applicant['degree_level']); ?></span></div>
+      <div class="info-row"><span class="info-label-modal">الجامعة:</span><span><?php echo e($applicant['univ_name']); ?></span></div>
+      <div class="info-row"><span class="info-label-modal">التخصص:</span><span><?php echo e($applicant['major_name']); ?></span></div>
+      <div class="info-row"><span class="info-label-modal">تاريخ التقديم:</span><span><?php echo date("d-m-Y",strtotime($applicant['Submit_date'])); ?></span></div>
+    </div>
 
-<h3 class="files-title">الملفات المرفقة</h3>
-<div id="modalDocumentsList">
-<div class="file-item"><div class="file-info"><div class="file-name">لا توجد ملفات مرفقة لهذا الطلب.</div></div></div>
-</div>
+    <h3 class="files-title">الملفات المرفقة</h3>
+    <div>
+      <?php if(count($applicant["documents"])>0): ?>
+        <?php foreach($applicant["documents"] as $doc): ?>
+          <div class="file-item">
+            <div class="file-info">
+              <div class="file-type">نوع الملف: <?php echo e($doc['doc_type']); ?></div>
+              <div class="file-name"><?php echo e($doc['file_name']); ?></div>
+            </div>
 
-<div class="modal-actions">
-<form method="post" id="acceptForm">
-<input type="hidden" name="request_id" id="acceptRequestId" value="">
-<input type="hidden" name="action_type" value="accept">
-<button type="submit" class="accept-btn" id="acceptBtn">قبول الطلب</button>
-</form>
-<form method="post" id="rejectForm">
-<input type="hidden" name="request_id" id="rejectRequestId" value="">
-<input type="hidden" name="action_type" value="reject">
-<button type="submit" class="reject-btn">رفض الطلب</button>
-</form>
+            <?php if($doc['file']!=""): ?>
+              <a href="<?php echo e($doc['file']); ?>" target="_blank" class="download-file-btn">تنزيل الملف</a>
+            <?php endif; ?>
+          </div>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <div class="file-item">
+          <div class="file-info">
+            <div class="file-name">لا توجد ملفات مرفقة لهذا الطلب.</div>
+          </div>
+        </div>
+      <?php endif; ?>
+    </div>
+
+    <div class="modal-actions">
+      <form method="post">
+        <input type="hidden" name="request_id" value="<?php echo $applicant['request_id']; ?>">
+        <input type="hidden" name="action_type" value="accept">
+        <?php if($applicant['request_status']=="مقبول"): ?>
+          <button type="button" class="accept-btn accepted-static-btn">مقبول</button>
+        <?php else: ?>
+          <button type="submit" class="accept-btn">قبول الطلب</button>
+        <?php endif; ?>
+      </form>
+
+      <?php if($applicant['request_status']!="مقبول"): ?>
+      <form method="post">
+        <input type="hidden" name="request_id" value="<?php echo $applicant['request_id']; ?>">
+        <input type="hidden" name="action_type" value="reject">
+        <button type="submit" class="reject-btn">رفض الطلب</button>
+      </form>
+      <?php endif; ?>
+    </div>
+  </div>
 </div>
-</div>
-</div>
+<?php endforeach; ?>
 
 <script>
 const tabs=document.querySelectorAll(".tab");
 const contents=document.querySelectorAll(".tab-content");
+
 tabs.forEach(function(tab){
-tab.addEventListener("click",function(){
-tabs.forEach(function(item){item.classList.remove("tab-active");});
-contents.forEach(function(content){content.classList.remove("active");});
-tab.classList.add("tab-active");
-document.getElementById(tab.getAttribute("data-target")).classList.add("active");
-});
-});
-
-const modal=document.getElementById("detailsModal");
-const closeModalBtn=document.getElementById("closeModalBtn");
-const openButtons=document.querySelectorAll(".open-details-btn");
-const modalFullName=document.getElementById("modalFullName");
-const modalEmail=document.getElementById("modalEmail");
-const modalPhone=document.getElementById("modalPhone");
-const modalField=document.getElementById("modalField");
-const modalDegree=document.getElementById("modalDegree");
-const modalUniversity=document.getElementById("modalUniversity");
-const modalMajor=document.getElementById("modalMajor");
-const modalSubmitDate=document.getElementById("modalSubmitDate");
-const modalDocumentsList=document.getElementById("modalDocumentsList");
-const acceptRequestId=document.getElementById("acceptRequestId");
-const rejectRequestId=document.getElementById("rejectRequestId");
-const acceptBtn=document.getElementById("acceptBtn");
-const rejectForm=document.getElementById("rejectForm");
-
-openButtons.forEach(function(btn){
-btn.addEventListener("click",function(){
-const requestId=this.getAttribute("data-request-id");
-const fName=this.getAttribute("data-fname");
-const lName=this.getAttribute("data-lname");
-const email=this.getAttribute("data-email");
-const phone=this.getAttribute("data-phone");
-const field=this.getAttribute("data-field");
-const degree=this.getAttribute("data-degree");
-const univ=this.getAttribute("data-univ");
-const major=this.getAttribute("data-major");
-const status=this.getAttribute("data-status");
-const submitDate=this.getAttribute("data-date");
-const documentsRaw=this.getAttribute("data-documents");
-let documents=[];
-try{documents=JSON.parse(documentsRaw);}catch(e){documents=[];}
-
-modalFullName.textContent=(fName+" "+lName).trim() || "-";
-modalEmail.textContent=email ? email : "-";
-modalPhone.textContent=phone ? phone : "-";
-modalField.textContent=field ? field : "-";
-modalDegree.textContent=degree ? degree : "-";
-modalUniversity.textContent=univ ? univ : "-";
-modalMajor.textContent=major ? major : "-";
-modalSubmitDate.textContent=submitDate ? submitDate : "-";
-
-acceptRequestId.value=requestId;
-rejectRequestId.value=requestId;
-
-modalDocumentsList.innerHTML="";
-if(documents.length>0){
-documents.forEach(function(doc){
-const item=document.createElement("div");
-item.className="file-item";
-const info=document.createElement("div");
-info.className="file-info";
-const type=document.createElement("div");
-type.className="file-type";
-type.textContent="نوع الملف: "+(doc.doc_type ? doc.doc_type : "-");
-const name=document.createElement("div");
-name.className="file-name";
-name.textContent=doc.file_name ? doc.file_name : "ملف مرفق";
-info.appendChild(type);
-info.appendChild(name);
-item.appendChild(info);
-if(doc.open_link){
-const link=document.createElement("a");
-link.className="download-file-btn";
-link.href=doc.open_link;
-link.target="_blank";
-link.textContent="تنزيل الملف";
-item.appendChild(link);
-}
-modalDocumentsList.appendChild(item);
-});
-}else{
-modalDocumentsList.innerHTML='<div class="file-item"><div class="file-info"><div class="file-name">لا توجد ملفات مرفقة لهذا الطلب.</div></div></div>';
-}
-
-if(status==="مقبول"){
-acceptBtn.textContent="مقبول";
-acceptBtn.classList.add("accepted-static-btn");
-rejectForm.classList.add("hidden-form");
-}else{
-acceptBtn.textContent="قبول الطلب";
-acceptBtn.classList.remove("accepted-static-btn");
-rejectForm.classList.remove("hidden-form");
-}
-
-modal.classList.add("show");
-});
+  tab.addEventListener("click",function(){
+    tabs.forEach(function(item){item.classList.remove("tab-active");});
+    contents.forEach(function(content){content.classList.remove("active");});
+    tab.classList.add("tab-active");
+    document.getElementById(tab.getAttribute("data-target")).classList.add("active");
+  });
 });
 
-closeModalBtn.addEventListener("click",function(){modal.classList.remove("show");});
-modal.addEventListener("click",function(e){if(e.target===modal){modal.classList.remove("show");}});
+/* فتح النافذة */
+document.querySelectorAll(".open-details-btn").forEach(function(btn){
+  btn.addEventListener("click",function(){
+    const modalId=this.getAttribute("data-modal");
+    document.getElementById(modalId).classList.add("show");
+  });
+});
+
+/* إغلاق النافذة */
+document.querySelectorAll(".close-modal-btn").forEach(function(btn){
+  btn.addEventListener("click",function(){
+    this.closest(".modal-overlay").classList.remove("show");
+  });
+});
+
+document.querySelectorAll(".modal-overlay").forEach(function(modal){
+  modal.addEventListener("click",function(e){
+    if(e.target===modal){
+      modal.classList.remove("show");
+    }
+  });
+});
 </script>
 </body>
 </html>

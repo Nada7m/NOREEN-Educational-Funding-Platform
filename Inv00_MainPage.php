@@ -1,24 +1,60 @@
+<?php
+session_start();
+
+/* الاتصال بقاعدة البيانات */
+$conn = new mysqli("localhost", "root", "", "noreen");
+
+if ($conn->connect_error) {
+  die("فشل الاتصال بقاعدة البيانات: " . $conn->connect_error);
+}
+
+$conn->set_charset("utf8mb4");
+
+/* الاسم الافتراضي */
+$userName = 'المستثمر';
+
+/* جلب اسم المستثمر إذا كان مسجل دخول */
+if (isset($_SESSION['inv_id'])) {
+  $inv_id = $_SESSION['inv_id'];
+
+  $stmt = $conn->prepare("SELECT inv_name FROM investor WHERE inv_id = ?");
+  $stmt->bind_param("i", $inv_id);
+  $stmt->execute();
+  $result = $stmt->get_result();
+
+  if ($row = $result->fetch_assoc()) {
+    $userName = $row['inv_name'];
+  }
+
+  $stmt->close();
+} else {
+  header("Location: login.php");
+  exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<meta charset="UTF-8">
-
 <head>
+  <meta charset="UTF-8">
   <title>نورين - الرئيسية</title>
-
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="CSS01Layout.css?v=4">  <link rel="stylesheet" href="CSS02Home.css?v=4">
+  <link rel="stylesheet" href="CSS01Layout.css?v=4">
+  <link rel="stylesheet" href="CSS02Home.css?v=2">
+  <style>
+    .page-subtitle{
+      font-size:16px;
+      color:#6E6E6E;
+      margin-top:6px;
+      font-weight:500;
+    }
+  </style>
 </head>
-
 <body>
-
   <div class="layout">
 
     <!-- الشريط الجانبي -->
     <aside class="sidebar">
-
       <div class="sidebar-top">
-
         <div class="sidebar-logo">
           <img src="شعار نورين.png">
         </div>
@@ -27,20 +63,18 @@
           <li><a href="Inv00_MainPage.php" class="active">الرئيسية</a></li>
           <li><a href="Inv04_CreateScholarship.php">عرض المنح</a></li>
           <li><a href="Inv06_ManageScholarships.php">إدارة المنح</a></li>
-<li><a href="Inv10_Payments.php">المدفوعات</a></li>
+          <li><a href="Inv10_Payments.php">المدفوعات</a></li>
         </ul>
-
       </div>
 
-   <div class="sidebar-bottom">
-  <form action="logout.php" method="post">
-    <button type="submit" class="logout-btn">
-      <img src="ايقونة تسجيل الخروج.png" class="logout-icon">
-      <b>تسجيل الخروج</b>
-    </button>
-  </form>
-</div>
-
+      <div class="sidebar-bottom">
+        <form action="logout.php" method="post">
+          <button type="submit" class="logout-btn">
+            <img src="ايقونة تسجيل الخروج.png" class="logout-icon">
+            <b>تسجيل الخروج</b>
+          </button>
+        </form>
+      </div>
     </aside>
 
     <!-- المحتوى الرئيسي -->
@@ -48,30 +82,33 @@
 
       <!-- الهيدر -->
       <header class="header">
+        <div class="page-heading">
+          <div class="page-title">الرئيسية</div>
 
-  <div class="page-heading">
-    <div class="page-title">الرئيسية</div>
-  </div>
+          <div class="welcome-box">
+            <div class="welcome-text">
+              أهلًا بك، <?php echo htmlspecialchars($userName); ?>
+            </div>
+          </div>
+        </div>
 
-  <div class="header-icons">
-    <div class="settings-dropdown">
-      <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="الإعدادات">
+        <div class="header-icons">
+          <div class="settings-dropdown">
+            <img src="ايقونة قائمة الاعدادات.png" class="menu-icon">
 
-      <div class="dropdown-menu">
-        <a href="Inv02_Profile.php">الملف الشخصي</a>
-        <a href="support.php">تقديم شكوى او استفسار</a>
-      </div>
-    </div>
-  </div>
-
-</header>
+            <div class="dropdown-menu">
+              <a href="Inv02_Profile.php">الملف الشخصي</a>
+              <a href="support.php">تقديم شكوى او استفسار</a>
+            </div>
+          </div>
+        </div>
+      </header>
 
       <!-- محتوى الصفحة -->
       <div class="page">
 
         <!-- القسم الرئيسي -->
         <section class="intro">
-
           <div class="int-cnt">
 
             <div class="int-txt">
@@ -88,7 +125,6 @@
             </div>
 
           </div>
-
         </section>
 
         <div class="gap"></div>
@@ -97,7 +133,6 @@
         <section class="ab-sec" id="about">
 
           <div class="ab-card">
-
             <div class="ab-ico">
               <img src="بوابة نورين.svg">
             </div>
@@ -109,7 +144,6 @@
                 والمكاتب الاستشارية لتسهيل الحصول على المنح الدراسية.
               </p>
             </div>
-
           </div>
 
           <div class="ab-row">
@@ -210,42 +244,60 @@
 
           <div class="faq-list">
 
+            <details class="faq-item">
+              <summary>
+                المستثمر
+                <img src="سهم مدبل.svg">
+              </summary>
 
-        <details class="faq-item">
-  <summary>
-    المستثمر
-    <img src="سهم مدبل.svg">
-  </summary>
+              <div class="faq-ans">
 
-  <div class="faq-ans">
+                <div class="faq-q">سؤال 1: كيف يمكنني تقديم منحة ودعم المستفيدين من خلال المنصة؟</div>
+                <div class="faq-a">
+                  يمكنك تقديم منحة من خلال الدخول إلى صفحة "عرض المنح"، ثم إنشاء منحة جديدة وتحديد بياناتها، وبعد نشرها يستطيع المستفيدون التقديم عليها، ويمكنك مراجعة الطلبات واختيار المستفيد المناسب.
+                </div>
 
-    <div class="faq-q">سؤال 1: كيف يمكنني تقديم منحة و دعم المستفيدين، من خلال المنصة؟</div>
-<div class="faq-a"> يمكنك تقديم منحة من خلال الدخول إلى صفحة "عرض المنح"، ثم إنشاء منحة جديدة وتحديد بياناتها، وبعد نشرها يستطيع المستفيدين التقديم عليها، ويمكنك مراجعة الطلبات واختيار المستفيد المناسب.</div>
-    <div class="faq-q">سؤال 2: متى يتم توقيع العقد مع المستفيد؟</div>
-    <div class="faq-a"> يتم توقيع العقد الإلكتروني بعد القبول المبدئي والتواصل لإجراء المقابلة، ويجب على المستفيد الموافقة على الشروط قبل بدء الدعم.</div>
+                <div class="faq-q">سؤال 2: متى يتم توقيع العقد مع المستفيد؟</div>
+                <div class="faq-a">
+                  يتم توقيع العقد الإلكتروني بعد القبول المبدئي والتواصل لإجراء المقابلة، ويجب على المستفيد الموافقة على الشروط قبل بدء الدعم.
+                </div>
 
-    <div class="faq-q">سؤال 3: كيف تتم متابعة المستفيد بعد القبول؟</div>
-    <div class="faq-a"> يمكنك متابعة المستفيد من خلال صفحة إدارة المنح، حيث يتم عرض بيانات التواصل والتقارير الأكاديمية التي يرفعها المستفيد خلال فترة الدراسة.</div>
+                <div class="faq-q">سؤال 3: كيف تتم متابعة المستفيد بعد القبول؟</div>
+                <div class="faq-a">
+                  يمكنك متابعة المستفيد من خلال صفحة إدارة المنح، حيث يتم عرض بيانات التواصل والتقارير الأكاديمية التي يرفعها المستفيد خلال فترة الدراسة.
+                </div>
 
-    <div class="faq-q">سؤال 4: كيف تتم عملية الدفع؟</div>
-    <div class="faq-a"> يتم الدفع على شكل دفعات، ويتم صرف كل دفعة بعد رفع المستفيد للتقارير الأكاديمية المطلوبة والتحقق منها.</div>
+                <div class="faq-q">سؤال 4: كيف تتم عملية الدفع؟</div>
+                <div class="faq-a">
+                  يتم الدفع على شكل دفعات، ويتم صرف كل دفعة بعد رفع المستفيد للتقارير الأكاديمية المطلوبة والتحقق منها.
+                </div>
 
-    <div class="faq-q">سؤال 5: هل يمكنني إلغاء الدعم بعد الموافقة؟</div>
-    <div class="faq-a"> نعم، يمكن ذلك عن طريق رفع شكوى عبر النظام مع توضيح الأسباب، ويتم مراجعتها واتخاذ الإجراء المناسب وفقًا لسياسات العقد،.</div>
+                <div class="faq-q">سؤال 5: هل يمكنني إلغاء الدعم بعد الموافقة؟</div>
+                <div class="faq-a">
+                  نعم، يمكن ذلك عن طريق رفع شكوى عبر النظام مع توضيح الأسباب، ويتم مراجعتها واتخاذ الإجراء المناسب وفقًا لسياسات العقد.
+                </div>
 
-    <div class="faq-q">سؤال 6: كيف أتواصل مع المستفيد؟</div>
-    <div class="faq-a"> يمكنك التواصل مع المستفيد من خلال نظام الرسائل داخل المنصة بعد القبول المبدئي، حيث يتم فتح قناة تواصل مباشرة بين الطرفين.</div>
+                <div class="faq-q">سؤال 6: كيف أتواصل مع المستفيد؟</div>
+                <div class="faq-a">
+                  يمكنك التواصل مع المستفيد من خلال نظام الرسائل داخل المنصة بعد القبول المبدئي، حيث يتم فتح قناة تواصل مباشرة بين الطرفين.
+                </div>
 
-     <div class="faq-q">سؤال 11: كيف يمكنني إنهاء المنحة إذا واجهت بعض المشاكل؟</div>
-     <div class="faq-a">  يمكنك طلب إنهاء منحة من خلال صفحة "تقديم شكوى أو استفسار" مع التأكد من تضمن الطلب رقم العقد المرتبط بالمنحة، مع توضيح المشكلة بشكل واضح و ستتم مراجعة الطلب من الجهة المختصة، واتخاذ الإجراء المناسب وفقًا لشروط العقد والسياسات المعتمدة.</div>
-  </div>
-</details>
+                <div class="faq-q">سؤال 7: كيف يمكنني إنهاء المنحة إذا واجهت بعض المشاكل؟</div>
+                <div class="faq-a">
+                  يمكنك طلب إنهاء المنحة من خلال صفحة "تقديم شكوى أو استفسار" مع التأكد من تضمين رقم العقد المرتبط بالمنحة، وشرح المشكلة بوضوح، ثم تتم مراجعة الطلب واتخاذ الإجراء المناسب وفقًا لشروط العقد والسياسات المعتمدة.
+                </div>
+
+              </div>
+            </details>
+
+          </div>
+
+        </section>
 
       </div>
 
     </div>
 
   </div>
-
 </body>
 </html>
