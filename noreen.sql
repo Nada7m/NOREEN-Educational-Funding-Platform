@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 22 أبريل 2026 الساعة 01:07
+-- Generation Time: 22 أبريل 2026 الساعة 11:13
 -- إصدار الخادم: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -317,7 +317,7 @@ CREATE TABLE `investor` (
 --
 
 INSERT INTO `investor` (`inv_id`, `ccr_number`, `email`, `inv_number`, `inv_name`, `password`, `approval_status`, `account_status`) VALUES
-(1, '1010010813', 'InvestorRelations@safco.sabic.com', 530014051, 'سابك - الشركة السعودية للصناعات', '$2y$10$/8anVADcwa6r5K6nJk/RCO9Tb6fS7G05m9eUS4FIXm90T2iaJ7c4a', 'معتمد', 'محظور'),
+(1, '1010010813', 'InvestorRelations@safco.sabic.com', 530014051, 'سابك - الشركة السعودية للصناعات', '$2y$10$/8anVADcwa6r5K6nJk/RCO9Tb6fS7G05m9eUS4FIXm90T2iaJ7c4a', 'معتمد', 'نشط'),
 (2, '4030175741', 'Baggage.Inquiries@Saudia.com', 2147483647, 'الخطوط الجوية السعودية', '$2y$10$46r8y.xFY5El.dVX2RJuN.2ijifWQAc8tZgH6GxcpN.vi5D5hJPby', 'معتمد', 'نشط'),
 (3, '2052101150', 'investor@aramco.com', 567788990, 'أرامكو', '$2y$10$IGfO7u71zWhhE/n3JrK72.0Wh2ZOM9PyPNd.3vGYwGuYarq8SCIT.', 'مرفوض', 'نشط');
 
@@ -492,10 +492,10 @@ CREATE TABLE `scholarship_request_documents` (
 --
 
 INSERT INTO `scholarship_request_documents` (`doc_id`, `request_id`, `doc_type`, `file_name`, `file`) VALUES
-(1, 2, 'CV', '1774446178_Fatimah_Alhammadi_CV.pdf', '1774446178_Fatimah_Alhammadi_CV.pdf'),
-(2, 2, 'Certificate', '1774446178_DegreeCertificate.pdf', '1774446178_DegreeCertificate.pdf'),
-(3, 2, 'Recommendation', '1774446178_Fatimah_Alhammadi_Recommendation.pdf', '1774446178_Fatimah_Alhammadi_Recommendation.pdf'),
-(4, 2, 'Acceptance', '1774446178_AcceptanceLetter.pdf', '1774446178_AcceptanceLetter.pdf'),
+(1, 2, 'CV', '1774446178_Fatimah_Alhammadi_CV.pdf', 'uploads/admission_requests/1_cv_file.pdf'),
+(2, 2, 'Certificate', '1774446178_DegreeCertificate.pdf', 'uploads/admission_requests/1_degree_file.pdf'),
+(3, 2, 'Recommendation', '1774446178_Fatimah_Alhammadi_Recommendation.pdf', 'uploads/admission_requests/1_recommendation_file.pdf'),
+(4, 2, 'Acceptance', '1774446178_AcceptanceLetter.pdf', 'uploads/admission_requests/3_recommendation_file.pdf'),
 (9, 5, 'CV', 'Tasneem_Alharbi_CV.pdf.pdf', 'uploads/scholarship_requests/5_cv_file.pdf'),
 (10, 5, 'Certificate', 'HS_Certificate_Tasneem.pdf.pdf', 'uploads/scholarship_requests/5_cert_file.pdf'),
 (11, 5, 'Recommendation', 'Recommendation_Tasneem.pdf', 'uploads/scholarship_requests/5_rec_file.pdf'),
