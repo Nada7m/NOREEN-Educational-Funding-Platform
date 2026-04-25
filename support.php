@@ -60,32 +60,179 @@ $page = isset($_GET['page']) ? $_GET['page'] : "list";
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic&display=swap" rel="stylesheet">
 
 <style>
-body { font-family: 'Noto Kufi Arabic', sans-serif; background-color: #F4F4F4; margin: 0; }
-.wrapper { max-width: 1000px; margin: 30px auto; padding: 20px; }
-.page-top { display: flex; justify-content: flex-end; margin-bottom: 5px; }
-.back-btn-details img { width: 40px; height: 40px; display: block; }
-.content-box { background: white; border-radius: 12px; padding: 40px;  min-height: 400px; }
-.btn-purple { background: #3E2454; color: white; padding: 12px 25px; border-radius: 6px; text-decoration: none; border: none; cursor: pointer; float: left; margin-bottom: 25px; }
-table { width: 100%; border-collapse: collapse; }
-th, td { padding: 15px; border: 1px solid #EEEEEE; text-align: center; }
-.badge { padding: 6px 15px; border-radius: 20px; color: white; font-size: 12px; }
-.bg-orange { background: #f2cc8f; }
-.bg-green { background: #76b893; }
-input, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; }
-.reset-link { color: #EEE; font-size: 9px; text-decoration: none; position: absolute; bottom: 5px; right: 5px; }
+body{
+    font-family:'Noto Kufi Arabic', sans-serif;
+    background-color:#F4F4F4;
+    margin:0;
+}
+
+.wrapper{
+    max-width:1100px;
+    margin:30px auto;
+    padding:20px 25px;
+}
+
+.page-top{
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    margin-bottom:8px;
+}
+
+.back-btn-details{
+    width:50px;
+    height:50px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.back-btn-details img{
+    width:40px;
+    height:40px;
+    display:block;
+}
+
+h2{
+    font-size:22px;
+    font-weight:700;
+    color:#472764;
+    margin:0 0 18px;
+}
+
+.content-box{
+    background:#FFFFFF;
+    border:1px solid #CFCFCF;
+    border-radius:8px;
+    padding:28px;
+    min-height:400px;
+}
+
+.btn-purple{
+    background:#472764;
+    color:white;
+    padding:12px 22px;
+    border-radius:6px;
+    text-decoration:none;
+    border:none;
+    cursor:pointer;
+    float:left;
+    margin-bottom:25px;
+    font-size:14px;
+    font-weight:700;
+    font-family:'Noto Kufi Arabic', sans-serif;
+}
+
+.btn-purple:hover{
+    background:#3f2556;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:#FFFFFF;
+    clear:both;
+}
+
+th{
+    background:#F7F7F7;
+    color:#333;
+    font-size:14px;
+    font-weight:700;
+    padding:15px;
+    border:1px solid #EEEEEE;
+    text-align:center;
+}
+
+td{
+    color:#555;
+    font-size:13.5px;
+    padding:15px;
+    border:1px solid #EEEEEE;
+    text-align:center;
+}
+
+.badge{
+    padding:7px 16px;
+    border-radius:8px;
+    font-size:13px;
+    font-weight:700;
+    display:inline-block;
+}
+
+.bg-orange{
+    background:#FFF4E5;
+    color:#E6BC6A;
+}
+
+.bg-green{
+    background:#D4F4E2;
+    color:#55A082;
+}
+
+h3{
+    font-size:18px;
+    font-weight:700;
+    color:#333;
+    margin:0 0 20px;
+    text-align:center;
+    border-bottom:1px solid #f0f0f0;
+    padding-bottom:10px;
+}
+
+input,
+textarea{
+    width:100%;
+    padding:13px 14px;
+    margin-bottom:15px;
+    border:1px solid #b8d2dd;
+    border-radius:4px;
+    font-size:14px;
+    font-family:'Noto Kufi Arabic', sans-serif;
+    outline:none;
+    box-sizing:border-box;
+    direction:rtl;
+    text-align:right;
+}
+
+input:focus,
+textarea:focus{
+    border-color:#472764;
+}
+
+textarea{
+    resize:none;
+    line-height:1.8;
+}
+
+.reset-link{
+    color:#EEE;
+    font-size:9px;
+    text-decoration:none;
+    position:absolute;
+    bottom:5px;
+    right:5px;
+}
 </style>
 </head>
 
 <body>
 
 <div class="wrapper">
+<?php
+// تحديد رابط الرجوع حسب الصفحة
+if($page == "new"){
+    $back = "support.php"; // من صفحة الإرسال → يرجع للقائمة
+}else{
+    $back = $back_link; // من القائمة → يرجع للرئيسية
+}
+?>
 
-    <!-- السهم الموحد -->
-    <div class="page-top">
-        <a href="<?php echo $back_link; ?>" class="back-btn-details">
-            <img src="سهم تراجع.svg" alt="رجوع">
-        </a>
-    </div>
+<div class="page-top">
+    <a href="<?php echo $back; ?>" class="back-btn-details">
+        <img src="سهم تراجع.svg" alt="رجوع">
+    </a>
+</div>
 
     <h2>الشكاوى والاستفسارات</h2>
 
