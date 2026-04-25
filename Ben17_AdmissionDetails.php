@@ -101,17 +101,23 @@ $statusClass = "";
 $statusMessage = "";
 
 if ($status == "" || $status == "قيد المعالجة") {
+
     $statusText = "في انتظار إصدار النتيجة";
     $statusClass = "processing";
-    $statusMessage = "طلبك ما زال تحت مراجعة المكتب، وسيتم تحديث هذه الخانة عند صدور النتيجة.";
-} elseif ($status == "مرفوض" || $status == "مرفوضة" || $status == "رفض") {
+    $statusMessage = "طلبك ما زال تحت مراجعة المكتب، يرجى التأكد من اتمام الدفع وسيتم تحديث هذه الخانة عند صدور النتيجة.";
+
+} elseif ($status == "مرفوض" || $status == "لم تُصدر") {
+
     $statusText = "تم رفض الطلب";
     $statusClass = "rejected";
     $statusMessage = "تمت مراجعة الطلب من قبل المكتب ولم تتم الموافقة عليه.";
-} else {
+
+} elseif ($status == "أُصدرت" || $status == "أصدرت") {
+
     $statusText = "تم إصدار النتيجة";
     $statusClass = "done";
-    $statusMessage = "تمت معالجة الطلب ويمكنك الاطلاع على ملاحظات المكتب والتفاصيل أدناه.";
+    $statusMessage = "تمت معالجة الطلب ويمكنك الاطلاع على التفاصيل أدناه.";
+
 }
 
 $requestCode = "UA" . $request['request_id'];
@@ -136,8 +142,8 @@ body{
 
 .content-box{
     width:100%;
-    max-width:930px;
-    margin:18px auto;
+    max-width:1150px;
+        margin:18px auto;
     background:#fff;
     border:1px solid #ece7f1;
     border-radius:16px;
@@ -278,8 +284,8 @@ body{
     display:inline-flex;
     align-items:center;
     justify-content:center;
-    min-width:190px;
-    height:68px;
+    min-width:170px;
+    height:50px;
     text-align:center;
     background:#3E2454;
     color:#fff;
@@ -291,10 +297,11 @@ body{
     text-decoration:none;
     font-family:'Noto Kufi Arabic', sans-serif;
     transition:0.3s;
+    box-shadow:0 2px 1px rgba(0,0,0,0.15);
 }
 
 .file-btn:hover{
-    background:#274E99;
+    background:#6B527D ;
 }
 
 .rating-form{
@@ -339,6 +346,7 @@ body{
     cursor:pointer;
     font-family:'Noto Kufi Arabic', sans-serif;
     transition:0.3s;
+    box-shadow:0 2px 1px rgba(0,0,0,0.15);
 }
 
 .rating-btn:hover{
@@ -410,8 +418,8 @@ body{
 .back-wrap{
     display:flex;
     justify-content:flex-end;
-    max-width:930px;
-    margin:0 auto 10px;
+    max-width:1150px;
+        margin:0 auto 10px;
 }
 
 .back-icon{
@@ -514,8 +522,9 @@ body{
                     <div class="section-title">نتيجة القبول</div>
                     <div class="section-note">ملاحظات المكتب</div>
 
-                    <div class="result-row">
-                        <?php if ($status == "أصدرت" && !empty($request['result'])) { ?>
+<div class="result-row">
+
+    <?php if ($status != "مرفوض" && $status != "لم تُصدر" && ($status == "أُصدرت" || $status == "أصدرت") && !empty($request['result'])) { ?>
                             <div class="file-action-side">
                                 <a href="<?php echo htmlspecialchars($request['result']); ?>" target="_blank" class="file-btn">
                                     تحميل النتيجة
@@ -525,11 +534,13 @@ body{
 
                         <div class="result-box <?php echo $statusClass; ?>">
                             <?php
-                            if (!empty(trim($request['result_notes']))) {
-                                echo nl2br(htmlspecialchars($request['result_notes']));
-                            } else {
-                                echo $statusMessage;
-                            }
+if ($status == "مرفوض" || $status == "لم تُصدر") {
+    echo $statusMessage;
+} elseif (!empty(trim($request['result_notes']))) {
+    echo nl2br(htmlspecialchars($request['result_notes']));
+} else {
+    echo $statusMessage;
+}
                             ?>
                         </div>
                     </div>
@@ -537,26 +548,37 @@ body{
 
                 <div class="section-box">
                     <div class="section-title">تقييم المكتب</div>
+<?php if ($status != "مرفوض" && $status != "لم تُصدر" && $hasRating) { ?>
 
-                    <?php if ($hasRating) { ?>
-                        <div class="rating-view">
-                            <div class="rating-comment-box">
-                                <?php echo nl2br(htmlspecialchars($lastComment)); ?>
-                            </div>
+    <div class="rating-view">
+        <div class="rating-comment-box">
+            <?php echo nl2br(htmlspecialchars($lastComment)); ?>
+        </div>
 
-                            <div class="rating-success-box">
-                                تم استلام تقييمك بنجاح
-                            </div>
-                        </div>
-                    <?php } else { ?>
-                        <form method="POST" class="rating-form">
-                            <textarea name="comment_text" class="rating-textarea" placeholder="اكتب تقييمك لخدمة المكتب هنا"></textarea>
+        <div class="rating-success-box">
+            تم استلام تقييمك بنجاح
+        </div>
+    </div>
 
-                            <div class="rating-btn-wrap">
-                                <button type="submit" name="send_rating" class="rating-btn">إرسال التقييم</button>
-                            </div>
-                        </form>
-                    <?php } ?>
+<?php } elseif ($status != "مرفوض" && $status != "لم تُصدر") { ?>
+
+    <form method="POST" class="rating-form">
+
+        <textarea name="comment_text" class="rating-textarea" placeholder="اكتب تقييمك لخدمة المكتب هنا"></textarea>
+
+        <div class="rating-btn-wrap">
+            <button type="submit" name="send_rating" class="rating-btn">إرسال التقييم</button>
+        </div>
+
+    </form>
+
+<?php } else { ?>
+
+    <div class="rating-success-box" style="background:#FFF1F1;color:#B42318;border:1px solid #E8B4B4;">
+        لا يمكن تقييم المكتب لأن الطلب مرفوض
+    </div>
+
+<?php } ?>    
                 </div>
 
             </div>

@@ -40,7 +40,7 @@ if (isset($_POST['accept_request'])) {
 if (isset($_POST['reject_request'])) {
     $sqlUpdate = "UPDATE admission_request
                   SET request_status = 'مرفوض',
-                      Result_status = 'قيد المعالجة'
+                      Result_status = 'لم تُصدر'
                   WHERE request_id = $request_id AND office_id = $office_id";
 
     if (!mysqli_query($con, $sqlUpdate)) {
@@ -57,14 +57,15 @@ $sql = "SELECT
             ar.major_name,
             ar.univ_name,
             ar.Submit_date,
-            ar.request_status,
-            ar.Result_status,
-            b.f_name,
-            b.l_name,
-            b.email,
-            b.phone_num,
-            b.sch_field,
-            b.degree_level
+         ar.request_status,
+ar.Result_status,
+ar.payment_status,
+b.f_name,
+b.l_name,
+b.email,
+b.phone_num,
+b.sch_field,
+b.degree_level
         FROM admission_request ar
         INNER JOIN beneficiary b ON ar.bnf_id = b.bnf_id
         WHERE ar.request_id = $request_id AND ar.office_id = $office_id";
@@ -76,6 +77,8 @@ if (!$result || mysqli_num_rows($result) == 0) {
 }
 
 $request = mysqli_fetch_assoc($result);
+$payment_status = trim($request['payment_status']);
+$isPaid = ($payment_status == "مدفوع");
 
 $sqlDocs = "SELECT doc_type, file_name, file
             FROM admission_request_documents
@@ -99,7 +102,7 @@ if ($result_status == "") {
 $isPending = ($request_status == "في الانتظار");
 $isAccepted = ($request_status == "مقبول");
 $isRejected = ($request_status == "مرفوض");
-$resultIssued = ($result_status == "أصدرت");
+$resultIssued = ($result_status == "أُصدرت");
 
 $program_type = $request['program_type'];
 $program_name = "";
@@ -323,13 +326,23 @@ $docLabels = [
                     <?php } ?>
 
                     <div class="bottom-actions">
-                        <?php if ($resultIssued) { ?>
-                            <a href="#" class="upload-result-btn upload-finished">تم إصدار النتيجة</a>
-                        <?php } elseif ($isAccepted) { ?>
-                            <a href="Con06_UploadResult.php?request_id=<?php echo $request_id; ?>" class="upload-result-btn upload-enabled">رفع نتيجة التقديم</a>
-                        <?php } else { ?>
-                            <a href="#" class="upload-result-btn upload-disabled">رفع نتيجة التقديم</a>
-                        <?php } ?>
+                   <?php if ($resultIssued) { ?>
+
+    <a href="#" class="upload-result-btn upload-finished">تم إصدار النتيجة</a>
+
+<?php } elseif ($isAccepted && $isPaid) { ?>
+
+    <a href="Con06_UploadResult.php?request_id=<?php echo $request_id; ?>" class="upload-result-btn upload-enabled">رفع نتيجة التقديم</a>
+
+<?php } elseif ($isAccepted && !$isPaid) { ?>
+
+    <a href="#" class="upload-result-btn upload-disabled">رفع نتيجة التقديم </a>
+
+<?php } else { ?>
+
+    <a href="#" class="upload-result-btn upload-disabled">رفع نتيجة التقديم</a>
+
+<?php } ?>
                     </div>
                 </div>
 
