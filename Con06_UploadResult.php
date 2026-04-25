@@ -79,12 +79,13 @@ if (isset($_POST['submit_result'])) {
 
             if (move_uploaded_file($tmp_name, $file_path)) {
 
-                $sqlUpdate = "UPDATE admission_request
-                              SET result = '$safe_path',
-                                  result_notes = '$safe_notes',
-                                  Result_status = 'أصدرت'
-                              WHERE request_id = $request_id
-                              AND office_id = $office_id";
+             $sqlUpdate = "UPDATE admission_request
+              SET result = '$safe_path',
+                  result_notes = '$safe_notes',
+                  Result_status = 'أُصدرت'
+              WHERE request_id = $request_id
+              AND office_id = $office_id
+              AND request_status = 'مقبول'";
 
                 if (mysqli_query($con, $sqlUpdate)) {
                     header("Location: Con05_AdmissiontDetails.php?request_id=" . $request_id);

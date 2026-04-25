@@ -26,7 +26,8 @@ if (isset($_POST['confirm_payment'])) {
         $sqlPay = "UPDATE admission_request 
                    SET payment_status = 'مدفوع' 
                    WHERE request_id = $request_id 
-                   AND bnf_id = $bnf_id";
+                   AND bnf_id = $bnf_id
+                   AND request_status = 'مقبول'";
 
         $conn->query($sqlPay);
     }
@@ -82,9 +83,13 @@ $result = $conn->query($sql);
 
 .status-rejected{ background:#F2B6B6; color:#8A1F1F; }
 
+.status-plain{ background:#FFFFFF; color:#444444; border:1px solid #DDDDDD; }
+
 .details-btn{ display:inline-block; padding:8px 16px; background:#fff; color:#3E2454; border:1.5px solid #B9B0C6; border-radius:10px; text-decoration:none; font-size:13px; font-weight:700; transition:0.3s; font-family:'Noto Kufi Arabic', sans-serif; cursor:pointer; }
 
 .details-btn:hover{ background:#f6f2fa; }
+
+.details-btn.disabled{ background:#E5E5E5; color:#9A9A9A; border:1.5px solid #D0D0D0; cursor:not-allowed; pointer-events:none; opacity:0.7; }
 
 .empty-box{ text-align:center; padding:50px 20px; color:#777; font-size:16px; font-family:'Noto Kufi Arabic', sans-serif; }
 
@@ -107,11 +112,6 @@ $result = $conn->query($sql);
 .pay-confirm{ width:100%; height:46px; border:none; border-radius:6px; background:#70A0AF; color:#fff; font-size:18px; font-weight:700; font-family:'Noto Kufi Arabic'; cursor:pointer; margin-top:10px; }
 
 .close-btn{ display:block; margin:12px auto 0; background:none; border:none; color:#777; font-size:14px; font-family:'Noto Kufi Arabic'; cursor:pointer; }
-.status-plain{
-  background:#FFFFFF;
-  color:#444444;
-  border:1px solid #DDDDDD;
-}
 </style>
 </head>
 <body>
@@ -197,33 +197,23 @@ $result = $conn->query($sql);
                                     $requestStatusClass = "status-done";
                                 }
 
-                               $result_status = trim($row['Result_status']);
-
-if ($request_status == "مرفوض") {
-    $resultStatusText = "لم تُصدر";
-    $resultStatusClass = "status-plain";
-} elseif ($result_status == "" || $result_status == "قيد المعالجة") {
-    $resultStatusText = "قيد المعالجة";
-    $resultStatusClass = "status-processing";
-} elseif ($result_status == "أُصدرت" || $result_status == "أصدرت") {
-    $resultStatusText = "أُصدرت";
-    $resultStatusClass = "status-done";
-} else {
-    $resultStatusText = $result_status;
-    $resultStatusClass = "status-done";
-}
-                                $payment_status = trim($row['payment_status']);
+                                $result_status = trim($row['Result_status']);
 
                                 if ($request_status == "مرفوض") {
-                                    $paymentStatusText = "لم يتم الدفع";
-                                    $paymentStatusClass = "status-rejected";
-                                } elseif ($payment_status == "مدفوع") {
-                                    $paymentStatusText = "تم الدفع";
-                                    $paymentStatusClass = "status-done";
+                                    $resultStatusText = "لم تُصدر";
+                                    $resultStatusClass = "status-plain";
+                                } elseif ($result_status == "" || $result_status == "قيد المعالجة") {
+                                    $resultStatusText = "قيد المعالجة";
+                                    $resultStatusClass = "status-processing";
+                                } elseif ($result_status == "أُصدرت" || $result_status == "أصدرت") {
+                                    $resultStatusText = "أُصدرت";
+                                    $resultStatusClass = "status-done";
                                 } else {
-                                    $paymentStatusText = "ادفع الآن";
-                                    $paymentStatusClass = "status-processing";
+                                    $resultStatusText = $result_status;
+                                    $resultStatusClass = "status-done";
                                 }
+
+                                $payment_status = trim($row['payment_status']);
                                 ?>
 
                                 <tr>
@@ -246,14 +236,28 @@ if ($request_status == "مرفوض") {
                                     </td>
 
                                     <td>
-                                        <?php if ($request_status != "مرفوض" && $payment_status != "مدفوع") { ?>
-                                            <button type="button" class="details-btn" onclick="openPaymentModal(<?php echo $row['request_id']; ?>)">
-                                                ادفع الآن
-                                            </button>
-                                        <?php } else { ?>
-                                            <div class="status-box <?php echo $paymentStatusClass; ?>">
-                                                <?php echo $paymentStatusText; ?>
+                                        <?php if ($payment_status == "مدفوع") { ?>
+
+                                            <div class="status-box status-done">
+                                                تم الدفع
                                             </div>
+
+                                        <?php } else { ?>
+
+                                            <?php if ($request_status == "مقبول") { ?>
+
+                                                <button type="button" class="details-btn" onclick="openPaymentModal(<?php echo $row['request_id']; ?>)">
+                                                    ادفع الآن
+                                                </button>
+
+                                            <?php } else { ?>
+
+                                                <button type="button" class="details-btn disabled">
+                                                    ادفع الآن
+                                                </button>
+
+                                            <?php } ?>
+
                                         <?php } ?>
                                     </td>
 
