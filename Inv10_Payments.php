@@ -201,14 +201,6 @@ while ($row = mysqli_fetch_assoc($ended_result)) {
   font-size:20px;
   color:#777777;
 }
-@media (max-width:950px){
-  .payments-box{
-    overflow-x:auto;
-  }
-  .table-head,.table-row{
-    min-width:700px;
-  }
-}
 </style>
 </head>
 <body>
@@ -244,8 +236,9 @@ while ($row = mysqli_fetch_assoc($ended_result)) {
     <header class="header">
 
       <div class="page-heading">
-        <h1 class="page-title">المدفوعات</h1>
-      </div>
+  <h1 class="page-title">المدفوعات</h1>
+  <p class="page-description">صفحة إدارة مدفوعات المنح للمستفيدين</p>
+</div>
 
       <div class="header-icons">
         <div class="settings-dropdown">

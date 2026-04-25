@@ -160,47 +160,7 @@ while ($row = mysqli_fetch_assoc($details_result)) {
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="CSS01Layout.css?v=4">
 <style>
-.header{display:flex;justify-content:space-between;align-items:center}
-.page-heading{display:flex;flex-direction:column;align-items:flex-start;text-align:right}
-.header-icons{display:flex;align-items:center}
-.pay-details-page{padding:30px}
-.page-top{display:flex;justify-content:flex-end;align-items:center;margin-bottom:20px}
-.content-grid{display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:stretch}
-.info-card{background:#FFFFFF;border:1px solid #EAEAEA;border-radius:16px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,0.04);height:100%}
-.info-card h3{color:#3E2454;font-size:16px;font-weight:700;text-align:center;margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid #F0F0F0}
-.contract-box{direction:rtl;text-align:right}
-.data-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;font-size:14px}
-.data-row:last-child{margin-bottom:0}
-.data-row label{color:#70A0AF;font-weight:700;flex-shrink:0}
-.data-row span{color:#333333;font-weight:600;text-align:left}
-.table-wrap{background:#FFFFFF;border:1px solid #EAEAEA;border-radius:16px;box-shadow:0 2px 8px rgba(0,0,0,0.04);padding:10px 16px 16px;height:100%}
-.styled-table{width:100%;border-collapse:collapse}
-.styled-table th{padding:16px 14px;text-align:center;color:#3E2454;font-size:15px;font-weight:700;border-bottom:1px solid #EAEAEA;background:#FFFFFF}
-.styled-table td{padding:18px 14px;text-align:center;border-bottom:1px solid #F1F1F1;color:#444444;font-size:14px;background:#FFFFFF;vertical-align:middle}
-.styled-table tbody tr:last-child td{border-bottom:none}
-.installment-number{font-size:16px;font-weight:700;color:#333333}
-.small-btn,.action-btn,.status-badge{width:130px;height:34px;border-radius:20px;font-size:12px;font-weight:700;font-family:"Noto Kufi Arabic",sans-serif;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;box-sizing:border-box;border:none;white-space:nowrap}
-.small-btn{background:#FFFFFF;color:#3E2454;border:1px solid #3E2454;cursor:pointer}
-.approve-btn{background:#D4F4E2;color:#55A082;cursor:pointer}
-.pay-btn{background:#FFF4E5;color:#E6BC6A;cursor:pointer}
-.wait{background:#FFF4E5;color:#E6BC6A}
-.done{background:#D4F4E2;color:#55A082}
-.gray-badge{background:#F1F1F1;color:#888888}
-.no-action{color:#999999;font-weight:700}
-.message{text-align:center;padding:10px;margin-bottom:20px;border-radius:6px;font-size:13px}
-.error{background:#fff3f3;color:#b42318}
-.success{background:#f1fff3;color:#1f7a2e}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);justify-content:center;align-items:center;z-index:3000}
-.modal-content{width:700px;max-width:92%;background:#FFFFFF;border-radius:12px;box-shadow:0 10px 25px rgba(0,0,0,0.18);padding:28px 34px}
-.modal-title{text-align:center;font-size:20px;font-weight:700;color:#4a2b63;margin-bottom:26px}
-.pay-form{display:flex;flex-direction:column;gap:20px}
-.pay-row{display:flex;gap:20px}
-.pay-field{flex:1}
-.pay-field label{display:block;margin-bottom:8px;font-size:15px;font-weight:600;color:#333333}
-.pay-field input{width:100%;height:52px;border:1px solid #cccccc;border-radius:10px;padding:10px 14px;font-size:15px;outline:none;font-family:"Noto Kufi Arabic",sans-serif;box-sizing:border-box}
-.confirm-pay-btn{width:100%;height:56px;border:none;border-radius:10px;background:#77a7b8;color:#FFFFFF;font-size:18px;font-weight:700;cursor:pointer;font-family:"Noto Kufi Arabic",sans-serif}
-.close-modal-btn{background:none;border:none;color:#b54747;font-size:15px;cursor:pointer;margin-top:8px;font-family:"Noto Kufi Arabic",sans-serif}
-@media (max-width:950px){.content-grid{grid-template-columns:1fr}.styled-table{display:block;overflow-x:auto}.pay-row{flex-direction:column}}
+.header{display:flex;justify-content:space-between;align-items:center}.page-heading{display:flex;flex-direction:column;align-items:flex-start;text-align:right}.header-icons{display:flex;align-items:center}.pay-details-page{padding:30px}.page-top{display:flex;justify-content:flex-end;align-items:center;margin-bottom:20px}.content-grid{display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:stretch}.info-card{background:#FFFFFF;border:1px solid #EAEAEA;border-radius:16px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,0.04);height:100%}.info-card h3{color:#3E2454;font-size:16px;font-weight:700;text-align:center;margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid #F0F0F0}.contract-box{direction:rtl;text-align:right}.data-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;font-size:14px}.data-row:last-child{margin-bottom:0}.data-row label{color:#70A0AF;font-weight:700;flex-shrink:0}.data-row span{color:#333333;font-weight:600;text-align:left}.table-wrap{background:#FFFFFF;border:1px solid #EAEAEA;border-radius:16px;box-shadow:0 2px 8px rgba(0,0,0,0.04);padding:10px 16px 16px;height:100%}.styled-table{width:100%;border-collapse:collapse}.styled-table th{padding:16px 14px;text-align:center;color:#3E2454;font-size:15px;font-weight:700;border-bottom:1px solid #EAEAEA;background:#FFFFFF}.styled-table td{padding:18px 14px;text-align:center;border-bottom:1px solid #F1F1F1;color:#444444;font-size:14px;background:#FFFFFF;vertical-align:middle}.styled-table tbody tr:last-child td{border-bottom:none}.installment-number{font-size:16px;font-weight:700;color:#333333}.small-btn,.action-btn{display:inline-block;width:120px;padding:8px 0;border:1px solid #999;border-radius:10px;background:#fff;color:#3E2454;text-decoration:none;font-size:13px;font-weight:600;font-family:'Noto Kufi Arabic',sans-serif;transition:0.3s;cursor:pointer;text-align:center}.small-btn:hover,.action-btn:hover{background:#f4f0f7}.status-badge{display:inline-block;min-width:120px;padding:7px 14px;border-radius:20px;color:#fff;font-size:13px;font-weight:700;font-family:'Noto Kufi Arabic',sans-serif;text-align:center}.done{background:#63B68B}.wait{background:#E9BE66}.gray-badge{background:#FFFFFF;color:#444444;border:1px solid #DDDDDD}.no-action{color:#999999;font-weight:700}.message{text-align:center;padding:10px;margin-bottom:20px;border-radius:6px;font-size:13px}.error{background:#fff3f3;color:#b42318}.success{background:#f1fff3;color:#1f7a2e}.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);justify-content:center;align-items:center;z-index:3000}.modal-content{width:700px;max-width:92%;background:#FFFFFF;border-radius:12px;box-shadow:0 10px 25px rgba(0,0,0,0.18);padding:28px 34px}.modal-title{text-align:center;font-size:20px;font-weight:700;color:#4a2b63;margin-bottom:26px}.pay-form{display:flex;flex-direction:column;gap:20px}.pay-row{display:flex;gap:20px}.pay-field{flex:1}.pay-field label{display:block;margin-bottom:8px;font-size:15px;font-weight:600;color:#333333}.pay-field input{width:100%;height:52px;border:1px solid #cccccc;border-radius:10px;padding:10px 14px;font-size:15px;outline:none;font-family:"Noto Kufi Arabic",sans-serif;box-sizing:border-box}.confirm-pay-btn{display:inline-block;width:100%;padding:12px 0;border:1px solid #999;border-radius:10px;background:#fff;color:#3E2454;text-decoration:none;font-size:15px;font-weight:700;font-family:'Noto Kufi Arabic',sans-serif;transition:0.3s;cursor:pointer;text-align:center}.confirm-pay-btn:hover{background:#f4f0f7}.close-modal-btn{display:inline-block;width:100%;padding:10px 0;border:1px solid #999;border-radius:10px;background:#fff;color:#3E2454;text-decoration:none;font-size:14px;font-weight:600;font-family:'Noto Kufi Arabic',sans-serif;transition:0.3s;cursor:pointer;text-align:center}.close-modal-btn:hover{background:#f4f0f7}.backbtn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}@media (max-width:950px){.content-grid{grid-template-columns:1fr}.styled-table{display:block;overflow-x:auto}.pay-row{flex-direction:column}}
 </style>
 </head>
 <body>
@@ -301,7 +261,7 @@ while ($row = mysqli_fetch_assoc($details_result)) {
 <?php else: ?>
 <form method="post" style="margin:0;">
 <input type="hidden" name="report_id" value="<?php echo $item['report_id']; ?>">
-<button type="submit" name="approve_report" class="action-btn approve-btn">اعتماد</button>
+<button type="submit" name="approve_report" class="action-btn">اعتماد</button>
 </form>
 <?php endif; ?>
 </td>
@@ -316,7 +276,7 @@ while ($row = mysqli_fetch_assoc($details_result)) {
 <?php if ($item['payment_status'] == "تم الدفع"): ?>
 <span class="no-action">—</span>
 <?php elseif ($item['report_appoval'] == "معتمد"): ?>
-<button type="button" class="action-btn pay-btn openPayModal" data-payment="<?php echo $item['payment_id']; ?>">دفع الدفعة</button>
+<button type="button" class="action-btn openPayModal" data-payment="<?php echo $item['payment_id']; ?>">دفع الدفعة</button>
 <?php else: ?>
 <span class="no-action">—</span>
 <?php endif; ?>

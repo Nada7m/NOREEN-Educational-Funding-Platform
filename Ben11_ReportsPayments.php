@@ -96,15 +96,15 @@ while ($row = $res_p->fetch_assoc()) {
 .styled-table td{padding:18px 14px;text-align:center;border-bottom:1px solid #F1F1F1;color:#444444;font-size:14px;background:#FFFFFF;vertical-align:middle}
 .styled-table tbody tr:last-child td{border-bottom:none}
 .installment-number{font-size:16px;font-weight:700;color:#333333}
-.status-badge{width:130px;height:34px;border-radius:20px;font-size:12px;font-weight:700;font-family:"Noto Kufi Arabic",sans-serif;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;box-sizing:border-box;border:none;white-space:nowrap}
-.wait{background:#FFF4E5;color:#E6BC6A}
-.done{background:#D4F4E2;color:#55A082}
-.gray-badge{background:#F1F1F1;color:#888888}
-.txt-gray{color:#888888;font-weight:700;font-size:13px}
+.action-btn{display:inline-block;width:120px;padding:8px 0;border:1px solid #999;border-radius:10px;background:#fff;color:#3E2454;text-decoration:none;font-size:13px;font-weight:600;font-family:'Noto Kufi Arabic',sans-serif;transition:0.3s;cursor:pointer;text-align:center}
+.action-btn:hover{background:#f4f0f7}
+.status-badge{display:inline-block;min-width:120px;padding:7px 14px;border-radius:20px;color:#fff;font-size:13px;font-weight:700;font-family:'Noto Kufi Arabic',sans-serif;text-align:center}
+.done{background:#63B68B}
+.wait{background:#E9BE66}
+.gray-badge{background:#FFFFFF;color:#444444;border:1px solid #DDDDDD}
 .report-actions{display:flex;flex-direction:column;align-items:center;gap:8px}
-.btn-upload{color:#3E2454;font-size:13px;font-weight:700;cursor:pointer;text-decoration:underline}
-.view-file-link{color:#70A0AF;font-size:12px;font-weight:700;text-decoration:none}
-.view-file-link:hover{text-decoration:underline}
+.download-link{color:#777777;font-size:13px;font-weight:700;text-decoration:underline;text-underline-offset:4px}
+.download-link:hover{color:#3E2454}
 @media (max-width:950px){.content-grid{grid-template-columns:1fr}.styled-table{display:block;overflow-x:auto}}
 </style>
 </head>
@@ -189,15 +189,15 @@ while ($row = $res_p->fetch_assoc()) {
 <td>
 <div class="report-actions">
 <?php if ($p['report_upload'] == 'مرفوع') { ?>
-<span class="txt-gray">تم الرفع</span>
+<span class="status-badge done">تم الرفع</span>
 <?php if (!empty($p['report_file'])) { ?>
-<a href="<?php echo htmlspecialchars($p['report_file']); ?>" target="_blank" class="view-file-link">عرض الملف المرفوع</a>
+<a href="<?php echo htmlspecialchars($p['report_file']); ?>" target="_blank" class="download-link">تنزيل التقرير</a>
 <?php } ?>
 <?php } else { ?>
 <form method="POST" enctype="multipart/form-data" class="upload-form">
 <input type="hidden" name="payment_id" value="<?php echo $p['payment_id']; ?>">
-<label class="btn-upload">
-ارفع التقرير
+<label class="action-btn">
+رفع التقرير
 <input type="file" name="report_file" accept=".pdf" onchange="this.form.submit()" style="display:none;">
 </label>
 </form>
@@ -205,14 +205,18 @@ while ($row = $res_p->fetch_assoc()) {
 </div>
 </td>
 <td>
-<span class="status-badge <?php echo ($p['report_appoval'] == 'معتمد') ? 'done' : 'wait'; ?>">
-<?php echo $p['report_appoval'] ?: 'غير معتمد'; ?>
-</span>
+<?php if ($p['report_appoval'] == 'معتمد') { ?>
+<span class="status-badge done">معتمد</span>
+<?php } else { ?>
+<span class="status-badge wait"><?php echo $p['report_appoval'] ?: 'غير معتمد'; ?></span>
+<?php } ?>
 </td>
 <td>
-<span class="status-badge <?php echo ($p['payment_status'] == 'تم الدفع' || $p['payment_status'] == 'مدفوعة') ? 'done' : 'wait'; ?>">
-<?php echo htmlspecialchars($p['payment_status']); ?>
-</span>
+<?php if ($p['payment_status'] == 'تم الدفع' || $p['payment_status'] == 'مدفوعة') { ?>
+<span class="status-badge done"><?php echo htmlspecialchars($p['payment_status']); ?></span>
+<?php } else { ?>
+<span class="status-badge wait"><?php echo htmlspecialchars($p['payment_status']); ?></span>
+<?php } ?>
 </td>
 </tr>
 <?php } ?>
