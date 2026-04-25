@@ -1,37 +1,25 @@
 <?php
 session_start();
-
-/* التحقق من تسجيل دخول المستثمر */
+/* التحقق من دخول المستثمر */
 if (!isset($_SESSION['inv_id'])) {
     header("Location: login.php");
     exit();
 }
-
 /* الاتصال بقاعدة البيانات */
 $con = mysqli_connect("localhost", "root", "", "noreen");
-if (!$con) {
-    die("فشل الاتصال بقاعدة البيانات");
-}
+if (!$con) { die("فشل الاتصال بقاعدة البيانات"); }
 mysqli_set_charset($con, "utf8mb4");
-
-/* رقم المستثمر الحالي */
+/* بيانات أساسية */
 $inv_id = $_SESSION['inv_id'];
-
-/* التأكد من وجود رقم الطلب */
 if (!isset($_GET['request_id']) || $_GET['request_id'] == "") {
     die("رقم الطلب غير موجود.");
 }
 $request_id = (int)$_GET['request_id'];
-
-/* رسائل التنبيه */
 $msg = "";
 $type = "";
-
 /* اعتماد التقرير */
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["approve_report"])) {
     $report_id = (int)$_POST["report_id"];
-
-    /* التأكد أن التقرير يخص هذا المستثمر */
     $check_sql = "SELECT academic_report.report_id
                   FROM academic_report
                   INNER JOIN e_contract ON academic_report.contract_id = e_contract.contract_id
@@ -40,21 +28,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["approve_report"])) {
                   WHERE academic_report.report_id = ?
                   AND scholarship_requests.request_id = ?
                   AND scholarship_opps.inv_id = ?";
-
     $check_stmt = mysqli_prepare($con, $check_sql);
     mysqli_stmt_bind_param($check_stmt, "iii", $report_id, $request_id, $inv_id);
     mysqli_stmt_execute($check_stmt);
     $check_result = mysqli_stmt_get_result($check_stmt);
-
     if (mysqli_num_rows($check_result) > 0) {
-        /* تحديث حالة التقرير إلى معتمد */
-        $update_sql = "UPDATE academic_report
-                       SET report_appoval = 'معتمد'
-                       WHERE report_id = ?";
-
+        $update_sql = "UPDATE academic_report SET report_appoval = 'معتمد' WHERE report_id = ?";
         $update_stmt = mysqli_prepare($con, $update_sql);
         mysqli_stmt_bind_param($update_stmt, "i", $report_id);
-
         if (mysqli_stmt_execute($update_stmt)) {
             $msg = "تم اعتماد التقرير بنجاح.";
             $type = "success";
@@ -67,7 +48,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["approve_report"])) {
         $type = "error";
     }
 }
-
 /* دفع الدفعة */
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirm_payment"])) {
     $payment_id  = (int)$_POST["payment_id"];
@@ -75,30 +55,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirm_payment"])) {
     $card_number = preg_replace('/\D/', '', $_POST["card_number"]);
     $exp_date    = trim($_POST["exp_date"]);
     $cvv         = preg_replace('/\D/', '', $_POST["cvv"]);
-
-    /* التحقق من صحة بيانات البطاقة */
     if ($card_name == "" || $card_number == "" || $exp_date == "" || $cvv == "") {
         $msg = "يرجى تعبئة جميع بيانات الدفع.";
         $type = "error";
-
     } elseif (!preg_match('/^[\p{Arabic}a-zA-Z\s]{3,100}$/u', $card_name)) {
         $msg = "اسم حامل البطاقة غير صحيح.";
         $type = "error";
-
     } elseif (!preg_match('/^\d{16}$/', $card_number)) {
         $msg = "رقم البطاقة يجب أن يكون 16 رقم.";
         $type = "error";
-
     } elseif (!preg_match('/^(0[1-9]|1[0-2])\/\d{2}$/', $exp_date)) {
         $msg = "تاريخ الانتهاء يجب أن يكون بالشكل MM/YY.";
         $type = "error";
-
     } elseif (!preg_match('/^\d{3}$/', $cvv)) {
         $msg = "رمز الأمان يجب أن يكون 3 أرقام.";
         $type = "error";
-
     } else {
-        /* التأكد أن الدفعة تابعة لهذا الطلب وأن التقرير معتمد */
         $pay_check_sql = "SELECT payments.payment_id, payments.contract_id
                           FROM payments
                           INNER JOIN e_contract ON payments.contract_id = e_contract.contract_id
@@ -110,116 +82,71 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirm_payment"])) {
                           AND scholarship_opps.inv_id = ?
                           AND academic_report.report_appoval = 'معتمد'
                           AND payments.payment_status != 'تم الدفع'";
-
         $pay_check_stmt = mysqli_prepare($con, $pay_check_sql);
         mysqli_stmt_bind_param($pay_check_stmt, "iii", $payment_id, $request_id, $inv_id);
         mysqli_stmt_execute($pay_check_stmt);
         $pay_check_result = mysqli_stmt_get_result($pay_check_stmt);
         $pay_row = mysqli_fetch_assoc($pay_check_result);
-
         if ($pay_row) {
             $contract_id_for_payment = (int)$pay_row["contract_id"];
-
-            /* تحديث حالة الدفعة إلى مدفوعة */
-            $pay_sql = "UPDATE payments
-                        SET payment_status = 'تم الدفع',
-                            payment_date = NOW()
-                        WHERE payment_id = ?";
-
+            $pay_sql = "UPDATE payments SET payment_status = 'تم الدفع', payment_date = NOW() WHERE payment_id = ?";
             $pay_stmt = mysqli_prepare($con, $pay_sql);
             mysqli_stmt_bind_param($pay_stmt, "i", $payment_id);
-
             if (mysqli_stmt_execute($pay_stmt)) {
-
-                /* التحقق هل بقيت دفعات غير مدفوعة */
-                $remaining_sql = "SELECT payment_id
-                                  FROM payments
-                                  WHERE contract_id = ?
-                                  AND payment_status != 'تم الدفع'
-                                  LIMIT 1";
+                $remaining_sql = "SELECT payment_id FROM payments WHERE contract_id = ? AND payment_status != 'تم الدفع' LIMIT 1";
                 $remaining_stmt = mysqli_prepare($con, $remaining_sql);
                 mysqli_stmt_bind_param($remaining_stmt, "i", $contract_id_for_payment);
                 mysqli_stmt_execute($remaining_stmt);
                 $remaining_result = mysqli_stmt_get_result($remaining_stmt);
-
-                /* إذا انتهت كل الدفعات نحول العقد إلى منتهي */
                 if (mysqli_num_rows($remaining_result) == 0) {
-                    $finish_sql = "UPDATE e_contract
-                                   SET ctr_status = 'منتهي'
-                                   WHERE contract_id = ?";
+                    $finish_sql = "UPDATE e_contract SET ctr_status = 'منتهي' WHERE contract_id = ?";
                     $finish_stmt = mysqli_prepare($con, $finish_sql);
                     mysqli_stmt_bind_param($finish_stmt, "i", $contract_id_for_payment);
                     mysqli_stmt_execute($finish_stmt);
-
-                    $msg = "تم سداد الدفعة الأخيرة بنجاح وتم إنهاء العقد.";
+                    $finish_request_sql = "UPDATE scholarship_requests SET request_status = 'منتهي' WHERE request_id = ?";
+                    $finish_request_stmt = mysqli_prepare($con, $finish_request_sql);
+                    mysqli_stmt_bind_param($finish_request_stmt, "i", $request_id);
+                    mysqli_stmt_execute($finish_request_stmt);
+                    $msg = "تم سداد الدفعة الأخيرة بنجاح وتم إنهاء العقد والطلب.";
                     $type = "success";
                 } else {
                     $msg = "تم سداد الدفعة بنجاح.";
                     $type = "success";
                 }
-
             } else {
                 $msg = "حدث خطأ أثناء تسجيل الدفع.";
                 $type = "error";
             }
-
         } else {
             $msg = "لا يمكن دفع هذه الدفعة قبل اعتماد تقريرها أو ربما تم سدادها مسبقًا.";
             $type = "error";
         }
     }
 }
-
-/* جلب بيانات العقد الأساسية */
-$main_sql = "SELECT
-                scholarship_requests.request_id,
-                scholarship_requests.major_name,
-                scholarship_requests.univ_name,
-                beneficiary.f_name,
-                beneficiary.l_name,
-                scholarship_opps.sch_name,
-                e_contract.contract_id,
-                e_contract.payments_count,
-                e_contract.amount,
-                e_contract.ctr_status
+/* جلب بيانات العقد */
+$main_sql = "SELECT scholarship_requests.request_id,scholarship_requests.major_name,scholarship_requests.univ_name,beneficiary.f_name,beneficiary.l_name,scholarship_opps.sch_name,e_contract.contract_id,e_contract.payments_count,e_contract.amount,e_contract.ctr_status
              FROM e_contract
              INNER JOIN scholarship_requests ON e_contract.request_id = scholarship_requests.request_id
              INNER JOIN scholarship_opps ON scholarship_requests.scholarship_id = scholarship_opps.scholarship_id
              INNER JOIN beneficiary ON scholarship_requests.bnf_id = beneficiary.bnf_id
-             WHERE e_contract.request_id = ?
-             AND scholarship_opps.inv_id = ?";
-
+             WHERE e_contract.request_id = ? AND scholarship_opps.inv_id = ?";
 $main_stmt = mysqli_prepare($con, $main_sql);
 mysqli_stmt_bind_param($main_stmt, "ii", $request_id, $inv_id);
 mysqli_stmt_execute($main_stmt);
 $main_result = mysqli_stmt_get_result($main_stmt);
 $main_data = mysqli_fetch_assoc($main_result);
-
-if (!$main_data) {
-    die("لا يمكن الوصول إلى هذه البيانات.");
-}
-
-/* جلب تفاصيل جميع الدفعات */
+if (!$main_data) { die("لا يمكن الوصول إلى هذه البيانات."); }
+/* جلب الدفعات */
 $rows = [];
-$details_sql = "SELECT
-                  payments.payment_id,
-                  payments.installment_number,
-                  payments.payment_amount,
-                  payments.payment_status,
-                  payments.payment_date,
-                  academic_report.report_id,
-                  academic_report.report_file,
-                  academic_report.report_appoval
+$details_sql = "SELECT payments.payment_id,payments.installment_number,payments.payment_amount,payments.payment_status,payments.payment_date,academic_report.report_id,academic_report.report_file,academic_report.report_appoval
                 FROM payments
                 LEFT JOIN academic_report ON payments.payment_id = academic_report.payment_id
                 WHERE payments.contract_id = ?
                 ORDER BY payments.installment_number ASC";
-
 $details_stmt = mysqli_prepare($con, $details_sql);
 mysqli_stmt_bind_param($details_stmt, "i", $main_data['contract_id']);
 mysqli_stmt_execute($details_stmt);
 $details_result = mysqli_stmt_get_result($details_stmt);
-
 while ($row = mysqli_fetch_assoc($details_result)) {
     $rows[] = $row;
 }
@@ -231,7 +158,7 @@ while ($row = mysqli_fetch_assoc($details_result)) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>تفاصيل المدفوعات</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="CSS01Layout.css?v=3">
+<link rel="stylesheet" href="CSS01Layout.css?v=4">
 <style>
 .header{display:flex;justify-content:space-between;align-items:center}
 .page-heading{display:flex;flex-direction:column;align-items:flex-start;text-align:right}
@@ -252,30 +179,13 @@ while ($row = mysqli_fetch_assoc($details_result)) {
 .styled-table td{padding:18px 14px;text-align:center;border-bottom:1px solid #F1F1F1;color:#444444;font-size:14px;background:#FFFFFF;vertical-align:middle}
 .styled-table tbody tr:last-child td{border-bottom:none}
 .installment-number{font-size:16px;font-weight:700;color:#333333}
-.status-badge{display:inline-block;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700}
+.small-btn,.action-btn,.status-badge{width:130px;height:34px;border-radius:20px;font-size:12px;font-weight:700;font-family:"Noto Kufi Arabic",sans-serif;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;box-sizing:border-box;border:none;white-space:nowrap}
+.small-btn{background:#FFFFFF;color:#3E2454;border:1px solid #3E2454;cursor:pointer}
+.approve-btn{background:#D4F4E2;color:#55A082;cursor:pointer}
+.pay-btn{background:#FFF4E5;color:#E6BC6A;cursor:pointer}
 .wait{background:#FFF4E5;color:#E6BC6A}
 .done{background:#D4F4E2;color:#55A082}
-.gray-badge{background:#ECECEC;color:#777777}
-.small-btn{min-width:120px;height:42px;border:1px solid #7a7a7a;border-radius:14px;background:#FFFFFF;color:#4a2b63;font-size:14px;font-weight:700;cursor:pointer;font-family:"Noto Kufi Arabic",sans-serif;display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
-
-/* زر موحد للحجم */
-.action-btn{
-  width:130px;
-  height:44px;
-  border:none;
-  border-radius:14px;
-  font-size:15px;
-  font-weight:700;
-  cursor:pointer;
-  font-family:"Noto Kufi Arabic",sans-serif;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-}
-.approve-btn{background:#65b185;color:#FFFFFF}
-.pay-btn{background:#a8a8a8;color:#FFFFFF}
-.pay-btn.active{background:#e4b869}
-
+.gray-badge{background:#F1F1F1;color:#888888}
 .no-action{color:#999999;font-weight:700}
 .message{text-align:center;padding:10px;margin-bottom:20px;border-radius:6px;font-size:13px}
 .error{background:#fff3f3;color:#b42318}
@@ -290,251 +200,191 @@ while ($row = mysqli_fetch_assoc($details_result)) {
 .pay-field input{width:100%;height:52px;border:1px solid #cccccc;border-radius:10px;padding:10px 14px;font-size:15px;outline:none;font-family:"Noto Kufi Arabic",sans-serif;box-sizing:border-box}
 .confirm-pay-btn{width:100%;height:56px;border:none;border-radius:10px;background:#77a7b8;color:#FFFFFF;font-size:18px;font-weight:700;cursor:pointer;font-family:"Noto Kufi Arabic",sans-serif}
 .close-modal-btn{background:none;border:none;color:#b54747;font-size:15px;cursor:pointer;margin-top:8px;font-family:"Noto Kufi Arabic",sans-serif}
-@media (max-width:950px){
-  .content-grid{grid-template-columns:1fr}
-  .styled-table{display:block;overflow-x:auto}
-  .pay-row{flex-direction:column}
-}
+@media (max-width:950px){.content-grid{grid-template-columns:1fr}.styled-table{display:block;overflow-x:auto}.pay-row{flex-direction:column}}
 </style>
 </head>
 <body>
 <div class="layout">
-
-  <aside class="sidebar">
-    <div class="sidebar-top">
-      <div class="sidebar-logo">
-        <img src="شعار نورين.png" alt="نورين">
-      </div>
-
-      <ul class="sidebar-menu">
-        <li><a href="Inv00_MainPage.php">الرئيسية</a></li>
-        <li><a href="Inv06_ManageScholarships.php">إدارة المنح</a></li>
-        <li><a href="Inv04_CreateScholarship.php">عرض المنح</a></li>
-        <li><a href="Inv10_Payments.php" class="active">المدفوعات</a></li>
-      </ul>
-    </div>
-
-    <div class="sidebar-bottom">
-      <form action="logout.php" method="post">
-        <button type="submit" class="logout-btn">
-          <img src="ايقونة تسجيل الخروج.png" class="logout-icon" alt="خروج">
-          <b>تسجيل الخروج</b>
-        </button>
-      </form>
-    </div>
-  </aside>
-
-  <div class="main-content">
-
-    <header class="header">
-      <div class="page-heading">
-        <h1 class="page-title">المدفوعات</h1>
-      </div>
-      <div class="header-icons">
-        <div class="settings-dropdown">
-          <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="الإعدادات">
-          <div class="dropdown-menu">
-            <a href="Inv02_Profile.php">الملف الشخصي</a>
-            <a href="support.php">تقديم شكوى او استفسار</a>
-          </div>
-        </div>
-      </div>
-
-      
-    </header>
-
-    <section class="pay-details-page">
-
-      <div class="page-top">
-        <a href="Inv10_Payments.php">
-          <img src="سهم تراجع.svg" width="40" alt="رجوع">
-        </a>
-      </div>
-
-      <?php if($msg != ""): ?>
-        <div class="message <?php echo $type; ?>">
-          <?php echo $msg; ?>
-        </div>
-      <?php endif; ?>
-
-      <div class="content-grid">
-
-        <div class="info-card contract-box">
-          <h3>ملخص العقد</h3>
-
-          <div class="data-row">
-            <label>رقم العقد:</label>
-            <span><?php echo htmlspecialchars($main_data['contract_id']); ?></span>
-          </div>
-
-          <div class="data-row">
-            <label>قيمة المنحة الإجمالية:</label>
-            <span><?php echo number_format($main_data['amount'], 2); ?></span>
-          </div>
-
-          <div class="data-row">
-            <label>عدد الدفعات:</label>
-            <span><?php echo htmlspecialchars($main_data['payments_count']); ?></span>
-          </div>
-
-          <div class="data-row">
-            <label>حالة العقد:</label>
-            <span><?php echo htmlspecialchars($main_data['ctr_status']); ?></span>
-          </div>
-        </div>
-
-        <div class="table-wrap">
-          <table class="styled-table">
-            <thead>
-              <tr>
-                <th>رقم الدفعة</th>
-                <th>حالة التقرير</th>
-                <th>اعتماد التقرير</th>
-                <th>حالة الدفعة</th>
-                <th>الإجراء</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php foreach ($rows as $item): ?>
-                <tr>
-                  <td><span class="installment-number"><?php echo htmlspecialchars($item['installment_number']); ?></span></td>
-
-                  <td>
-                    <?php if ($item['report_file'] != ""): ?>
-                      <a href="<?php echo htmlspecialchars($item['report_file']); ?>" target="_blank" class="small-btn">تنزيل الملف</a>
-                    <?php else: ?>
-                      <span class="status-badge gray-badge">لا يوجد تقرير</span>
-                    <?php endif; ?>
-                  </td>
-
-                  <td>
-                    <?php if ($item['report_file'] == ""): ?>
-                      <span class="status-badge gray-badge">لا يوجد تقرير</span>
-
-                    <?php elseif ($item['report_appoval'] == "معتمد"): ?>
-                      <span class="status-badge done">معتمد</span>
-
-                    <?php else: ?>
-                      <form method="post" style="margin:0;">
-                        <input type="hidden" name="report_id" value="<?php echo $item['report_id']; ?>">
-                        <button type="submit" name="approve_report" class="action-btn approve-btn">اعتماد</button>
-                      </form>
-                    <?php endif; ?>
-                  </td>
-
-                  <td>
-                    <?php if ($item['payment_status'] == "تم الدفع"): ?>
-                      <span class="status-badge done">مدفوعة</span>
-                    <?php else: ?>
-                      <span class="status-badge wait">غير مدفوعة</span>
-                    <?php endif; ?>
-                  </td>
-
-                  <td>
-                    <?php if ($item['payment_status'] == "تم الدفع"): ?>
-                      <span class="no-action">—</span>
-
-                    <?php elseif ($item['report_appoval'] == "معتمد"): ?>
-                      <button type="button"
-                              class="action-btn pay-btn active openPayModal"
-                              data-payment="<?php echo $item['payment_id']; ?>">
-                        دفع الدفعة
-                      </button>
-
-                    <?php else: ?>
-                      <span class="no-action">—</span>
-                    <?php endif; ?>
-                  </td>
-                </tr>
-              <?php endforeach; ?>
-            </tbody>
-          </table>
-        </div>
-
-      </div>
-
-    </section>
-
-  </div>
+<aside class="sidebar">
+<div class="sidebar-top">
+<div class="sidebar-logo">
+<img src="شعار نورين.png" alt="نورين">
 </div>
-
+<ul class="sidebar-menu">
+<li><a href="Inv00_MainPage.php">الرئيسية</a></li>
+<li><a href="Inv06_ManageScholarships.php">إدارة المنح</a></li>
+<li><a href="Inv04_CreateScholarship.php">عرض المنح</a></li>
+<li><a href="Inv10_Payments.php" class="active">المدفوعات</a></li>
+</ul>
+</div>
+<div class="sidebar-bottom">
+<form action="logout.php" method="post">
+<button type="submit" class="logout-btn">
+<img src="ايقونة تسجيل الخروج.png" class="logout-icon" alt="خروج">
+<b>تسجيل الخروج</b>
+</button>
+</form>
+</div>
+</aside>
+<div class="main-content">
+<header class="header">
+<div class="page-heading">
+<div class="page-title">المدفوعات</div>
+<div class="page-description">تفاصيل دفعات المنحة</div>
+</div>
+<div class="header-icons">
+<div class="settings-dropdown">
+<img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="الإعدادات">
+<div class="dropdown-menu">
+<a href="Inv02_Profile.php">الملف الشخصي</a>
+<a href="support.php">تقديم شكوى او استفسار</a>
+</div>
+</div>
+</div>
+</header>
+<section class="pay-details-page">
+<div class="page-top">
+<a href="Inv10_Payments.php" class="backbtn">
+<img src="سهم تراجع.svg" class="backicon" alt="رجوع">
+</a>
+</div>
+<?php if($msg != ""): ?>
+<div class="message <?php echo $type; ?>"><?php echo $msg; ?></div>
+<?php endif; ?>
+<div class="content-grid">
+<div class="info-card contract-box">
+<h3>ملخص العقد</h3>
+<div class="data-row">
+<label>رقم العقد:</label>
+<span><?php echo htmlspecialchars($main_data['contract_id']); ?></span>
+</div>
+<div class="data-row">
+<label>قيمة المنحة الإجمالية:</label>
+<span><?php echo number_format($main_data['amount'], 2); ?></span>
+</div>
+<div class="data-row">
+<label>عدد الدفعات:</label>
+<span><?php echo htmlspecialchars($main_data['payments_count']); ?></span>
+</div>
+<div class="data-row">
+<label>حالة العقد:</label>
+<span><?php echo htmlspecialchars($main_data['ctr_status']); ?></span>
+</div>
+</div>
+<div class="table-wrap">
+<table class="styled-table">
+<thead>
+<tr>
+<th>رقم الدفعة</th>
+<th>حالة التقرير</th>
+<th>اعتماد التقرير</th>
+<th>حالة الدفعة</th>
+<th>الإجراء</th>
+</tr>
+</thead>
+<tbody>
+<?php foreach ($rows as $item): ?>
+<tr>
+<td><span class="installment-number"><?php echo htmlspecialchars($item['installment_number']); ?></span></td>
+<td>
+<?php if ($item['report_file'] != ""): ?>
+<a href="<?php echo htmlspecialchars($item['report_file']); ?>" target="_blank" class="small-btn">تنزيل الملف</a>
+<?php else: ?>
+<span class="status-badge gray-badge">لا يوجد تقرير</span>
+<?php endif; ?>
+</td>
+<td>
+<?php if ($item['report_file'] == ""): ?>
+<span class="status-badge gray-badge">لا يوجد تقرير</span>
+<?php elseif ($item['report_appoval'] == "معتمد"): ?>
+<span class="status-badge done">معتمد</span>
+<?php else: ?>
+<form method="post" style="margin:0;">
+<input type="hidden" name="report_id" value="<?php echo $item['report_id']; ?>">
+<button type="submit" name="approve_report" class="action-btn approve-btn">اعتماد</button>
+</form>
+<?php endif; ?>
+</td>
+<td>
+<?php if ($item['payment_status'] == "تم الدفع"): ?>
+<span class="status-badge done">مدفوعة</span>
+<?php else: ?>
+<span class="status-badge wait">غير مدفوعة</span>
+<?php endif; ?>
+</td>
+<td>
+<?php if ($item['payment_status'] == "تم الدفع"): ?>
+<span class="no-action">—</span>
+<?php elseif ($item['report_appoval'] == "معتمد"): ?>
+<button type="button" class="action-btn pay-btn openPayModal" data-payment="<?php echo $item['payment_id']; ?>">دفع الدفعة</button>
+<?php else: ?>
+<span class="no-action">—</span>
+<?php endif; ?>
+</td>
+</tr>
+<?php endforeach; ?>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</div>
+</div>
 <div class="modal" id="paymentModal">
-  <div class="modal-content">
-    <div class="modal-title">رجاء قم بإدخال بيانات البطاقة لسداد دفعة المنحة للطالب</div>
-
-    <form method="post" class="pay-form" id="paymentForm">
-      <input type="hidden" name="payment_id" id="modal_payment_id">
-
-      <div class="pay-field">
-        <label>الاسم على البطاقة</label>
-        <input type="text" name="card_name" id="card_name" maxlength="100">
-      </div>
-
-      <div class="pay-field">
-        <label>رقم البطاقة</label>
-        <input type="text" name="card_number" id="card_number" maxlength="16" inputmode="numeric">
-      </div>
-
-      <div class="pay-row">
-        <div class="pay-field">
-          <label>تاريخ الانتهاء</label>
-          <input type="text" name="exp_date" id="exp_date" placeholder="MM/YY" maxlength="5" inputmode="numeric">
-        </div>
-
-        <div class="pay-field">
-          <label>رمز الأمان</label>
-          <input type="text" name="cvv" id="cvv" maxlength="3" inputmode="numeric">
-        </div>
-      </div>
-
-      <button type="submit" name="confirm_payment" class="confirm-pay-btn">تأكيد السداد</button>
-      <button type="button" class="close-modal-btn" id="closeModalBtn">إلغاء</button>
-    </form>
-  </div>
+<div class="modal-content">
+<div class="modal-title">رجاء قم بإدخال بيانات البطاقة لسداد دفعة المنحة للطالب</div>
+<form method="post" class="pay-form" id="paymentForm">
+<input type="hidden" name="payment_id" id="modal_payment_id">
+<div class="pay-field">
+<label>الاسم على البطاقة</label>
+<input type="text" name="card_name" id="card_name" maxlength="100">
 </div>
-
+<div class="pay-field">
+<label>رقم البطاقة</label>
+<input type="text" name="card_number" id="card_number" maxlength="16" inputmode="numeric">
+</div>
+<div class="pay-row">
+<div class="pay-field">
+<label>تاريخ الانتهاء</label>
+<input type="text" name="exp_date" id="exp_date" placeholder="MM/YY" maxlength="5" inputmode="numeric">
+</div>
+<div class="pay-field">
+<label>رمز الأمان</label>
+<input type="text" name="cvv" id="cvv" maxlength="3" inputmode="numeric">
+</div>
+</div>
+<button type="submit" name="confirm_payment" class="confirm-pay-btn">تأكيد السداد</button>
+<button type="button" class="close-modal-btn" id="closeModalBtn">إلغاء</button>
+</form>
+</div>
+</div>
 <script>
-/* فتح نافذة الدفع */
-const paymentModal = document.getElementById("paymentModal");
-const modalPaymentId = document.getElementById("modal_payment_id");
-const openButtons = document.querySelectorAll(".openPayModal");
-const closeModalBtn = document.getElementById("closeModalBtn");
-
-openButtons.forEach(function(btn){
-  btn.addEventListener("click", function(){
-    modalPaymentId.value = this.getAttribute("data-payment");
-    paymentModal.style.display = "flex";
-  });
+/* فتح وإغلاق نافذة الدفع */
+const paymentModal=document.getElementById("paymentModal");
+const modalPaymentId=document.getElementById("modal_payment_id");
+const closeModalBtn=document.getElementById("closeModalBtn");
+document.querySelectorAll(".openPayModal").forEach(function(btn){
+btn.addEventListener("click",function(){
+modalPaymentId.value=this.getAttribute("data-payment");
+paymentModal.style.display="flex";
 });
-
-/* إغلاق النافذة */
-closeModalBtn.addEventListener("click", function(){
-  paymentModal.style.display = "none";
 });
-
-paymentModal.addEventListener("click", function(e){
-  if(e.target === paymentModal){
-    paymentModal.style.display = "none";
-  }
+closeModalBtn.addEventListener("click",function(){
+paymentModal.style.display="none";
 });
-
-/* السماح بأرقام فقط */
-document.getElementById("card_number").addEventListener("input", function(){
-  this.value = this.value.replace(/\D/g, "").slice(0,16);
+paymentModal.addEventListener("click",function(e){
+if(e.target===paymentModal){ paymentModal.style.display="none"; }
 });
-
-document.getElementById("cvv").addEventListener("input", function(){
-  this.value = this.value.replace(/\D/g, "").slice(0,3);
+/* تنسيق بيانات البطاقة */
+document.getElementById("card_number").addEventListener("input",function(){
+this.value=this.value.replace(/\D/g,"").slice(0,16);
 });
-
-/* تنسيق تاريخ الانتهاء */
-document.getElementById("exp_date").addEventListener("input", function(){
-  let value = this.value.replace(/\D/g, "").slice(0,4);
-  if(value.length >= 3){
-    this.value = value.slice(0,2) + "/" + value.slice(2);
-  }else{
-    this.value = value;
-  }
+document.getElementById("cvv").addEventListener("input",function(){
+this.value=this.value.replace(/\D/g,"").slice(0,3);
+});
+document.getElementById("exp_date").addEventListener("input",function(){
+let value=this.value.replace(/\D/g,"").slice(0,4);
+this.value=value.length>=3 ? value.slice(0,2)+"/"+value.slice(2) : value;
 });
 </script>
 </body>
