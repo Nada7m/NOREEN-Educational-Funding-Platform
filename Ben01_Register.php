@@ -34,6 +34,22 @@ if(isset($_POST["save"])){
 
 ?>
 
+<style>
+/*  نص تسجيل الدخول تحت الزر */
+.login-text{
+    text-align:center;
+    margin-top:12px;
+    color:#777;
+    font-size:14px;
+}
+.login-text a{
+    color:#777;
+    text-decoration:none;
+}
+.login-text a:hover{
+    text-decoration:underline;
+}
+</style>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -142,6 +158,8 @@ if(isset($_POST["save"])){
 <div class="center">
 <button type="submit" class="btn" name="save">إنشاء حساب</button>
 </div>
+<div class="login-text">
+    <a href="login.php">هل ترغب بتسجيل الدخول؟</a>
 
 </form>
 

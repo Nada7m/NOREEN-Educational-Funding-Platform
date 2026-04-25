@@ -81,230 +81,214 @@ if (isset($_POST['confirm_final']) && $contract_data) {
     <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="CSS01Layout.css?v=4">
     <style>
-        .page{
-          padding:30px;
-        }
-
-        .page-top{
-          display:flex;
-          justify-content:flex-end;
-          align-items:center;
-          padding:0;
-          margin-bottom:20px;
-        }
-
-        .content-grid{
-          display:grid;
-          grid-template-columns:340px 1fr;
-          gap:20px;
-          align-items:start;
-        }
-
-        .side-col{
-          display:flex;
-          flex-direction:column;
-          gap:20px;
-        }
-
-        .info-card{
-          background:#FFFFFF;
-          border:1px solid #EAEAEA;
-          border-radius:16px;
-          padding:24px;
-          box-shadow:0 2px 8px rgba(0,0,0,0.04);
-        }
-
-        .info-card h3{
-          color:#3E2454;
-          font-size:16px;
-          font-weight:700;
-          text-align:center;
-          margin-bottom:18px;
-          padding-bottom:10px;
-          border-bottom:1px solid #F0F0F0;
-        }
-
-        .contract-box{
-          direction:rtl;
-          text-align:right;
-        }
-
-        .data-row{
-          display:flex;
-          align-items:center;
-          justify-content:space-between;
-          gap:12px;
-          margin-bottom:14px;
-          font-size:14px;
-        }
-
-        .data-row:last-child{
-          margin-bottom:0;
-        }
-
-        .data-row label{
-          color:#70A0AF;
-          font-weight:700;
-          flex-shrink:0;
-        }
-
-        .data-row span{
-          color:#333333;
-          font-weight:600;
-          text-align:left;
-        }
-
-        .terms-card{
-          background:#FFFFFF;
-          border:1px solid #EAEAEA;
-          border-radius:16px;
-          box-shadow:0 2px 8px rgba(0,0,0,0.04);
-          padding:24px;
-          min-height:100%;
-        }
-
-        .terms-card h3{
-          color:#3E2454;
-          font-size:16px;
-          font-weight:700;
-          text-align:center;
-          margin-bottom:18px;
-          padding-bottom:10px;
-          border-bottom:1px solid #F0F0F0;
-        }
-
-        .terms-box{
-          font-size:14px;
-          line-height:2;
-          color:#555555;
-          white-space:pre-line;
-          text-align:right;
-        }
-
-        .agree-text{
-          font-size:14px;
-          color:#444444;
-          line-height:1.9;
-          text-align:right;
-          margin-bottom:18px;
-        }
-
-        .btn-approve{
-          width:100%;
-          background:#3E2454;
-          color:#FFFFFF;
-          border:none;
-          border-radius:12px;
-          padding:12px 16px;
-          font-size:14px;
-          font-weight:700;
-          cursor:pointer;
-          text-decoration:none;
-          display:block;
-          text-align:center;
-          transition:.3s;
-        }
-
-        .btn-approve:hover{
-          background:#523067;
-        }
-
-        .approved-box{
-          display:inline-block;
-          width:100%;
-          text-align:center;
-          background:#D4F4E2;
-          color:#55A082;
-          padding:12px 16px;
-          border-radius:20px;
-          font-size:13px;
-          font-weight:700;
-        }
-
-        .modal-bg{
-          position:fixed;
-          top:0;
-          left:0;
-          width:100%;
-          height:100%;
-          background:rgba(0,0,0,0.45);
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          z-index:9999;
-          padding:20px;
-        }
-
-        .modal-box{
-          width:100%;
-          max-width:430px;
-          background:#FFFFFF;
-          border-radius:18px;
-          padding:30px 26px;
-          text-align:center;
-          box-shadow:0 8px 24px rgba(0,0,0,0.15);
-        }
-
-        .modal-icon{
-          width:58px;
-          height:58px;
-          border-radius:50%;
-          background:#C96B6B;
-          color:#FFFFFF;
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          font-size:28px;
-          font-weight:700;
-          margin:0 auto 16px;
-        }
-
-        .modal-text{
-          font-size:14px;
-          color:#444444;
-          line-height:1.9;
-          margin-bottom:22px;
-        }
-
-        .modal-actions{
-          display:flex;
-          justify-content:center;
-          gap:10px;
-          flex-wrap:wrap;
-        }
-
-        .modal-btn{
-          min-width:120px;
-          padding:10px 18px;
-          border:none;
-          border-radius:10px;
-          font-size:14px;
-          font-weight:700;
-          cursor:pointer;
-          text-decoration:none;
-        }
-
-        .confirm-btn{
-          background:#69B38A;
-          color:#FFFFFF;
-        }
-
-        .cancel-btn{
-          background:#F3E6DD;
-          color:#3E2454;
-        }
-
-        .empty-box{
-          background:#FFFFFF;
-          border:1px solid #EAEAEA;
-          border-radius:16px;
-          padding:30px;
-          box-shadow:0 2px 8px rgba(0,0,0,0.04);
-          text-align:center;
-          color:#666666;
-          font-size:14px;
-          font-weight:600;
-        }
+.page{
+    padding:20px 25px;
+}
+.page-top{
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    margin-bottom:8px;
+    margin-top:-30px;
+}
+.backbtn{
+    width:50px;
+    height:50px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+.backicon{
+    width:40px;
+    height:40px;
+}
+.content-grid{
+    display:flex;
+    gap:25px;
+    align-items:flex-start;
+}
+.side-col{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+.info-card{
+    background:#fff;
+    border-radius:12px;
+    padding:25px;
+    border:1px solid #e0e0e0;
+    box-shadow:0 2px 4px rgba(0,0,0,0.05);
+}
+.info-card h3{
+    font-size:16px;
+    font-weight:700;
+    color:#333;
+    margin-bottom:20px;
+    text-align:center;
+    border-bottom:1px solid #f0f0f0;
+    padding-bottom:10px;
+}
+.terms-card{
+    flex:1.8;
+    background:#fff;
+    border-radius:12px;
+    padding:25px;
+    border:1px solid #e0e0e0;
+    box-shadow:0 2px 4px rgba(0,0,0,0.05);
+}
+.terms-card h3{
+    font-size:16px;
+    font-weight:700;
+    color:#333;
+    margin-bottom:20px;
+    text-align:center;
+    border-bottom:1px solid #f0f0f0;
+    padding-bottom:10px;
+}
+.contract-box{
+    direction:rtl;
+    text-align:right;
+}
+.data-row{
+    display:flex;
+    justify-content:flex-start;
+    gap:15px;
+    margin-bottom:15px;
+    font-size:13.5px;
+}
+.data-row:last-child{
+    margin-bottom:0;
+}
+.data-row label{
+    color:#8EB4C2;
+    font-weight:600;
+    min-width:110px;
+}
+.data-row span{
+    color:#666;
+    font-weight:500;
+    text-align:right;
+}
+.terms-box{
+    font-size:13.5px;
+    line-height:1.6;
+    color:#555;
+    text-align:right;
+    white-space:pre-line;
+}
+.agree-text{
+    font-size:13.5px;
+    color:#555;
+    line-height:1.8;
+    text-align:right;
+    margin-bottom:18px;
+}
+.btn-approve{
+    width:100%;
+    height:48px;
+    background:#472764;
+    color:#FFFFFF;
+    border:none;
+    border-radius:8px;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+.btn-approve:hover{
+    background:#3f2556;
+}
+.approved-box{
+    display:block;
+    width:100%;
+    text-align:center;
+    background:#D4F4E2;
+    color:#55A082;
+    padding:12px;
+    border-radius:8px;
+    font-size:14px;
+    font-weight:700;
+}
+.modal-bg{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.45);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+    padding:20px;
+}
+.modal-box{
+    width:100%;
+    max-width:430px;
+    background:#FFFFFF;
+    border-radius:18px;
+    padding:30px 26px;
+    text-align:center;
+    box-shadow:0 8px 24px rgba(0,0,0,0.15);
+}
+.modal-icon{
+    width:58px;
+    height:58px;
+    border-radius:50%;
+    background:#C96B6B;
+    color:#FFFFFF;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    font-weight:700;
+    margin:0 auto 16px;
+}
+.modal-text{
+    font-size:14px;
+    color:#444444;
+    line-height:1.9;
+    margin-bottom:22px;
+}
+.modal-actions{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+}
+.modal-btn{
+    min-width:120px;
+    padding:10px 18px;
+    border:none;
+    border-radius:10px;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+    text-decoration:none;
+}
+.confirm-btn{
+    background:#69B38A;
+    color:#FFFFFF;
+}
+.cancel-btn{
+    background:#F3E6DD;
+    color:#3E2454;
+}
+.empty-box{
+    background:#FFFFFF;
+    border:1px solid #e0e0e0;
+    border-radius:12px;
+    padding:30px;
+    box-shadow:0 2px 4px rgba(0,0,0,0.05);
+    text-align:center;
+    color:#666666;
+    font-size:14px;
+    font-weight:600;
+}
     </style>
 </head>
 <body>
@@ -371,7 +355,7 @@ if (isset($_POST['confirm_final']) && $contract_data) {
 
                             <div class="data-row">
                                 <label>رقم العقد:</label>
-                                <span>CNT-<?php echo $contract_data['contract_id']; ?></span>
+                                <span><?php echo $contract_data['contract_id']; ?></span>
                             </div>
 
                             <div class="data-row">

@@ -14,11 +14,9 @@ mysqli_set_charset($con, "utf8mb4");
 
 $inv_id = (int) $_SESSION['inv_id'];
 $request_id = isset($_GET['request_id']) ? (int)$_GET['request_id'] : 0;
-
 if ($request_id <= 0) {
     die("رقم الطلب غير صحيح");
 }
-
 $success_message = "";
 $error_message = "";
 
@@ -509,30 +507,31 @@ if (isset($_GET['success'])) {
                                         value="<?php echo isset($_POST['amount']) ? htmlspecialchars($_POST['amount']) : ''; ?>"
                                     >
                                 </div>
-
-                                <div class="form-group">
-                                    <label class="form-label"><span class="req">*</span> مدة تمويل المنحة (عدد سنوات الدراسة)</label>
-                                    <select name="funding_duration" class="form-select">
-                                        <option value="">اختر مدة التمويل</option>
-                                        <option value="1" <?php if (isset($_POST['funding_duration']) && $_POST['funding_duration'] == "1") echo "selected"; ?>>1</option>
-                                        <option value="2" <?php if (isset($_POST['funding_duration']) && $_POST['funding_duration'] == "2") echo "selected"; ?>>2</option>
-                                        <option value="3" <?php if (isset($_POST['funding_duration']) && $_POST['funding_duration'] == "3") echo "selected"; ?>>3</option>
-                                        <option value="4" <?php if (isset($_POST['funding_duration']) && $_POST['funding_duration'] == "4") echo "selected"; ?>>4</option>
-                                        <option value="5" <?php if (isset($_POST['funding_duration']) && $_POST['funding_duration'] == "5") echo "selected"; ?>>5</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="form-label"><span class="req">*</span> عدد الدفعات المطلوبة</label>
-                                    <select name="payments_count" class="form-select">
-                                        <option value="">اختر عدد الدفعات</option>
-                                        <option value="2" <?php if (isset($_POST['payments_count']) && $_POST['payments_count'] == "2") echo "selected"; ?>>2</option>
-                                        <option value="3" <?php if (isset($_POST['payments_count']) && $_POST['payments_count'] == "3") echo "selected"; ?>>3</option>
-                                        <option value="4" <?php if (isset($_POST['payments_count']) && $_POST['payments_count'] == "4") echo "selected"; ?>>4</option>
-                                        <option value="5" <?php if (isset($_POST['payments_count']) && $_POST['payments_count'] == "5") echo "selected"; ?>>5</option>
-                                        <option value="6" <?php if (isset($_POST['payments_count']) && $_POST['payments_count'] == "6") echo "selected"; ?>>6</option>
-                                    </select>
-                                </div>
+  <div class="form-group">
+     <label class="form-label"><span class="req">*</span> مدة تمويل المنحة (عدد سنوات الدراسة)</label>
+     <select name="funding_duration" class="form-select">
+     <option value="">اختر مدة التمويل</option>
+  <option value="1" <?php if (isset($_POST['funding_duration']) && $_POST['funding_duration'] == "1") echo "selected"; ?>>1</option>
+  <option value="2" <?php if (isset($_POST['funding_duration']) && $_POST['funding_duration'] == "2") echo "selected"; ?>>2</option>
+  <option value="3" <?php if (isset($_POST['funding_duration']) && $_POST['funding_duration'] == "3") echo "selected"; ?>>3</option>
+  <option value="4" <?php if (isset($_POST['funding_duration']) && $_POST['funding_duration'] == "4") echo "selected"; ?>>4</option>
+  <option value="5" <?php if (isset($_POST['funding_duration']) && $_POST['funding_duration'] == "5") echo "selected"; ?>>5</option>
+ <option value="6" <?php if (isset($_POST['funding_duration']) && $_POST['funding_duration'] == "6") echo "selected"; ?>>6</option>
+  </select>
+ </div>
+<div class="form-group">
+    <label class="form-label"><span class="req">*</span> إجمالي عدد الدفعات طوال فترة المنحة</label>
+    <select name="payments_count" class="form-select">
+      <option value="">اختر عدد الدفعات</option>
+       <?php
+    for($i = 2; $i <= 12; $i++){
+        $selected = (isset($_POST['payments_count']) && $_POST['payments_count'] == $i) ? "selected" : "";
+        echo "<option value='$i' $selected>$i</option>";
+    }
+    ?>
+    </select>
+</div>
+</select>
                             </div>
 
                             <div>

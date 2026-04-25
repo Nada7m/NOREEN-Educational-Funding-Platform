@@ -265,7 +265,7 @@ while ($row = mysqli_fetch_assoc($ended_result)) {
 
       <div class="track-tabs">
         <a href="Inv10_Payments.php?tab=active" class="track-tab <?php echo $tab === 'active' ? 'active' : ''; ?>">المستفيدون النشطون</a>
-        <a href="Inv10_Payments.php?tab=others" class="track-tab <?php echo $tab === 'others' ? 'active' : ''; ?>">مستفيدون آخرون</a>
+        <a href="Inv10_Payments.php?tab=others" class="track-tab <?php echo $tab === 'others' ? 'active' : ''; ?>">المستفيدين السابقين </a>
       </div>
 
       <?php if ($tab === 'others') { ?>

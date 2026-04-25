@@ -108,6 +108,11 @@ tbody td{
   background:#C4474F;
 }
 
+/* إضافة منتهي رمادي */
+.status-ended{
+  background:#9E9E9E;
+}
+
 .btn{
   width:100px;
   height:42px;
@@ -197,6 +202,8 @@ $class = "status-active";
 
 if($status == "ملغي"){
     $class = "status-cancel";
+} elseif($status == "منتهي"){
+    $class = "status-ended";
 }
 ?>
 <tr>
@@ -212,14 +219,13 @@ if($status == "ملغي"){
   </td>
 
   <td>
-    <?php if($status != 'ملغي'){ ?>
+    <?php if($status != 'ملغي' && $status != 'منتهي'){ ?>
     <form method="POST">
       <input type="hidden" name="contract_id" value="<?= $row['contract_id'] ?>">
       <input type="hidden" name="request_id" value="<?= $row['request_id'] ?>">
       <button class="btn btn-delete" name="end_contract">إنهاء العقد</button>
     </form>
     <?php } else { ?>
-      <span style="color:#999;">منتهي</span>
     <?php } ?>
   </td>
 </tr>
