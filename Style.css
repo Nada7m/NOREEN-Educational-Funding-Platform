@@ -1,20 +1,19 @@
-
+/* ضبط كل العناصر */
 *{
   box-sizing:border-box;
 }
-
-
+/* شكل الصفحة العام */
 body{
   margin:0;
   background:#F4F4F4;
   font-family:'Noto Kufi Arabic',sans-serif;
 }
-
+/* الحاوية الرئيسية */
 .container{
   min-height:100vh;
-  padding-top:120px;
+  padding-top:120px; /* مسافة من فوق */
 }
-
+/*  (الفورم) */
 .box{
   width:650px;
   margin:auto;
@@ -23,36 +22,36 @@ body{
   border-radius:8px;
   box-shadow:0 0 10px #ccc;
 }
-
+/* عنوان الصفحة */
 h2{
   text-align:center;
   margin-bottom:30px;
 }
-
+/* جزء ملون في العنوان */
 h2 span{
   color:#7ea7b0;
 }
-
+/* صف الحقول */
 .row{
   display:flex;
   gap:30px;
   margin-bottom:20px;
 }
-
+/* كل حقل */
 .field{
   flex:1;
 }
-
+/* النص فوق الحقل */
 label{
   display:block;
   margin-bottom:6px;
   font-size:14px;
 }
-
+/* النجمة الحمراء */
 .star{
   color:red;
 }
-
+/* الحقول (input + select) */
 input,
 select{
   width:100%;
@@ -62,39 +61,36 @@ select{
   font-family:'Noto Kufi Arabic',sans-serif;
   background:white;
 }
-
+/* عند الضغط على الحقل */
 input:focus,
 select:focus{
   border-color:#4b2d67;
   outline:none;
 }
-
-
+/* تكرار تنسيق input */
 input{
-width:100%;
-padding:10px;
-border:1px solid #8fb4bf;
-border-radius:4px;
-font-family:'Noto Kufi Arabic',sans-serif;
+  width:100%;
+  padding:10px;
+  border:1px solid #8fb4bf;
+  border-radius:4px;
+  font-family:'Noto Kufi Arabic',sans-serif;
 }
-
+/* عند التركيز على input */
 input:focus{
-border-color:#4b2d67;
-outline:none;
+  border-color:#4b2d67;
+  outline:none;
 }
-
+/* صندوق كلمة المرور */
 .passBox{
-
   position:relative;
   width:100%;
 }
-
+/* حقل الباسورد */
 .passBox input{
   width:100%;
-  padding-left:35px;
-
+  padding-left:35px; /* مساحة للأيقونة */
 }
-
+/* أيقونة العين */
 .eye{
   position:absolute;
   left:10px;
@@ -103,14 +99,14 @@ outline:none;
   cursor:pointer;
   font-size:16px;
 }
-
+/* رسالة الخطأ */
 .errorText{
   color:red;
   font-size:12px;
   margin-top:5px;
   min-height:18px;
 }
-
+/* الرسائل العامة */
 .message{
   text-align:center;
   padding:10px;
@@ -118,22 +114,22 @@ outline:none;
   border-radius:5px;
   font-size:13px;
 }
-
+/* رسالة خطأ */
 .error{
   background:#fff3f3;
   color:#b42318;
 }
-
+/* رسالة نجاح */
 .success{
   background:#f1fff3;
   color:#1f7a2e;
 }
-
+/* توسيط */
 .center{
   text-align:center;
   margin-top:20px;
 }
-
+/* زر */
 .btn{
   display:block;
   margin:auto;
@@ -145,11 +141,11 @@ outline:none;
   font-family:'Noto Kufi Arabic',sans-serif;
   cursor:pointer;
 }
-
+/* عند المرور على الزر */
 .btn:hover{
   background:#3f2556;
 }
-
+/* مربع الوصف */
 .descBox{
   width:100%;
   height:120px;
@@ -159,21 +155,21 @@ outline:none;
   resize:none;
   padding:10px;
 }
-
+/* عند الضغط عليه */
 .descBox:focus{
   border-color:#4b2d67;
   outline:none;
 }
-
+/* خط فاصل */
 .line{
   margin-top:20px;
   border:1px solid #ddd;
 }
-
+/* تنسيق select2 */
 #country + .select2-container{
   width:100% !important;
 }
-
+/* شكل الاختيارات */
 #country + .select2-container .select2-selection--multiple{
   min-height:47.5px !important;
   border:1px solid #8fb4bf !important;
@@ -182,8 +178,7 @@ outline:none;
   padding:4px 10px !important;
   box-sizing:border-box !important;
 }
-
+/* عند التركيز */
 #country + .select2-container.select2-container--focus .select2-selection--multiple{
   border-color:#4b2d67 !important;
 }
-
