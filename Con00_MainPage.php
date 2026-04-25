@@ -1,3 +1,19 @@
+<?php
+session_start();
+$conn=new mysqli("localhost","root","","noreen");
+if($conn->connect_error){die("فشل الاتصال بقاعدة البيانات");}
+$conn->set_charset("utf8mb4");
+$userName="المكتب الاستشاري";
+if(isset($_SESSION['office_id'])){
+$office_id=$_SESSION['office_id'];
+$stmt=$conn->prepare("SELECT office_name FROM consulting_office WHERE office_id=?");
+$stmt->bind_param("i",$office_id);
+$stmt->execute();
+$result=$stmt->get_result();
+if($row=$result->fetch_assoc()){$userName=$row['office_name'];}
+$stmt->close();
+}
+?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <meta charset="UTF-8">
@@ -44,25 +60,25 @@
     <!-- المحتوى الرئيسي -->
     <div class="main-content">
 
-      <!-- الهيدر -->
-      <header class="header">
-
-        <div class="page-heading">
-          <div class="page-title">الرئيسية</div>
-        </div>
-
-        <div class="header-icons">
-          <div class="settings-dropdown">
-            <img src="ايقونة قائمة الاعدادات.png" class="menu-icon">
-
-            <div class="dropdown-menu">
-              <a href="Con02_Profile.php">الملف الشخصي</a>
-              <a href="support.php">تقديم شكوى او استفسار</a>
-            </div>
-          </div>
-        </div>
-
-      </header>
+      <!-- الهيدر --><header class="header">
+<div class="page-heading">
+<div class="page-title">الرئيسية</div>
+<div class="welcome-box">
+<div class="welcome-text">
+أهلًا بك، <?php echo htmlspecialchars($userName); ?>
+</div>
+</div>
+</div>
+<div class="header-icons">
+<div class="settings-dropdown">
+<img src="ايقونة قائمة الاعدادات.png" class="menu-icon">
+<div class="dropdown-menu">
+<a href="Con02_Profile.php">الملف الشخصي</a>
+<a href="support.php">تقديم شكوى او استفسار</a>
+</div>
+</div>
+</div>
+</header>
 
       <!-- محتوى الصفحة -->
       <div class="page">
