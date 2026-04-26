@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: 22 أبريل 2026 الساعة 19:54
--- إصدار الخادم: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: 127.0.0.1:3306
+-- Generation Time: 26 أبريل 2026 الساعة 14:20
+-- إصدار الخادم: 9.1.0
+-- PHP Version: 8.3.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -27,16 +27,21 @@ SET time_zone = "+00:00";
 -- بنية الجدول `academic_report`
 --
 
-CREATE TABLE `academic_report` (
-  `report_id` int(11) NOT NULL,
-  `bnf_id` int(11) NOT NULL,
-  `contract_id` int(11) NOT NULL,
-  `payment_id` int(11) NOT NULL,
-  `report_file` varchar(255) NOT NULL,
-  `report_upload` enum('مرفوع','غير مرفوع','','') NOT NULL,
+DROP TABLE IF EXISTS `academic_report`;
+CREATE TABLE IF NOT EXISTS `academic_report` (
+  `report_id` int NOT NULL AUTO_INCREMENT,
+  `bnf_id` int NOT NULL,
+  `contract_id` int NOT NULL,
+  `payment_id` int NOT NULL,
+  `report_file` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `report_upload` enum('مرفوع','غير مرفوع','','') COLLATE utf8mb4_general_ci NOT NULL,
   `submit_date` date NOT NULL,
-  `report_appoval` enum('معتمد','غير معتمد','','') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `report_appoval` enum('معتمد','غير معتمد','','') COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`report_id`),
+  KEY `bnf_id` (`bnf_id`),
+  KEY `contract_id` (`contract_id`),
+  KEY `payment_id` (`payment_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- إرجاع أو استيراد بيانات الجدول `academic_report`
@@ -52,11 +57,14 @@ INSERT INTO `academic_report` (`report_id`, `bnf_id`, `contract_id`, `payment_id
 -- بنية الجدول `admin`
 --
 
-CREATE TABLE `admin` (
-  `admin_id` int(11) NOT NULL,
-  `admin_name` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `admin`;
+CREATE TABLE IF NOT EXISTS `admin` (
+  `admin_id` int NOT NULL AUTO_INCREMENT,
+  `admin_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`admin_id`),
+  UNIQUE KEY `admin_name` (`admin_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- إرجاع أو استيراد بيانات الجدول `admin`
@@ -71,20 +79,24 @@ INSERT INTO `admin` (`admin_id`, `admin_name`, `password`) VALUES
 -- بنية الجدول `admission_request`
 --
 
-CREATE TABLE `admission_request` (
-  `request_id` int(11) NOT NULL,
-  `bnf_id` int(11) NOT NULL,
-  `office_id` int(11) NOT NULL,
-  `program_type` enum('bachelor','master','phd') NOT NULL,
-  `major_name` varchar(100) NOT NULL,
-  `univ_name` varchar(100) NOT NULL,
+DROP TABLE IF EXISTS `admission_request`;
+CREATE TABLE IF NOT EXISTS `admission_request` (
+  `request_id` int NOT NULL AUTO_INCREMENT,
+  `bnf_id` int NOT NULL,
+  `office_id` int NOT NULL,
+  `program_type` enum('bachelor','master','phd') COLLATE utf8mb4_general_ci NOT NULL,
+  `major_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `univ_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `Submit_date` date NOT NULL,
-  `result_notes` text DEFAULT NULL,
-  `Result_status` enum('قيد المعالجة','أُصدرت','لم تُصدر') DEFAULT 'قيد المعالجة',
-  `request_status` enum('في الانتظار','مقبول','مرفوض') NOT NULL DEFAULT 'في الانتظار',
-  `payment_status` enum('غير مدفوع','مدفوع','بانتظار الدفع') NOT NULL DEFAULT 'غير مدفوع',
-  `result` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `result_notes` text COLLATE utf8mb4_general_ci,
+  `Result_status` enum('قيد المعالجة','أُصدرت','لم تُصدر') COLLATE utf8mb4_general_ci DEFAULT 'قيد المعالجة',
+  `request_status` enum('في الانتظار','مقبول','مرفوض') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'في الانتظار',
+  `payment_status` enum('غير مدفوع','مدفوع','بانتظار الدفع') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'غير مدفوع',
+  `result` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  PRIMARY KEY (`request_id`),
+  KEY `bnf_id` (`bnf_id`),
+  KEY `office_id` (`office_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- إرجاع أو استيراد بيانات الجدول `admission_request`
@@ -101,13 +113,16 @@ INSERT INTO `admission_request` (`request_id`, `bnf_id`, `office_id`, `program_t
 -- بنية الجدول `admission_request_documents`
 --
 
-CREATE TABLE `admission_request_documents` (
-  `doc_id` int(11) NOT NULL,
-  `request_id` int(11) NOT NULL,
-  `doc_type` enum('CV','High School Certificate','University Degree Certificate','Academic Certificates','Academic Transcript','Language Certificate','Passport','Recommendation Letters','Statement of Purpose','Letter of Intent','Research Proposal','Acceptance Letter','Other Certificates') NOT NULL,
-  `file_name` varchar(255) NOT NULL,
-  `file` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `admission_request_documents`;
+CREATE TABLE IF NOT EXISTS `admission_request_documents` (
+  `doc_id` int NOT NULL AUTO_INCREMENT,
+  `request_id` int NOT NULL,
+  `doc_type` enum('CV','High School Certificate','University Degree Certificate','Academic Certificates','Academic Transcript','Language Certificate','Passport','Recommendation Letters','Statement of Purpose','Letter of Intent','Research Proposal','Acceptance Letter','Other Certificates') COLLATE utf8mb4_general_ci NOT NULL,
+  `file_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `file` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`doc_id`),
+  KEY `request_id` (`request_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- إرجاع أو استيراد بيانات الجدول `admission_request_documents`
@@ -141,26 +156,32 @@ INSERT INTO `admission_request_documents` (`doc_id`, `request_id`, `doc_type`, `
 -- بنية الجدول `beneficiary`
 --
 
-CREATE TABLE `beneficiary` (
-  `bnf_id` int(11) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `f_name` varchar(50) NOT NULL,
-  `l_name` varchar(50) NOT NULL,
-  `phone_num` varchar(15) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `sch_field` enum('تقني و حوسبي','علوم طبيعية','صناعي و تشغيلي','إداري','قانوني','اجتماعي و إنساني','تصميمي','اقتصادي','إعلامي','بيئي','لوجيستي','صحي','لا يوجد') NOT NULL,
-  `degree_level` enum('ثانوي','بكالوريوس','ماجستير','') NOT NULL,
-  `account_status` enum('نشط','محظور') NOT NULL DEFAULT 'نشط'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `beneficiary`;
+CREATE TABLE IF NOT EXISTS `beneficiary` (
+  `bnf_id` int NOT NULL AUTO_INCREMENT,
+  `email` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `f_name` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `l_name` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `phone_num` varchar(15) COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `degree_level` enum('ثانوي','بكالوريوس','ماجستير','') COLLATE utf8mb4_general_ci NOT NULL,
+  `account_status` enum('نشط','محظور') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'نشط',
+  `sch_field` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`bnf_id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- إرجاع أو استيراد بيانات الجدول `beneficiary`
 --
 
-INSERT INTO `beneficiary` (`bnf_id`, `email`, `f_name`, `l_name`, `phone_num`, `password`, `sch_field`, `degree_level`, `account_status`) VALUES
-(1, 'FatmaAlghamdi@gmail.com', 'فاطمة', 'الغامدي', '0502508284', '$2y$10$vS2J608Dv/DImLLpfl9Vu.PcHg0YtAsR2HX8IgX87Lj9Bh1AMhQlS', 'صناعي و تشغيلي', 'بكالوريوس', 'نشط'),
-(3, 'Tasneem@gmail.com', 'تسنيم', 'الحربي', '0535246000', '$2y$10$6AxmbjZBFFpd8KP8K.9jWuFUkZ0ifxmunNsiRxq3pzNng6mvo2RhW', '', 'ثانوي', 'نشط'),
-(4, 'noorAlfif99@gmail.com', 'نور', 'الفيفي', '0559800107', '$2y$10$7Ym4vCgxDdZbi7ELxvoDReX0CbOud1XYHol8HNeJ0/UdogqE3Vv/W', 'صحي', 'ثانوي', 'نشط');
+INSERT INTO `beneficiary` (`bnf_id`, `email`, `f_name`, `l_name`, `phone_num`, `password`, `degree_level`, `account_status`, `sch_field`) VALUES
+(1, 'FatmaAlghamdi@gmail.com', 'فاطمة', 'الغامدي', '0502508284', '$2y$10$vS2J608Dv/DImLLpfl9Vu.PcHg0YtAsR2HX8IgX87Lj9Bh1AMhQlS', 'بكالوريوس', 'نشط', ''),
+(3, 'Tasneem@gmail.com', 'تسنيم', 'الحربي', '0535246000', '$2y$10$6AxmbjZBFFpd8KP8K.9jWuFUkZ0ifxmunNsiRxq3pzNng6mvo2RhW', 'ثانوي', 'نشط', ''),
+(4, 'noorAlfif99@gmail.com', 'نور', 'الفيفي', '0559800107', '$2y$10$7Ym4vCgxDdZbi7ELxvoDReX0CbOud1XYHol8HNeJ0/UdogqE3Vv/W', 'ثانوي', 'نشط', ''),
+(5, 'roro.b1908@gmail.com', 'REMAS', 'ALHARBI', '0502508481', '$2y$10$0crcpoVtPfbZ6iuSFDMlPu03FwtxGPRW8AkWKbqKBfSUtkheirrCW', 'بكالوريوس', 'نشط', ''),
+(6, 'amal.b1908@gmail.com', 'amal', 'AHARBI', '0502500481', '$2y$10$6ChXA/5O84Evqns2.xQPteBjckpILxBqocR.P8V.BmNiCxqbTdcUS', 'ثانوي', 'نشط', ''),
+(7, 'omar.b1908@gmail.com', 'omar', 'ALHARBI', '0533508481', '$2y$10$.zaLlgn6K4VYFL0pzqbRKuvfdCOLCIqHeRnuqfADuvz4TtPYI008u', 'ثانوي', 'نشط', 'إداري');
 
 -- --------------------------------------------------------
 
@@ -168,14 +189,18 @@ INSERT INTO `beneficiary` (`bnf_id`, `email`, `f_name`, `l_name`, `phone_num`, `
 -- بنية الجدول `bnf_inv_msg`
 --
 
-CREATE TABLE `bnf_inv_msg` (
-  `msg_id` int(11) NOT NULL,
-  `bnf_id` int(11) NOT NULL,
-  `inv_id` int(11) NOT NULL,
-  `msg_time` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `msg_text` text NOT NULL,
-  `sender_type` enum('beneficiary','investor') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `bnf_inv_msg`;
+CREATE TABLE IF NOT EXISTS `bnf_inv_msg` (
+  `msg_id` int NOT NULL AUTO_INCREMENT,
+  `bnf_id` int NOT NULL,
+  `inv_id` int NOT NULL,
+  `msg_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `msg_text` text COLLATE utf8mb4_general_ci NOT NULL,
+  `sender_type` enum('beneficiary','investor') COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`msg_id`),
+  KEY `bnf_id` (`bnf_id`),
+  KEY `inv_id` (`inv_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- إرجاع أو استيراد بيانات الجدول `bnf_inv_msg`
@@ -191,14 +216,18 @@ INSERT INTO `bnf_inv_msg` (`msg_id`, `bnf_id`, `inv_id`, `msg_time`, `msg_text`,
 -- بنية الجدول `bnf_off_msg`
 --
 
-CREATE TABLE `bnf_off_msg` (
-  `msg_id` int(11) NOT NULL,
-  `bnf_id` int(11) NOT NULL,
-  `office_id` int(11) NOT NULL,
-  `msg_time` datetime NOT NULL DEFAULT current_timestamp(),
-  `msg_text` text NOT NULL,
-  `sender_type` enum('beneficiary','office') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `bnf_off_msg`;
+CREATE TABLE IF NOT EXISTS `bnf_off_msg` (
+  `msg_id` int NOT NULL AUTO_INCREMENT,
+  `bnf_id` int NOT NULL,
+  `office_id` int NOT NULL,
+  `msg_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `msg_text` text COLLATE utf8mb4_general_ci NOT NULL,
+  `sender_type` enum('beneficiary','office') COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`msg_id`),
+  KEY `bnf_id` (`bnf_id`),
+  KEY `office_id` (`office_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- إرجاع أو استيراد بيانات الجدول `bnf_off_msg`
@@ -218,17 +247,22 @@ INSERT INTO `bnf_off_msg` (`msg_id`, `bnf_id`, `office_id`, `msg_time`, `msg_tex
 -- بنية الجدول `complaints_inquiries`
 --
 
-CREATE TABLE `complaints_inquiries` (
-  `ticket_id` int(11) NOT NULL,
-  `office_id` int(11) DEFAULT NULL,
-  `bnf_id` int(11) DEFAULT NULL,
-  `inv_id` int(11) DEFAULT NULL,
-  `admin_reply` text DEFAULT NULL,
-  `submission_date` datetime DEFAULT current_timestamp(),
-  `subject` text NOT NULL,
-  `message` text NOT NULL,
-  `status` enum('بانتظار الرد','تم الرد') DEFAULT 'بانتظار الرد'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `complaints_inquiries`;
+CREATE TABLE IF NOT EXISTS `complaints_inquiries` (
+  `ticket_id` int NOT NULL AUTO_INCREMENT,
+  `office_id` int DEFAULT NULL,
+  `bnf_id` int DEFAULT NULL,
+  `inv_id` int DEFAULT NULL,
+  `admin_reply` text COLLATE utf8mb4_general_ci,
+  `submission_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `subject` text COLLATE utf8mb4_general_ci NOT NULL,
+  `message` text COLLATE utf8mb4_general_ci NOT NULL,
+  `status` enum('بانتظار الرد','تم الرد') COLLATE utf8mb4_general_ci DEFAULT 'بانتظار الرد',
+  PRIMARY KEY (`ticket_id`),
+  KEY `bnf_id` (`bnf_id`),
+  KEY `inv_id` (`inv_id`),
+  KEY `office_id` (`office_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- إرجاع أو استيراد بيانات الجدول `complaints_inquiries`
@@ -245,20 +279,24 @@ INSERT INTO `complaints_inquiries` (`ticket_id`, `office_id`, `bnf_id`, `inv_id`
 -- بنية الجدول `consulting_office`
 --
 
-CREATE TABLE `consulting_office` (
-  `office_id` int(11) NOT NULL,
-  `ccr_number` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `office_name` varchar(255) NOT NULL,
-  `office_description` text NOT NULL,
-  `Bachelor_fee` int(11) NOT NULL,
-  `Masters_fee` int(11) NOT NULL,
-  `Phd_fee` int(11) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `phone` varchar(255) NOT NULL,
-  `approval_status` enum('بانتظار المراجعة','معتمد','مرفوض') NOT NULL DEFAULT 'بانتظار المراجعة',
-  `account_status` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `consulting_office`;
+CREATE TABLE IF NOT EXISTS `consulting_office` (
+  `office_id` int NOT NULL AUTO_INCREMENT,
+  `ccr_number` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `office_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `office_description` text COLLATE utf8mb4_general_ci NOT NULL,
+  `Bachelor_fee` int NOT NULL,
+  `Masters_fee` int NOT NULL,
+  `Phd_fee` int NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `phone` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `approval_status` enum('بانتظار المراجعة','معتمد','مرفوض') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'بانتظار المراجعة',
+  `account_status` int NOT NULL DEFAULT '0',
+  PRIMARY KEY (`office_id`),
+  UNIQUE KEY `ccr_number` (`ccr_number`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- إرجاع أو استيراد بيانات الجدول `consulting_office`
@@ -275,17 +313,21 @@ INSERT INTO `consulting_office` (`office_id`, `ccr_number`, `email`, `office_nam
 -- بنية الجدول `e_contract`
 --
 
-CREATE TABLE `e_contract` (
-  `contract_id` int(11) NOT NULL,
-  `request_id` int(11) NOT NULL,
-  `payments_count` int(11) NOT NULL,
-  `funding_duration` int(11) NOT NULL,
-  `ctr_status` enum('نشط','ملغي','منتهي') NOT NULL,
-  `terms` text NOT NULL,
+DROP TABLE IF EXISTS `e_contract`;
+CREATE TABLE IF NOT EXISTS `e_contract` (
+  `contract_id` int NOT NULL AUTO_INCREMENT,
+  `request_id` int NOT NULL,
+  `payments_count` int NOT NULL,
+  `funding_duration` int NOT NULL,
+  `ctr_status` enum('نشط','ملغي','منتهي') COLLATE utf8mb4_general_ci NOT NULL,
+  `terms` text COLLATE utf8mb4_general_ci NOT NULL,
   `amount` decimal(10,2) NOT NULL,
-  `approval_status` enum('انتظار الموافقة','تمت الموافقة') DEFAULT 'انتظار الموافقة',
-  `inv_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `approval_status` enum('انتظار الموافقة','تمت الموافقة') COLLATE utf8mb4_general_ci DEFAULT 'انتظار الموافقة',
+  `inv_id` int NOT NULL,
+  PRIMARY KEY (`contract_id`),
+  KEY `request_id` (`request_id`),
+  KEY `e_contract_ibfk_2` (`inv_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- إرجاع أو استيراد بيانات الجدول `e_contract`
@@ -301,16 +343,20 @@ INSERT INTO `e_contract` (`contract_id`, `request_id`, `payments_count`, `fundin
 -- بنية الجدول `investor`
 --
 
-CREATE TABLE `investor` (
-  `inv_id` int(11) NOT NULL,
-  `ccr_number` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `inv_number` varchar(11) NOT NULL,
-  `inv_name` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `approval_status` enum('بانتظار المراجعة','معتمد','مرفوض') NOT NULL DEFAULT 'بانتظار المراجعة',
-  `account_status` enum('نشط','محظور') NOT NULL DEFAULT 'نشط'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `investor`;
+CREATE TABLE IF NOT EXISTS `investor` (
+  `inv_id` int NOT NULL AUTO_INCREMENT,
+  `ccr_number` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `inv_number` varchar(11) COLLATE utf8mb4_general_ci NOT NULL,
+  `inv_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `approval_status` enum('بانتظار المراجعة','معتمد','مرفوض') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'بانتظار المراجعة',
+  `account_status` enum('نشط','محظور') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'نشط',
+  PRIMARY KEY (`inv_id`),
+  UNIQUE KEY `ccr_number` (`ccr_number`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- إرجاع أو استيراد بيانات الجدول `investor`
@@ -327,9 +373,12 @@ INSERT INTO `investor` (`inv_id`, `ccr_number`, `email`, `inv_number`, `inv_name
 -- بنية الجدول `office_country`
 --
 
-CREATE TABLE `office_country` (
-  `office_id` int(11) NOT NULL,
-  `con_name` varchar(100) NOT NULL
+DROP TABLE IF EXISTS `office_country`;
+CREATE TABLE IF NOT EXISTS `office_country` (
+  `office_id` int NOT NULL,
+  `con_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`office_id`,`con_name`),
+  KEY `office_id` (`office_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -377,14 +426,17 @@ INSERT INTO `office_country` (`office_id`, `con_name`) VALUES
 -- بنية الجدول `payments`
 --
 
-CREATE TABLE `payments` (
-  `payment_id` int(11) NOT NULL,
-  `contract_id` int(11) NOT NULL,
-  `installment_number` int(11) NOT NULL,
-  `payment_amount` int(11) NOT NULL,
-  `payment_status` enum('تم الدفع','بانتظار الدفع','','') NOT NULL,
-  `payment_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `payments`;
+CREATE TABLE IF NOT EXISTS `payments` (
+  `payment_id` int NOT NULL AUTO_INCREMENT,
+  `contract_id` int NOT NULL,
+  `installment_number` int NOT NULL,
+  `payment_amount` int NOT NULL,
+  `payment_status` enum('تم الدفع','بانتظار الدفع','','') COLLATE utf8mb4_general_ci NOT NULL,
+  `payment_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`payment_id`),
+  KEY `contract_id` (`contract_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- إرجاع أو استيراد بيانات الجدول `payments`
@@ -405,14 +457,19 @@ INSERT INTO `payments` (`payment_id`, `contract_id`, `installment_number`, `paym
 -- بنية الجدول `rating`
 --
 
-CREATE TABLE `rating` (
-  `rating_id` int(11) NOT NULL,
-  `bnf_id` int(11) NOT NULL,
-  `office_id` int(11) NOT NULL,
-  `request_id` int(11) NOT NULL,
-  `rating_date` datetime DEFAULT current_timestamp(),
-  `comment_text` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `rating`;
+CREATE TABLE IF NOT EXISTS `rating` (
+  `rating_id` int NOT NULL AUTO_INCREMENT,
+  `bnf_id` int NOT NULL,
+  `office_id` int NOT NULL,
+  `request_id` int NOT NULL,
+  `rating_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `comment_text` text COLLATE utf8mb4_general_ci,
+  PRIMARY KEY (`rating_id`),
+  KEY `bnf_id` (`bnf_id`),
+  KEY `office_id` (`office_id`),
+  KEY `request_id` (`request_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- إرجاع أو استيراد بيانات الجدول `rating`
@@ -428,16 +485,21 @@ INSERT INTO `rating` (`rating_id`, `bnf_id`, `office_id`, `request_id`, `rating_
 -- بنية الجدول `scholarship_opps`
 --
 
-CREATE TABLE `scholarship_opps` (
-  `scholarship_id` int(11) NOT NULL,
-  `sch_field` enum('تقني وحوسبي','علوم طبيعية','صناعي وتشغيلي','ادراي','قانوني','اجتماعي وانساني','تصميمي','اقتصادي','إعلامي','بيئي','لوجيستي','صحي') NOT NULL,
-  `inv_id` int(11) NOT NULL,
-  `sch_name` varchar(100) NOT NULL,
-  `requirements` text NOT NULL,
-  `study_level` enum('بكالوريوس','ماجستير','دكتوراه') NOT NULL,
-  `Specializations` text NOT NULL,
-  `app_deadline` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `scholarship_opps`;
+CREATE TABLE IF NOT EXISTS `scholarship_opps` (
+  `scholarship_id` int NOT NULL AUTO_INCREMENT,
+  `sch_field` enum('تقني وحوسبي','علوم طبيعية','صناعي وتشغيلي','ادراي','قانوني','اجتماعي وانساني','تصميمي','اقتصادي','إعلامي','بيئي','لوجيستي','صحي') COLLATE utf8mb4_general_ci NOT NULL,
+  `inv_id` int NOT NULL,
+  `sch_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `requirements` text COLLATE utf8mb4_general_ci NOT NULL,
+  `study_level` enum('بكالوريوس','ماجستير','دكتوراه') COLLATE utf8mb4_general_ci NOT NULL,
+  `Specializations` text COLLATE utf8mb4_general_ci NOT NULL,
+  `app_deadline` datetime NOT NULL,
+  PRIMARY KEY (`scholarship_id`),
+  UNIQUE KEY `scholarship_id` (`scholarship_id`),
+  KEY `field_filter` (`sch_field`),
+  KEY `inv_id` (`inv_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- إرجاع أو استيراد بيانات الجدول `scholarship_opps`
@@ -454,15 +516,19 @@ INSERT INTO `scholarship_opps` (`scholarship_id`, `sch_field`, `inv_id`, `sch_na
 -- بنية الجدول `scholarship_requests`
 --
 
-CREATE TABLE `scholarship_requests` (
-  `request_id` int(11) NOT NULL,
-  `scholarship_id` int(11) NOT NULL,
-  `bnf_id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `scholarship_requests`;
+CREATE TABLE IF NOT EXISTS `scholarship_requests` (
+  `request_id` int NOT NULL AUTO_INCREMENT,
+  `scholarship_id` int NOT NULL,
+  `bnf_id` int NOT NULL,
   `Submit_date` date NOT NULL,
-  `request_status` enum('مقبول','مرفوض','تحت المراجعة','منتهي','ملغي') NOT NULL DEFAULT 'تحت المراجعة',
-  `major_name` varchar(100) NOT NULL,
-  `univ_name` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `request_status` enum('مقبول','مرفوض','تحت المراجعة','منتهي','ملغي') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'تحت المراجعة',
+  `major_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `univ_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`request_id`),
+  KEY `scholarship_id` (`scholarship_id`),
+  KEY `bnf_id` (`bnf_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- إرجاع أو استيراد بيانات الجدول `scholarship_requests`
@@ -479,13 +545,16 @@ INSERT INTO `scholarship_requests` (`request_id`, `scholarship_id`, `bnf_id`, `S
 -- بنية الجدول `scholarship_request_documents`
 --
 
-CREATE TABLE `scholarship_request_documents` (
-  `doc_id` int(11) NOT NULL,
-  `request_id` int(11) NOT NULL,
-  `doc_type` varchar(150) NOT NULL,
-  `file_name` varchar(150) NOT NULL,
-  `file` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `scholarship_request_documents`;
+CREATE TABLE IF NOT EXISTS `scholarship_request_documents` (
+  `doc_id` int NOT NULL AUTO_INCREMENT,
+  `request_id` int NOT NULL,
+  `doc_type` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
+  `file_name` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
+  `file` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`doc_id`),
+  KEY `request_id` (`request_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- إرجاع أو استيراد بيانات الجدول `scholarship_request_documents`
@@ -504,244 +573,6 @@ INSERT INTO `scholarship_request_documents` (`doc_id`, `request_id`, `doc_type`,
 (14, 6, 'Certificate', 'Fatima_Alghamdi_University_Degree.pdf', 'uploads/scholarship_requests/6_cert_file.pdf'),
 (15, 6, 'Recommendation', 'Fatima_Alghamdi_Recommendation_Letters.pdf', 'uploads/scholarship_requests/6_rec_file.pdf'),
 (16, 6, 'Acceptance', 'Admission_Result.pdf.pdf', 'uploads/scholarship_requests/6_accept_file.pdf');
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `academic_report`
---
-ALTER TABLE `academic_report`
-  ADD PRIMARY KEY (`report_id`),
-  ADD KEY `bnf_id` (`bnf_id`),
-  ADD KEY `contract_id` (`contract_id`),
-  ADD KEY `payment_id` (`payment_id`);
-
---
--- Indexes for table `admin`
---
-ALTER TABLE `admin`
-  ADD PRIMARY KEY (`admin_id`),
-  ADD UNIQUE KEY `admin_name` (`admin_name`);
-
---
--- Indexes for table `admission_request`
---
-ALTER TABLE `admission_request`
-  ADD PRIMARY KEY (`request_id`),
-  ADD KEY `bnf_id` (`bnf_id`),
-  ADD KEY `office_id` (`office_id`);
-
---
--- Indexes for table `admission_request_documents`
---
-ALTER TABLE `admission_request_documents`
-  ADD PRIMARY KEY (`doc_id`),
-  ADD KEY `request_id` (`request_id`);
-
---
--- Indexes for table `beneficiary`
---
-ALTER TABLE `beneficiary`
-  ADD PRIMARY KEY (`bnf_id`),
-  ADD UNIQUE KEY `email` (`email`);
-
---
--- Indexes for table `bnf_inv_msg`
---
-ALTER TABLE `bnf_inv_msg`
-  ADD PRIMARY KEY (`msg_id`),
-  ADD KEY `bnf_id` (`bnf_id`),
-  ADD KEY `inv_id` (`inv_id`);
-
---
--- Indexes for table `bnf_off_msg`
---
-ALTER TABLE `bnf_off_msg`
-  ADD PRIMARY KEY (`msg_id`),
-  ADD KEY `bnf_id` (`bnf_id`),
-  ADD KEY `office_id` (`office_id`);
-
---
--- Indexes for table `complaints_inquiries`
---
-ALTER TABLE `complaints_inquiries`
-  ADD PRIMARY KEY (`ticket_id`),
-  ADD KEY `bnf_id` (`bnf_id`),
-  ADD KEY `inv_id` (`inv_id`),
-  ADD KEY `office_id` (`office_id`);
-
---
--- Indexes for table `consulting_office`
---
-ALTER TABLE `consulting_office`
-  ADD PRIMARY KEY (`office_id`),
-  ADD UNIQUE KEY `ccr_number` (`ccr_number`),
-  ADD UNIQUE KEY `email` (`email`);
-
---
--- Indexes for table `e_contract`
---
-ALTER TABLE `e_contract`
-  ADD PRIMARY KEY (`contract_id`),
-  ADD KEY `request_id` (`request_id`),
-  ADD KEY `e_contract_ibfk_2` (`inv_id`);
-
---
--- Indexes for table `investor`
---
-ALTER TABLE `investor`
-  ADD PRIMARY KEY (`inv_id`),
-  ADD UNIQUE KEY `ccr_number` (`ccr_number`),
-  ADD UNIQUE KEY `email` (`email`);
-
---
--- Indexes for table `office_country`
---
-ALTER TABLE `office_country`
-  ADD PRIMARY KEY (`office_id`,`con_name`),
-  ADD KEY `office_id` (`office_id`);
-
---
--- Indexes for table `payments`
---
-ALTER TABLE `payments`
-  ADD PRIMARY KEY (`payment_id`),
-  ADD KEY `contract_id` (`contract_id`);
-
---
--- Indexes for table `rating`
---
-ALTER TABLE `rating`
-  ADD PRIMARY KEY (`rating_id`),
-  ADD KEY `bnf_id` (`bnf_id`),
-  ADD KEY `office_id` (`office_id`),
-  ADD KEY `request_id` (`request_id`);
-
---
--- Indexes for table `scholarship_opps`
---
-ALTER TABLE `scholarship_opps`
-  ADD PRIMARY KEY (`scholarship_id`),
-  ADD UNIQUE KEY `scholarship_id` (`scholarship_id`),
-  ADD KEY `field_filter` (`sch_field`),
-  ADD KEY `inv_id` (`inv_id`);
-
---
--- Indexes for table `scholarship_requests`
---
-ALTER TABLE `scholarship_requests`
-  ADD PRIMARY KEY (`request_id`),
-  ADD KEY `scholarship_id` (`scholarship_id`),
-  ADD KEY `bnf_id` (`bnf_id`);
-
---
--- Indexes for table `scholarship_request_documents`
---
-ALTER TABLE `scholarship_request_documents`
-  ADD PRIMARY KEY (`doc_id`),
-  ADD KEY `request_id` (`request_id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `academic_report`
---
-ALTER TABLE `academic_report`
-  MODIFY `report_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT for table `admin`
---
-ALTER TABLE `admin`
-  MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `admission_request`
---
-ALTER TABLE `admission_request`
-  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `admission_request_documents`
---
-ALTER TABLE `admission_request_documents`
-  MODIFY `doc_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
-
---
--- AUTO_INCREMENT for table `beneficiary`
---
-ALTER TABLE `beneficiary`
-  MODIFY `bnf_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `bnf_inv_msg`
---
-ALTER TABLE `bnf_inv_msg`
-  MODIFY `msg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `bnf_off_msg`
---
-ALTER TABLE `bnf_off_msg`
-  MODIFY `msg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT for table `complaints_inquiries`
---
-ALTER TABLE `complaints_inquiries`
-  MODIFY `ticket_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
-
---
--- AUTO_INCREMENT for table `consulting_office`
---
-ALTER TABLE `consulting_office`
-  MODIFY `office_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `e_contract`
---
-ALTER TABLE `e_contract`
-  MODIFY `contract_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `investor`
---
-ALTER TABLE `investor`
-  MODIFY `inv_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `payments`
---
-ALTER TABLE `payments`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-
---
--- AUTO_INCREMENT for table `rating`
---
-ALTER TABLE `rating`
-  MODIFY `rating_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT for table `scholarship_opps`
---
-ALTER TABLE `scholarship_opps`
-  MODIFY `scholarship_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `scholarship_requests`
---
-ALTER TABLE `scholarship_requests`
-  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-
---
--- AUTO_INCREMENT for table `scholarship_request_documents`
---
-ALTER TABLE `scholarship_request_documents`
-  MODIFY `doc_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- قيود الجداول المُلقاة.
