@@ -145,14 +145,14 @@ body{
     max-width:1150px;
         margin:18px auto;
     background:#fff;
-    border:1px solid #ece7f1;
+    border:1px solid #c1bdc1;
     border-radius:16px;
     overflow:hidden;
 }
 
 .top-card{
     padding:20px 26px 16px;
-    background:#FCFBFD;
+    background:  #f4f3f3;
     border-bottom:1px solid #ECE7F1;
 }
 
@@ -221,7 +221,7 @@ body{
 
 .section-box{
     padding:20px 26px;
-    border-bottom:1px solid #ECE7F1;
+    border-bottom:1px solid # #161616;
 }
 
 .section-box:last-child{
@@ -264,7 +264,7 @@ body{
 }
 
 .result-box.done{
-    background:#EEF6F7;
+    background:#EFE6F5;
     border:1px solid #D6E6E8;
 }
 
@@ -311,17 +311,15 @@ body{
 }
 
 .rating-textarea{
-    width:100%;
+   width:100%;
     min-height:110px;
-    resize:none;
-    border:1px solid #D7E5E8;
     border-radius:12px;
-    background:#F4FBFC;
     padding:14px;
     font-size:14px;
     outline:none;
     color:#444;
-    font-family:'Noto Kufi Arabic', sans-serif;
+    border:1px solid #D7E5E8;
+    background:#EAF6FA;if;
 }
 
 .rating-textarea::placeholder{
@@ -427,6 +425,13 @@ body{
     height:46px;
     object-fit:contain;
 }
+.result-row,
+.rating-view{
+    display:flex;
+    align-items:stretch; /* مهم */
+    gap:18px;
+}
+
 </style>
 </head>
 <body>

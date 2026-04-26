@@ -148,27 +148,26 @@ body{
   border-bottom:1px solid #d9d9d9;
   background:#F4F4F4;
   display:flex;
-  flex-direction:row-reverse;;
-  align-items:flex-end;
+  flex-direction:row;
+  align-items:center;
   justify-content:space-between;
   padding:10px 30px;
 }
 
-/* عنوان الصفحة */
-
 .page-heading{
   display:flex;
   flex-direction:column;
-  align-items:flex-start;
-  justify-content:center;
+  align-items:flex-end;
+  justify-content:right;;
   text-align:right;
 }
-
 .page-title{
   font-size:22px;
   font-weight:700;
   color:#111111;
   line-height:1.4;
+  text-align:right;
+  width:100%;
 }
 
 .page-description{
@@ -176,6 +175,7 @@ body{
   font-weight:600;
   color:#1f1f1f;
   line-height:1.6;
+  text-align:right;
 }
 
 /* أيقونة الإعدادات */
@@ -229,7 +229,6 @@ body{
   padding:10px 14px;
   color:#333333;
   font-size:14px;
-  transition:background .2s;
   text-align:right;
 }
 
@@ -290,3 +289,18 @@ body{
   color:#FFFFFF;
 }
 
+/* السؤال */
+.faq-q {
+  font-weight: 700;
+  font-size: 15px;
+  color: #3E2454;
+  margin-top: 12px;
+}
+
+/*  */
+.faq-a {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.8;
+  margin-bottom: 12px;
+}

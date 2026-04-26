@@ -173,12 +173,15 @@ if ($current_request) {
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="CSS01Layout.css?v=3">
   <style>
+/* الحاوية العامة */
 .track-wrap{
-    padding:30px 20px;
+    padding:30px;
 }
 
+/* رسالة النجاح */
 .msg.success{
-    max-width:1000px;
+    width:100%;
+    max-width:1250px;
     margin:0 auto 15px;
     background:#edf8ee;
     color:#256b2a;
@@ -189,14 +192,19 @@ if ($current_request) {
     font-family:'Noto Kufi Arabic', sans-serif;
 }
 
+/* التبويبات */
 .track-tabs{
-    max-width:1000px;
+    width:100%;
+    max-width:1250px;
     margin:0 auto 22px;
     display:grid;
     grid-template-columns:1fr 1fr;
     border:1px solid #d9d9d9;
+    border-radius:12px;
+    overflow:hidden;
 }
 
+/* زر التبويب */
 .track-tab{
     height:50px;
     display:flex;
@@ -210,23 +218,29 @@ if ($current_request) {
     background-color:#fff;
 }
 
+/* التبويب النشط */
 .track-tab.active{
     background:#F8F5FB;
 }
 
+/* لوحة المحتوى */
 .track-panel{
-    max-width:1000px;
+    width:100%;
+    max-width:1250px;
     margin:auto;
     border:none;
 }
 
+/* بطاقة الطلب النشط */
 .track-card{
+    width:100%;
     background:#FFFFFF;
     border-radius:12px;
-    border:1px solid #d6d0d6;
-    padding:22px 30px;
+    border:0.5px solid #c5c3c3;
+    padding:26px 32px;
 }
 
+/* الجزء العلوي من البطاقة */
 .track-top{
     display:flex;
     justify-content:space-between;
@@ -235,44 +249,52 @@ if ($current_request) {
     flex-wrap:wrap;
 }
 
+/* صندوق الحالة */
 .status-box{
     min-width:220px;
     max-width:220px;
     height:42px;
-    border-radius:4px;
+    border-radius:20px;
     display:flex;
     align-items:center;
     justify-content:center;
     color:#FFFFFF;
-    font-size:16px;
+    font-size:15px;
     font-weight:700;
 }
 
+/* حالة تحت المراجعة */
 .st-pending{
-    background:#E6BC6A;
+    background:#E9BE66;
 }
 
+/* حالة مقبول */
 .st-accepted{
-    background:#69B38A;
+    background:#63B68B;
 }
 
+/* حالة مرفوض */
 .st-rejected{
-    background:#C96B6B;
+    background:#D96C6C;
 }
 
+/* حالة منتهي */
 .st-ended{
     background:#8D8D8D;
 }
 
+/* حالة ملغى */
 .st-cancelled{
     background:#7A7A7A;
 }
 
+/* بيانات الطلب */
 .track-info{
     flex:1;
     min-width:280px;
 }
 
+/* عنوان البطاقة */
 .track-title{
     font-size:18px;
     font-weight:700;
@@ -280,6 +302,7 @@ if ($current_request) {
     margin-bottom:14px;
 }
 
+/* سطر البيانات */
 .info-line{
     margin-bottom:8px;
     font-size:15px;
@@ -287,18 +310,21 @@ if ($current_request) {
     line-height:1.9;
 }
 
+/* عنوان سطر البيانات */
 .info-line b{
     color:#8EB4C2;
     font-size:16px;
     margin-left:6px;
 }
 
+/* الخط الفاصل */
 .track-divider{
     border:none;
     border-top:1px solid #dddddd;
     margin:24px 0 18px;
 }
 
+/* أزرار الإجراءات */
 .track-actions{
     display:flex;
     gap:14px;
@@ -306,12 +332,13 @@ if ($current_request) {
     justify-content:center;
 }
 
+/* الزر العام */
 .track-btn{
     min-width:180px;
     height:40px;
     border:none;
-    border-radius:4px;
-    font-family:"Noto Kufi Arabic", sans-serif;
+    border-radius:6px;
+    font-family:'Noto Kufi Arabic', sans-serif;
     font-size:15px;
     font-weight:700;
     cursor:pointer;
@@ -322,6 +349,7 @@ if ($current_request) {
     transition:0.2s;
 }
 
+/* الزر غير المتاح */
 .btn-disabled{
     background:#A9A9A9;
     color:#FFFFFF;
@@ -329,43 +357,52 @@ if ($current_request) {
     cursor:default;
 }
 
+/* زر التواصل */
 .btn-contact{
     background:#C9ADD8;
     color:#FFFFFF;
 }
 
+/* زر العقد */
 .btn-contract{
     background:#5A2D74;
     color:#FFFFFF;
 }
 
+/* زر التقارير */
 .btn-reports{
     background:#70A0AF;
     color:#FFFFFF;
 }
 
+/* صندوق عدم وجود بيانات */
 .empty-box{
+    width:100%;
     background:#FFFFFF;
     border-radius:12px;
     padding:30px;
     text-align:center;
     color:#666666;
     font-size:16px;
-    border:1px solid #ececec;
+    border:0.5px solid #c5c3c3;
 }
 
+/* قائمة الطلبات السابقة */
 .old-requests-list{
     display:grid;
     gap:14px;
 }
 
+/* بطاقة طلب سابق */
 .old-request-card{
+    width:100%;
     background:#FFFFFF;
     border-radius:12px;
-    padding:18px 20px;
-    border:1px solid #d9d0da;
+    padding:22px 26px;
+    border:0.5px solid #c5c3c3;
 }
 
+/* أعلى بطاقة الطلب السابق */
 .old-request-top{
     display:flex;
     justify-content:space-between;
@@ -374,11 +411,13 @@ if ($current_request) {
     flex-wrap:wrap;
 }
 
+/* بيانات الطلب السابق */
 .old-request-info{
     flex:1;
     min-width:250px;
 }
 
+/* عنوان الطلب السابق */
 .old-request-title{
     font-size:16px;
     font-weight:700;
@@ -386,10 +425,11 @@ if ($current_request) {
     margin-bottom:10px;
 }
 
+/* حالة الطلب السابق */
 .old-request-status{
     min-width:170px;
     height:36px;
-    border-radius:4px;
+    border-radius:20px;
     display:flex;
     align-items:center;
     justify-content:center;

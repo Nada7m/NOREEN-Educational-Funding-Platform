@@ -35,29 +35,74 @@ $result = $con->query($sql);
     <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="CSS01Layout.css?v=4">
     <style>
-        :root { --main-purple: #3E2454; }
+.content-body{
+    padding:30px;
+}
 
-        /* الجدول */
-        .content-body { padding: 20px 30px; }
-        .table-container { background: #fff; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow: hidden; margin-top: 20px; }
-        table { width: 100%; border-collapse: collapse; }
-        th { background: #fdfdfd; padding: 20px; text-align: right; border-bottom: 2px solid #eee; color: var(--main-purple); font-weight: 700; }
-        td { padding: 20px; text-align: right; border-bottom: 1px solid #f0f0f0; color: #444; }
+.table-container{
+    max-width:1250px;
+    margin:20px auto;
+    background:#fff;
+    border-radius:12px;
+    border:0.5px solid #c5c3c3;
+    overflow-x:auto;
+    padding:0;
+    box-shadow:none;
+}
 
-        /* الأزرار والحالات */
-        .btn-action {
-            background-color: #E5E7EB; color: #000; padding: 8px 20px; border-radius: 8px; 
-            text-decoration: none; font-size: 13px; border: 1px solid #ccc; 
-            display: inline-flex; align-items: center; gap: 10px; transition: 0.3s;
-        }
+table{
+    width:100%;
+    min-width:900px;
+    border-collapse:collapse;
+    text-align:center;
+    font-family:'Noto Kufi Arabic', sans-serif;
+}
 
-        /* اللون الأخضر الفاتح عند وجود رد جديد من المكتب */
-        .btn-green-alert { 
-            background-color: #D1FAE5 !important; 
-            color: #065F46 !important; 
-            border: 1px solid #10B981 !important; 
-            font-weight: bold;
-        }
+thead tr th{
+    background:#f8f8f8;
+    color:#3E2454;
+    font-size:15px;
+    font-weight:700;
+    padding:14px 10px;
+    border-bottom:1px solid #ddd;
+}
+
+tbody td{
+    padding:14px 10px;
+    border-bottom:1px solid #eee;
+    font-size:14px;
+    color:#333;
+}
+
+tbody tr:last-child td{
+    border-bottom:none;
+}
+
+/* زر الإجراء */
+.btn-action{
+    display:inline-block;
+    padding:8px 18px;
+    border:1px solid #999;
+    border-radius:10px;
+    background:#fff;
+    color:#3E2454;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:600;
+    transition:0.3s;
+}
+
+/* عند وجود رد جديد */
+.btn-green-alert{
+    background:#D1FAE5;
+    color:#065F46;
+    border:1px solid #10B981;
+    font-weight:700;
+}
+
+.btn-action:hover{
+    background:#f4f0f7;
+}
 
     </style>
 </head>

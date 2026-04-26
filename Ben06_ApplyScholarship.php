@@ -27,8 +27,10 @@ if(isset($_POST['submit_request'])){
     $today = date("Y-m-d");
 
     // إدخال الطلب في جدول scholarship_requests
-    $sql_req = "INSERT INTO scholarship_requests (scholarship_id, bnf_id, Submit_date, request_status, major_name, univ_name) 
-                VALUES ('$sch_id', '$user_id', '$today','$major', '$univ')";
+$sql_req = "INSERT INTO scholarship_requests 
+(scholarship_id, bnf_id, Submit_date, request_status, major_name, univ_name) 
+VALUES 
+('$sch_id', '$user_id', '$today', 'تحت المراجعة', '$major', '$univ')";
     
     if($con->query($sql_req)){
         $req_id = $con->insert_id;
