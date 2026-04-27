@@ -138,7 +138,7 @@ $conn->close();
                 <li><a href="Inv00_MainPage.php">الرئيسية</a></li>
                 <li><a href="Inv04_CreateScholarship.php">عرض المنح</a></li>
                 <li><a href="Inv06_ManageScholarships.php">إدارة المنح</a></li>
-                <li><a href="#">المدفوعات</a></li>
+                <li><a href="Inv10_Payments.php">المدفوعات</a></li>
             </ul>
 
         </div>
