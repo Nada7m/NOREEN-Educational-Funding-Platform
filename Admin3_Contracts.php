@@ -108,7 +108,6 @@ tbody td{
   background:#C4474F;
 }
 
-/* إضافة منتهي رمادي */
 .status-ended{
   background:#9E9E9E;
 }
@@ -133,6 +132,61 @@ tbody td{
   height:62px;
   background:#FFFFFF;
   border-bottom:1px solid #EEEEEE;
+}
+
+/* نافذة التأكيد */
+.confirm-modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.35);
+  z-index:9999;
+  justify-content:center;
+  align-items:center;
+}
+
+.confirm-box{
+  width:420px;
+  max-width:92%;
+  background:#FFFFFF;
+  border-radius:10px;
+  padding:28px 24px;
+  text-align:center;
+  box-shadow:0 8px 25px rgba(0,0,0,0.15);
+}
+
+.confirm-title{
+  color:#3E2454;
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:25px;
+}
+
+.confirm-actions{
+  display:flex;
+  justify-content:center;
+  gap:14px;
+}
+
+.confirm-btn{
+  min-width:110px;
+  height:42px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:14px;
+  font-family:"Noto Kufi Arabic",sans-serif;
+  font-weight:700;
+}
+
+.confirm-yes{
+  background:#A53A3A;
+  color:#FFFFFF;
+}
+
+.confirm-no{
+  background:#ECECEC;
+  color:#3E2454;
 }
 
 </style>
@@ -220,10 +274,10 @@ if($status == "ملغي"){
 
   <td>
     <?php if($status != 'ملغي' && $status != 'منتهي'){ ?>
-    <form method="POST">
+    <form method="POST" class="cancel-form">
       <input type="hidden" name="contract_id" value="<?= $row['contract_id'] ?>">
       <input type="hidden" name="request_id" value="<?= $row['request_id'] ?>">
-      <button class="btn btn-delete" name="end_contract">إنهاء العقد</button>
+      <button type="button" class="btn btn-delete open-confirm">إنهاء العقد</button>
     </form>
     <?php } else { ?>
     <?php } ?>
@@ -244,6 +298,49 @@ if($status == "ملغي"){
 
   </div>
 </div>
+
+<!-- نافذة التأكيد -->
+<div class="confirm-modal" id="confirmModal">
+  <div class="confirm-box">
+    <div class="confirm-title">هل أنت متأكد من إلغاء العقد؟</div>
+    <div class="confirm-actions">
+      <button type="button" class="confirm-btn confirm-yes" id="confirmYes">نعم</button>
+      <button type="button" class="confirm-btn confirm-no" onclick="closeConfirm()">لا</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let selectedForm = null;
+
+document.querySelectorAll('.open-confirm').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    selectedForm = this.closest('form');
+    document.getElementById('confirmModal').style.display = 'flex';
+  });
+});
+
+document.getElementById('confirmYes').addEventListener('click', function(){
+  if(selectedForm){
+    const hiddenBtn = document.createElement('button');
+    hiddenBtn.type = 'submit';
+    hiddenBtn.name = 'end_contract';
+    hiddenBtn.style.display = 'none';
+    selectedForm.appendChild(hiddenBtn);
+    hiddenBtn.click();
+  }
+});
+
+function closeConfirm(){
+  document.getElementById('confirmModal').style.display = 'none';
+}
+
+window.onclick = function(e){
+  if(e.target.id === 'confirmModal'){
+    closeConfirm();
+  }
+}
+</script>
 
 </body>
 </html>
