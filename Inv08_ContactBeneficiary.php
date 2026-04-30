@@ -1,10 +1,10 @@
 <?php
 session_start();
-$con = new mysqli("localhost", "root", "", "noreen", 3306);
+$con = new mysqli("localhost", "root", "", "noreen");
 $con->set_charset("utf8mb4");
 
-$current_inv_id = $_SESSION['user_id'] ?? 1; 
-$target_bnf_id = isset($_GET['bnf_id']) ? intval($_GET['bnf_id']) : 1; 
+$current_inv_id = $_SESSION['user_id'] ?? 0; 
+$target_bnf_id = isset($_GET['bnf_id']) ? intval($_GET['bnf_id']) : 0; 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send_msg'])) {
     $text = trim($con->real_escape_string($_POST['message']));

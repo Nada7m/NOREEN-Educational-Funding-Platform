@@ -8,7 +8,7 @@ if (!isset($_SESSION['office_id'])) {
 }
 
 // 2. الاتصال بالقاعدة
-$con = new mysqli("localhost", "root", "", "noreen", 3306);
+$con = new mysqli("localhost", "root", "", "noreen");
 if ($con->connect_error) { die("فشل الاتصال بقاعدة البيانات"); }
 $con->set_charset("utf8mb4");
 

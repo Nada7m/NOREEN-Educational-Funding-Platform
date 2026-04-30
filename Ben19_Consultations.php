@@ -2,12 +2,12 @@
 session_start();
 
 // 1. الاتصال بالقاعدة
-$con = new mysqli("localhost", "root", "", "noreen", 3306);
+$con = new mysqli("localhost", "root", "", "noreen");
 if ($con->connect_error) { die("فشل الاتصال بالقاعدة"); }
 $con->set_charset("utf8mb4");
 
 // 2. معرف المستخدم (تلقائي من السيشون)
-$current_bnf_id = $_SESSION['bnf_id'] ?? 2; 
+$current_bnf_id = $_SESSION['bnf_id'] ?? 0; 
 
 // 3. الاستعلام الذكي لمقارنة توقيت آخر رسالة بين المستفيد والمكتب
 $sql = "SELECT 

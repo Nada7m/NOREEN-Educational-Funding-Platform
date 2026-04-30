@@ -2,13 +2,13 @@
 session_start();
 
 // 1. الاتصال بالقاعدة
-$con = new mysqli("localhost", "root", "", "noreen", 3306);
+$con = new mysqli("localhost", "root", "", "noreen");
 if ($con->connect_error) { die("فشل الاتصال: " . $con->connect_error); }
 $con->set_charset("utf8mb4");
 
 // 2. المعرفات
-$current_off_id = $_SESSION['office_id'] ?? 2; 
-$target_bnf_id = (isset($_GET['bnf_id']) && intval($_GET['bnf_id']) > 0) ? intval($_GET['bnf_id']) : 1; 
+$current_off_id = $_SESSION['office_id'] ?? 0; 
+$target_bnf_id = (isset($_GET['bnf_id']) && intval($_GET['bnf_id']) > 0) ? intval($_GET['bnf_id']) : 0; 
 
 // 3. معالجة الإرسال
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send_msg'])) {
