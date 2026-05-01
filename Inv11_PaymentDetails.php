@@ -236,6 +236,7 @@ while ($row = mysqli_fetch_assoc($details_result)) {
 <thead>
 <tr>
 <th>رقم الدفعة</th>
+<th>مبلغ الدفعة</th>
 <th>حالة التقرير</th>
 <th>اعتماد التقرير</th>
 <th>حالة الدفعة</th>
@@ -246,6 +247,7 @@ while ($row = mysqli_fetch_assoc($details_result)) {
 <?php foreach ($rows as $item): ?>
 <tr>
 <td><span class="installment-number"><?php echo htmlspecialchars($item['installment_number']); ?></span></td>
+<td><?php echo number_format($item['payment_amount'], 2); ?></td>
 <td>
 <?php if ($item['report_file'] != ""): ?>
 <a href="<?php echo htmlspecialchars($item['report_file']); ?>" target="_blank" class="small-btn">تنزيل الملف</a>
@@ -319,7 +321,7 @@ while ($row = mysqli_fetch_assoc($details_result)) {
 </div>
 </div>
 <script>
-/* فتح وإغلاق نافذة الدفع */
+    /* فتح وإغلاق نافذة الدفع */
 const paymentModal=document.getElementById("paymentModal");
 const modalPaymentId=document.getElementById("modal_payment_id");
 const closeModalBtn=document.getElementById("closeModalBtn");
