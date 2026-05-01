@@ -32,10 +32,10 @@ $result = $con->query($sql);
 <meta charset="UTF-8">
 <title>تقييمات المستفيدين - نورين</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="CSS01Layout.css?v=5">
+<link rel="stylesheet" href="CSS01Layout.css?v=6س">
 <style>
 .content-body{padding:30px;}
-.header{display:flex;align-items:center;justify-content:space-between;direction:ltr;}
+.header{display:flex;align-items:center;justify-content:space-between;direction:rt;;}
 .page-heading{direction:rtl;text-align:right;}
 .header-icons{direction:rtl;}
 .table-wrap{max-width:1180px;margin:0 auto;border:0.5px solid #c5c3c3;border-radius:18px;}

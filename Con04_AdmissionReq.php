@@ -62,7 +62,7 @@ $resRequests = mysqli_query($con, $sqlRequests);
 <meta charset="UTF-8">
 <title>إدارة طلبات القبول</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="CSS01Layout.css?v=3">
+<link rel="stylesheet" href="CSS01Layout.css?v=6">
 
 <style>
 .dashboard-section{padding:30px;}

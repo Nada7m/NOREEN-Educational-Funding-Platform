@@ -37,7 +37,7 @@ $result = $con->query($sql);
 <meta charset="UTF-8">
 <title>الاستشارات الواردة - نورين</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="CSS01Layout.css?v=5">
+<link rel="stylesheet" href="CSS01Layout.css?v=6">
 
 <style>
 /* مساحة الصفحة */

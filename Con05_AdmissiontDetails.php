@@ -136,7 +136,7 @@ $docLabels = [
 <meta charset="UTF-8">
 <title>تفاصيل طلب القبول</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="CSS01Layout.css?v=5">
+<link rel="stylesheet" href="CSS01Layout.css?v=6">
 <style>
 .page-wrap{padding:14px 18px 18px;}
 /* شريط زر الرجوع */

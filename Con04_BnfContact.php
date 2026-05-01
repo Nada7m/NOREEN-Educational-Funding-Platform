@@ -41,7 +41,7 @@ $res_msgs = $con->query("SELECT * FROM bnf_off_msg WHERE bnf_id = '$target_bnf_i
     <meta charset="UTF-8">
     <title>نورين - التواصل مع المستفيد</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="CSS01Layout.css?v=4">
+    <link rel="stylesheet" href="CSS01Layout.css?v=6">
     <style>
         :root { --main-purple: #3E2454; --chat-bg: #F5F5F5; }
         body { background-color: #FFFFFF; margin: 0; font-family: 'Noto Kufi Arabic', sans-serif; }

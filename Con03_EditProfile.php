@@ -204,7 +204,7 @@ $conn->close();
 <meta charset="UTF-8">
 <title>تعديل البيانات</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="CSS01Layout.css?v=4">
+<link rel="stylesheet" href="CSS01Layout.css?v=6">
 <link rel="stylesheet" href="Style.css">
 
 <style>
