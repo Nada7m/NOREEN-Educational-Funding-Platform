@@ -108,6 +108,15 @@ while ($row = mysqli_fetch_assoc($ended_result)) {
 <li><a href="Inv06_ManageScholarships.php">إدارة المنح</a></li>
 <li><a href="Inv10_Payments.php" class="active">المدفوعات</a></li>
 </ul>
+
+<div class="sidebar-bottom">
+            <form action="logout.php" method="post">
+                <button type="submit" class="logout-btn">
+                    <img src="ايقونة تسجيل الخروج.png" class="logout-icon" alt="خروج">
+                    <b>تسجيل الخروج</b>
+                </button>
+            </form>
+        </div>
 </div>
 </aside>
 
@@ -118,6 +127,16 @@ while ($row = mysqli_fetch_assoc($ended_result)) {
 <div class="page-title">المدفوعات</div>
 <div class="page-description">إدارة المستفيدين</div>
 </div>
+  <div class="header-icons">
+                <div class="settings-dropdown">
+                    <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="الإعدادات">
+                    <div class="dropdown-menu">
+                        <a href="Inv02_Profile.php">الملف الشخصي</a>
+                        <a href="support.php">تقديم شكوى او استفسار</a>
+                    </div>
+                </div>
+            </div>
+
 </header>
 
 <div class="track-wrap">
