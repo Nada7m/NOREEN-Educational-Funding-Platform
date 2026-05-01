@@ -13,7 +13,7 @@ if(!isset($_SESSION['user_id'])){
 $user_id = $_SESSION['user_id'];
 
 //جلب رقم المنحة من الرابط
-$sch_id = isset($_GET['sch_id']) ? intval($_GET['sch_id']) : 1;
+$sch_id = isset($_GET['sch_id']) ? intval($_GET['sch_id']) : 0;
 
 // جلب بيانات المستخدم 
 $sql_user = "SELECT * FROM beneficiary WHERE bnf_id = $user_id ";
@@ -34,7 +34,7 @@ VALUES
     
     if($con->query($sql_req)){
         $req_id = $con->insert_id;
-        $upload_dir = "upload/";
+        $upload_dir = "uploads/";
          }
 
         // دالة رفع المستندات وحفظها في جدول scholarship_request_documents
