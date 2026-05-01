@@ -358,7 +358,7 @@ while($row=mysqli_fetch_assoc($app_result)){
             </div>
 
             <?php if($doc['file']!=""): ?>
-              <a href="<?php echo e($doc['file']); ?>" target="_blank" class="download-file-btn">تنزيل الملف</a>
+              <a href="upload/<?php echo e($doc['file']); ?>" target="_blank" class="download-file-btn">تنزيل الملف</a>
             <?php endif; ?>
           </div>
         <?php endforeach; ?>
