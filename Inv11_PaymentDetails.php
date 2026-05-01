@@ -172,8 +172,8 @@ while ($row = mysqli_fetch_assoc($details_result)) {
 </div>
 <ul class="sidebar-menu">
 <li><a href="Inv00_MainPage.php">الرئيسية</a></li>
-<li><a href="Inv06_ManageScholarships.php">إدارة المنح</a></li>
 <li><a href="Inv04_CreateScholarship.php">عرض المنح</a></li>
+<li><a href="Inv06_ManageScholarships.php">إدارة المنح</a></li>
 <li><a href="Inv10_Payments.php" class="active">المدفوعات</a></li>
 </ul>
 </div>
@@ -190,7 +190,7 @@ while ($row = mysqli_fetch_assoc($details_result)) {
 <header class="header">
 <div class="page-heading">
 <div class="page-title">المدفوعات</div>
-<div class="page-description">تفاصيل دفعات المنحة</div>
+<div class="page-description">تفاصيل إدارة منحة المستفيد</div>
 </div>
 <div class="header-icons">
 <div class="settings-dropdown">
@@ -220,7 +220,7 @@ while ($row = mysqli_fetch_assoc($details_result)) {
 </div>
 <div class="data-row">
 <label>قيمة المنحة الإجمالية:</label>
-<span><?php echo number_format($main_data['amount'], 2); ?></span>
+<span><?php echo number_format($main_data['amount'], 0); ?></span>
 </div>
 <div class="data-row">
 <label>عدد الدفعات:</label>
@@ -247,7 +247,7 @@ while ($row = mysqli_fetch_assoc($details_result)) {
 <?php foreach ($rows as $item): ?>
 <tr>
 <td><span class="installment-number"><?php echo htmlspecialchars($item['installment_number']); ?></span></td>
-<td><?php echo number_format($item['payment_amount'], 2); ?></td>
+<td><?php echo number_format($item['payment_amount'], 0); ?></td>
 <td>
 <?php if ($item['report_file'] != ""): ?>
 <a href="<?php echo htmlspecialchars($item['report_file']); ?>" target="_blank" class="small-btn">تنزيل الملف</a>
@@ -321,7 +321,7 @@ while ($row = mysqli_fetch_assoc($details_result)) {
 </div>
 </div>
 <script>
-    /* فتح وإغلاق نافذة الدفع */
+ /* فتح وإغلاق نافذة الدفع */
 const paymentModal=document.getElementById("paymentModal");
 const modalPaymentId=document.getElementById("modal_payment_id");
 const closeModalBtn=document.getElementById("closeModalBtn");
