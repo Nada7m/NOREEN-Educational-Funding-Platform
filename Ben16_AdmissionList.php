@@ -41,7 +41,11 @@ $sql = "SELECT
             ar.result_notes,
             ar.Result_status,
             ar.payment_status,
-            co.office_name
+            ar.program_type,
+            co.office_name,
+            co.Bachelor_fee,
+            co.Masters_fee,
+            co.Phd_fee
         FROM admission_request ar
         LEFT JOIN consulting_office co ON ar.office_id = co.office_id
         WHERE ar.bnf_id = $bnf_id
@@ -180,96 +184,121 @@ $result = $conn->query($sql);
     font-family:'Noto Kufi Arabic', sans-serif;
 }
 
-.pay-modal{
+.modal{
     display:none;
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,0.45);
-    z-index:3000;
+    background:rgba(0,0,0,0.35);
     justify-content:center;
     align-items:center;
+    z-index:3000;
 }
 
-.pay-card{
+.modal-content{
     width:700px;
     max-width:92%;
-    background:#fff;
-    border-radius:10px;
-    padding:30px 24px;
-    box-shadow:0 8px 24px rgba(0,0,0,0.18);
+    background:#FFFFFF;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.18);
+    padding:28px 34px;
 }
 
-.pay-title{
-    text-align:center;
-    color:#d46a6a;
-    font-size:22px;
-    font-weight:700;
-    margin-bottom:18px;
-    font-family:'Noto Kufi Arabic', sans-serif;
-}
-
-.pay-box{
-    width:78%;
-    margin:0 auto;
-    border:1px solid #e0e0e0;
-    border-radius:10px;
-    padding:18px;
-}
-
-.pay-box-title{
+.modal-title{
     text-align:center;
     font-size:20px;
     font-weight:700;
-    color:#333;
-    margin-bottom:16px;
-    font-family:'Noto Kufi Arabic', sans-serif;
+    color:#4a2b63;
+    margin-bottom:26px;
+}
+
+.pay-form{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.pay-row{
+    display:flex;
+    gap:20px;
 }
 
 .pay-field{
-    margin-bottom:14px;
+    flex:1;
+}
+
+.pay-field label{
+    display:block;
+    margin-bottom:8px;
+    font-size:15px;
+    font-weight:600;
+    color:#333333;
 }
 
 .pay-field input{
     width:100%;
-    height:46px;
-    border:1px solid #d1d1d1;
-    border-radius:6px;
-    padding:8px 12px;
-    font-size:14px;
-    font-family:'Noto Kufi Arabic', sans-serif;
+    height:52px;
+    border:1px solid #cccccc;
+    border-radius:10px;
+    padding:10px 14px;
+    font-size:15px;
     outline:none;
+    font-family:"Noto Kufi Arabic", sans-serif;
+    box-sizing:border-box;
 }
 
-.pay-row{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
-}
-
-.pay-confirm{
+.confirm-pay-btn{
+    display:inline-block;
     width:100%;
-    height:46px;
-    border:none;
-    border-radius:6px;
-    background:#70A0AF;
-    color:#fff;
-    font-size:18px;
+    padding:12px 0;
+    border:1px solid #999;
+    border-radius:10px;
+    background:#fff;
+    color:#3E2454;
+    text-decoration:none;
+    font-size:15px;
     font-weight:700;
     font-family:'Noto Kufi Arabic', sans-serif;
+    transition:0.3s;
     cursor:pointer;
-    margin-top:10px;
+    text-align:center;
 }
 
-.close-btn{
-    display:block;
-    margin:12px auto 0;
-    background:none;
-    border:none;
-    color:#777;
+.confirm-pay-btn:hover{
+    background:#f4f0f7;
+}
+
+.close-modal-btn{
+    display:inline-block;
+    width:100%;
+    padding:10px 0;
+    border:1px solid #999;
+    border-radius:10px;
+    background:#fff;
+    color:#3E2454;
+    text-decoration:none;
     font-size:14px;
+    font-weight:600;
     font-family:'Noto Kufi Arabic', sans-serif;
+    transition:0.3s;
     cursor:pointer;
-}</style>
+    text-align:center;
+}
+
+.close-modal-btn:hover{
+    background:#f4f0f7;
+}
+.fee-box{
+    background:linear-gradient(to left, #3E2454, #A48BB5);
+    color:#FFFFFF;
+    border-radius:14px;
+    height:60px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    font-weight:700;
+}
+</style>
 </head>
 <body>
 
@@ -371,6 +400,15 @@ $result = $conn->query($sql);
                                 }
 
                                 $payment_status = trim($row['payment_status']);
+                                $program_type = trim($row['program_type']);
+
+                                if ($program_type == "bachelor") {
+                                    $feeAmount = $row['Bachelor_fee'];
+                                } elseif ($program_type == "master") {
+                                    $feeAmount = $row['Masters_fee'];
+                                } else {
+                                    $feeAmount = $row['Phd_fee'];
+                                }
                                 ?>
 
                                 <tr>
@@ -403,7 +441,7 @@ $result = $conn->query($sql);
 
                                             <?php if ($request_status == "مقبول") { ?>
 
-                                                <button type="button" class="details-btn" onclick="openPaymentModal(<?php echo $row['request_id']; ?>)">
+                                                <button type="button" class="details-btn" onclick="openPaymentModal(<?php echo $row['request_id']; ?>, '<?php echo $feeAmount; ?>')">
                                                     ادفع الآن
                                                 </button>
 
@@ -442,45 +480,48 @@ $result = $conn->query($sql);
     </div>
 </div>
 
-<div class="pay-modal" id="paymentModal">
-    <div class="pay-card">
-        <div class="pay-title">إتمام عملية الدفع</div>
+<div class="modal" id="paymentModal">
+    <div class="modal-content">
+        <div class="modal-title">رجاء قم بإدخال بيانات البطاقة لسداد رسوم البرنامج</div>
 
-        <div class="pay-box">
-            <div class="pay-box-title">بيانات تأكيد الدفع</div>
+        <form method="POST" class="pay-form" id="paymentForm">
+            <input type="hidden" name="request_id" id="payment_request_id">
 
-            <form method="POST" id="paymentForm">
-                <input type="hidden" name="request_id" id="payment_request_id">
+        <div class="fee-box" id="payment_fee"></div>
+
+            <div class="pay-field">
+                <label>الاسم على البطاقة</label>
+                <input type="text" id="cardName" maxlength="100">
+            </div>
+
+            <div class="pay-field">
+                <label>رقم البطاقة</label>
+                <input type="text" id="cardNumber" maxlength="16" inputmode="numeric">
+            </div>
+
+            <div class="pay-row">
+                <div class="pay-field">
+                    <label>تاريخ الانتهاء</label>
+                    <input type="text" id="expDate" placeholder="MM/YY" maxlength="5" inputmode="numeric">
+                </div>
 
                 <div class="pay-field">
-                    <input type="text" id="cardName" placeholder="NAME ON CARD">
+                    <label>رمز الأمان</label>
+                    <input type="text" id="cvv" maxlength="3" inputmode="numeric">
                 </div>
+            </div>
 
-                <div class="pay-field">
-                    <input type="text" id="cardNumber" placeholder="CARD NUMBER" maxlength="19">
-                </div>
-
-                <div class="pay-row">
-                    <div class="pay-field">
-                        <input type="text" id="expDate" placeholder="MM/YY" maxlength="5">
-                    </div>
-
-                    <div class="pay-field">
-                        <input type="text" id="cvv" placeholder="CVV" maxlength="4">
-                    </div>
-                </div>
-
-                <button type="button" class="pay-confirm" onclick="confirmPayment()">اضغط لتأكيد الدفع</button>
-                <button type="button" class="close-btn" onclick="closePaymentModal()">إغلاق</button>
-                <button type="submit" name="confirm_payment" id="realPaySubmit" style="display:none;"></button>
-            </form>
-        </div>
+            <button type="button" class="confirm-pay-btn" onclick="confirmPayment()">تأكيد السداد</button>
+            <button type="button" class="close-modal-btn" onclick="closePaymentModal()">إلغاء</button>
+            <button type="submit" name="confirm_payment" id="realPaySubmit" style="display:none;"></button>
+        </form>
     </div>
 </div>
 
 <script>
-function openPaymentModal(requestId){
+function openPaymentModal(requestId, feeAmount){
     document.getElementById("payment_request_id").value = requestId;
+    document.getElementById("payment_fee").innerText = "رسوم الطلب: " + feeAmount + " ريال";
     document.getElementById("paymentModal").style.display = "flex";
 }
 
@@ -488,23 +529,22 @@ function closePaymentModal(){
     document.getElementById("paymentModal").style.display = "none";
 }
 
+document.getElementById("cardNumber").addEventListener("input", function(){
+    this.value = this.value.replace(/\D/g, "").slice(0, 16);
+});
+
+document.getElementById("cvv").addEventListener("input", function(){
+    this.value = this.value.replace(/\D/g, "").slice(0, 3);
+});
+
 document.getElementById("expDate").addEventListener("input", function(){
-    let value = this.value.replace(/[^\d]/g, "");
-
-    if(value.length > 4){
-        value = value.substring(0, 4);
-    }
-
-    if(value.length >= 3){
-        value = value.substring(0, 2) + "/" + value.substring(2);
-    }
-
-    this.value = value;
+    let value = this.value.replace(/\D/g, "").slice(0, 4);
+    this.value = value.length >= 3 ? value.slice(0, 2) + "/" + value.slice(2) : value;
 });
 
 function confirmPayment(){
     const cardName = document.getElementById("cardName").value.trim();
-    const cardNumber = document.getElementById("cardNumber").value.trim().replace(/\s+/g, "");
+    const cardNumber = document.getElementById("cardNumber").value.trim();
     const expDate = document.getElementById("expDate").value.trim();
     const cvv = document.getElementById("cvv").value.trim();
 
@@ -513,36 +553,23 @@ function confirmPayment(){
         return;
     }
 
-    if(!/^\d{12,19}$/.test(cardNumber)){
-        alert("رقم البطاقة غير صحيح.");
+    if(!/^[\u0600-\u06FFa-zA-Z\s]{3,100}$/.test(cardName)){
+        alert("اسم حامل البطاقة غير صحيح.");
         return;
     }
 
-    if(!/^\d{2}\/\d{2}$/.test(expDate)){
-        alert("صيغة تاريخ الانتهاء يجب أن تكون MM/YY");
+    if(!/^\d{16}$/.test(cardNumber)){
+        alert("رقم البطاقة يجب أن يكون 16 رقم.");
         return;
     }
 
-    const parts = expDate.split("/");
-    const month = parseInt(parts[0], 10);
-    const year = parseInt(parts[1], 10);
-
-    if(month < 1 || month > 12){
-        alert("شهر الانتهاء غير صحيح.");
+    if(!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expDate)){
+        alert("تاريخ الانتهاء يجب أن يكون بالشكل MM/YY.");
         return;
     }
 
-    const now = new Date();
-    const currentMonth = now.getMonth() + 1;
-    const currentYear = now.getFullYear() % 100;
-
-    if(year < currentYear || (year === currentYear && month < currentMonth)){
-        alert("البطاقة منتهية الصلاحية.");
-        return;
-    }
-
-    if(!/^\d{3,4}$/.test(cvv)){
-        alert("رمز CVV غير صحيح.");
+    if(!/^\d{3}$/.test(cvv)){
+        alert("رمز الأمان يجب أن يكون 3 أرقام.");
         return;
     }
 
@@ -551,6 +578,7 @@ function confirmPayment(){
 
 window.addEventListener("click", function(e){
     const modal = document.getElementById("paymentModal");
+
     if(e.target === modal){
         modal.style.display = "none";
     }
