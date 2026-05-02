@@ -21,8 +21,9 @@ $sql = "SELECT
             b.f_name,
             b.l_name
         FROM rating r
-        INNER JOIN beneficiary b ON r.bnf_id = b.bnf_id
-        WHERE r.office_id = '$office_id'
+        INNER JOIN admission_request ar ON r.request_id = ar.request_id
+        INNER JOIN beneficiary b ON ar.bnf_id = b.bnf_id
+        WHERE ar.office_id = '$office_id'
         ORDER BY r.rating_date DESC";
 $result = $con->query($sql);
 ?>

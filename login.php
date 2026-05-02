@@ -11,107 +11,82 @@ if ($con->connect_error) {
 // متغير لتخزين رسائل الخطأ وعرضها للمستخدم لاحقاً
 $error = "";
 
-// تنفيذ الكود فقط عند الضغط على زر "تسجيل الدخول" (POST method)
+// تنفيذ الكود فقط عند الضغط على زر "تسجيل الدخول"
 if (isset($_POST['login'])) {
+
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
 
-    /**
-     * مصفوفة تعريف المستخدمين:
-     * نستخدم هذه الطريقة لتجنب تكرار الكود. 
-     * كل عنصر يحتوي على (اسم الجدول، اسم حقل المعرف ID، مفتاح الجلسة، وصفحة التوجيه)
-     */
+    // مصفوفة أنواع المستخدمين
     $users = [
-        [
-            "table" => "investor",
-            "id_field" => "inv_id",
-            "session_key" => "inv_id",
-            "redirect" => "Inv00_MainPage.php"
-        ],
-        [
-            "table" => "beneficiary",
-            "id_field" => "bnf_id",
-            "session_key" => "bnf_id",
-            "redirect" => "Ben00_MainPage.php"
-        ],
-        [
-            "table" => "consulting_office",
-            "id_field" => "office_id",
-            "session_key" => "office_id",
-            "redirect" => "Con00_MainPage.php"
-        ],
-        [
-            "table" => "admin",
-            "id_field" => "admin_id",
-            "session_key" => "admin_id",
-            "redirect" => "Admin1_profile.php"
-        ]
+        ["table" => "investor", "id_field" => "inv_id", "session_key" => "inv_id", "redirect" => "Inv00_MainPage.php"],
+        ["table" => "beneficiary", "id_field" => "bnf_id", "session_key" => "bnf_id", "redirect" => "Ben00_MainPage.php"],
+        ["table" => "consulting_office", "id_field" => "office_id", "session_key" => "office_id", "redirect" => "Con00_MainPage.php"],
+        ["table" => "admin", "id_field" => "admin_id", "session_key" => "admin_id", "redirect" => "Admin1_profile.php"]
     ];
 
-    // حلقة تكرارية للمرور على جميع الجداول والبحث عن الإيميل
+    // البحث في جميع الجداول
     foreach ($users as $userType) {
+
         $table = $userType["table"];
         $id_field = $userType["id_field"];
         $session_key = $userType["session_key"];
         $redirect = $userType["redirect"];
 
-        
-       if ($table == "admin") {
-    $stmt = $con->prepare("SELECT * FROM admin WHERE admin_name = ?");
-} else {
-    $stmt = $con->prepare("SELECT * FROM $table WHERE email = ?");
-}
+        if ($table == "admin") {
+            $stmt = $con->prepare("SELECT * FROM admin WHERE admin_name = ?");
+        } else {
+            $stmt = $con->prepare("SELECT * FROM $table WHERE email = ?");
+        }
+
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
 
- 
         if ($result->num_rows > 0) {
+
             $user = $result->fetch_assoc();
 
-          if (password_verify($password, $user['password'])) {
+            if (password_verify($password, $user['password'])) {
 
-          
-            if (isset($user['account_status']) && $user['account_status'] == 'محظور') {
-        $error = "تم حظر الحساب";
-        break;
-    }
+                // التحقق من الحظر
+                if (isset($user['account_status']) && $user['account_status'] == 'محظور') {
+                    $error = "تم حظر الحساب";
+                    break;
+                }
 
-    /* =========================
-       التحقق من الاعتماد (فقط للمستثمر والمكتب)
-    ========================= */
-    if ($table == "investor" || $table == "consulting_office") {
+                // التحقق من الاعتماد (للمستثمر والمكتب)
+                if ($table == "investor" || $table == "consulting_office") {
 
-        if ($user['approval_status'] == 'بانتظار المراجعة') {
-            $error = "حسابك بانتظار المراجعة من الإدارة";
-            break;
-        }
-        elseif ($user['approval_status'] == 'مرفوض') {
-            $error = "تم رفض طلب التسجيل";
-            break;
-        }
-        elseif ($user['approval_status'] != 'معتمد') {
-            $error = "حالة الحساب غير معروفة";
-            break;
-        }
-    }
+                    if ($user['approval_status'] == 'بانتظار المراجعة') {
+                        $error = "حسابك بانتظار المراجعة من الإدارة";
+                        break;
+                    } elseif ($user['approval_status'] == 'مرفوض') {
+                        $error = "تم رفض طلب التسجيل";
+                        break;
+                    } elseif ($user['approval_status'] != 'معتمد') {
+                        $error = "حالة الحساب غير معروفة";
+                        break;
+                    }
+                }
 
-    /* إذا معتمد أو نوعه مو يحتاج اعتماد */
-    $_SESSION['email'] = $user['email'];
-    $_SESSION['user_type'] = $table;
-    $_SESSION[$session_key] = $user[$id_field]; 
-    $_SESSION['user_id'] = $user[$id_field];
+                // حفظ الجلسة
+                $_SESSION['email'] = $user['email'];
+                $_SESSION['user_type'] = $table;
+                $_SESSION[$session_key] = $user[$id_field];
+                $_SESSION['user_id'] = $user[$id_field];
 
-    header("Location: " . $redirect);
-    exit(); 
-}
+                // التوجيه
+                header("Location: " . $redirect);
+                exit();
+            }
         }
     }
 
-    // إذا انتهت الحلقة ولم يتم التوجيه، فهذا يعني أن البيانات خاطئة
+    // في حال فشل تسجيل الدخول
     if (empty($error)) {
-    $error = "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
-}
+        $error = "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+    }
 }
 ?>
 
@@ -124,64 +99,32 @@ if (isset($_POST['login'])) {
 <link rel="stylesheet" href="Style.css">
 
 <style>
-    /* تنسيقات CSS مخصصة للصفحة */
-    body {
-        margin:0;
-        background:#f5f4f2;
-        font-family:'Noto Kufi Arabic',sans-serif;
-    }
-    .container {
-        min-height:100vh;
-        padding-top:120px;
-    }
-    .box {
-        width:650px;
-        max-width:90%;
-        margin:auto;
-        background: #fff; 
-        padding: 40px;
-        border-radius: 8px;
-    }
-    .error {
-        text-align:center;
-        margin-bottom:10px;
-        color:red;
-    }
-    .center { text-align:center; }
-    .btn { margin-top:15px; width: 100%; } /* جعل الزر بعرض الصندوق */
-</style>
-</head>
-<body>
+body{ margin:0; background:#f5f4f2; font-family:'Noto Kufi Arabic',sans-serif;}
+.container{  min-height:100vh;  padding-top:120px;}
+.box{  width:650px;  max-width:90%;  margin:auto;  background:#fff; padding:40px; border-radius:8px;}
+.error{text-align:center;margin-bottom:10px;color:red;}
+.center{ text-align:center;}
+.btn{ margin-top:15px; width:100%;}
+</style> </head> <body>
 
-<div class="container">
-    <div class="box">
+<div class="container"> <div class="box">
 
-        <h2>مرحباً بعودتك</h2>
-        <p class="subtitle center">سجل الدخول للمتابعة</p>
+<h2>مرحباً بعودتك</h2>
+<p class="subtitle center">سجل الدخول للمتابعة</p>
 
-        <?php if(!empty($error)) echo '<p class="error">'.$error.'</p>'; ?>
+<?php if(!empty($error)) echo '<p class="error">'.$error.'</p>'; ?>
 
-        <form method="POST">
-            <label>البريد الإلكتروني</label>
-            <div class="input-group">
-                <input type="text" name="email" placeholder="أدخل البريد الإلكتروني" required>
-            </div>
+<form method="POST">
 
-            <label>كلمة المرور</label>
-            <div class="input-group">
-                <input type="password" name="password" placeholder="أدخل كلمة المرور" required>
-            </div>
-
-            <button type="submit" name="login" class="btn">تسجيل الدخول</button>
-
-            <p class="register center">
-              ليس لديك حساب؟ <a href="Main Page.html#accounts">إنشاء حساب</a>
-            </p>
-
-        </form>
-
-    </div>
+<label>البريد الإلكتروني</label>
+<div class="input-group">
+<input type="text" name="email" placeholder="أدخل البريد الإلكتروني" required>
 </div>
 
-</body>
-</html>
+<label>كلمة المرور</label>
+<div class="input-group">
+<input type="password" name="password" placeholder="أدخل كلمة المرور" required>
+</div>
+<button type="submit" name="login" class="btn">تسجيل الدخول</button>
+<p class="register center"> ليس لديك حساب؟ <a href="Main Page.html#accounts">إنشاء حساب</a> </p>
+</form> </div> </div> </body> </html>

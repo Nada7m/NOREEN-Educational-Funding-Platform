@@ -522,25 +522,17 @@ $result = $conn->query($sql);
 function openPaymentModal(requestId, feeAmount){
     document.getElementById("payment_request_id").value = requestId;
     document.getElementById("payment_fee").innerText = "رسوم الطلب: " + feeAmount + " ريال";
-    document.getElementById("paymentModal").style.display = "flex";
-}
+    document.getElementById("paymentModal").style.display = "flex";}
 
 function closePaymentModal(){
-    document.getElementById("paymentModal").style.display = "none";
-}
-
+    document.getElementById("paymentModal").style.display = "none";}
 document.getElementById("cardNumber").addEventListener("input", function(){
-    this.value = this.value.replace(/\D/g, "").slice(0, 16);
-});
-
+    this.value = this.value.replace(/\D/g, "").slice(0, 16);});
 document.getElementById("cvv").addEventListener("input", function(){
-    this.value = this.value.replace(/\D/g, "").slice(0, 3);
-});
-
+    this.value = this.value.replace(/\D/g, "").slice(0, 3);});
 document.getElementById("expDate").addEventListener("input", function(){
     let value = this.value.replace(/\D/g, "").slice(0, 4);
-    this.value = value.length >= 3 ? value.slice(0, 2) + "/" + value.slice(2) : value;
-});
+    this.value = value.length >= 3 ? value.slice(0, 2) + "/" + value.slice(2) : value;});
 
 function confirmPayment(){
     const cardName = document.getElementById("cardName").value.trim();
@@ -550,39 +542,24 @@ function confirmPayment(){
 
     if(cardName === "" || cardNumber === "" || expDate === "" || cvv === ""){
         alert("يرجى تعبئة جميع بيانات الدفع.");
-        return;
-    }
-
+        return; }
     if(!/^[\u0600-\u06FFa-zA-Z\s]{3,100}$/.test(cardName)){
         alert("اسم حامل البطاقة غير صحيح.");
-        return;
-    }
-
+        return;}
     if(!/^\d{16}$/.test(cardNumber)){
         alert("رقم البطاقة يجب أن يكون 16 رقم.");
-        return;
-    }
-
+        return;}
     if(!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expDate)){
         alert("تاريخ الانتهاء يجب أن يكون بالشكل MM/YY.");
-        return;
-    }
-
+        return; }
     if(!/^\d{3}$/.test(cvv)){
         alert("رمز الأمان يجب أن يكون 3 أرقام.");
-        return;
-    }
-
-    document.getElementById("realPaySubmit").click();
-}
+        return; }
+    document.getElementById("realPaySubmit").click();}
 
 window.addEventListener("click", function(e){
     const modal = document.getElementById("paymentModal");
-
-    if(e.target === modal){
-        modal.style.display = "none";
-    }
-});
+      if(e.target === modal){ modal.style.display = "none";}});
 </script>
 
 </body>

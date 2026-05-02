@@ -63,11 +63,11 @@ $sqlRate = "
         r.comment_text,
         CONCAT(b.f_name, ' ', b.l_name) AS bnf_name
     FROM rating r
-    LEFT JOIN beneficiary b ON r.bnf_id = b.bnf_id
-    WHERE r.office_id = ?
+    JOIN admission_request ar ON r.request_id = ar.request_id
+    LEFT JOIN beneficiary b ON ar.bnf_id = b.bnf_id
+    WHERE ar.office_id = ?
     ORDER BY r.rating_date DESC
 ";
-
 $stmtRate = $conn->prepare($sqlRate);
 $stmtRate->bind_param("i", $officeId);
 $stmtRate->execute();

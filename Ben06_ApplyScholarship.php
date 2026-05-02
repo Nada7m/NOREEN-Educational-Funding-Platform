@@ -36,7 +36,6 @@ VALUES
         $req_id = $con->insert_id;
         $upload_dir = "uploads/";
          }
-
         // دالة رفع المستندات وحفظها في جدول scholarship_request_documents
         function uploadDoc($con, $req_id, $input, $type, $dir) {
             if(!empty($_FILES[$input]['name'])) {
@@ -45,16 +44,11 @@ VALUES
                      
                    { $sql_d = "INSERT INTO scholarship_request_documents (request_id, doc_type, file_name, file) 
                               VALUES ('$req_id', '$type', '$fName', '$fName')";
-                    $con->query($sql_d);}
-                }
-            
-        }
-
+                    $con->query($sql_d);}}}
         uploadDoc($con, $req_id, 'cv_file', 'CV', $upload_dir);
         uploadDoc($con, $req_id, 'cert_file', 'Certificate', $upload_dir);
         uploadDoc($con, $req_id, 'rec_file', 'Recommendation', $upload_dir);
         uploadDoc($con, $req_id, 'accept_file', 'Acceptance', $upload_dir);
-
         echo "<script>alert('✅ تم إرسال طلبك بنجاح!'); window.location.href='Ben09_TrackScholarship.php';</script>";
     }
 

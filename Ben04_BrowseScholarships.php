@@ -117,12 +117,9 @@ $selected_field = isset($_POST['sch_field']) ? $_POST['sch_field'] : '';
                 </div>
             </div>
         </header>
-
         <div class="page">
-
             <form method="POST" class="filter-container">
                 <div class="filter-label">تصفية المنح حسب المجال الرئيسي:</div>
-
                 <select name="sch_field" class="filter-select" onchange="this.form.submit()">
                     <option value="">اختر المجال</option>
                     <?php
@@ -131,12 +128,9 @@ $selected_field = isset($_POST['sch_field']) ? $_POST['sch_field'] : '';
 
                     foreach($fields as $f) {
                         $sel = ($selected_field == $f) ? "selected" : "";
-                        echo "<option value='$f' $sel>$f</option>";
-                    }
-                    ?>
+                        echo "<option value='$f' $sel>$f</option>"; } ?>
                 </select>
             </form>
-
             <div class="scholarships-grid">
                 <?php
                 /* جلب المنح التي ما زال التقديم عليها متاحًا */
@@ -144,48 +138,35 @@ $selected_field = isset($_POST['sch_field']) ? $_POST['sch_field'] : '';
                       FROM scholarship_opps s
                       LEFT JOIN investor i ON s.inv_id = i.inv_id
                       WHERE DATE(s.app_deadline) >= CURDATE()";
-
                 /* إضافة الفلترة حسب المجال إذا تم الاختيار */
                 if (!empty($selected_field)) {
                     $q .= " AND s.sch_field = '".$conn->real_escape_string($selected_field)."'";
                 }
-
                 $res = $conn->query($q);
-
                 /* عرض بطاقات المنح */
                 while($row = $res->fetch_assoc()):
-                    $provider = !empty($row['inv_name']) ? $row['inv_name'] : 'غير محدد';
-                ?>
+                    $provider = !empty($row['inv_name']) ? $row['inv_name'] : 'غير محدد'; ?>
                 <div class="s-card">
-
                     <div class="s-title"><?php echo htmlspecialchars($row['sch_name']); ?></div>
-
                     <div class="s-content">
-
                         <div class="s-item">
                             <div class="s-lbl">مقدمة من:</div>
                             <div class="s-val"><?php echo htmlspecialchars($provider); ?></div>
                         </div>
-
                         <div class="s-item">
                             <div class="s-lbl">المجال الرئيسي:</div>
                             <div class="s-val"><?php echo htmlspecialchars($row['sch_field']); ?></div>
                         </div>
-
                         <div class="s-item">
                             <div class="s-lbl">الدرجة المستهدفة:</div>
                             <div class="s-val"><?php echo htmlspecialchars($row['study_level']); ?></div>
                         </div>
-
                     </div>
-
                     <div class="s-divider"></div>
-
                     <div class="s-item s-deadline">
                         <div class="s-lbl">آخر موعد للتقديم:</div>
                         <div class="s-val"><?php echo date("Y-m-d", strtotime($row['app_deadline'])); ?></div>
                     </div>
-
                     <a href="Ben05_ScholarshipDetails.php?id=<?php echo $row['scholarship_id']; ?>" class="btn-action">عرض تفاصيل أكثر</a>
                 </div>
                 <?php endwhile; ?>
