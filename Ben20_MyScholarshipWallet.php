@@ -10,13 +10,11 @@ if (!isset($_SESSION['bnf_id'])) {
 /* الاتصال بقاعدة البيانات */
 $conn = new mysqli("localhost", "root", "", "noreen");
 if ($conn->connect_error) {
-    die("فشل الاتصال بقاعدة البيانات");
-}
+    die("فشل الاتصال بقاعدة البيانات");}
 $conn->set_charset("utf8mb4");
 
 /* رقم المستفيد الحالي */
 $bnf_id = $_SESSION['bnf_id'];
-
 $sql = "
     SELECT
         r.request_id,
@@ -42,8 +40,7 @@ $sql = "
         c.amount,
         c.payments_count
     ORDER BY r.request_id DESC
-    LIMIT 1
-";
+    LIMIT 1";
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $bnf_id);
@@ -52,9 +49,7 @@ $result = $stmt->get_result();
 
 $data = null;
 
-if ($result && $result->num_rows > 0) {
-    $data = $result->fetch_assoc();
-}
+if ($result && $result->num_rows > 0) {  $data = $result->fetch_assoc();}
 
 /* قيم افتراضية */
 $sch_name = "لا توجد منحة حالية";

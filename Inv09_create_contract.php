@@ -36,8 +36,7 @@ $result = mysqli_stmt_get_result($stmt);
 $request_data = mysqli_fetch_assoc($result);
 
 if (!$request_data) {
-    die("لا يمكن الوصول إلى هذا الطلب");
-}
+    die("لا يمكن الوصول إلى هذا الطلب");}
 
 /* فحص هل العقد موجود مسبقاً لهذا الطلب مع التأكد أنه تابع للمستثمر */
 $contract_query = "SELECT ec.*

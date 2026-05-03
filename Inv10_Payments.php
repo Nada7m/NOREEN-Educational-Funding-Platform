@@ -10,7 +10,6 @@ if (!$con) {
     die("فشل الاتصال بقاعدة البيانات");
 }
 mysqli_set_charset($con, "utf8mb4");
-
 $inv_id = $_SESSION['inv_id'];
 $tab = isset($_GET['tab']) ? $_GET['tab'] : 'active';
 
@@ -34,11 +33,8 @@ $active_stmt = mysqli_prepare($con, $active_sql);
 mysqli_stmt_bind_param($active_stmt, "i", $inv_id);
 mysqli_stmt_execute($active_stmt);
 $active_result = mysqli_stmt_get_result($active_stmt);
-
 $active_rows = [];
-while ($row = mysqli_fetch_assoc($active_result)) {
-    $active_rows[] = $row;
-}
+while ($row = mysqli_fetch_assoc($active_result)) {  $active_rows[] = $row;}
 
 /* السابقين */
 $ended_sql = "SELECT
@@ -61,7 +57,6 @@ $ended_stmt = mysqli_prepare($con, $ended_sql);
 mysqli_stmt_bind_param($ended_stmt, "i", $inv_id);
 mysqli_stmt_execute($ended_stmt);
 $ended_result = mysqli_stmt_get_result($ended_stmt);
-
 $ended_rows = [];
 while ($row = mysqli_fetch_assoc($ended_result)) {
     $ended_rows[] = $row;

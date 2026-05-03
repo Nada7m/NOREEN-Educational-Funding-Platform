@@ -38,16 +38,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["approve_report"])) {
         mysqli_stmt_bind_param($update_stmt, "i", $report_id);
         if (mysqli_stmt_execute($update_stmt)) {
             $msg = "تم اعتماد التقرير بنجاح.";
-            $type = "success";
-        } else {
-            $msg = "حدث خطأ أثناء اعتماد التقرير.";
-            $type = "error";
-        }
-    } else {
+            $type = "success"; } else {  $msg = "حدث خطأ أثناء اعتماد التقرير.";  $type = "error";   }   } else {
         $msg = "لا يمكن اعتماد هذا التقرير.";
-        $type = "error";
-    }
-}
+        $type = "error";   }}
 /* دفع الدفعة */
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirm_payment"])) {
     $payment_id  = (int)$_POST["payment_id"];
@@ -57,20 +50,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirm_payment"])) {
     $cvv         = preg_replace('/\D/', '', $_POST["cvv"]);
     if ($card_name == "" || $card_number == "" || $exp_date == "" || $cvv == "") {
         $msg = "يرجى تعبئة جميع بيانات الدفع.";
-        $type = "error";
-    } elseif (!preg_match('/^[\p{Arabic}a-zA-Z\s]{3,100}$/u', $card_name)) {
+        $type = "error"; } elseif (!preg_match('/^[\p{Arabic}a-zA-Z\s]{3,100}$/u', $card_name)) {
         $msg = "اسم حامل البطاقة غير صحيح.";
-        $type = "error";
-    } elseif (!preg_match('/^\d{16}$/', $card_number)) {
+        $type = "error";  } elseif (!preg_match('/^\d{16}$/', $card_number)) {
         $msg = "رقم البطاقة يجب أن يكون 16 رقم.";
-        $type = "error";
-    } elseif (!preg_match('/^(0[1-9]|1[0-2])\/\d{2}$/', $exp_date)) {
+        $type = "error";  } elseif (!preg_match('/^(0[1-9]|1[0-2])\/\d{2}$/', $exp_date)) {
         $msg = "تاريخ الانتهاء يجب أن يكون بالشكل MM/YY.";
-        $type = "error";
-    } elseif (!preg_match('/^\d{3}$/', $cvv)) {
+        $type = "error";  } elseif (!preg_match('/^\d{3}$/', $cvv)) {
         $msg = "رمز الأمان يجب أن يكون 3 أرقام.";
-        $type = "error";
-    } else {
+        $type = "error";  } else {
         $pay_check_sql = "SELECT payments.payment_id, payments.contract_id
                           FROM payments
                           INNER JOIN e_contract ON payments.contract_id = e_contract.contract_id
@@ -108,21 +96,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirm_payment"])) {
                     mysqli_stmt_bind_param($finish_request_stmt, "i", $request_id);
                     mysqli_stmt_execute($finish_request_stmt);
                     $msg = "تم سداد الدفعة الأخيرة بنجاح وتم إنهاء العقد والطلب.";
-                    $type = "success";
-                } else {
+                    $type = "success"; } else {
                     $msg = "تم سداد الدفعة بنجاح.";
-                    $type = "success";
-                }
-            } else {
+                    $type = "success";   }  } else {
                 $msg = "حدث خطأ أثناء تسجيل الدفع.";
-                $type = "error";
-            }
-        } else {
+                $type = "error";  }   } else {
             $msg = "لا يمكن دفع هذه الدفعة قبل اعتماد تقريرها أو ربما تم سدادها مسبقًا.";
-            $type = "error";
-        }
-    }
-}
+            $type = "error"; } }}
 /* جلب بيانات العقد */
 $main_sql = "SELECT scholarship_requests.request_id,scholarship_requests.major_name,scholarship_requests.univ_name,beneficiary.f_name,beneficiary.l_name,scholarship_opps.sch_name,e_contract.contract_id,e_contract.payments_count,e_contract.amount,e_contract.ctr_status
              FROM e_contract

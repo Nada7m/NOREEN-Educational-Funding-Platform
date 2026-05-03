@@ -3,23 +3,20 @@ session_start();
 
 /* التأكد أن المستخدم مسجل دخول */
 if (!isset($_SESSION['inv_id'])) {
-    header("Location: login.php");
-    exit();
-}
+    header("Location: login.php");  exit();}
 
 /* الاتصال بقاعدة البيانات */
 $conn = new mysqli("localhost", "root", "", "noreen");
 
 /* إذا فشل الاتصال */
 if ($conn->connect_error) {
-    die("فشل الاتصال بقاعدة البيانات");
-}
+    die("فشل الاتصال بقاعدة البيانات");}
 
 /* متغيرات الرسائل */
 $success = "";
 $error = "";
 
-/* عند إرسال النموذج */
+/*  إرسال النموذج */
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     /* أخذ البيانات */
@@ -32,21 +29,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $inv_id = $_SESSION["inv_id"];
 
     /* التحقق */
-    if (
-        $sch_name == "" ||
+    if ( $sch_name == "" ||
         $sch_field == "" ||
         $study_level == "" ||
         $app_deadline == "" ||
-        !isset($_POST["confirm_data"])
-    ) {
-        $error = "يرجى تعبئة جميع الحقول المطلوبة وتأكيد صحة البيانات.";
-    } else {
+        !isset($_POST["confirm_data"])) { $error = "يرجى تعبئة جميع الحقول المطلوبة وتأكيد صحة البيانات.";} else {
 
         /* إدخال البيانات */
         $stmt = $conn->prepare("INSERT INTO scholarship_opps 
         (sch_field, inv_id, sch_name, requirements, study_level, Specializations, app_deadline)
         VALUES (?, ?, ?, ?, ?, ?, ?)");
-
         $stmt->bind_param(
             "sisssss",
             $sch_field,
@@ -55,14 +47,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $requirements,
             $study_level,
             $specializations,
-            $app_deadline
-        );
+            $app_deadline );
 
         if ($stmt->execute()) {
-            $success = "تم نشر عرض المنحة بنجاح.";
-        } else {
-            $error = "حدث خطأ أثناء حفظ البيانات.";
-        }
+            $success = "تم نشر عرض المنحة بنجاح."; } else {
+            $error = "حدث خطأ أثناء حفظ البيانات.";}
 
         $stmt->close();
     }

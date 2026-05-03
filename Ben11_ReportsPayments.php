@@ -9,8 +9,8 @@ $request_id = $_GET['request_id'] ?? null;
 $bnf_id = $_SESSION['bnf_id'] ?? null;
 if (!$request_id || !$bnf_id) {
     header("Location: Ben09_TrackScholarship.php");
-    exit();
-}
+    exit();}
+
 /* جلب بيانات العقد */
 $sql_info = "SELECT r.request_id,r.univ_name,r.major_name,s.sch_name,c.contract_id,c.amount,c.payments_count
              FROM scholarship_requests r
@@ -21,10 +21,7 @@ $stmt = $conn->prepare($sql_info);
 $stmt->bind_param("ii", $request_id, $bnf_id);
 $stmt->execute();
 $info = $stmt->get_result()->fetch_assoc();
-if (!$info) {
-    header("Location: Ben09_TrackScholarship.php");
-    exit();
-}
+if (!$info) { header("Location: Ben09_TrackScholarship.php");   exit();}
 $contract_id = $info['contract_id'];
 /* رفع التقرير */
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['report_file'])) {
@@ -54,10 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['report_file'])) {
                 $ins->execute();
             }
             header("Location: " . $_SERVER['PHP_SELF'] . "?request_id=" . $request_id);
-            exit();
-        }
-    }
-}
+            exit(); }  }}
 /* جلب الدفعات */
 $payments_list = [];
 $res_p = $conn->query("SELECT p.payment_id,p.installment_number,p.payment_status,r.report_upload,r.report_appoval,r.report_file
@@ -66,8 +60,7 @@ $res_p = $conn->query("SELECT p.payment_id,p.installment_number,p.payment_status
                       WHERE p.contract_id = $contract_id
                       ORDER BY p.installment_number ASC");
 while ($row = $res_p->fetch_assoc()) {
-    $payments_list[] = $row;
-}
+    $payments_list[] = $row;}
 ?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">

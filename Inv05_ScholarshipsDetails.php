@@ -21,10 +21,8 @@ if(!isset($_GET['id'])||$_GET['id']==""){
 }
 $scholarship_id=(int)$_GET['id'];
 
-/* اختصار لطباعة النص بأمان */
 function e($text){
-    return htmlspecialchars($text ?? "",ENT_QUOTES,"UTF-8");
-}
+    return htmlspecialchars($text ?? "",ENT_QUOTES,"UTF-8");}
 
 /* قبول أو رفض الطلب */
 if($_SERVER["REQUEST_METHOD"]=="POST" && isset($_POST["action_type"]) && isset($_POST["request_id"])){
@@ -32,11 +30,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST" && isset($_POST["action_type"]) && isset($
     $action_type=$_POST["action_type"];
     $new_status="";
 
-    if($action_type=="accept"){
-        $new_status="مقبول";
-    }elseif($action_type=="reject"){
-        $new_status="مرفوض";
-    }
+    if($action_type=="accept"){   $new_status="مقبول";  }elseif($action_type=="reject"){  $new_status="مرفوض"; }
 
     if($new_status!=""){
         $update_stmt=mysqli_prepare($con,"
@@ -46,9 +40,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST" && isset($_POST["action_type"]) && isset($
             WHERE sr.request_id=? AND sr.scholarship_id=? AND so.inv_id=?
         ");
         mysqli_stmt_bind_param($update_stmt,"siii",$new_status,$request_id,$scholarship_id,$inv_id);
-        mysqli_stmt_execute($update_stmt);
-    }
-}
+        mysqli_stmt_execute($update_stmt)  } }
 
 /* بيانات المنحة */
 $stmt=mysqli_prepare($con,"

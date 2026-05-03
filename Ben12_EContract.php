@@ -8,69 +8,50 @@ if ($conn->connect_error) {
     die("فشل الاتصال");
 }
 $conn->set_charset("utf8mb4");
-
 $request_id = $_GET['request_id'] ?? null;
 $bnf_id = $_SESSION['bnf_id'] ?? null;
 $step = $_GET['step'] ?? 'view';
-
 $contract_data = null;
 $user_name = "المستخدم";
-
-if ($request_id && $bnf_id) {
-    $sql = "
-        SELECT r.request_id, r.major_name, r.univ_name,
+=
+if ($request_id && $bnf_id) {  $sql = "   SELECT r.request_id, r.major_name, r.univ_name,
                c.contract_id, c.amount, c.terms, c.funding_duration, c.payments_count, c.approval_status,
                b.f_name, b.l_name
         FROM scholarship_requests r
         JOIN e_contract c ON r.request_id = c.request_id
         JOIN beneficiary b ON r.bnf_id = b.bnf_id
-        WHERE r.request_id = ? AND r.bnf_id = ?
-    ";
+        WHERE r.request_id = ? AND r.bnf_id = ? ";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ii", $request_id, $bnf_id);
     $stmt->execute();
     $result = $stmt->get_result();
-
     if ($result->num_rows > 0) {
         $contract_data = $result->fetch_assoc();
-        $user_name = $contract_data['f_name'] . " " . $contract_data['l_name'];
-    }
-}
+        $user_name = $contract_data['f_name'] . " " . $contract_data['l_name']; }}
 
-if (isset($_POST['confirm_final']) && $contract_data) {
-    $conn->begin_transaction();
+if (isset($_POST['confirm_final']) && $contract_data) { $conn->begin_transaction();
 
-    try {
-        $update_sql = "UPDATE e_contract SET approval_status = 'تمت الموافقة' WHERE request_id = ?";
+    try { $update_sql = "UPDATE e_contract SET approval_status = 'تمت الموافقة' WHERE request_id = ?";
         $stmt_upd = $conn->prepare($update_sql);
         $stmt_upd->bind_param("i", $contract_data['request_id']);
         $stmt_upd->execute();
-
         $c_id = $contract_data['contract_id'];
         $p_count = $contract_data['payments_count'];
         $total_amt = $contract_data['amount'];
         $each_amt = $total_amt / $p_count;
-
         $check_existing = $conn->query("SELECT COUNT(*) as existing FROM payments WHERE contract_id = $c_id");
-
-        if ($check_existing->fetch_assoc()['existing'] == 0) {
-            $status_default = "بانتظار الدفع";
+        if ($check_existing->fetch_assoc()['existing'] == 0) {و $status_default = "بانتظار الدفع";
 
             for ($i = 1; $i <= $p_count; $i++) {
                 $ins_p = $conn->prepare("INSERT INTO payments (contract_id, installment_number, payment_amount, payment_status) VALUES (?, ?, ?, ?)");
                 $ins_p->bind_param("iids", $c_id, $i, $each_amt, $status_default);
-                $ins_p->execute();
-            }
-        }
+                $ins_p->execute(); }  }
 
         $conn->commit();
         header("Location: Ben12_EContract.php?request_id=" . $request_id . "&step=view");
-        exit();
-    } catch (Exception $e) {
+        exit();   } catch (Exception $e) {
         $conn->rollback();
-        echo "خطأ في النظام: " . $e->getMessage();
-    }
-}
+        echo "خطأ في النظام: " . $e->getMessage();  }}
 ?>
 
 <!DOCTYPE html>
@@ -347,58 +328,39 @@ if (isset($_POST['confirm_final']) && $contract_data) {
             </div>
 
             <?php if ($contract_data): ?>
-                <div class="content-grid">
-
-                    <div class="side-col">
+                <div class="content-grid">  <div class="side-col">
                         <div class="info-card contract-box">
                             <h3>ملخص العقد</h3>
-
                             <div class="data-row">
                                 <label>رقم العقد:</label>
-                                <span><?php echo $contract_data['contract_id']; ?></span>
-                            </div>
-
+                                <span><?php echo $contract_data['contract_id']; ?></span>  </div>
                             <div class="data-row">
-                                <label>اسم الطالب:</label>
-                                <span><?php echo htmlspecialchars($user_name); ?></span>
-                            </div>
-
+                                <label>اسم المستفيد:</label>
+                                <span><?php echo htmlspecialchars($user_name); ?></span> </div>
                             <div class="data-row">
                                 <label>قيمة التمويل:</label>
-                                <span><?php echo number_format($contract_data['amount']); ?> ريال</span>
-                            </div>
-
+                                <span><?php echo number_format($contract_data['amount']); ?> ريال</span></div>
                             <div class="data-row">
                                 <label>مدة التمويل:</label>
-                                <span><?php echo htmlspecialchars($contract_data['funding_duration']); ?> سنوات</span>
-                            </div>
-
+                                <span><?php echo htmlspecialchars($contract_data['funding_duration']); ?> سنوات</span> </div>
                             <div class="data-row">
                                 <label>عدد الدفعات:</label>
                                 <span><?php echo htmlspecialchars($contract_data['payments_count']); ?> دفعات</span>
-                            </div>
-                        </div>
-
-                        <div class="info-card contract-box">
+                            </div>  </div>
+                            <div class="info-card contract-box">
                             <h3>الإقرار والموافقة</h3>
-
                             <div class="agree-text">
                                 أقر أنا <b><?php echo htmlspecialchars($user_name); ?></b> على الشروط والأحكام الواردة في هذا العقد، وأتعهد بالالتزام بها التزامًا كاملًا.
                             </div>
-
                             <?php if ($contract_data['approval_status'] === 'تمت الموافقة'): ?>
                                 <div class="approved-box">تمت الموافقة ✓</div>
                             <?php else: ?>
                                 <a href="?request_id=<?php echo $request_id; ?>&step=confirm" class="btn-approve">أوافق على الشروط والأحكام</a>
                             <?php endif; ?>
-                        </div>
-                    </div>
-
-                    <div class="terms-card">
+                        </div>    </div>  <div class="terms-card">
                         <h3>شروط العقد</h3>
                         <div class="terms-box"><?php echo nl2br(htmlspecialchars($contract_data['terms'])); ?></div>
                     </div>
-
                 </div>
             <?php else: ?>
                 <div class="empty-box">لا توجد بيانات عقد متاحة لهذا الطلب.</div>
