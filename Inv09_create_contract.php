@@ -14,15 +14,13 @@ mysqli_set_charset($con, "utf8mb4");
 
 $inv_id = (int) $_SESSION['inv_id'];
 $request_id = isset($_GET['request_id']) ? (int)$_GET['request_id'] : 0;
-
 if ($request_id <= 0) {
     die("رقم الطلب غير صحيح");
 }
-
 $success_message = "";
 $error_message = "";
 
-/* جلب بيانات المستفيد والمنحة والتأكد أن الطلب تابع للمستثمر */
+/* جلب بيانات المستفيد والمنحة */
 $sql = "SELECT b.f_name, b.l_name, sr.major_name, sr.univ_name, sr.bnf_id
         FROM scholarship_requests sr
         INNER JOIN scholarship_opps so ON sr.scholarship_id = so.scholarship_id
@@ -38,15 +36,10 @@ $request_data = mysqli_fetch_assoc($result);
 if (!$request_data) {
     die("لا يمكن الوصول إلى هذا الطلب");}
 
-/* فحص هل العقد موجود مسبقاً لهذا الطلب مع التأكد أنه تابع للمستثمر */
-$contract_query = "SELECT ec.*
-                   FROM e_contract ec
-                   INNER JOIN scholarship_requests sr ON ec.request_id = sr.request_id
-                   INNER JOIN scholarship_opps so ON sr.scholarship_id = so.scholarship_id
-                   WHERE ec.request_id = ? AND so.inv_id = ?";
-
+/* فحص هل العقد موجود مسبقاً لهذا المستثمر ولهذا الطلب */
+$contract_query = "SELECT * FROM e_contract WHERE request_id = ?";
 $c_stmt = mysqli_prepare($con, $contract_query);
-mysqli_stmt_bind_param($c_stmt, "ii", $request_id, $inv_id);
+mysqli_stmt_bind_param($c_stmt, "i", $request_id);
 mysqli_stmt_execute($c_stmt);
 $contract_data = mysqli_fetch_assoc(mysqli_stmt_get_result($c_stmt));
 $has_contract = ($contract_data) ? true : false;
@@ -73,12 +66,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !$has_contract) {
         $funding_duration = (int)$funding_duration;
         $payments_count = (int)$payments_count;
 
-        $insert_sql = "INSERT INTO e_contract 
-                       (request_id, payments_count, funding_duration, ctr_status, terms, amount, approval_status) 
-                       VALUES (?, ?, ?, ?, ?, ?, 'في انتظار الموافقة')";
-
+        $insert_sql = "INSERT INTO e_contract (request_id, payments_count, funding_duration, ctr_status, terms, amount, approval_status) 
+                       VALUES (?, ?, ?, ?, ?, ?, ?, 'في انتظار الموافقة')";
         $insert_stmt = mysqli_prepare($con, $insert_sql);
-        mysqli_stmt_bind_param($insert_stmt, "iiissd", $request_id, $payments_count, $funding_duration, $ctr_status, $terms, $amount);
+        mysqli_stmt_bind_param($insert_stmt, "iiiissd", $request_id, $inv_id, $payments_count, $funding_duration, $ctr_status, $terms, $amount);
 
         if (mysqli_stmt_execute($insert_stmt)) {
             header("Location: Inv09_create_contract.php?request_id=$request_id&success=1");
@@ -99,7 +90,7 @@ if (isset($_GET['success'])) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>العقد الإلكتروني</title>
+<title> العقد الإلكتروني</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="CSS01Layout.css?v=3">
@@ -426,7 +417,6 @@ if (isset($_GET['success'])) {
             <?php endif; ?>
 
             <?php if ($has_contract): ?>
-
                 <div class="view-layout">
 
                     <div class="right-col">
@@ -457,8 +447,8 @@ if (isset($_GET['success'])) {
                                 <label>رقم العقد:</label>
                                 <span><?php echo $contract_data['contract_id']; ?></span>
                             </div>
-                        </div>
 
+                         </div>
                         <div class="card-v">
                             <div class="card-h-v">حالة موافقة المستفيد</div>
 
@@ -486,7 +476,6 @@ if (isset($_GET['success'])) {
                 </div>
 
             <?php else: ?>
-
                 <div class="contract-card">
 
                     <div class="contract-top">
@@ -512,32 +501,31 @@ if (isset($_GET['success'])) {
                                         value="<?php echo isset($_POST['amount']) ? htmlspecialchars($_POST['amount']) : ''; ?>"
                                     >
                                 </div>
-
-                                <div class="form-group">
-                                    <label class="form-label"><span class="req">*</span> مدة تمويل المنحة (عدد سنوات الدراسة)</label>
-                                    <select name="funding_duration" class="form-select">
-                                        <option value="">اختر مدة التمويل</option>
-                                        <option value="1" <?php if (isset($_POST['funding_duration']) && $_POST['funding_duration'] == "1") echo "selected"; ?>>1</option>
-                                        <option value="2" <?php if (isset($_POST['funding_duration']) && $_POST['funding_duration'] == "2") echo "selected"; ?>>2</option>
-                                        <option value="3" <?php if (isset($_POST['funding_duration']) && $_POST['funding_duration'] == "3") echo "selected"; ?>>3</option>
-                                        <option value="4" <?php if (isset($_POST['funding_duration']) && $_POST['funding_duration'] == "4") echo "selected"; ?>>4</option>
-                                        <option value="5" <?php if (isset($_POST['funding_duration']) && $_POST['funding_duration'] == "5") echo "selected"; ?>>5</option>
-                                        <option value="6" <?php if (isset($_POST['funding_duration']) && $_POST['funding_duration'] == "6") echo "selected"; ?>>6</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="form-label"><span class="req">*</span> إجمالي عدد الدفعات طوال فترة المنحة</label>
-                                    <select name="payments_count" class="form-select">
-                                        <option value="">اختر عدد الدفعات</option>
-                                        <?php
-                                        for ($i = 2; $i <= 12; $i++) {
-                                            $selected = (isset($_POST['payments_count']) && $_POST['payments_count'] == $i) ? "selected" : "";
-                                            echo "<option value='$i' $selected>$i</option>";
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
+  <div class="form-group">
+     <label class="form-label"><span class="req">*</span> مدة تمويل المنحة (عدد سنوات الدراسة)</label>
+     <select name="funding_duration" class="form-select">
+     <option value="">اختر مدة التمويل</option>
+  <option value="1" <?php if (isset($_POST['funding_duration']) && $_POST['funding_duration'] == "1") echo "selected"; ?>>1</option>
+  <option value="2" <?php if (isset($_POST['funding_duration']) && $_POST['funding_duration'] == "2") echo "selected"; ?>>2</option>
+  <option value="3" <?php if (isset($_POST['funding_duration']) && $_POST['funding_duration'] == "3") echo "selected"; ?>>3</option>
+  <option value="4" <?php if (isset($_POST['funding_duration']) && $_POST['funding_duration'] == "4") echo "selected"; ?>>4</option>
+  <option value="5" <?php if (isset($_POST['funding_duration']) && $_POST['funding_duration'] == "5") echo "selected"; ?>>5</option>
+ <option value="6" <?php if (isset($_POST['funding_duration']) && $_POST['funding_duration'] == "6") echo "selected"; ?>>6</option>
+  </select>
+ </div>
+<div class="form-group">
+    <label class="form-label"><span class="req">*</span> إجمالي عدد الدفعات طوال فترة المنحة</label>
+    <select name="payments_count" class="form-select">
+      <option value="">اختر عدد الدفعات</option>
+       <?php
+    for($i = 2; $i <= 12; $i++){
+        $selected = (isset($_POST['payments_count']) && $_POST['payments_count'] == $i) ? "selected" : "";
+        echo "<option value='$i' $selected>$i</option>";
+    }
+    ?>
+    </select>
+</div>
+</select>
                             </div>
 
                             <div>
@@ -562,7 +550,6 @@ if (isset($_GET['success'])) {
                     </form>
 
                 </div>
-
             <?php endif; ?>
 
         </section>

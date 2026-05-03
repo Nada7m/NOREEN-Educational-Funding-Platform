@@ -274,7 +274,7 @@ while ($row = mysqli_fetch_assoc($details_result)) {
 </div>
 <div class="modal" id="paymentModal">
 <div class="modal-content">
-<div class="modal-title">رجاء قم بإدخال بيانات البطاقة لسداد دفعة المنحة للطالب</div>
+<div class="modal-title">رجاء قم بإدخال بيانات البطاقة لسداد دفعة المنحة للمستفيد</div>
 <form method="post" class="pay-form" id="paymentForm">
 <input type="hidden" name="payment_id" id="modal_payment_id">
 <div class="pay-field">
