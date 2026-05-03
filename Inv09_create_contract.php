@@ -449,12 +449,7 @@ if (isset($_GET['success'])) {
                                 <span><?php echo $contract_data['contract_id']; ?></span>
                             </div>
 
-                            <div class="info-line-v">
-                                <label>رقم المستثمر:</label>
-                                <span><?php echo $contract_data['inv_id']; ?></span>
-                            </div>
-                        </div>
-
+                         </div>
                         <div class="card-v">
                             <div class="card-h-v">حالة موافقة المستفيد</div>
 
