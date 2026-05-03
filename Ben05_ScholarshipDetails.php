@@ -52,23 +52,18 @@ $stmt_student->bind_param("i", $bnf_id);
 $stmt_student->execute();
 $student_result = $stmt_student->get_result();
 $student = $student_result->fetch_assoc();
-
 /* تحديد اسم الجهة المانحة */
 $provider_name = !empty($opp['inv_name']) ? $opp['inv_name'] : 'غير محدد';
-
 /* افتراض إمكانية التقديم */
 $can_apply = true;
 $apply_message = "";
-
 /* التحقق من وجود طلب نشط للمستفيد */
 $active_sql = "
     SELECT request_id
     FROM scholarship_requests
     WHERE bnf_id = ?
       AND request_status IN ('مقبول', 'تحت المراجعة')
-    LIMIT 1
-";
-
+    LIMIT 1";
 $stmt_active = $conn->prepare($active_sql);
 $stmt_active->bind_param("i", $bnf_id);
 $stmt_active->execute();
@@ -76,9 +71,7 @@ $active_result = $stmt_active->get_result();
 
 if ($active_result->num_rows > 0) {
     $can_apply = false;
-    $apply_message = "لا يمكنك التقديم لوجود طلب نشط لديك حاليًا";
-}
-
+    $apply_message = "لا يمكنك التقديم لوجود طلب نشط لديك حاليًا";}
 /* التحقق من توافق المؤهل مع المنحة */
 if ($can_apply && $student) {
     $degree_level = trim($student['degree_level']);
@@ -88,13 +81,13 @@ if ($can_apply && $student) {
         $can_apply = false;
         $apply_message = "هذه المنحة غير متوافقة مع مؤهلك";
     }
-
     if ($degree_level == 'بكالوريوس' && $study_level == 'دكتوراه') {
         $can_apply = false;
         $apply_message = "هذه المنحة غير متوافقة مع مؤهلك";
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">

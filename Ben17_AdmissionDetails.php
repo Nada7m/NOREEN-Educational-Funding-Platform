@@ -52,7 +52,6 @@ $lastComment = "";
 $sqlLastRating = "SELECT rating_id, comment_text
                   FROM rating
                   WHERE request_id = $request_id
-                  AND bnf_id = $bnf_id
                   ORDER BY rating_id DESC
                   LIMIT 1";
 
@@ -80,9 +79,8 @@ if (isset($_POST['send_rating'])) {
     } else {
         $safeComment = $conn->real_escape_string($comment_text);
 
-        $sqlInsertRating = "INSERT INTO rating (bnf_id, office_id, request_id, comment_text)
-                            VALUES ('$bnf_id', '$office_id', '$request_id', '$safeComment')";
-
+     $sqlInsertRating = "INSERT INTO rating (request_id, comment_text)
+                    VALUES ('$request_id', '$safeComment')";
         if ($conn->query($sqlInsertRating)) {
             $msg = "تم استلام تقييمك بنجاح.";
             $type = "success";
@@ -559,13 +557,9 @@ if ($status == "مرفوض" || $status == "لم تُصدر") {
         <div class="rating-comment-box">
             <?php echo nl2br(htmlspecialchars($lastComment)); ?>
         </div>
-
-        <div class="rating-success-box">
-            تم استلام تقييمك بنجاح
-        </div>
     </div>
 
-<?php } elseif ($status != "مرفوض" && $status != "لم تُصدر") { ?>
+<?php }  elseif ($status != "مرفوض" && $status != "لم تُصدر") { ?>
 
     <form method="POST" class="rating-form">
 

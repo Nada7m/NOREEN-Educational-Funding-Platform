@@ -4,16 +4,12 @@ session_start();
 /* الاتصال بقاعدة البيانات */
 $conn = new mysqli("localhost", "root", "", "noreen");
 if ($conn->connect_error) {
-    die("فشل الاتصال بقاعدة البيانات");
-}
+    die("فشل الاتصال بقاعدة البيانات");}
 $conn->set_charset("utf8mb4");
 
 /* التحقق من الدولة المختارة */
 if (isset($_GET['country'])) {
-    $selectedCountry = $_GET['country'];
-} else {
-    $selectedCountry = "all";
-}
+    $selectedCountry = $_GET['country']; } else { $selectedCountry = "all";}
 
 /* جلب المكاتب */
 if ($selectedCountry != "all" && $selectedCountry != "") {
@@ -39,9 +35,7 @@ if ($selectedCountry != "all" && $selectedCountry != "") {
             co.office_description,
             co.Bachelor_fee,
             co.Masters_fee,
-            co.Phd_fee
-    ";
-
+            co.Phd_fee";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $selectedCountry);
 } else {
@@ -168,7 +162,6 @@ $conn->close();
 <div class="page">
 <div class="frow">
 <div class="flbl">تصفية المكاتب الاستشارية حسب الدولة:</div>
-
 <form class="fform" method="get">
 <select id="country" name="country" class="fsel" onchange="this.form.submit()">
 <option value="all" <?php if ($selectedCountry == "all") echo "selected"; ?>>الكل</option>
@@ -206,31 +199,16 @@ $conn->close();
 </form>
 </div>
 
-<?php if (!empty($offices)) { ?>
-<div class="cgrid">
-<?php foreach ($offices as $office) { ?>
-<?php
-$countries = [];
-
-if (!empty($office['countries'])) {
-    $countries = explode("||", $office['countries']);
-}
-?>
-
-<div class="ccard">
-<div class="cttl"><?php echo $office['office_name']; ?></div>
-<div class="cdesc"><?php echo $office['office_description']; ?></div>
-<div class="sttl">الدول:</div>
-
-<div class="cbox">
-<?php if (!empty($countries)) { ?>
-    <?php foreach ($countries as $country) { ?>
+<?php if (!empty($offices)) { ?> <div class="cgrid"> <?php foreach ($offices as $office) { ?>
+<?php $countries = [];
+if (!empty($office['countries'])) {   $countries = explode("||", $office['countries']); } ?>
+<div class="ccard"> <div class="cttl"> <?php echo $office['office_name']; ?> </div>
+<div class="cdesc"> <?php echo $office['office_description']; ?></div>  <div class="sttl">الدول:</div>
+<div class="cbox"> <?php if (!empty($countries)) { ?> 
+ <?php foreach ($countries as $country) { ?>
         <div class="ctag"><?php echo $country; ?></div>
     <?php } ?>
-<?php } else { ?>
-    <div class="ctag">لا توجد دول</div>
-<?php } ?>
-</div>
+<?php } else { ?> <div class="ctag">لا توجد دول</div> <?php } ?> </div>
 
 <button type="button" class="btnmore" onclick="window.location.href='Ben14_OfficeDetails.php?id=<?php echo $office['office_id']; ?>'">عرض تفاصيل أكثر</button>
 </div>
