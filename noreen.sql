@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 02 مايو 2026 الساعة 18:39
+-- Generation Time: 03 مايو 2026 الساعة 23:17
 -- إصدار الخادم: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -92,8 +92,8 @@ CREATE TABLE `admission_request` (
 INSERT INTO `admission_request` (`request_id`, `bnf_id`, `office_id`, `program_type`, `major_name`, `univ_name`, `Submit_date`, `result_notes`, `Result_status`, `request_status`, `payment_status`, `result`) VALUES
 (1, 1, 2, 'master', 'نمذجة وتحسين النظم الصناعية', 'إلينوي أوربانا شامبين - الولايات المتحدة', '2026-04-02', 'تم رفع خطاب القبول الرسمي أدناه يرجى مراجعة الملف المرفق والاطلاع على الشروط والأحكام الأكاديمية والمالية قبل اتخاذ أي إجراء لاحق.', '', 'مقبول', 'مدفوع', 'uploads/admission_results/1_result.pdf'),
 (3, 3, 3, 'bachelor', 'هندسة الطيران', 'جامعة إمبري ريدل للطيران', '2026-04-06', 'مبارك', '', 'مقبول', 'مدفوع', 'uploads/admission_results/3_result.pdf'),
-(5, 8, 2, 'phd', 'دكتوراه في العلوم السريرية', 'جامعة كينجز كوليدج لندن', '2026-05-02', '', 'قيد المعالجة', 'في الانتظار', 'غير مدفوع', NULL),
-(6, 8, 2, 'phd', 'دكتوراه في العلوم السريرية', 'جامعة كينجز كوليدج لندن', '2026-05-02', 'تم إصدار خطاب القبول المبدئي للطالبة بعد مراجعة جميع مستنداتها واستيفائها لشروط البرنامج. القبول صادر من جامعة معتمدة ضمن التخصص الطبي المطلوب، ويمكن للطالبة استكمال الإجراءات النهائية والتواصل مع الجهة التعليمية لإتمام التسجيل', 'أُصدرت', 'مقبول', 'مدفوع', 'uploads/admission_results/6_result.pdf');
+(7, 8, 2, 'phd', 'دكتوراه في العلوم السريرية', 'جامعة كينجز كوليدج لندن', '2026-05-03', '', 'لم تُصدر', 'مرفوض', 'غير مدفوع', NULL),
+(8, 8, 5, 'phd', 'دكتوراه في العلوم السريرية', 'جامعة كينجز كوليدج لندن', '2026-05-03', 'تم إصدار خطاب القبول المبدئي للطالبة بعد مراجعة جميع مستنداتها واستيفائها لشروط البرنامج. القبول صادر من جامعة معتمدة ضمن التخصص الطبي المطلوب، ويمكن للطالبة استكمال الإجراءات النهائية والتواصل مع الجهة التعليمية لإتمام التسجيل', 'أُصدرت', 'مقبول', 'مدفوع', 'uploads/admission_results/8_result.pdf');
 
 -- --------------------------------------------------------
 
@@ -128,20 +128,20 @@ INSERT INTO `admission_request_documents` (`doc_id`, `request_id`, `doc_type`, `
 (18, 3, 'Recommendation Letters', 'SOP_Tasneem.pdf', 'uploads/admission_requests/3_recommendation_file.pdf'),
 (19, 3, 'High School Certificate', 'HS_Certificate_Tasneem.pdf.pdf', 'uploads/admission_requests/3_highschool_file.pdf'),
 (20, 3, 'Letter of Intent', 'SOP_Tasneem.pdf', 'uploads/admission_requests/3_intent_file.pdf'),
-(27, 5, 'CV', 'reemCV.pdf', 'uploads/admission_requests/5_cv_file.pdf'),
-(28, 5, 'Passport', 'ReemAlshammari_Passport..pdf', 'uploads/admission_requests/5_passport_file.pdf'),
-(29, 5, 'Language Certificate', 'Reem_IELTS.pdf', 'uploads/admission_requests/5_language_file.pdf'),
-(30, 5, 'Recommendation Letters', 'Reem_Recond.pdf', 'uploads/admission_requests/5_recommendation_file.pdf'),
-(31, 5, 'Academic Certificates', 'Reem_Academic Transcript.pdf', 'uploads/admission_requests/5_academic_file.pdf'),
-(32, 5, 'Research Proposal', 'Research Proposal.pdf', 'uploads/admission_requests/5_research_file.pdf'),
-(33, 5, 'Statement of Purpose', 'PersonalStatement.pdf', 'uploads/admission_requests/5_sop_file.pdf'),
-(34, 6, 'CV', 'reemCV.pdf', 'uploads/admission_requests/6_cv_file.pdf'),
-(35, 6, 'Passport', 'ReemAlshammari_Passport..pdf', 'uploads/admission_requests/6_passport_file.pdf'),
-(36, 6, 'Language Certificate', 'Reem_IELTS.pdf', 'uploads/admission_requests/6_language_file.pdf'),
-(37, 6, 'Recommendation Letters', 'Reem_Recond.pdf', 'uploads/admission_requests/6_recommendation_file.pdf'),
-(38, 6, 'Academic Certificates', 'Reem_Academic Transcript.pdf', 'uploads/admission_requests/6_academic_file.pdf'),
-(39, 6, 'Research Proposal', 'Research Proposal.pdf', 'uploads/admission_requests/6_research_file.pdf'),
-(40, 6, 'Statement of Purpose', 'PersonalStatement.pdf', 'uploads/admission_requests/6_sop_file.pdf');
+(41, 7, 'CV', 'reemCV.pdf', 'uploads/admission_requests/7_cv_file.pdf'),
+(42, 7, 'Passport', 'ReemAlshammari_Passport..pdf', 'uploads/admission_requests/7_passport_file.pdf'),
+(43, 7, 'Language Certificate', 'Reem_IELTS.pdf', 'uploads/admission_requests/7_language_file.pdf'),
+(44, 7, 'Recommendation Letters', 'Reem_Recond.pdf', 'uploads/admission_requests/7_recommendation_file.pdf'),
+(45, 7, 'Academic Certificates', 'Reem_Academic Transcript.pdf', 'uploads/admission_requests/7_academic_file.pdf'),
+(46, 7, 'Research Proposal', 'Research Proposal.pdf', 'uploads/admission_requests/7_research_file.pdf'),
+(47, 7, 'Statement of Purpose', 'PersonalStatement.pdf', 'uploads/admission_requests/7_sop_file.pdf'),
+(48, 8, 'CV', 'reemCV.pdf', 'uploads/admission_requests/8_cv_file.pdf'),
+(49, 8, 'Passport', 'ReemAlshammari_Passport..pdf', 'uploads/admission_requests/8_passport_file.pdf'),
+(50, 8, 'Language Certificate', 'Reem_IELTS.pdf', 'uploads/admission_requests/8_language_file.pdf'),
+(51, 8, 'Recommendation Letters', 'Reem_Recond.pdf', 'uploads/admission_requests/8_recommendation_file.pdf'),
+(52, 8, 'Academic Certificates', 'Reem_Academic Transcript.pdf', 'uploads/admission_requests/8_academic_file.pdf'),
+(53, 8, 'Research Proposal', 'Research Proposal.pdf', 'uploads/admission_requests/8_research_file.pdf'),
+(54, 8, 'Statement of Purpose', 'PersonalStatement.pdf', 'uploads/admission_requests/8_sop_file.pdf');
 
 -- --------------------------------------------------------
 
@@ -278,7 +278,7 @@ CREATE TABLE `consulting_office` (
 INSERT INTO `consulting_office` (`office_id`, `ccr_number`, `email`, `office_name`, `office_description`, `Bachelor_fee`, `Masters_fee`, `Phd_fee`, `password`, `phone`, `approval_status`, `account_status`) VALUES
 (2, ' 101989710', 'info@asasstudyabroad.com', 'أساس للدراسة بالخارج', 'مكتب رائد في مجال الاستشارات التعليمية والقبول الجامعي، نخدم الطلاب في أكثر من 15 دولة حول العالم، مستشارينا معتمدين من التعليم البريطاني، والتعليم الكندي والتعليم الامريكي ومنظمة ICEF ومؤهلين لتقديم النصيحة والاستشارة المناسبة لكل طالب ونسعى لتقديم النصيحة الأمينة حسب متطلبات الجامعات  ومؤهلات الطلب لضمان انسب خيارات الدراسة لكل طالب.\r\nوكلاء افضل الجامعات والمعاهد في أمريكا، بريطانيا، استراليا، نيوزيلندا، أيرلندا، كندا، ماليزيا، اسبانيا، ايطاليا، فرنسا، الهند، مالطا، جنوب افريقيا، تركيا، وغيرها من الدول، تقديم سهل وسريع على المعاهد والجامعات لضمان توفير القبول المناسب بأسرع وقت ممكن.', 300, 200, 600, '$2y$10$Nb3JPrsRVArQ8nZ1saNTYux42WPRTBnIJPg5kMEEDzR706mx98pVu', '0541722808', 'معتمد', 'نشط'),
 (3, '1029836153', 'gecs.edu.@outlook.com', 'مكتب الخليج', 'مكتب متخصص في الاستشارات الأكاديمية ومساعدة الطلاب في إجراءات القبول الجامعي نقدّم خدمات تقييم المؤهلات الأكاديمية، ترشيح الجامعات والتخصصات المناسبة، وإرسال طلبات القبول إلى الجامعات\r\nكما نتولى متابعة حالة الطلب حتى صدور قرار القبول، مع تقديم إرشادات حول اختيار الدولة والبرنامج الدراسي الأنسب للطالب', 150, 200, 300, '$2y$10$ha7iXPVAeiRjM0bpPDo5GufT.cvp2awdRfogP0z/bIojRWUy0d4nu', '0549778902', 'معتمد', 'نشط'),
-(4, '4030257841', ' info@almasarconsult.com', 'المسار الدولي', 'مكتبنا يقدم خدمات الإرشاد الأكاديمي للطلاب الراغبين في الدراسة في الجامعات الآسيوية والعربية ويتضمن في مساعدة الطالب لاختيار الدولة والبرنامج الدراسي المناسب، توضيح متطلبات القبول في الجامعات، وترتيب خطوات التقديم بشكل منظم، إضافة إلى متابعة الطلبات مع الجهات التعليمية حتى استكمال إجراءات القبول.', 200, 300, 500, '$2y$10$cLcV5hj8mNTQ9QFyMZ1ZU.g4kLS02k5VXBwn9LV4vKcbhrJxQ1KS2', '0551234567', 'معتمد', 'نشط'),
+(4, '4030257841', ' info@almasarconsult.com', 'المسار الدولي', 'مكتبنا يقدم خدمات الإرشاد الأكاديمي للطلاب الراغبين في الدراسة في الجامعات الآسيوية والعربية ويتضمن في مساعدة المستفيد لاختيار الدولة والبرنامج الدراسي المناسب، توضيح متطلبات القبول في الجامعات، وترتيب خطوات التقديم بشكل منظم، إضافة إلى متابعة الطلبات مع الجهات التعليمية حتى استكمال إجراءات القبول.', 200, 300, 500, '$2y$10$cLcV5hj8mNTQ9QFyMZ1ZU.g4kLS02k5VXBwn9LV4vKcbhrJxQ1KS2', '0551234567', 'معتمد', 'نشط'),
 (5, '1010967823', 'info@madar-edu.sa', 'مدار التعليمية', 'مكتب استشاري متخصص في خدمات القبول الأكاديمي في الجامعات والمعاهد الدولية، يركّز على توجيه الطلاب لاختيار التخصصات المناسبة وفق ميولهم الأكاديمية واحتياجات سوق العمل، كما يقدم مكتبنا استشارات دقيقة حول خيارات الدراسة في الدول الأوروبية ويتابع حالة الطلب مع الجهات التعليمية ويقوم بالتنسيق المستمر لضمان سير الإجراءات حتى صدور القبول', 450, 300, 400, '$2y$10$b8WQCi9ZGiIYzyLuEimum.8exMMZKdefidMo45BOME6o8bj.98YAG', '0556182394', 'معتمد', 'نشط');
 
 -- --------------------------------------------------------
@@ -433,8 +433,7 @@ CREATE TABLE `rating` (
 
 INSERT INTO `rating` (`rating_id`, `request_id`, `rating_date`, `comment_text`) VALUES
 (4, 1, '2026-04-04 20:40:56', 'تم التعامل مع طلبي باحترافية من البداية وحتى إصدار القبول، أقدّر الجهود المبذولة واشكر المكتب الشكر الجزيل'),
-(6, 3, '2026-04-06 14:18:45', 'شكرا على خدمتكم'),
-(7, 6, '2026-05-02 19:32:35', 'أشكر مكتب مدار التعليمية على دعمهم خلال رحلة التقديم، حيث كان التعامل احترافيًا وسريعًا، وتم توضيح جميع خطوات القبول بشكل دقيق. ساعدني الفريق في اختيار الجامعة المناسبة ومتابعة الطلب حتى صدور القبول دون تأخير.\r\n التجربة كانت مريحة وواضحة، وأوصي بالتعامل معه👍');
+(8, 8, '2026-05-04 00:16:39', 'أشكر مكتب مدار التعليمية على دعمهم خلال رحلة التقديم، حيث كان التعامل احترافيًا وسريعًا، وتم توضيح جميع خطوات القبول بشكل دقيق. ساعدني الفريق في اختيار الجامعة المناسبة ومتابعة الطلب حتى صدور القبول دون تأخير.\r\n التجربة كانت مريحة وواضحة، وأوصي بالتعامل معه👍');
 
 -- --------------------------------------------------------
 
@@ -675,13 +674,13 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `admission_request`
 --
 ALTER TABLE `admission_request`
-  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `admission_request_documents`
 --
 ALTER TABLE `admission_request_documents`
-  MODIFY `doc_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `doc_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT for table `beneficiary`
@@ -735,7 +734,7 @@ ALTER TABLE `payments`
 -- AUTO_INCREMENT for table `rating`
 --
 ALTER TABLE `rating`
-  MODIFY `rating_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `rating_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `scholarship_opps`
