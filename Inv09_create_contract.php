@@ -38,9 +38,9 @@ if (!$request_data) {
 }
 
 /* فحص هل العقد موجود مسبقاً لهذا المستثمر ولهذا الطلب */
-$contract_query = "SELECT * FROM e_contract WHERE request_id = ? AND inv_id = ?";
+$contract_query = "SELECT * FROM e_contract WHERE request_id = ?";
 $c_stmt = mysqli_prepare($con, $contract_query);
-mysqli_stmt_bind_param($c_stmt, "ii", $request_id, $inv_id);
+mysqli_stmt_bind_param($c_stmt, "i", $request_id);
 mysqli_stmt_execute($c_stmt);
 $contract_data = mysqli_fetch_assoc(mysqli_stmt_get_result($c_stmt));
 $has_contract = ($contract_data) ? true : false;
@@ -67,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !$has_contract) {
         $funding_duration = (int)$funding_duration;
         $payments_count = (int)$payments_count;
 
-        $insert_sql = "INSERT INTO e_contract (request_id, inv_id, payments_count, funding_duration, ctr_status, terms, amount, approval_status) 
+        $insert_sql = "INSERT INTO e_contract (request_id, payments_count, funding_duration, ctr_status, terms, amount, approval_status) 
                        VALUES (?, ?, ?, ?, ?, ?, ?, 'في انتظار الموافقة')";
         $insert_stmt = mysqli_prepare($con, $insert_sql);
         mysqli_stmt_bind_param($insert_stmt, "iiiissd", $request_id, $inv_id, $payments_count, $funding_duration, $ctr_status, $terms, $amount);
