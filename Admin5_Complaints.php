@@ -18,38 +18,28 @@ mysqli_set_charset($con, "utf8mb4");
 
 /* حفظ الرد وتحديث حالة التذكرة */
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ticket_id'])) {
-
     $ticket_id = (int)$_POST['ticket_id'];
     $reply = trim($_POST['admin_reply']);
-
     if ($ticket_id > 0 && $reply != "") {
 
         $stmt = mysqli_prepare($con, "
             UPDATE complaints_inquiries
             SET admin_reply = ?, status = 'تم الرد'
-            WHERE ticket_id = ?
-        ");
+            WHERE ticket_id = ?  ");
 
         if ($stmt) {
             mysqli_stmt_bind_param($stmt, "si", $reply, $ticket_id);
             mysqli_stmt_execute($stmt);
-            mysqli_stmt_close($stmt);
-        }
-    }
+            mysqli_stmt_close($stmt);    }  }
 
-    header("Location: Admin5_Complaints.php?tab=replied");
-    exit();
-}
+    header("Location: Admin5_Complaints.php?tab=replied");  exit();}
 
 /* تحديد التبويب الحالي */
 $tab = isset($_GET['tab']) ? $_GET['tab'] : 'pending';
-
 if ($tab == 'replied') {
-    $status_filter = "تم الرد";
-} else {
+    $status_filter = "تم الرد"; } else {
     $status_filter = "بانتظار الرد";
-    $tab = 'pending';
-}
+    $tab = 'pending';}
 
 /* جلب التذاكر */
 $sql = "
@@ -63,14 +53,12 @@ SELECT
     c.bnf_id,
     c.inv_id,
     c.office_id,
-
     CASE
         WHEN c.bnf_id IS NOT NULL THEN CONCAT(b.f_name, ' ', b.l_name)
         WHEN c.inv_id IS NOT NULL THEN i.inv_name
         WHEN c.office_id IS NOT NULL THEN o.office_name
         ELSE 'غير معروف'
     END AS sender_name
-
 FROM complaints_inquiries c
 LEFT JOIN beneficiary b ON c.bnf_id = b.bnf_id
 LEFT JOIN investor i ON c.inv_id = i.inv_id
@@ -78,7 +66,6 @@ LEFT JOIN consulting_office o ON c.office_id = o.office_id
 WHERE c.status = '$status_filter'
 ORDER BY c.ticket_id DESC
 ";
-
 $result = mysqli_query($con, $sql);
 ?>
 <!DOCTYPE html>

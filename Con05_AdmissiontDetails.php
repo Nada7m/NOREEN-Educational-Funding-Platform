@@ -9,17 +9,14 @@ if (!isset($_SESSION['office_id'])) {
 $con = mysqli_connect("localhost", "root", "", "noreen");
 
 if (!$con) {
-    die("فشل الاتصال بقاعدة البيانات");
-}
+    die("فشل الاتصال بقاعدة البيانات");}
 
 mysqli_set_charset($con, "utf8mb4");
-
 $office_id = (int) $_SESSION['office_id'];
 $request_id = isset($_GET['request_id']) ? (int) $_GET['request_id'] : 0;
 
 if ($request_id <= 0) {
-    die("رقم الطلب غير صحيح");
-}
+    die("رقم الطلب غير صحيح");}
 
 /* عند قبول الطلب */
 if (isset($_POST['accept_request'])) {
@@ -29,12 +26,9 @@ if (isset($_POST['accept_request'])) {
                   WHERE request_id = $request_id AND office_id = $office_id";
 
     if (!mysqli_query($con, $sqlUpdate)) {
-        die("خطأ في تحديث حالة الطلب");
-    }
+        die("خطأ في تحديث حالة الطلب");}
 
-    header("Location: Con05_AdmissiontDetails.php?request_id=" . $request_id);
-    exit();
-}
+    header("Location: Con05_AdmissiontDetails.php?request_id=" . $request_id);exit();}
 
 /* عند رفض الطلب */
 if (isset($_POST['reject_request'])) {
@@ -42,14 +36,10 @@ if (isset($_POST['reject_request'])) {
                   SET request_status = 'مرفوض',
                       Result_status = 'لم تُصدر'
                   WHERE request_id = $request_id AND office_id = $office_id";
-
     if (!mysqli_query($con, $sqlUpdate)) {
-        die("خطأ في تحديث حالة الطلب");
-    }
-
+        die("خطأ في تحديث حالة الطلب"); }
     header("Location: Con05_AdmissiontDetails.php?request_id=" . $request_id);
-    exit();
-}
+    exit();}
 
 $sql = "SELECT 
             ar.request_id,

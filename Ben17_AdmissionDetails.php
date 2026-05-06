@@ -37,9 +37,7 @@ $sqlRequest = "SELECT
 
 $resultRequest = $conn->query($sqlRequest);
 
-if (!$resultRequest || $resultRequest->num_rows == 0) {
-    die("الطلب غير موجود");
-}
+if (!$resultRequest || $resultRequest->num_rows == 0) {  die("الطلب غير موجود");}
 
 $request = $resultRequest->fetch_assoc();
 $office_id = (int) $request['office_id'];
@@ -48,7 +46,6 @@ $status = trim($request['Result_status']);
 /* التحقق هل يوجد تقييم سابق لهذا الطلب */
 $hasRating = false;
 $lastComment = "";
-
 $sqlLastRating = "SELECT rating_id, comment_text
                   FROM rating
                   WHERE request_id = $request_id
@@ -56,12 +53,10 @@ $sqlLastRating = "SELECT rating_id, comment_text
                   LIMIT 1";
 
 $resultLastRating = $conn->query($sqlLastRating);
-
 if ($resultLastRating && $resultLastRating->num_rows > 0) {
     $lastRating = $resultLastRating->fetch_assoc();
     $lastComment = $lastRating['comment_text'];
-    $hasRating = true;
-}
+    $hasRating = true;}
 
 /* حفظ تقييم المكتب */
 if (isset($_POST['send_rating'])) {
@@ -69,14 +64,11 @@ if (isset($_POST['send_rating'])) {
 
     if ($status == "" || $status == "قيد المعالجة") {
         $msg = "لا يمكن إرسال التقييم قبل صدور النتيجة.";
-        $type = "error";
-    } elseif ($hasRating) {
+        $type = "error"; } elseif ($hasRating) {
         $msg = "تم إرسال تقييمك مسبقًا لهذا الطلب.";
-        $type = "error";
-    } elseif ($comment_text == "") {
+        $type = "error"; } elseif ($comment_text == "") {
         $msg = "يرجى كتابة التقييم أولاً.";
-        $type = "error";
-    } else {
+        $type = "error"; } else {
         $safeComment = $conn->real_escape_string($comment_text);
 
      $sqlInsertRating = "INSERT INTO rating (request_id, comment_text)

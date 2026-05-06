@@ -189,7 +189,6 @@ if ($request_status == "" || $request_status == "في الانتظار") {
     $requestStatusClass = "status-finished";
 }
 
-/* ✅ التعديل الوحيد هنا */
 if ($request_status == "مرفوض") {
     $resultStatusText = "لم تُصدر";
     $resultStatusClass = "status-plain";

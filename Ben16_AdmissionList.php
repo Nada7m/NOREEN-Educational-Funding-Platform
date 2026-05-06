@@ -380,8 +380,7 @@ $result = $conn->query($sql);
                                     $requestStatusClass = "status-rejected";
                                 } else {
                                     $requestStatusText = "مقبول";
-                                    $requestStatusClass = "status-done";
-                                }
+                                    $requestStatusClass = "status-done"; }
 
                                 $result_status = trim($row['Result_status']);
 
@@ -396,8 +395,7 @@ $result = $conn->query($sql);
                                     $resultStatusClass = "status-done";
                                 } else {
                                     $resultStatusText = $result_status;
-                                    $resultStatusClass = "status-done";
-                                }
+                                    $resultStatusClass = "status-done";                }
 
                                 $payment_status = trim($row['payment_status']);
                                 $program_type = trim($row['program_type']);
@@ -407,23 +405,17 @@ $result = $conn->query($sql);
                                 } elseif ($program_type == "master") {
                                     $feeAmount = $row['Masters_fee'];
                                 } else {
-                                    $feeAmount = $row['Phd_fee'];
-                                }
+                                    $feeAmount = $row['Phd_fee'];                  }
                                 ?>
-
                                 <tr>
                                     <td class="req-code">UA<?php echo $row['request_id']; ?></td>
-
                                     <td><?php echo htmlspecialchars($row['office_name']); ?></td>
-
                                     <td><?php echo htmlspecialchars($row['Submit_date']); ?></td>
-
                                     <td>
                                         <div class="status-box <?php echo $requestStatusClass; ?>">
                                             <?php echo $requestStatusText; ?>
                                         </div>
                                     </td>
-
                                     <td>
                                         <div class="status-box <?php echo $resultStatusClass; ?>">
                                             <?php echo $resultStatusText; ?>

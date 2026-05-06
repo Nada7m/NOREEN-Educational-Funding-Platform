@@ -14,8 +14,7 @@ if ($conn->connect_error) {
 $conn->set_charset("utf8mb4");
 /* رقم المستثمر الحالي */
 $inv_id = $_SESSION['inv_id'];
-/* متغيرات رسائل التنبيه */
-$msg = "";
+-$msg = "";
 $type = "";
 /* عند الضغط على زر حفظ التعديلات */
 if (isset($_POST["save"])) {
@@ -80,14 +79,11 @@ if (isset($_POST["save"])) {
             /* التحقق من صحة تغيير كلمة المرور */
             if ($currentPass == "" || $newPass == "" || $confirmPass == "") {
                 $msg = "لتغيير كلمة المرور يجب تعبئة جميع حقول كلمة المرور.";
-                $type = "error";
-            } elseif (!password_verify($currentPass, $storedPass)) {
+                $type = "error";   } elseif (!password_verify($currentPass, $storedPass)) {
                 $msg = "كلمة المرور الحالية غير صحيحة.";
-                $type = "error";
-            } elseif ($newPass != $confirmPass) {
+                $type = "error";   } elseif ($newPass != $confirmPass) {
                 $msg = "كلمتا المرور الجديدتان غير متطابقتين.";
-                $type = "error";
-            } else {
+               $type = "error";  } else {
                 /* تشفير كلمة المرور الجديدة ثم حفظها */
                 $hashedPass = password_hash($newPass, PASSWORD_DEFAULT);
                 $updatePass = $conn->prepare("UPDATE investor SET password = ? WHERE inv_id = ?");
@@ -100,9 +96,7 @@ if (isset($_POST["save"])) {
         } else {
             /* إذا لم يغيّر كلمة المرور */
             $msg = "تم تحديث البيانات بنجاح.";
-            $type = "success";
-        }
-    }
+                  $type = "success";   }   }
     /* إغلاق استعلامات التحقق */
     $checkEmail->close();
     $checkCcr->close();

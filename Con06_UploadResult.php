@@ -13,13 +13,10 @@ if (!$con) {
 }
 
 mysqli_set_charset($con, "utf8mb4");
-
 $office_id = (int) $_SESSION['office_id'];
 $request_id = isset($_GET['request_id']) ? (int) $_GET['request_id'] : 0;
-
 if ($request_id <= 0) {
-    die("رقم الطلب غير صحيح");
-}
+    die("رقم الطلب غير صحيح");}
 
 $sql = "SELECT 
             ar.request_id,
@@ -37,22 +34,14 @@ $sql = "SELECT
 $result = mysqli_query($con, $sql);
 
 if (!$result || mysqli_num_rows($result) == 0) {
-    die("الطلب غير موجود");
-}
-
+    die("الطلب غير موجود");}
 $request = mysqli_fetch_assoc($result);
-
 if ($request['request_status'] != 'مقبول') {
-    die("لا يمكن رفع النتيجة قبل قبول الطلب");
-}
-
+    die("لا يمكن رفع النتيجة قبل قبول الطلب");}
 $error = "";
-
 if (isset($_POST['submit_result'])) {
-
     $result_notes = trim($_POST['result_notes']);
     $safe_notes = mysqli_real_escape_string($con, $result_notes);
-
     if (!isset($_FILES['result_file']) || empty($_FILES['result_file']['name'])) {
         $error = "يرجى رفع ملف النتيجة.";
     } else {
@@ -62,23 +51,18 @@ if (isset($_POST['submit_result'])) {
         $file_size = $_FILES['result_file']['size'];
 
         if (!str_ends_with(strtolower($old_name), ".pdf")) {
-            $error = "يُسمح فقط برفع ملفات PDF.";
-        } elseif ($file_size > 5 * 1024 * 1024) {
-            $error = "حجم الملف كبير جدًا.";
-        } else {
+            $error = "يُسمح فقط برفع ملفات PDF.";    } elseif ($file_size > 5 * 1024 * 1024) {
+            $error = "حجم الملف كبير جدًا.";  } else {
 
             $upload_dir = "uploads/admission_results/";
 
-            if (!is_dir($upload_dir)) {
-                mkdir($upload_dir, 0777, true);
-            }
+            if (!is_dir($upload_dir)) { mkdir($upload_dir, 0777, true);  }
 
             $new_name = $request_id . "_result.pdf";
             $file_path = $upload_dir . $new_name;
             $safe_path = mysqli_real_escape_string($con, $file_path);
 
             if (move_uploaded_file($tmp_name, $file_path)) {
-
              $sqlUpdate = "UPDATE admission_request
               SET result = '$safe_path',
                   result_notes = '$safe_notes',
@@ -89,10 +73,8 @@ if (isset($_POST['submit_result'])) {
 
                 if (mysqli_query($con, $sqlUpdate)) {
                     header("Location: Con05_AdmissiontDetails.php?request_id=" . $request_id);
-                    exit();
-                } else {
-                    $error = "حدث خطأ أثناء حفظ النتيجة.";
-                }
+                    exit();    } else {
+                    $error = "حدث خطأ أثناء حفظ النتيجة.";  }
 
             } else {
                 $error = "حدث خطأ أثناء رفع الملف.";

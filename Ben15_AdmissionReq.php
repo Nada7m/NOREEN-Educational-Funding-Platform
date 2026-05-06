@@ -24,59 +24,43 @@ $univ_name = "";
 $major_name = "";
 $msg = "";
 $type = "";
-
 /* عناوين البرامج */
 $programTitles = [
     "bachelor" => "نموذج تقديم طلب إصدار القبول الجامعي – بكالوريوس",
     "masters" => "نموذج تقديم طلب إصدار القبول الجامعي – ماجستير",
-    "phd" => "نموذج تقديم طلب إصدار القبول الجامعي – دكتوراه"
-];
-
+    "phd" => "نموذج تقديم طلب إصدار القبول الجامعي – دكتوراه"];
 /* المستندات المشتركة المطلوبة */
 $commonDocs = [
     "cv_file" => ["type" => "CV", "label" => "السيرة الذاتية"],
     "passport_file" => ["type" => "Passport", "label" => "جواز السفر"],
     "language_file" => ["type" => "Language Certificate", "label" => "شهادة اللغة"],
-    "recommendation_file" => ["type" => "Recommendation Letters", "label" => "خطابات التوصية"]
-];
-
+    "recommendation_file" => ["type" => "Recommendation Letters", "label" => "خطابات التوصية"]];
 /* المستند الاختياري */
 $optionalDocs = [
-    "other_file" => ["type" => "Other Certificates", "label" => "شهادات أخرى"]
-];
-
+    "other_file" => ["type" => "Other Certificates", "label" => "شهادات أخرى"]];
 /* المستندات الخاصة بكل برنامج */
 $programDocs = [
     "bachelor" => [
         "highschool_file" => ["type" => "High School Certificate", "label" => "شهادة الثانوية العامة"],
-        "intent_file" => ["type" => "Letter of Intent", "label" => "خطاب النوايا"]
-    ],
+        "intent_file" => ["type" => "Letter of Intent", "label" => "خطاب النوايا"]],
     "masters" => [
         "degree_file" => ["type" => "University Degree Certificate", "label" => "الشهادة الجامعية"],
         "transcript_file" => ["type" => "Academic Transcript", "label" => "السجل الأكاديمي"],
-        "sop_file" => ["type" => "Statement of Purpose", "label" => "بيان الغرض الدراسي"]
-    ],
+        "sop_file" => ["type" => "Statement of Purpose", "label" => "بيان الغرض الدراسي"]],
     "phd" => [
         "academic_file" => ["type" => "Academic Certificates", "label" => "الشهادات الأكاديمية"],
         "research_file" => ["type" => "Research Proposal", "label" => "المقترح البحثي"],
-        "sop_file" => ["type" => "Statement of Purpose", "label" => "بيان الغرض الدراسي"]
-    ]
-];
+        "sop_file" => ["type" => "Statement of Purpose", "label" => "بيان الغرض الدراسي"]]];
 
 /* دالة رفع الملفات */
 function uploadAdmissionFile($inputName, $requestId, $docType, $uploadDir, $conn)
 {
-    if (!isset($_FILES[$inputName]) || empty($_FILES[$inputName]['name'])) {
-        return false;
-    }
+    if (!isset($_FILES[$inputName]) || empty($_FILES[$inputName]['name'])) {  return false;}
 
     $tmpName = $_FILES[$inputName]['tmp_name'];
     $oldName = $_FILES[$inputName]['name'];
 
-    if (!str_ends_with(strtolower($oldName), ".pdf")) {
-        return false;
-    }
-
+    if (!str_ends_with(strtolower($oldName), ".pdf")) {  return false;    }
     $newName = $requestId . "_" . $inputName . ".pdf";
     $filePath = $uploadDir . $newName;
 
@@ -84,16 +68,9 @@ function uploadAdmissionFile($inputName, $requestId, $docType, $uploadDir, $conn
         $safeOldName = $conn->real_escape_string($oldName);
         $safeFilePath = $conn->real_escape_string($filePath);
         $safeDocType = $conn->real_escape_string($docType);
-
         $sqlDoc = "INSERT INTO admission_request_documents (request_id, doc_type, file_name, file)
                    VALUES ('$requestId', '$safeDocType', '$safeOldName', '$safeFilePath')";
-        $conn->query($sqlDoc);
-
-        return true;
-    }
-
-    return false;
-}
+        $conn->query($sqlDoc); return true;   }return false;}
 
 /* معالجة إرسال النموذج */
 if (isset($_POST['submit_request'])) {
@@ -104,73 +81,52 @@ if (isset($_POST['submit_request'])) {
 
     if ($program == "") {
         $msg = "يرجى اختيار نوع البرنامج.";
-        $type = "error";
-    } elseif (!isset($programDocs[$program])) {
+        $type = "error"; } elseif (!isset($programDocs[$program])) {
         $msg = "البرنامج المختار غير صحيح.";
-        $type = "error";
-    } elseif ($univ_name == "" || $major_name == "") {
+        $type = "error"; } elseif ($univ_name == "" || $major_name == "") {
         $msg = "جميع الحقول مطلوبة.";
-        $type = "error";
-    } else {
-
+        $type = "error"; } else {
         /* الملفات المطلوبة فقط */
         $requiredDocs = array_merge($commonDocs, $programDocs[$program]);
-
         $missingFile = false;
         $wrongType = false;
-
         foreach ($requiredDocs as $inputName => $docData) {
             if (!isset($_FILES[$inputName]) || empty($_FILES[$inputName]['name'])) {
                 $missingFile = true;
-                break;
-            }
+                break;  }
 
             $fileName = strtolower($_FILES[$inputName]['name']);
             if (!str_ends_with($fileName, ".pdf")) {
                 $wrongType = true;
-                break;
-            }
-        }
+                break;  }   }
 
         /* التحقق من الملف الاختياري إذا تم رفعه */
         if (isset($_FILES["other_file"]) && !empty($_FILES["other_file"]["name"])) {
             $otherFileName = strtolower($_FILES["other_file"]["name"]);
             if (!str_ends_with($otherFileName, ".pdf")) {
-                $wrongType = true;
-            }
-        }
-
+                $wrongType = true; }  }
         if ($missingFile) {
             $msg = "يجب تعبئة جميع الحقول ورفع جميع الملفات المطلوبة.";
-            $type = "error";
-        } elseif ($wrongType) {
+            $type = "error"; } elseif ($wrongType) {
             $msg = "جميع الملفات يجب أن تكون PDF فقط.";
-            $type = "error";
-        } else {
-
+            $type = "error"; } else {
             $safeProgram = $conn->real_escape_string($program);
             $safeUniv = $conn->real_escape_string($univ_name);
             $safeMajor = $conn->real_escape_string($major_name);
             $today = date("Y-m-d");
-
             $sqlReq = "INSERT INTO admission_request
                        (bnf_id, office_id, program_type, major_name, univ_name, Submit_date, result_notes, Result_status, request_status)
                        VALUES
                        ('$bnf_id', '$office_id', '$safeProgram', '$safeMajor', '$safeUniv', '$today', '', 'قيد المعالجة', 'في الانتظار')";
-
             if ($conn->query($sqlReq)) {
-
                 $requestId = $conn->insert_id;
                 $uploadDir = "uploads/admission_requests/";
-
                 if (!is_dir($uploadDir)) {
-                    mkdir($uploadDir, 0777, true);
-                }
+                    mkdir($uploadDir, 0777, true);  }
 
                 /* رفع الملفات المطلوبة */
                 foreach ($requiredDocs as $inputName => $docData) {
-                    uploadAdmissionFile($inputName, $requestId, $docData["type"], $uploadDir, $conn);
-                }
+                    uploadAdmissionFile($inputName, $requestId, $docData["type"], $uploadDir, $conn);  }
 
                 /* رفع شهادات أخرى إذا وُجدت */
                 uploadAdmissionFile("other_file", $requestId, "Other Certificates", $uploadDir, $conn);
@@ -388,28 +344,22 @@ const programTitle = document.getElementById("programTitle");
 const docsSection = document.getElementById("docsSection");
 const submitBtn = document.getElementById("submitBtn");
 const realSubmitBtn = document.getElementById("realSubmitBtn");
-
 const programsData = <?php echo json_encode($jsPrograms, JSON_UNESCAPED_UNICODE); ?>;
-
 function buildDocs(program){
   docsSection.innerHTML = "";
 
   if(!program || !programsData[program]){
     programArea.classList.add("hidden");
-    return;
-  }
+    return; }
 
   programArea.classList.remove("hidden");
   programTitle.textContent = programsData[program].title;
-
   programsData[program].docs.forEach(function(doc){
     const docItem = document.createElement("div");
     docItem.className = "doc-item";
-
     let star = '<b class="star">*</b> ';
     if(doc.name === "other_file"){
-      star = "";
-    }
+      star = ""; }
 
     docItem.innerHTML =
       '<label class="title-label">' + star + doc.label + '</label>' +
@@ -417,60 +367,40 @@ function buildDocs(program){
       '<input type="file" name="' + doc.name + '" id="' + doc.name + '" accept=".pdf" style="display:none;" onchange="showFileName(this)">' +
       '<div class="file-name-display" onclick="openSelectedFile(this)"></div>';
 
-    docsSection.appendChild(docItem);
-  });
-}
+    docsSection.appendChild(docItem);  });}
 
 function showFileName(input){
   const container = input.closest(".doc-item");
   const fileBox = container.querySelector(".file-name-display");
   const uploadBox = container.querySelector(".upload-wrapper");
-
   if(input.files && input.files[0]){
     fileBox.innerHTML = input.files[0].name;
     fileBox.style.display = "flex";
-    uploadBox.style.display = "none";
-  }
-}
-
+    uploadBox.style.display = "none";}}
 function openSelectedFile(fileBox){
   const container = fileBox.closest(".doc-item");
   const input = container.querySelector('input[type="file"]');
   if(input){
-    input.click();
-  }
-}
-
+    input.click(); }}
 function validateVisibleSection(){
   const activeProgram = programSelect.value;
   const univField = document.getElementById("univ_name");
   const majorField = document.getElementById("major_name");
-
   if(!activeProgram){
     alert("يرجى اختيار نوع البرنامج.");
-    return false;
-  }
-
+    return false; }
   if(!univField || !majorField || univField.value.trim() === "" || majorField.value.trim() === ""){
     alert("يرجى تعبئة اسم الجامعة والتخصص الدراسي.");
-    return false;
-  }
-
+    return false; }
   const fileInputs = docsSection.querySelectorAll('input[type="file"]');
-
   for(let i = 0; i < fileInputs.length; i++){
     const inputName = fileInputs[i].name;
-
     if(inputName === "other_file"){
       if(fileInputs[i].files.length > 0){
         const optionalFileName = fileInputs[i].files[0].name.toLowerCase();
         if(!optionalFileName.endsWith(".pdf")){
           alert("جميع الملفات يجب أن تكون PDF فقط.");
-          return false;
-        }
-      }
-      continue;
-    }
+          return false;  }   }   continue; }
 
     if(fileInputs[i].files.length === 0){
       alert("يرجى رفع جميع الملفات المطلوبة.");

@@ -29,13 +29,10 @@ if (isset($_POST["save"])) {
     $phone       = trim($_POST["phone"]);
     $email       = trim($_POST["email"]);
     $description = trim($_POST["office_description"]);
-
     $bachelor_fee = trim($_POST["bachelor_fee"]);
     $masters_fee  = trim($_POST["masters_fee"]);
     $phd_fee      = trim($_POST["phd_fee"]);
-
     $countries_text = trim($_POST["countries"]);
-
     $currentPass = trim($_POST["currentPassword"]);
     $newPass     = trim($_POST["newPassword"]);
     $confirmPass = trim($_POST["confirmPassword"]);
@@ -129,14 +126,11 @@ if (isset($_POST["save"])) {
 
             if ($currentPass == "" || $newPass == "" || $confirmPass == "") {
                 $msg = "لتغيير كلمة المرور يجب تعبئة جميع حقول كلمة المرور.";
-                $type = "error";
-            } elseif (!password_verify($currentPass, $storedPass)) {
+                $type = "error"; } elseif (!password_verify($currentPass, $storedPass)) {
                 $msg = "كلمة المرور الحالية غير صحيحة.";
-                $type = "error";
-            } elseif ($newPass != $confirmPass) {
+                $type = "error"; } elseif ($newPass != $confirmPass) {
                 $msg = "كلمتا المرور الجديدتان غير متطابقتين.";
-                $type = "error";
-            } else {
+                $type = "error";     } else {
                 $hashedPass = password_hash($newPass, PASSWORD_DEFAULT);
 
                 $updatePass = $conn->prepare("UPDATE consulting_office SET password = ? WHERE office_id = ?");
@@ -146,13 +140,9 @@ if (isset($_POST["save"])) {
 
                 $msg = "تم تحديث البيانات وكلمة المرور بنجاح.";
                 $type = "success";
-            }
-
-        } else {
+            }  } else {
             $msg = "تم تحديث البيانات بنجاح.";
-            $type = "success";
-        }
-    }
+            $type = "success";     }   }
 
     $checkEmail->close();
     $checkCcr->close();

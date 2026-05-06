@@ -13,7 +13,7 @@ $bnf_id = $_SESSION['bnf_id'] ?? null;
 $step = $_GET['step'] ?? 'view';
 $contract_data = null;
 $user_name = "المستخدم";
-=
+
 if ($request_id && $bnf_id) {  $sql = "   SELECT r.request_id, r.major_name, r.univ_name,
                c.contract_id, c.amount, c.terms, c.funding_duration, c.payments_count, c.approval_status,
                b.f_name, b.l_name
@@ -40,8 +40,8 @@ if (isset($_POST['confirm_final']) && $contract_data) { $conn->begin_transaction
         $total_amt = $contract_data['amount'];
         $each_amt = $total_amt / $p_count;
         $check_existing = $conn->query("SELECT COUNT(*) as existing FROM payments WHERE contract_id = $c_id");
-        if ($check_existing->fetch_assoc()['existing'] == 0) {و $status_default = "بانتظار الدفع";
-
+if ($check_existing->fetch_assoc()['existing'] == 0) {
+    $status_default = "بانتظار الدفع";
             for ($i = 1; $i <= $p_count; $i++) {
                 $ins_p = $conn->prepare("INSERT INTO payments (contract_id, installment_number, payment_amount, payment_status) VALUES (?, ?, ?, ?)");
                 $ins_p->bind_param("iids", $c_id, $i, $each_amt, $status_default);
