@@ -40,7 +40,9 @@ if($_SERVER["REQUEST_METHOD"]=="POST" && isset($_POST["action_type"]) && isset($
             WHERE sr.request_id=? AND sr.scholarship_id=? AND so.inv_id=?
         ");
         mysqli_stmt_bind_param($update_stmt,"siii",$new_status,$request_id,$scholarship_id,$inv_id);
-        mysqli_stmt_execute($update_stmt)  } }
+   mysqli_stmt_execute($update_stmt);
+    }
+}
 
 /* بيانات المنحة */
 $stmt=mysqli_prepare($con,"

@@ -66,11 +66,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !$has_contract) {
         $funding_duration = (int)$funding_duration;
         $payments_count = (int)$payments_count;
 
-        $insert_sql = "INSERT INTO e_contract (request_id, payments_count, funding_duration, ctr_status, terms, amount, approval_status) 
-                       VALUES (?, ?, ?, ?, ?, ?, ?, 'في انتظار الموافقة')";
-        $insert_stmt = mysqli_prepare($con, $insert_sql);
-        mysqli_stmt_bind_param($insert_stmt, "iiiissd", $request_id, $inv_id, $payments_count, $funding_duration, $ctr_status, $terms, $amount);
+      $insert_sql = "INSERT INTO e_contract
+(request_id, payments_count, funding_duration, ctr_status, terms, amount, approval_status)
+VALUES (?, ?, ?, ?, ?, ?, 'في انتظار الموافقة')";
 
+$insert_stmt = mysqli_prepare($con, $insert_sql);
+
+mysqli_stmt_bind_param(
+    $insert_stmt,
+    "iiissd",
+    $request_id,
+    $payments_count,
+    $funding_duration,
+    $ctr_status,
+    $terms,
+    $amount
+);
         if (mysqli_stmt_execute($insert_stmt)) {
             header("Location: Inv09_create_contract.php?request_id=$request_id&success=1");
             exit();
