@@ -14,7 +14,7 @@ if ($conn->connect_error) {
 $conn->set_charset("utf8mb4");
 /* رقم المستثمر الحالي */
 $inv_id = $_SESSION['inv_id'];
--$msg = "";
+$msg = "";
 $type = "";
 /* عند الضغط على زر حفظ التعديلات */
 if (isset($_POST["save"])) {
