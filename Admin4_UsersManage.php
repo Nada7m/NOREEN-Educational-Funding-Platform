@@ -1,48 +1,102 @@
 <?php
 session_start();
 
-/* التحقق من دخول الأدمن */
+/* التحقق من دخول الأدمن قبل فتح الصفحة */
 if (!isset($_SESSION['admin_id'])) {
     header("Location: login.php");
     exit();
 }
 
 /* الاتصال بقاعدة البيانات */
-$con = mysqli_connect("localhost","root","","noreen");
+$con = mysqli_connect("localhost", "root", "", "noreen");
 
 if (!$con) {
     die("فشل الاتصال بقاعدة البيانات");
 }
 
-mysqli_set_charset($con,"utf8mb4");
+mysqli_set_charset($con, "utf8mb4");
 
-/* تحديث حالة المستخدم */
-if (isset($_POST['block']) || isset($_POST['activate'])) {
+/* حفظ رد الأدمن بعد التأكد من وصول رقم التذكرة */
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ticket_id'])) {
 
-    $id = (int)$_POST['entity_id'];
-    $type = $_POST['entity_type'];
-    $status = isset($_POST['block']) ? 'محظور' : 'نشط';
+    /* استخراج رقم التذكرة وتحويله لرقم صحيح لمنع القيم الخاطئة */
+    $ticket_id = (int) $_POST['ticket_id'];
 
-    if ($type == 'مستفيد') {
-        mysqli_query($con,"UPDATE beneficiary SET account_status='$status' WHERE bnf_id=$id");
-    } elseif ($type == 'مستثمر') {
-        mysqli_query($con,"UPDATE investor SET account_status='$status' WHERE inv_id=$id");
-    } else {
-        mysqli_query($con,"UPDATE consulting_office SET account_status='$status' WHERE office_id=$id");
+    /* قيد: لا يتم حفظ الرد إلا إذا كان رقم التذكرة صحيحًا والرد غير فارغ */
+    if ($ticket_id > 0 && $reply != "") {
+
+        /* تجهيز استعلام التحديث بطريقة آمنة قبل تمرير القيم */
+        $stmt = mysqli_prepare($con, "
+            UPDATE complaints_inquiries
+            SET admin_reply = ?, status = 'تم الرد'
+            WHERE ticket_id = ?
+        ");
+
+        if ($stmt) {
+
+            /* ربط الرد ورقم التذكرة بالاستعلام قبل التنفيذ */
+            mysqli_stmt_bind_param($stmt, "si", $reply, $ticket_id);
+
+            /* تنفيذ تحديث الرد وحالة التذكرة داخل قاعدة البيانات */
+            mysqli_stmt_execute($stmt);
+
+            mysqli_stmt_close($stmt);
+        }
     }
 
-    header("Location: ".$_SERVER['PHP_SELF']);
+    /* إعادة توجيه الأدمن إلى تبويب التذاكر التي تم الرد عليها */
+    header("Location: Admin5_Complaints.php?tab=replied");
     exit();
 }
 
-/* جلب بيانات المستخدمين */
-$result = mysqli_query($con,"
-SELECT bnf_id AS entity_id, CONCAT(f_name,' ',l_name) AS entity_name, 'مستفيد' AS entity_type, account_status, '-' AS register_date FROM beneficiary
-UNION ALL
-SELECT inv_id, inv_name, 'مستثمر', account_status, '-' FROM investor
-UNION ALL
-SELECT office_id, office_name, 'مكتب استشاري', account_status, '-' FROM consulting_office
-");
+/* تحديد القسم المطلوب عرضه  */
+$tab = isset($_GET['tab']) ? $_GET['tab'] : 'pending';
+
+/* حصر التذاكر المعروضة حسب التبويب المختار */
+if ($tab == 'replied') {
+    $status_filter = "تم الرد";
+} else {
+    $status_filter = "بانتظار الرد";
+    $tab = 'pending';
+}
+
+/* جلب التذاكر مع اسم المرسل حسب نوع الحساب المرتبط بالتذكرة */
+$sql = "
+SELECT
+    c.ticket_id,
+    c.subject,
+    c.message,
+    c.submission_date,
+    c.status,
+    c.admin_reply,
+    c.bnf_id,
+    c.inv_id,
+    c.office_id,
+    CASE
+        WHEN c.bnf_id IS NOT NULL THEN CONCAT(b.f_name, ' ', b.l_name)
+        WHEN c.inv_id IS NOT NULL THEN i.inv_name
+        WHEN c.office_id IS NOT NULL THEN o.office_name
+        ELSE 'غير معروف'
+    END AS sender_name
+FROM complaints_inquiries c
+LEFT JOIN beneficiary b ON c.bnf_id = b.bnf_id
+LEFT JOIN investor i ON c.inv_id = i.inv_id
+LEFT JOIN consulting_office o ON c.office_id = o.office_id
+WHERE c.status = ?
+ORDER BY c.ticket_id DESC
+";
+
+/* تجهيز استعلام جلب التذاكر وربط حالة التذكرة ديناميكيًا */
+$stmt = mysqli_prepare($con, $sql);
+
+/* تمرير حالة التذكرة المطلوبة بدل كتابتها مباشرة داخل الاستعلام */
+mysqli_stmt_bind_param($stmt, "s", $status_filter);
+
+/* تنفيذ استعلام جلب التذاكر */
+mysqli_stmt_execute($stmt);
+
+/* تحويل نتائج الاستعلام إلى بيانات قابلة للعرض داخل الجدول */
+$result = mysqli_stmt_get_result($stmt);
 ?>
 
 <!DOCTYPE html>
@@ -50,52 +104,80 @@ SELECT office_id, office_name, 'مكتب استشاري', account_status, '-' FR
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>إدارة المستخدمين</title>
+<title>الشكاوى والاستفسارات</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="CSS_AdminLayout.css?v=3">
 
 <style>
-
 /* الحاوية العامة */
 .page-wrapper{ padding:40px; }
 
-/* صندوق الجدول */
-.table-box{ width:100%; max-width:1050px; margin:0 auto; background:#FFFFFF; border:1px solid #E6E0E6; border-radius:8px; overflow:hidden; }
+/* قيد: تحديد أقصى عرض للتبويبات حتى لا تتمدد على كامل الشاشة */
+.tabs-box{ display:flex; width:100%; max-width:1050px; margin:0 auto 20px; border:1px solid #D9D9D9; border-radius:4px; overflow:hidden; background:#E9E9E9; }
+
+/* زر التبويب */
+.tab-btn{ flex:1; text-align:center; padding:14px 10px; font-size:15px; font-weight:600; color:#3E2454; background:#FFFFFF; border-left:1px solid #D0D0D0; transition:.2s; text-decoration:none; }
+
+/* التبويب النشط */
+.tab-btn.active{ background:#F2F2F2; }
+
+/* قيد: تحديد أقصى عرض لكرت الجدول للحفاظ على شكل الصفحة */
+.permissions-card{ width:100%; max-width:1050px; margin:0 auto; background:#FFFFFF; border:1px solid #D8D8D8; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.06); overflow:hidden; }
 
 /* الجدول */
-table{ width:100%; background:#FFFFFF; }
+.permissions-table{ width:100%; border-collapse:collapse; text-align:center; table-layout:fixed; }
 
 /* صف العناوين */
-.table-head th{ padding:15px; background:#FAFAFA; border-bottom:1px solid #DDDDDD; font-size:15px; font-weight:700; color:#3E2454; text-align:center; }
+.table-head th{ color:#3E2454; font-size:15px; font-weight:700; padding:16px 10px; background:#FBFBFB; border-bottom:1px solid #CFCFCF; }
 
 /* خلايا الجدول */
-table td{ padding:16px; border-bottom:1px solid #EEEEEE; text-align:center; font-size:14px; color:#444444; vertical-align:middle; }
+.permissions-table td{ color:#595959; font-size:14px; font-weight:500; padding:18px 10px; background:#FFFFFF; vertical-align:middle; border-bottom:1px solid #D9D9D9; }
 
-/* شكل الحالة */
-.status{ display:flex; align-items:center; justify-content:center; width:100px; height:42px; margin:0 auto; border-radius:12px; color:#FFFFFF; font-size:14px; font-weight:600; }
+/* عنوان التذكرة */
+.ticket-subject{ line-height:1.9; word-break:break-word; }
 
-/* حالة نشط */
-.status-active{ background:#2E8B57; }
+/* قيد: تحديد أقل عرض للزر حتى تكون أزرار الإجراءات متساوية */
+.btn{ border:none; padding:10px 18px; border-radius:12px; cursor:pointer; font-size:13px; font-weight:600; display:inline-block; min-width:130px; text-align:center; text-decoration:none; }
 
-/* حالة محظور */
-.status-blocked{ background:#C23B3B; }
+/* زر خارجي */
+.btn-outline{ background:#FFFFFF; color:#3E2454; border:1px solid #8F8F8F; }
 
-/* حاوية الأزرار */
-.actions{ display:flex; justify-content:center; align-items:center; gap:10px; }
+/* قيد: تحديد ارتفاع الصفوف الفارغة للحفاظ على شكل الجدول عند عدم وجود بيانات */
+.empty-row td{ height:62px; background:#FFFFFF; border-bottom:1px solid #D9D9D9; }
 
-/* الفورم داخل الإجراء */
-.actions form{ margin:0; }
+/* لا توجد بيانات */
+.no-data{ color:#8D8D8D; font-size:14px; padding:25px 10px; }
 
-/* زر عام */
-.btn{ width:100px; height:42px; border-radius:12px; font-size:14px; font-weight:600; cursor:pointer; }
+/* خلفية المودال */
+.reply-modal{ display:none; position:fixed; inset:0; z-index:9999; justify-content:center; align-items:center; }
 
-/* زر الحظر */
-.block{ background:#A53A3A; color:#FFFFFF; border:none; }
+/* قيد: تحديد عرض المودال وأقصى عرض له حتى يناسب الشاشات المختلفة */
+.reply-modal-content{ width:760px; max-width:92%; background:#FFFFFF; border-radius:10px; padding:28px 26px 24px; box-shadow:0 6px 24px rgba(0,0,0,0.18); position:relative; direction:rtl; }
 
-/* زر التنشيط */
-.activate{ background:#FFFFFF; color:#333333; border:1px solid #CCCCCC; }
+/* زر الإغلاق */
+.close-modal{ position:absolute; top:14px; left:16px; background:transparent; border:none; font-size:28px; color:#3E2454; cursor:pointer; font-family:inherit; }
 
+/* عنوان المودال */
+.reply-title{ color:#3E2454; font-size:18px; font-weight:700; margin-bottom:18px; text-align:right; }
+
+/* عنوان القسم */
+.section-label{ color:#000000; font-size:16px; font-weight:700; margin-bottom:12px; text-align:right; }
+
+/* قيد: تحديد أقل ارتفاع لصندوق الشكوى حتى يظهر المحتوى بشكل ثابت */
+.ticket-message-box{ background:#F0F0F0; border-radius:8px; padding:22px 24px; color:#3E2454; font-size:15px; line-height:2; margin-bottom:24px; min-height:110px; }
+
+/* قيد: تحديد أقل ارتفاع لحقل الرد ومنع تغيير حجمه يدويًا */
+.reply-textarea{ width:100%; min-height:160px; border:1px solid #70A0AF; border-radius:0; outline:none; resize:none; padding:16px 18px; font-size:15px; color:#3E2454; background:#FFFFFF; box-sizing:border-box; margin-bottom:24px; }
+
+/* نص placeholder */
+.reply-textarea::placeholder{ color:#C9C9C9; }
+
+/* قيد: تحديد أقل ارتفاع لصندوق عرض الرد المحفوظ */
+.reply-view-box{ width:100%; min-height:50px; border:1px solid #70A0AF; padding:16px 18px; font-size:15px; color:#3E2454; background:#FFFFFF; box-sizing:border-box; line-height:2; margin-bottom:24px; }
+
+/* قيد: تحديد عرض زر الإرسال وأقصى عرض له داخل المودال */
+.send-reply-btn{ display:block; width:320px; max-width:100%; margin:0 auto; background:#3E2454; color:#FFFFFF; border:none; border-radius:4px; padding:14px 20px; font-size:16px; font-weight:700; cursor:pointer; }
 </style>
 </head>
 
@@ -112,8 +194,8 @@ table td{ padding:16px; border-bottom:1px solid #EEEEEE; text-align:center; font
       <ul class="sidebar-menu">
         <li><a href="Admin2_EntitiesApproval.php">اعتماد الجهات</a></li>
         <li><a href="Admin3_Contracts.php">إدارة العقود</a></li>
-        <li><a href="Admin4_UsersManage.php" class="active">إدارة المستخدمين</a></li>
-        <li><a href="Admin5_Complaints.php">الشكاوى والاستفسارات</a></li>
+        <li><a href="Admin4_UsersManage.php">إدارة المستخدمين</a></li>
+        <li><a href="Admin5_Complaints.php" class="active">الشكاوى والاستفسارات</a></li>
       </ul>
     </div>
 
@@ -131,8 +213,8 @@ table td{ padding:16px; border-bottom:1px solid #EEEEEE; text-align:center; font
 
     <header class="header">
       <div class="page-heading">
-        <div class="page-title">إدارة المستخدمين</div>
-        <div class="page-description">عرض حسابات النظام وإدارة حالة المستخدمين</div>
+        <div class="page-title">الشكاوى والاستفسارات</div>
+        <div class="page-description">عرض التذاكر الواردة ومتابعة الردود الإدارية عليها</div>
       </div>
 
       <div class="header-left">
@@ -143,64 +225,86 @@ table td{ padding:16px; border-bottom:1px solid #EEEEEE; text-align:center; font
     <div class="page">
       <div class="page-wrapper">
 
-        <div class="table-box">
-          <table>
+        <div class="tabs-box">
+          <a href="?tab=replied" class="tab-btn <?php echo ($tab == 'replied') ? 'active' : ''; ?>">تم الرد</a>
+          <a href="?tab=pending" class="tab-btn <?php echo ($tab == 'pending') ? 'active' : ''; ?>">بانتظار الرد</a>
+        </div>
+
+        <div class="permissions-card">
+          <table class="permissions-table">
 
             <tr class="table-head">
-              <th>اسم المستخدم</th>
-              <th>نوع الحساب</th>
-              <th>الحالة</th>
+              <th>رقم التذكرة</th>
+              <th>المرسل</th>
+              <th>تاريخ الإرسال</th>
+              <th>العنوان</th>
               <th>الإجراءات</th>
             </tr>
 
             <?php
-            /* عرض المستخدمين داخل الجدول */
-            while($row = mysqli_fetch_assoc($result)){
-
-              /* قراءة حالة الحساب */
-              $status = $row['account_status'];
-
-              /* تحديد لون ونص الحالة */
-              if($status == "محظور"){
-                $class = "status-blocked";
-                $text = "محظور";
-              } else {
-                $class = "status-active";
-                $text = "نشط";
-              }
+            /* عرض التذاكر حسب التبويب الحالي */
+            if ($result && mysqli_num_rows($result) > 0) {
+                while ($row = mysqli_fetch_assoc($result)) {
             ?>
+
             <tr>
-              <td><?= $row['entity_name'] ?></td>
-              <td><?= $row['entity_type'] ?></td>
-
+              <td><?php echo "TKT-" . str_pad($row['ticket_id'], 3, "0", STR_PAD_LEFT); ?></td>
+              <td><?php echo htmlspecialchars($row['sender_name']); ?></td>
+              <td><?php echo htmlspecialchars($row['submission_date']); ?></td>
+              <td class="ticket-subject"><?php echo htmlspecialchars($row['subject']); ?></td>
               <td>
-                <div class="status <?= $class ?>"><?= $text ?></div>
-              </td>
 
-              <td>
-                <div class="actions">
-                  <?php
-                  /* إذا كان الحساب نشطًا يظهر زر الحظر */
-                  if($text == "نشط"){
-                  ?>
-                  <form method="post">
-                    <input type="hidden" name="entity_id" value="<?= $row['entity_id'] ?>">
-                    <input type="hidden" name="entity_type" value="<?= $row['entity_type'] ?>">
-                    <button type="submit" name="block" class="btn block">حظر</button>
-                  </form>
-                  <?php
-                  /* إذا كان الحساب محظورًا يظهر زر التنشيط */
-                  } else {
-                  ?>
-                  <form method="post">
-                    <input type="hidden" name="entity_id" value="<?= $row['entity_id'] ?>">
-                    <input type="hidden" name="entity_type" value="<?= $row['entity_type'] ?>">
-                    <button type="submit" name="activate" class="btn activate">تنشيط</button>
-                  </form>
-                  <?php } ?>
-                </div>
+                <?php
+                /* في التذاكر بانتظار الرد يفتح المودال مع خانة الرد */
+                if ($tab == 'pending') {
+                ?>
+
+                <!-- إرسال بيانات التذكرة إلى المودال باستخدام JSON -->
+                <button
+                  type="button"
+                  class="btn btn-outline"
+                  onclick='openReplyModal(<?php echo json_encode([
+                    "mode" => "pending",
+                    "message" => $row["message"],
+                    "raw_id" => $row["ticket_id"]
+                  ], JSON_UNESCAPED_UNICODE); ?>)'>
+                  الرد على التذكرة
+                </button>
+
+                <?php
+                /* في التذاكر المردود عليها يفتح نفس المودال مع الرد المحفوظ */
+                } else {
+                ?>
+
+                <!-- إرسال بيانات التذكرة والرد المحفوظ إلى المودال باستخدام JSON -->
+                <button
+                  type="button"
+                  class="btn btn-outline"
+                  onclick='openReplyModal(<?php echo json_encode([
+                    "mode" => "replied",
+                    "message" => $row["message"],
+                    "admin_reply" => $row["admin_reply"]
+                  ], JSON_UNESCAPED_UNICODE); ?>)'>
+                  عرض
+                </button>
+
+                <?php } ?>
+
               </td>
             </tr>
+
+            <?php
+                }
+            } else {
+            ?>
+
+            <tr>
+              <td colspan="5" class="no-data">لا توجد تذاكر في هذا القسم</td>
+            </tr>
+            <tr class="empty-row"><td colspan="5"></td></tr>
+            <tr class="empty-row"><td colspan="5"></td></tr>
+            <tr class="empty-row"><td colspan="5"></td></tr>
+
             <?php } ?>
 
           </table>
@@ -211,6 +315,74 @@ table td{ padding:16px; border-bottom:1px solid #EEEEEE; text-align:center; font
 
   </div>
 </div>
+
+<div class="reply-modal" id="replyModal">
+  <div class="reply-modal-content">
+
+    <button class="close-modal" type="button" onclick="closeReplyModal()">×</button>
+
+    <div class="reply-title" id="modalTitle">الرد على التذكرة</div>
+
+    <div class="section-label">الشكوى / الاستفسار</div>
+    <div class="ticket-message-box" id="message"></div>
+
+    <form method="post" id="replyForm">
+      <input type="hidden" name="ticket_id" id="rawId">
+
+      <div class="section-label">الرد الإداري</div>
+      <textarea name="admin_reply" class="reply-textarea" id="replyTextarea" placeholder="أدخل ردك هنا .." required></textarea>
+
+      <div class="reply-view-box" id="replyViewBox" style="display:none;"></div>
+
+      <button type="submit" class="send-reply-btn" id="sendReplyBtn">إرسال الرد</button>
+    </form>
+
+  </div>
+</div>
+
+<script>
+/* فتح المودال حسب حالة التذكرة */
+function openReplyModal(data){
+    document.getElementById("message").textContent = data.message;
+
+    /* قيد: في حالة انتظار الرد فقط يظهر حقل الكتابة وزر الإرسال */
+    if(data.mode === "pending"){
+        document.getElementById("modalTitle").textContent = "الرد على التذكرة";
+        document.getElementById("rawId").value = data.raw_id;
+        document.getElementById("replyTextarea").value = "";
+        document.getElementById("replyTextarea").style.display = "block";
+        document.getElementById("replyViewBox").style.display = "none";
+        document.getElementById("sendReplyBtn").style.display = "block";
+        document.getElementById("replyTextarea").required = true;
+
+    /* قيد: في حالة التذاكر المردود عليها يتم عرض الرد فقط دون إرسال جديد */
+    }else{
+        document.getElementById("modalTitle").textContent = "عرض الرد";
+        document.getElementById("rawId").value = "";
+        document.getElementById("replyTextarea").style.display = "none";
+        document.getElementById("replyViewBox").style.display = "block";
+        document.getElementById("replyViewBox").textContent = data.admin_reply ? data.admin_reply : "لا يوجد رد";
+        document.getElementById("sendReplyBtn").style.display = "none";
+        document.getElementById("replyTextarea").required = false;
+    }
+
+    document.getElementById("replyModal").style.display = "flex";
+}
+
+/* إغلاق نافذة الرد */
+function closeReplyModal(){
+    document.getElementById("replyModal").style.display = "none";
+}
+
+/* قيد: إغلاق المودال فقط عند الضغط على الخلفية وليس داخل الصندوق */
+window.onclick = function(e){
+    let modal = document.getElementById("replyModal");
+
+    if(e.target === modal){
+        modal.style.display = "none";
+    }
+}
+</script>
 
 </body>
 </html>
