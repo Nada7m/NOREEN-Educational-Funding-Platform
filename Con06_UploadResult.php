@@ -1,77 +1,75 @@
 <?php
 session_start();
-
+// التحقق من تسجيل دخول المكتب
 if (!isset($_SESSION['office_id'])) {
     header("Location: login.php");
     exit();
 }
-
 $con = mysqli_connect("localhost", "root", "", "noreen");
-
 if (!$con) {
     die("فشل الاتصال بقاعدة البيانات");
 }
-
 mysqli_set_charset($con, "utf8mb4");
+// جلب رقم المكتب الحالي
 $office_id = (int) $_SESSION['office_id'];
+// جلب رقم الطلب من الرابط
 $request_id = isset($_GET['request_id']) ? (int) $_GET['request_id'] : 0;
+// التحقق من صحة رقم الطلب
 if ($request_id <= 0) {
     die("رقم الطلب غير صحيح");}
-
-$sql = "SELECT 
-            ar.request_id,
-            ar.request_status,
-            ar.Result_status,
-            ar.result_notes,
-            ar.result,
-            b.f_name,
-            b.l_name
+// جلب بيانات الطلب والمستفيد
+$sql = "SELECT  ar.request_id,ar.request_status, ar.Result_status,
+            ar.result_notes,ar.result,b.f_name,b.l_name
         FROM admission_request ar
         INNER JOIN beneficiary b ON ar.bnf_id = b.bnf_id
         WHERE ar.request_id = $request_id
         AND ar.office_id = $office_id";
-
+// تنفيذ الاستعلام
 $result = mysqli_query($con, $sql);
-
+// التحقق من وجود الطلب
 if (!$result || mysqli_num_rows($result) == 0) {
     die("الطلب غير موجود");}
 $request = mysqli_fetch_assoc($result);
+// التحقق أن الطلب مقبول
 if ($request['request_status'] != 'مقبول') {
     die("لا يمكن رفع النتيجة قبل قبول الطلب");}
 $error = "";
+// عند الضغط على زر إرسال النتيجة
 if (isset($_POST['submit_result'])) {
+        // جلب الملاحظات
     $result_notes = trim($_POST['result_notes']);
     $safe_notes = mysqli_real_escape_string($con, $result_notes);
+        // التحقق من رفع الملف
     if (!isset($_FILES['result_file']) || empty($_FILES['result_file']['name'])) {
         $error = "يرجى رفع ملف النتيجة.";
     } else {
-
+        // بيانات الملف
         $old_name = $_FILES['result_file']['name'];
         $tmp_name = $_FILES['result_file']['tmp_name'];
         $file_size = $_FILES['result_file']['size'];
-
+        // التحقق من نوع الملف
+        // يسمح فقط بملفات PDF
         if (!str_ends_with(strtolower($old_name), ".pdf")) {
             $error = "يُسمح فقط برفع ملفات PDF.";    } elseif ($file_size > 5 * 1024 * 1024) {
             $error = "حجم الملف كبير جدًا.";  } else {
-
+            // مسار رفع الملفات
             $upload_dir = "uploads/admission_results/";
-
+            // إنشاء المجلد إذا غير موجود
             if (!is_dir($upload_dir)) { mkdir($upload_dir, 0777, true);  }
-
+            // اسم الملف الجديد
             $new_name = $request_id . "_result.pdf";
+            // المسار الكامل للملف
             $file_path = $upload_dir . $new_name;
             $safe_path = mysqli_real_escape_string($con, $file_path);
-
+            // رفع الملف
             if (move_uploaded_file($tmp_name, $file_path)) {
-             $sqlUpdate = "UPDATE admission_request
-              SET result = '$safe_path',
-                  result_notes = '$safe_notes',
-                  Result_status = 'أُصدرت'
-              WHERE request_id = $request_id
-              AND office_id = $office_id
-              AND request_status = 'مقبول'";
-
+            // تحديث بيانات النتيجة
+             $sqlUpdate = "UPDATE admission_request SET result = '$safe_path',
+  result_notes = '$safe_notes', Result_status = 'أُصدرت'
+WHERE request_id = $request_id AND office_id = $office_id AND request_status = 'مقبول'";
+                // تنفيذ التحديث
                 if (mysqli_query($con, $sqlUpdate)) {
+                  // العودة لصفحة التفاصيل
                     header("Location: Con05_AdmissiontDetails.php?request_id=" . $request_id);
                     exit();    } else {
                     $error = "حدث خطأ أثناء حفظ النتيجة.";  }
@@ -94,326 +92,81 @@ if (isset($_POST['submit_result'])) {
 <link rel="stylesheet" href="CSS01Layout.css?v=6">
 
 <style>
-.page-wrap{
-    padding: 18px 30px 30px;
+    /*  مساحة الصفحة */
+.page-wrap{padding: 18px 30px 30px;}
+/*  صندوق زر الرجوع */
+.back-wrap{display: flex;justify-content: flex-end;max-width: 1100px;margin: 22px auto 30px;}
+/* زر الرجوع */
+.back-btn{width: 50px;height: 50px;display: flex;align-items: center;justify-content: center;}
+/* أيقونة الرجوع */
+.back-icon{ width: 46px; height: 46px; object-fit: contain;}
+/*  بطاقة رفع النتيجة */
+.upload-card{width: 100%;max-width: 1100px;margin: 0 auto;background: #ffffff;padding: 40px 45px;
+    border-radius: 16px;box-shadow: 0 4px 15px rgba(0,0,0,0.05);}
+/* رأس البطاقة */
+.card-head{display: flex;justify-content: center;align-items: center;gap: 12px;
+    margin-bottom: 40px;flex-wrap: wrap;}
+/* عنوان الصفحة */
+.card-title{ font-size: 24px; font-weight: 700; color: #222; font-family: 'Noto Kufi Arabic', sans-serif;}
+/* اسم المستفيد */
+.student-name{font-size: 24px;font-weight: 700;color: #70A0AF;font-family: 'Noto Kufi Arabic', sans-serif;
 }
-
-.back-wrap{
-    display: flex;
-
-    justify-content: flex-end;
-
-    max-width: 1100px;
-
-    margin: 22px auto 30px;
-}
-
-.back-btn{
-    width: 50px;
-
-    height: 50px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-}
-
-.back-icon{
-    width: 46px;
-
-    height: 46px;
-
-    object-fit: contain;
-}
-
-.upload-card{
-    width: 100%;
-
-    max-width: 1100px;
-
-    margin: 0 auto;
-
-    background: #ffffff;
-
-    padding: 40px 45px;
-
-    border-radius: 16px;
-
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-}
-
-.card-head{
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    gap: 12px;
-
-    margin-bottom: 40px;
-
-    flex-wrap: wrap;
-}
-
-.card-title{
-    font-size: 24px;
-
-    font-weight: 700;
-
-    color: #222;
-
-    font-family: 'Noto Kufi Arabic', sans-serif;
-}
-
-.student-name{
-    font-size: 24px;
-
-    font-weight: 700;
-
-    color: #70A0AF;
-
-    font-family: 'Noto Kufi Arabic', sans-serif;
-}
-
-.form-grid{
-    display: grid;
-
-    grid-template-columns: 1fr 1fr;
-
-    gap: 35px;
-}
-
-.form-group{
-    display: flex;
-
-    flex-direction: column;
-}
-
-.form-label{
-    display: block;
-
-    margin-bottom: 12px;
-
-    color: #222;
-
-    font-size: 15px;
-
-    font-weight: 700;
-
-    font-family: 'Noto Kufi Arabic', sans-serif;
-}
-
-.textarea-box{
-    width: 100%;
-
-    height: 160px;
-
-    border: 1px solid #d9d9d9;
-
-    border-radius: 4px;
-
-    background: #fff;
-
-    padding: 12px;
-
-    font-size: 14px;
-
-    color: #333;
-
-    outline: none;
-
-    resize: none;
-
-    box-sizing: border-box;
-
-    font-family: 'Noto Kufi Arabic', sans-serif;
-}
-
+/*  شبكة الفورم */
+.form-grid{ display: grid; grid-template-columns: 1fr 1fr; gap: 35px;}
+/* مجموعة الحقول */
+.form-group{ display: flex; flex-direction: column;}
+/* عنوان الحقل */
+.form-label{display: block;margin-bottom: 12px; color: #222; font-size: 15px;
+    font-weight: 700;font-family: 'Noto Kufi Arabic', sans-serif;}
+/* مربع الملاحظات */
+.textarea-box{ width: 100%;height: 160px; border: 1px solid #d9d9d9; border-radius: 4px;background: #fff;
+    padding: 12px;font-size: 14px;color: #333; outline: none;resize: none;
+    box-sizing: border-box;font-family: 'Noto Kufi Arabic', sans-serif;}
+/* النص داخل الملاحظات */
 .textarea-box::placeholder{
-    color: #9b9b9b;
+    color: #9b9b9b;}
+/*  قسم رفع الملف */
+.upload-side{display: flex;flex-direction: column;align-items: center;justify-content: flex-start;}
+.upload-inner{width: 100%;}
+/* صندوق الرفع */
+.upload-wrapper{border: 2px solid;border-image-source: linear-gradient(90deg, #D6B7E2 0%, #3E2454 64%);
+    border-image-slice: 1;background-color: #F8F8F8;width: 140px;height: 40px;display: flex;
+    align-items: center;justify-content: center; cursor: pointer;transition: 0.3s;  margin: 0 auto;
 }
-
-.upload-side{
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    justify-content: flex-start;
-}
-
-.upload-inner{
-    width: 100%;
-}
-
-.upload-wrapper{
-    border: 2px solid;
-
+/* تأثير الماوس */
+.upload-wrapper:hover{background-color: #ececec;}
+/* صورة الرفع */
+.upload-img{width: 20px;height: auto;}
+/* حقل الملف المخفي */
+.file-hidden{display: none;}
+/* اسم الملف */
+.file-name-display{display: none;  width: 220px;  min-height: 40px;  padding: 8px 10px;margin: 0 auto;
+    text-align: center;word-break: break-word;font-size: 11px;color: #70A0AF;
+    font-family: 'Noto Kufi Arabic', sans-serif;border: 2px solid;
     border-image-source: linear-gradient(90deg, #D6B7E2 0%, #3E2454 64%);
-
-    border-image-slice: 1;
-
-    background-color: #F8F8F8;
-
-    width: 140px;
-
-    height: 40px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    cursor: pointer;
-
-    transition: 0.3s;
-
-    margin: 0 auto;
+    border-image-slice: 1;background: #F8F8F8;align-items: center;justify-content: center; cursor: pointer;
 }
+/* ملاحظة الرفع */
+.upload-note{margin-top: 14px;text-align: center;color: #777;font-size: 12px;font-family: 'Noto Kufi Arabic', sans-serif;}
+/* الملف الحالي */
+.current-file{ margin-top: 14px; text-align: center; font-size: 13px; color: #555;
+    font-family: 'Noto Kufi Arabic', sans-serif;}
+/* رابط الملف */
+.current-file a{color: #4b6cb7;text-decoration: underline;}
+/*  زر الإرسال */
+.submit-row{ display: flex;justify-content: center;margin-top: 40px;}
 
-.upload-wrapper:hover{
-    background-color: #ececec;
-}
-
-.upload-img{
-    width: 20px;
-
-    height: auto;
-}
-
-.file-hidden{
-    display: none;
-}
-
-.file-name-display{
-    display: none;
-
-    width: 220px;
-
-    min-height: 40px;
-
-    padding: 8px 10px;
-
-    margin: 0 auto;
-
-    text-align: center;
-
-    word-break: break-word;
-
-    font-size: 11px;
-
-    color: #70A0AF;
-
-    font-family: 'Noto Kufi Arabic', sans-serif;
-
-    border: 2px solid;
-
-    border-image-source: linear-gradient(90deg, #D6B7E2 0%, #3E2454 64%);
-
-    border-image-slice: 1;
-
-    background: #F8F8F8;
-
-    align-items: center;
-
-    justify-content: center;
-
-    cursor: pointer;
-}
-
-.upload-note{
-    margin-top: 14px;
-
-    text-align: center;
-
-    color: #777;
-
-    font-size: 12px;
-
-    font-family: 'Noto Kufi Arabic', sans-serif;
-}
-
-.current-file{
-    margin-top: 14px;
-
-    text-align: center;
-
-    font-size: 13px;
-
-    color: #555;
-
-    font-family: 'Noto Kufi Arabic', sans-serif;
-}
-
-.current-file a{
-    color: #4b6cb7;
-
-    text-decoration: underline;
-}
-
-.submit-row{
-    display: flex;
-
-    justify-content: center;
-
-    margin-top: 40px;
-}
-
-.submit-btn{
-    min-width: 230px;
-
-    padding: 14px 35px;
-
-    background-color: #70A0AF;
-
-    color: #ffffff;
-
-    border: none;
-
-    border-radius: 4px;
-
-    cursor: pointer;
-
-    font-size: 18px;
-
-    font-weight: 700;
-
-    font-family: 'Noto Kufi Arabic', sans-serif;
-}
-
-.msg{
-    max-width: 1100px;
-
-    margin: 0 auto 16px;
-
-    padding: 12px;
-
-    border-radius: 6px;
-
-    text-align: center;
-
-    font-size: 14px;
-
-    font-family: 'Noto Kufi Arabic', sans-serif;
-}
-
-.msg.error{
-    background: #fff1f1;
-
-    color: #b42318;
-
-    border: 1px solid #efb4b4;
-}
-
+.submit-btn{ min-width: 230px; padding: 14px 35px;background-color: #70A0AF;color: #ffffff;
+    border: none;border-radius: 4px;cursor: pointer;font-size: 18px;
+    font-weight: 700;font-family: 'Noto Kufi Arabic', sans-serif;}
+/* زر الإرسال */
+.msg{ max-width: 1100px;margin: 0 auto 16px;padding: 12px;border-radius: 6px;
+    text-align: center;font-size: 14px;font-family: 'Noto Kufi Arabic', sans-serif;}
+/*  رسائل الخطأ */
+.msg.error{ background: #fff1f1;color: #b42318;border: 1px solid #efb4b4;}
 </style>
 </head>
 <body>
-
 <div class="layout">
 
     <aside class="sidebar">
@@ -439,9 +192,7 @@ if (isset($_POST['submit_result'])) {
             </form>
         </div>
     </aside>
-
     <div class="main-content">
-
         <header class="header">
             <div class="page-heading">
                 <div class="page-title">إدارة طلبات القبول</div>
@@ -466,43 +217,40 @@ if (isset($_POST['submit_result'])) {
                     <img src="سهم تراجع.svg" class="back-icon" alt="رجوع">
                 </a>
             </div>
-
+          <!-- رسالة الخطأ -->
             <?php if (!empty($error)) { ?>
                 <div class="msg error">
                     <?php echo $error; ?>
                 </div>
             <?php } ?>
-
+          <!--  بطاقة رفع النتيجة -->
             <div class="upload-card">
-
                 <div class="card-head">
                     <div class="card-title">رفع خطاب النتيجة للمستفيد/ة</div>
                     <div class="student-name"><?php echo htmlspecialchars($request['f_name'] . " " . $request['l_name'], ENT_QUOTES, 'UTF-8'); ?></div>
                 </div>
-
+              <!-- نموذج رفع النتيجة -->
                 <form method="POST" enctype="multipart/form-data">
-
                     <div class="form-grid">
-
+                         <!-- الملاحظات -->
                         <div class="form-group">
                             <label class="form-label">ملاحظات:</label>
                             <textarea name="result_notes" class="textarea-box" placeholder="أضف ملاحظة إن وجدت"><?php echo htmlspecialchars($request['result_notes'], ENT_QUOTES, 'UTF-8'); ?></textarea>
                         </div>
-
                         <div class="form-group upload-side">
+                               <!-- رفع الملف -->
                             <div class="upload-inner">
                                 <label class="form-label">تقديم الخطاب:</label>
-
                                 <label for="result_file" class="upload-wrapper" id="uploadBox">
                                     <img src="upload.png" class="upload-img" alt="رفع">
                                 </label>
-
+                                <!-- حقل الملف -->
                                 <input type="file" name="result_file" id="result_file" accept=".pdf" class="file-hidden" onchange="showFileName(this)">
-
+                                <!-- اسم الملف -->
                                 <div class="file-name-display" id="fileNameBox" onclick="openSelectedFile()"></div>
-
+                                <!-- ملاحظة -->
                                 <div class="upload-note">يُسمح فقط برفع ملف PDF</div>
-
+                                <!-- الملف الحالي -->
                                 <?php if (!empty($request['result'])) { ?>
                                     <div class="current-file">
                                         الملف الحالي:
@@ -511,21 +259,16 @@ if (isset($_POST['submit_result'])) {
                                 <?php } ?>
                             </div>
                         </div>
-
                     </div>
-
+                    <!-- زر الإرسال -->
                     <div class="submit-row">
                         <button type="submit" name="submit_result" class="submit-btn">إرسال النتيجة</button>
                     </div>
-
                 </form>
-
             </div>
-
         </div>
     </div>
 </div>
-
 <script>
 function showFileName(input){
 
