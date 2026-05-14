@@ -15,26 +15,26 @@ if (!$con) {
 
 mysqli_set_charset($con,"utf8mb4");
 
-/* تحديث الحالة */
+/* تنفيذ الاعتماد أو الرفض */
 if(isset($_POST['approve']) || isset($_POST['reject'])){
     $id = (int)$_POST['entity_id'];
     $type = $_POST['entity_type'];
     $status = isset($_POST['approve']) ? 'معتمد' : 'مرفوض';
-
     if($type == "مستثمر"){
+    // تحديث حالة المستثمر
         mysqli_query($con,"UPDATE investor SET approval_status='$status' WHERE inv_id=$id");
     } else {
+   // تحديث حالة المكتب الاستشاري
         mysqli_query($con,"UPDATE consulting_office SET approval_status='$status' WHERE office_id=$id");
     }
-
+    // تحديث الصفحة بعد التنفيذ
     header("Location: ".$_SERVER['PHP_SELF']);
     exit();
 }
-
-/* جلب البيانات */
+/* اجيب بيانات المستثمرين والمكاتب */
 $result = mysqli_query($con,"
 SELECT inv_id AS entity_id, inv_name AS entity_name, ccr_number, approval_status, 'مستثمر' AS entity_type FROM investor
-UNION ALL
+UNION ALL //دمج نتائج أكثر من جدول مع بعض//
 SELECT office_id, office_name, ccr_number, approval_status, 'مكتب استشاري' FROM consulting_office
 ");
 ?>
@@ -148,9 +148,8 @@ table td{ padding:16px; border-bottom:1px solid #EEEEEE; text-align:center; colo
               <th>الحالة</th>
               <th>الإجراءات</th>
             </tr>
-
+            // عرض البيانات القادمة من قاعدة البيانات //
             <?php while($row = mysqli_fetch_assoc($result)) {
-
               $status = $row['approval_status'];
 
               if($status == "معتمد"){
@@ -172,13 +171,13 @@ table td{ padding:16px; border-bottom:1px solid #EEEEEE; text-align:center; colo
               <td>
                 <?php if($status == "بانتظار"){ ?>
                 <div class="actions">
-
+                  //فورم الاعتماد//
                   <form method="post">
                     <input type="hidden" name="entity_id" value="<?= $row['entity_id'] ?>">
                     <input type="hidden" name="entity_type" value="<?= $row['entity_type'] ?>">
                     <button type="submit" name="approve" class="btn accept">اعتماد</button>
                   </form>
-
+                  //فورم الرفض//
                   <form method="post">
                     <input type="hidden" name="entity_id" value="<?= $row['entity_id'] ?>">
                     <input type="hidden" name="entity_type" value="<?= $row['entity_type'] ?>">
