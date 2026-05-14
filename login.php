@@ -7,16 +7,12 @@ $con = new mysqli("localhost", "root", "", "noreen");
 if ($con->connect_error) {
     die("فشل الاتصال بقاعدة البيانات: " . $con->connect_error);
 }
-
 // متغير لتخزين رسائل الخطأ وعرضها للمستخدم لاحقاً
 $error = "";
-
 // تنفيذ الكود فقط عند الضغط على زر "تسجيل الدخول"
 if (isset($_POST['login'])) {
-
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
-
     // مصفوفة أنواع المستخدمين
     $users = [
         ["table" => "investor", "id_field" => "inv_id", "session_key" => "inv_id", "redirect" => "Inv00_MainPage.php"],
@@ -24,10 +20,8 @@ if (isset($_POST['login'])) {
         ["table" => "consulting_office", "id_field" => "office_id", "session_key" => "office_id", "redirect" => "Con00_MainPage.php"],
         ["table" => "admin", "id_field" => "admin_id", "session_key" => "admin_id", "redirect" => "Admin1_profile.php"]
     ];
-
     // البحث في جميع الجداول
     foreach ($users as $userType) {
-
         $table = $userType["table"];
         $id_field = $userType["id_field"];
         $session_key = $userType["session_key"];
@@ -38,23 +32,17 @@ if (isset($_POST['login'])) {
         } else {
             $stmt = $con->prepare("SELECT * FROM $table WHERE email = ?");
         }
-
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
-
         if ($result->num_rows > 0) {
-
             $user = $result->fetch_assoc();
-
             if (password_verify($password, $user['password'])) {
-
                 // التحقق من الحظر
                 if (isset($user['account_status']) && $user['account_status'] == 'محظور') {
                     $error = "تم حظر الحساب";
                     break;
                 }
-
                 // التحقق من الاعتماد (للمستثمر والمكتب)
                 if ($table == "investor" || $table == "consulting_office") {
 
@@ -69,27 +57,23 @@ if (isset($_POST['login'])) {
                         break;
                     }
                 }
-
                 // حفظ الجلسة
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['user_type'] = $table;
                 $_SESSION[$session_key] = $user[$id_field];
                 $_SESSION['user_id'] = $user[$id_field];
-
                 // التوجيه
                 header("Location: " . $redirect);
                 exit();
             }
         }
     }
-
     // في حال فشل تسجيل الدخول
     if (empty($error)) {
         $error = "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -97,7 +81,6 @@ if (isset($_POST['login'])) {
 <title>تسجيل الدخول</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="Style.css">
-
 <style>
 body{ margin:0; background:#f5f4f2; font-family:'Noto Kufi Arabic',sans-serif;}
 .container{  min-height:100vh;  padding-top:120px;}
@@ -108,19 +91,15 @@ body{ margin:0; background:#f5f4f2; font-family:'Noto Kufi Arabic',sans-serif;}
 </style> </head> <body>
 
 <div class="container"> <div class="box">
-
 <h2>مرحباً بعودتك</h2>
 <p class="subtitle center">سجل الدخول للمتابعة</p>
 
 <?php if(!empty($error)) echo '<p class="error">'.$error.'</p>'; ?>
-
 <form method="POST">
-
 <label>البريد الإلكتروني</label>
 <div class="input-group">
 <input type="text" name="email" placeholder="أدخل البريد الإلكتروني" required>
 </div>
-
 <label>كلمة المرور</label>
 <div class="input-group">
 <input type="password" name="password" placeholder="أدخل كلمة المرور" required>

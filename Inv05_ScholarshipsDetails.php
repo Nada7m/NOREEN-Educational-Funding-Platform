@@ -3,33 +3,30 @@ session_start();
 /**  يجب أن يكون المستثمر مسجل دخول **/
 if(!isset($_SESSION['inv_id'])){
     header("Location: login.php");
-    exit();
-}
+    exit();}
 /* الاتصال بقاعدة البيانات */
 $con=mysqli_connect("localhost","root","","noreen");
 if(!$con){
     die("فشل الاتصال بقاعدة البيانات");
 }
 mysqli_set_charset($con,"utf8mb4");
-
 /* رقم المستثمر الحالي */
 $inv_id=$_SESSION['inv_id'];
-
-/* رقم المنحة */
+/** يجب وجود رقم المنحة في الرابط **/
 if(!isset($_GET['id'])||$_GET['id']==""){
     die("رقم المنحة غير موجود.");
 }
+/* تحويل رقم المنحة إلى رقم صحيح */
 $scholarship_id=(int)$_GET['id'];
-
-function e($text){
-    return htmlspecialchars($text ?? "",ENT_QUOTES,"UTF-8");}
-
 /* قبول أو رفض الطلب */
 if($_SERVER["REQUEST_METHOD"]=="POST" && isset($_POST["action_type"]) && isset($_POST["request_id"])){
+      /* رقم الطلب */
     $request_id=(int)$_POST["request_id"];
+        /* نوع الإجراء */
     $action_type=$_POST["action_type"];
+        /* الحالة الجديدة */
     $new_status="";
-
+    /**  حالة الطلب تكون فقط مقبول أو مرفوض **/
     if($action_type=="accept"){   $new_status="مقبول";  }elseif($action_type=="reject"){  $new_status="مرفوض"; }
 
     if($new_status!=""){
