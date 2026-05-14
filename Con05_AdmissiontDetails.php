@@ -307,7 +307,6 @@ $docLabels = [
                                 ?>
                                 <div class="doc-item">
                                     <div class="doc-label"><?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8'); ?></div>
-                                  //   رابط الملف
                                     <a href="<?php echo htmlspecialchars($doc['file'], ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="doc-link"><?php echo htmlspecialchars($doc['file_name'], ENT_QUOTES, 'UTF-8'); ?></a>
                                 </div>
                             <?php } ?>

@@ -29,11 +29,18 @@ $resProcessing = mysqli_query($con, $sqlProcessing);
 $rowProcessing = mysqli_fetch_assoc($resProcessing);
 $processingRequests = $rowProcessing['processing_requests'];
 // جلب عدد الطلبات المنتهية
+// جلب عدد الطلبات المنتهية
 $sqlFinished = "SELECT COUNT(*) AS finished_requests
-     FROM admission_requestWHERE office_id = $office_id
- AND Result_status IS NOT NULL AND Result_status <> '' AND Result_status <> 'قيد المعالجة'";
+FROM admission_request
+WHERE office_id = $office_id
+AND Result_status IS NOT NULL
+AND Result_status <> ''
+AND Result_status <> 'قيد المعالجة'";
+
 $resFinished = mysqli_query($con, $sqlFinished);
+
 $rowFinished = mysqli_fetch_assoc($resFinished);
+
 $finishedRequests = $rowFinished['finished_requests'];
 // جلب جميع طلبات القبول الخاصة بالمكتب
 $sqlRequests = "SELECT  ar.request_id, ar.request_status, ar.Result_status, ar.payment_status,
