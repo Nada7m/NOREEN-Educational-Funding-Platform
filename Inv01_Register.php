@@ -1,5 +1,5 @@
 <?php
-// الاتصال بقاعدة البيانات + تحديد الترميز
+// الاتصال بقاعدة البيانات 
 $con = mysqli_connect("localhost","root","","noreen");
 mysqli_set_charset($con,"utf8mb4");
 // متغيرات لعرض الرسائل (نجاح / خطأ)
@@ -207,6 +207,5 @@ function checkForm(){
     return ok; // يرجع true أو false
 }
 </script>
-
 </body>
 </html>
