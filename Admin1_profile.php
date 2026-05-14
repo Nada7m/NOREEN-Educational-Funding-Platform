@@ -14,6 +14,7 @@ if (!$con) {
 }
 
 mysqli_set_charset($con, "utf8mb4");
+/* إحصائيات النظام   */
 
 /* حساب إجمالي المستفيدين */
 $beneficiaries_count = 0;
@@ -43,7 +44,6 @@ if ($q3) {
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>بيانات الحساب</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -59,7 +59,7 @@ if ($q3) {
 /* نص الترحيب */
 .welcome-box p{ margin:0; font-size:18px; color:#222222; line-height:2; }
 
-/* قريد الكروت */
+/* شبكة الكروت */
 .cards{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; max-width:820px; margin:0 auto; }
 
 /* الكرت */

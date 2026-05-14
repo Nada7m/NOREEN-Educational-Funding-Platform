@@ -8,7 +8,7 @@ if ($con->connect_error) {
 }
 $con->set_charset("utf8mb4");
 
-// 2. المعرفات (تأكدي أن inv_id يصل في الرابط)
+// 2. المعرفات 
 $current_bnf_id = $_SESSION['bnf_id'] ?? 0;
 $target_inv_id = isset($_GET['inv_id']) ? intval($_GET['inv_id']) : 0; 
 
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send_msg']) && $target
     }
 }
 
-// 4. جلب بيانات المستثمر (مع فحص الأمان لمنع الخطأ الذي ظهر لك)
+// 4.جلب بيانات المستثمر 
 $inv_name = "الجهة المانحة";
 if ($target_inv_id > 0) {
     $inv_res = $con->query("SELECT inv_name FROM investor WHERE inv_id = '$target_inv_id'");
