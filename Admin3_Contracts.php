@@ -21,7 +21,7 @@ SELECT
     c.ctr_status,
     c.request_id,
     i.inv_name,
-CONCAT(b.f_name,' ',b.l_name) AS beneficiary_name //عشان ادمج اسم المستخدم الأول و الثاني سوا
+CONCAT(b.f_name,' ',b.l_name) AS beneficiary_name 
 FROM e_contract c
 JOIN scholarship_requests r ON c.request_id = r.request_id
 JOIN beneficiary b ON r.bnf_id = b.bnf_id
@@ -108,11 +108,11 @@ text-align:center;box-shadow:0 8px 25px rgba(0,0,0,0.15);
 .confirm-btn{ min-width:110px; height:42px; border:none; border-radius:10px; cursor:pointer;
   font-size:14px;font-family:"Noto Kufi Arabic",sans-serif;font-weight:700;
 }
-
+/* زر نعم */
 .confirm-yes{
   background:#A53A3A;color:#FFFFFF;
 }
-
+/* زر لا */
 .confirm-no{
   background:#ECECEC;color:#3E2454;
 }
@@ -175,15 +175,18 @@ text-align:center;box-shadow:0 8px 25px rgba(0,0,0,0.15);
                 <th>الإجراءات</th>
               </tr>
             </thead>
-
-            <tbody>
+   <!-- بيانات الجدول -->
+   <tbody>
+         
 <?php while($row = mysqli_fetch_assoc($result)) { 
-
+// حفظ حالة العقد
 $status = $row['ctr_status'];
+// الحالة الافتراضية أن العقد يكون نشط
 $class = "status-active";
-
+// إذا العقد ملغي
 if($status == "ملغي"){
     $class = "status-cancel";
+    // إذا العقد منتهي
 } elseif($status == "منتهي"){
     $class = "status-ended";
 }
