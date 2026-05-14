@@ -165,7 +165,8 @@ if ($result->num_rows > 0) {
     $office = $result->fetch_assoc();
 } else {
     // إذا لم يتم العثور على بيانات
-    die("لم يتم العثور على بيانات المكتب")}
+    die("لم يتم العثور على بيانات المكتب");
+}
 $stmt->close();
 /* جلب الدول الحالية */
 $countryStmt = $conn->prepare("SELECT con_name
