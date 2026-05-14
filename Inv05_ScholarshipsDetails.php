@@ -1,10 +1,10 @@
 <?php
 session_start();
+/**  يجب أن يكون المستثمر مسجل دخول **/
 if(!isset($_SESSION['inv_id'])){
     header("Location: login.php");
     exit();
 }
-
 /* الاتصال بقاعدة البيانات */
 $con=mysqli_connect("localhost","root","","noreen");
 if(!$con){

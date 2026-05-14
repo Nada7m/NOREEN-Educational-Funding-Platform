@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 /* التحقق من تسجيل دخول المستثمر */
 if(!isset($_SESSION['inv_id'])){
     header("Location: login.php"); // إذا مو مسجل دخول يرجعه لصفحة الدخول
@@ -8,13 +7,11 @@ if(!isset($_SESSION['inv_id'])){
 }
 /* الاتصال بقاعدة البيانات */
 $con = mysqli_connect("localhost","root","","noreen");
-
 if(!$con){
     die("فشل الاتصال بقاعدة البيانات"); // إيقاف الصفحة إذا فشل الاتصال
 }
 /* ضبط ترميز اللغة العربية */
 mysqli_set_charset($con,"utf8mb4");
-
 /* رقم المستثمر الحالي من الجلسة */
 $inv_id = $_SESSION['inv_id'];
 /* جلب منح المستثمر الحالي فقط */
@@ -22,13 +19,11 @@ $sql = "SELECT scholarship_id, sch_name, sch_field, study_level, Specializations
         FROM scholarship_opps
         WHERE inv_id = '$inv_id'"; // يجيب فقط المنح الخاصة بهذا المستثمر
 
-$result = mysqli_query($con, $sql); // تنفيذ الاستعلام
-?>
+$result = mysqli_query($con, $sql); // تنفيذ الاستعلام ?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>عرض المنح</title>
 <!-- الخطوط -->
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -39,129 +34,45 @@ $result = mysqli_query($con, $sql); // تنفيذ الاستعلام
 .create-btn-box {
   margin-top: 10px;
 }
-.create-btn {
-  background: #3E2454;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 4px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  text-decoration: none;
-}
-.create-btn:hover {
-  opacity: .95;
-}
+.create-btn {background: #3E2454;color: white;padding: 10px 20px;border-radius: 4px;display: inline-flex;
+  align-items: center; gap: 8px; font-size: 14px;font-weight: 600;text-decoration: none;}
+.create-btn:hover {opacity: .95;}
 /* ترتيب أعلى الصفحة */
-.page-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 40px;
-  margin-top: 15px;
-}
+.page-top {display: flex;justify-content: space-between;align-items: center;
+  padding: 0 40px;margin-top: 15px;}
 /* قائمة المنح */
-.scholarships-list {
-  padding: 0 40px 40px;
-}
+.scholarships-list { padding: 0 40px 40px;}
 /* توزيع الكروت */
-.scholarships-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-  gap: 25px;
-  align-items: stretch;
-}
+.scholarships-grid {display: grid;grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 25px;align-items: stretch;}
 /* في حال ما فيه منح */
-.empty-state {
-  text-align: center;
-  margin-top: 220px;
-  color: #cfcfcf;
-  font-size: 28px;
-}
+.empty-state {text-align: center;margin-top: 220px;color: #cfcfcf;font-size: 28px;}
 /* كرت المنحة */
-.scholarship-card {
-  background: #fff;
-  border: 1.5px solid #E3E3E3;
-  border-radius: 10px;
-  padding: 25px;
-  text-align: right;
-  box-sizing: border-box;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  margin-top: 10px;
-}
+.scholarship-card {background: #fff;border: 1.5px solid #E3E3E3;border-radius: 10px;
+  padding: 25px;text-align: right;box-sizing: border-box;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: flex;flex-direction: column;
+  height: 100%;margin-top: 10px;}
 /* عنوان المنحة */
-.scholarship-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: #3E2454;
-  text-align: center;
-  line-height: 1.8;
-  min-height: 65px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 18px;
-}
+.scholarship-title {font-size: 18px;font-weight: 700;color: #3E2454;text-align: center;
+  line-height: 1.8;min-height: 65px;display: flex;align-items: center;justify-content: center;margin-bottom: 18px;}
 /* محتوى الكرت */
-.card-content {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  flex: 1;
-}
+.card-content {display: flex;flex-direction: column;gap: 14px;flex: 1;}
 /* كل عنصر داخل الكرت */
-.card-item {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
+.card-item { display: flex; flex-direction: column; gap: 6px;}
 /* اسم الحقل */
-.card-label {
-  color: #777;
-  font-size: 14px;
-  font-weight: 600;
-}
+.card-label {color: #777;font-size: 14px;font-weight: 600;}
 /* قيمة الحقل */
-.card-value {
-  color: #70A0AF;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.8;
-  word-break: break-word;
-}
+.card-value {color: #70A0AF;font-size: 16px;font-weight: 600;line-height: 1.8;word-break: break-word;}
 /* التخصصات */
 .specializations-block {
-  min-height: 90px;
-}
+  min-height: 90px;}
 /* خط فاصل */
-.card-divider {
-  border-top: 1px solid #E5E5E5;
-  margin: 18px 0 16px;
-}
+.card-divider {border-top: 1px solid #E5E5E5;margin: 18px 0 16px;}
 /* تاريخ التقديم */
-.deadline-block {
-  margin-top: auto;
-  margin-bottom: 18px;
-}
+.deadline-block { margin-top: auto; margin-bottom: 18px;}
 /* زر عرض التفاصيل */
-.details-btn {
-  width: 100%;
-  height: 46px;
-  background: #70A0AF;
-  color: #fff;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-}
+.details-btn {width: 100%;height: 46px;background: #70A0AF;color: #fff;border-radius: 6px;
+  font-size: 16px; font-weight: 600; display: flex; align-items: center;justify-content: center;text-decoration: none;}
 </style>
 </head>
 <body>

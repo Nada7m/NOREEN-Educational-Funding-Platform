@@ -1,62 +1,50 @@
 <?php
 session_start();
-
 /* التأكد أن المستخدم مسجل دخول */
 if (!isset($_SESSION['inv_id'])) {
     header("Location: login.php");  exit();}
-
 /* الاتصال بقاعدة البيانات */
 $conn = new mysqli("localhost", "root", "", "noreen");
-
 /* إذا فشل الاتصال */
 if ($conn->connect_error) {
     die("فشل الاتصال بقاعدة البيانات");}
-
 /* متغيرات الرسائل */
 $success = "";
 $error = "";
-
 /*  إرسال النموذج */
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    /* أخذ البيانات */
+    /*  أخذ البيانات من الفورم*/
     $sch_name = trim($_POST["sch_name"]);
     $sch_field = trim($_POST["sch_field"]);
     $study_level = trim($_POST["study_level"]);
     $app_deadline = trim($_POST["app_deadline"]);
     $requirements = trim($_POST["requirements"]);
     $specializations = trim($_POST["specializations"]);
+        /* رقم المستثمر الحالي */
     $inv_id = $_SESSION["inv_id"];
-
-    /* التحقق */
+    /** يجب تعبئة جميع الحقول المطلوبة وتأكيد صحة البيانات **/
     if ( $sch_name == "" ||
         $sch_field == "" ||
         $study_level == "" ||
         $app_deadline == "" ||
+        /* رسالة خطأ عند نقص البيانات */
         !isset($_POST["confirm_data"])) { $error = "يرجى تعبئة جميع الحقول المطلوبة وتأكيد صحة البيانات.";} else {
-
         /* إدخال البيانات */
         $stmt = $conn->prepare("INSERT INTO scholarship_opps 
         (sch_field, inv_id, sch_name, requirements, study_level, Specializations, app_deadline)
         VALUES (?, ?, ?, ?, ?, ?, ?)");
+                /* ربط البيانات مع الاستعلام */
         $stmt->bind_param(
-            "sisssss",
-            $sch_field,
-            $inv_id,
-            $sch_name,
-            $requirements,
-            $study_level,
-            $specializations,
-            $app_deadline );
-
+            "sisssss", $sch_field,   $inv_id,   $sch_name,  $requirements,
+            $study_level, $specializations, $app_deadline );
+        /* تنفيذ عملية الإدخال */
         if ($stmt->execute()) {
+                      /* رسالة نجاح */
             $success = "تم نشر عرض المنحة بنجاح."; } else {
+                      /* رسالة خطأ */
             $error = "حدث خطأ أثناء حفظ البيانات.";}
-
         $stmt->close();
-    }
-}
-?>
+    }}?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -64,168 +52,58 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <title>إنشاء عرض منحة جديدة</title>
 <link rel="stylesheet" href="CSS01Layout.css?v=4">
 <style>
-.back-icon{
-  width:26px;
-  height:26px;
-}
-
-.back-btn{
-  width:32px;
-  height:32px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-::placeholder{
-  color:#999;
-  font-size:13px;
-}
-
-.form-card{
-  width:96%;
-  max-width:1450px;
-  margin:0 auto;
-  background:#ffffff;
-  border-radius:10px;
-  padding:42px 46px 52px;
-  box-shadow:0 4px 18px rgba(0,0,0,0.05);
-}
-
-.intro-text{
-  text-align:center;
-  font-size:17px;
-  color:#222;
-  margin-bottom:28px;
-}
-
-.form-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:30px 38px;
-  align-items:start;
-}
-
-.field{
-  margin-bottom:22px;
-}
-
-.field label{
-  display:block;
-  font-size:17px;
-  font-weight:600;
-  margin-bottom:10px;
-  color:#191919;
-  line-height:1.9;
-}
-
+  /* أيقونة الرجوع */
+.back-icon{width:26px;height:26px;}
+/* زر الرجوع */
+.back-btn{ width:32px;height:32px; display:flex; align-items:center;justify-content:center;}
+/* النص الافتراضي داخل الحقول */
+::placeholder{color:#999;font-size:13px;}
+/* بطاقة الفورم */
+.form-card{ width:96%; max-width:1450px; margin:0 auto; background:#ffffff;
+  border-radius:10px; padding:42px 46px 52px; box-shadow:0 4px 18px rgba(0,0,0,0.05);}
+/* النص التعريفي */
+.intro-text{text-align:center;font-size:17px;color:#222;margin-bottom:28px;}
+/* شبكة الحقول */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px 38px;align-items:start;}
+/* الحقل */
+.field{margin-bottom:22px;}
+/* عنوان الحقل */
+.field label{display:block;font-size:17px;font-weight:600;margin-bottom:10px;color:#191919;line-height:1.9;}
+/* حقول الإدخال */
 .field input[type="text"],
 .field input[type="date"],
-.field select{
-  width:100%;
-  height:50px;
-  border:1.5px solid #8FB4C9;
-  background:#F8F8F8;
-  padding:10px 14px;
-  font-size:15px;
-  color:#222;
-  outline:none;
-  font-family:"Noto Kufi Arabic",sans-serif;
-}
-
-.field textarea{
-  width:100%;
-  min-height:320px;
-  border:1.5px solid #8FB4C9;
-  background:#F8F8F8;
-  padding:14px 16px;
-  font-size:15px;
-  color:#222;
-  outline:none;
-  resize:none;
-  font-family:"Noto Kufi Arabic",sans-serif;
-}
-
+.field select{width:100%;height:50px;border:1.5px solid #8FB4C9;background:#F8F8F8;padding:10px 14px;font-size:15px;
+  color:#222;outline:none;font-family:"Noto Kufi Arabic",sans-serif;}
+/* مربع النص */
+.field textarea{width:100%;min-height:320px;border:1.5px solid #8FB4C9;background:#F8F8F8;padding:14px 16px;
+  font-size:15px;color:#222; outline:none;resize:none;font-family:"Noto Kufi Arabic",sans-serif;}
+/* تأثير التركيز */
 .field input:focus,
 .field select:focus,
-.field textarea:focus{
-  border-color:#6E4A8E;
-  background:#ffffff;
-}
-
+.field textarea:focus{border-color:#6E4A8E;background:#ffffff;}
+/* لون النص الافتراضي */
 .field input::placeholder,
 .field textarea::placeholder,
-.field select{
-  color:#c9c9c9;
-}
+.field select{color:#c9c9c9;}
+/* مجموعة الخيارات */
+.radio-group{display:grid;grid-template-columns:repeat(2,max-content);gap:12px 46px;padding:6px 6px 0 0;margin-bottom:10px;}
+/* العنصر الواحد */
+.radio-group label{ display:flex; align-items:center; gap:10px; font-size:16px; color:#151515;}
+/* زر الراديو */
+.radio-group input{ width:16px; height:16px; accent-color:#4E2E65;}
+/* زر الإقرار */
+.confirm-row{ display:flex; align-items:center; gap:10px; font-size:16px; color:#171717; margin-top:22px;}
 
-.radio-group{
-  display:grid;
-  grid-template-columns:repeat(2,max-content);
-  gap:12px 46px;
-  padding:6px 6px 0 0;
-  margin-bottom:10px;
-}
+.confirm-row input{width:16px;height:16px;}
 
-.radio-group label{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-size:16px;
-  color:#151515;
-}
+.form-submit-box{margin-top:30px;}
 
-.radio-group input{
-  width:16px;
-  height:16px;
-  accent-color:#4E2E65;
-}
+.form-submit-btn{background:#4A2B63;color:white;border:none;padding:14px 26px;border-radius:4px;display:inline-flex;
+  align-items:center;justify-content:center;font-size:17px;font-weight:700;min-width:340px;cursor:pointer;}
 
-.confirm-row{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-size:16px;
-  color:#171717;
-  margin-top:22px;
-}
+.form-submit-btn:hover{opacity:.95;}
 
-.confirm-row input{
-  width:16px;
-  height:16px;
-}
-
-.form-submit-box{
-  margin-top:30px;
-}
-
-.form-submit-btn{
-  background:#4A2B63;
-  color:white;
-  border:none;
-  padding:14px 26px;
-  border-radius:4px;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  font-size:17px;
-  font-weight:700;
-  min-width:340px;
-  cursor:pointer;
-}
-
-.form-submit-btn:hover{
-  opacity:.95;
-}
-
-.error-text{
-  display:none;
-  margin-top:14px;
-  color:#C0392B;
-  font-size:15px;
-  font-weight:600;
-
-}
+.error-text{display:none;margin-top:14px;color:#C0392B;font-size:15px;font-weight:600;}
 </style>
 </head>
 

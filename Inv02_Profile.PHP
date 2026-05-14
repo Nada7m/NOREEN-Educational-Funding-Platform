@@ -4,24 +4,19 @@ session_start();
 if (!isset($_SESSION['inv_id'])) {
     header("Location: login.php");
     exit();}
-
 /* الاتصال بقاعدة البيانات */
 $conn = new mysqli("localhost", "root", "", "noreen");
 if ($conn->connect_error) {
     die("فشل الاتصال بقاعدة البيانات");}
-
 /* دعم العربية */
 $conn->set_charset("utf8mb4");
-
 /* جلب رقم المستثمر من الجلسة */
 $inv_id = $_SESSION['inv_id'];
-
 /* استعلام جلب بيانات المستثمر */
 $stmt = $conn->prepare("
     SELECT inv_name, ccr_number, inv_number, email
-    FROM investor
+    FROM  investor
     WHERE inv_id = ?");
-
 $stmt->bind_param("i", $inv_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -32,7 +27,6 @@ if ($result->num_rows > 0) {
 } else {
     die("لم يتم العثور على بيانات المستثمر");
 }
-
 $stmt->close();
 $conn->close();
 ?>
@@ -47,81 +41,26 @@ $conn->close();
 <link rel="stylesheet" href="CSS01Layout.css?v=4">
 <style>
 /* مساحة الصفحة الداخلية */
-.page{
-    padding:40px;
-    font-family:"Noto Kufi Arabic", sans-serif;
-}
-
+.page{padding:40px;font-family:"Noto Kufi Arabic", sans-serif;}
 /* صندوق الملف الشخصي */
-.profile-box{
-    background:#fff;
-    max-width:650px;
-    margin:auto;
-    padding:35px;
-    border-radius:14px;
-    box-shadow:0 3px 10px rgba(0,0,0,0.08);
-}
-
+.profile-box{ background:#fff; max-width:650px; margin:auto; padding:35px; border-radius:14px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.08);}
 /* اسم الشركة */
-.profile-box h2{
-    text-align:center;
-    margin-bottom:15px;
-    font-size:24px;
-    color:#4b2a63;
-}
-
+.profile-box h2{  text-align:center;margin-bottom:15px;font-size:24px;color:#4b2a63;}
 /* الخط الفاصل */
-.line{
-    width:100%;
-    height:1px;
-    background:#d8cde2;
-    margin:0 auto 25px;
-}
-
+.line{width:100%;height:1px;background:#d8cde2;margin:0 auto 25px;}
 /* كل قسم داخل الصندوق */
-.profile-section{
-    margin-bottom:25px;
-    padding-bottom:15px;
-    border-bottom:1px solid #eee;
-}
-
+.profile-section{ margin-bottom:25px; padding-bottom:15px; border-bottom:1px solid #eee;}
 /* عنوان القسم */
-.profile-section h3{
-    margin-bottom:15px;
-    font-size:19px;
-    color:#6a3d8f;
-}
-
+.profile-section h3{margin-bottom:15px;font-size:19px;color:#6a3d8f;}
 /* نصوص البيانات */
-.profile-section p{
-    margin:8px 0;
-    font-size:16px;
-}
-
+.profile-section p{ margin:8px 0; font-size:16px;}
 /* صف كلمة المرور */
-.password-box{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    flex-wrap:wrap;
-}
-
+.password-box{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 /* زر تعديل البيانات */
-.edit-btn{
-    margin-top:20px;
-    padding:10px 22px;
-    border:none;
-    border-radius:8px;
-    background:#4b2a63;
-    color:#fff;
-    font-size:15px;
-    cursor:pointer;
-    display:inline-block;
-    transition:0.3s;
-}
-.edit-btn:hover{
-    opacity:0.9;
-}
+.edit-btn{margin-top:20px;padding:10px 22px;border:none;border-radius:8px;background:#4b2a63;
+    color:#fff; font-size:15px;cursor:pointer; display:inline-block; transition:0.3s;}
+.edit-btn:hover{  opacity:0.9;}
 </style>
 </head>
 <body>
@@ -140,7 +79,6 @@ $conn->close();
                 <li><a href="Inv06_ManageScholarships.php">إدارة المنح</a></li>
                 <li><a href="Inv10_Payments.php">المدفوعات</a></li>
             </ul>
-
         </div>
         <!-- زر تسجيل الخروج -->
         <div class="sidebar-bottom">
@@ -156,7 +94,6 @@ $conn->close();
     <div class="main-content">
         <!-- الهيدر -->
   <header class="header">
-
   <div class="page-heading">
     <div class="page-title">الملف الشخصي</div>
   </div>
@@ -196,12 +133,8 @@ $conn->close();
                 <!-- زر التعديل -->
                 <a href="Inv03_EditProfile.php" class="edit-btn">تعديل البيانات</a>
             </div>
-
         </div>
-
     </div>
-
 </div>
-
 </body>
 </html>

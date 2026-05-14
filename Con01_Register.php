@@ -1,15 +1,11 @@
 <?php
-
 // الاتصال بقاعدة البيانات
 $con = mysqli_connect("localhost","root","","noreen");
-
 // متغيرات لرسالة النجاح أو الخطأ
 $msg = "";
 $type = "";
-
 // التحقق إذا تم الضغط على زر إنشاء الحساب
 if(isset($_POST["save"])){
-
 // استقبال البيانات من الفورم
 $office = $_POST["office_name"]; // اسم المكتب
 $ccr = $_POST["ccr_number"]; // رقم السجل التجاري
@@ -23,10 +19,8 @@ $pass = $_POST["password"]; // كلمة المرور
 
 // استقبال الدول المختارة كمصفوفة
 $countries = isset($_POST["country"]) ? $_POST["country"] : [];
-
 // التحقق من عدم تكرار البريد الإلكتروني
 $checkEmail = mysqli_query($con,"SELECT * FROM consulting_office WHERE email='$email'");
-
 // التحقق من عدم تكرار السجل التجاري
 $checkCcr = mysqli_query($con,"SELECT * FROM consulting_office WHERE ccr_number='$ccr'");
 
@@ -34,14 +28,11 @@ if(mysqli_num_rows($checkEmail) > 0){
 $msg = "البريد الإلكتروني مستخدم مسبقًا.";
 $type = "error";
 }
-
 else if(mysqli_num_rows($checkCcr) > 0){
 $msg = "رقم السجل التجاري مسجل مسبقًا.";
 $type = "error";
 }
-
 else{
-
 // تشفير كلمة المرور للحماية
 $newpass = password_hash($pass, PASSWORD_DEFAULT);
 
@@ -50,92 +41,69 @@ $sql = "INSERT INTO consulting_office
 (ccr_number,email,office_name,office_description,Bachelor_fee,Masters_fee,Phd_fee,password,phone)
 VALUES
 ('$ccr','$email','$office','$desc','$bachelor','$master','$phd','$newpass','$phone')";
-
+// تنفيذ أمر الإدخال
 if(mysqli_query($con,$sql)){
-
-// الحصول على رقم المكتب الذي تم إدخاله
+// الحصول على رقم المكتب الذي تم إضافته
 $office_id = mysqli_insert_id($con);
-
 // إدخال الدول المختارة وربطها بالمكتب
 foreach($countries as $oneCountry){
 
 $sql_country = "INSERT INTO office_country (office_id, con_name)
 VALUES ('$office_id', '$oneCountry')";
-
+// تنفيذ إدخال الدولة
 mysqli_query($con, $sql_country);
 }
-
+// رسالة نجاح
 $msg = "تم إنشاء الحساب بنجاح.";
 $type = "success";
-}
+}// إذا حدث خطأ أثناء الإدخال
 else{
 $msg = "حدث خطأ أثناء حفظ البيانات.";
 $type = "error";
 }
-
 }
-
 }
-
 ?>
 <style>
 /*  نص تسجيل الدخول تحت الزر */
-.login-text{
-    text-align:center;
-    margin-top:12px;
-    color:#777;
-    font-size:14px;
+.login-text{text-align:center; margin-top:12px;color:#777;font-size:14px;
 }
-.login-text a{
-    color:#777;
-    text-decoration:none;
+.login-text a{color:#777;text-decoration:none;
 }
 .login-text a:hover{
     text-decoration:underline;
 }
 </style>
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
-
 <meta charset="UTF-8">
 <title>إنشاء حساب مكتب استشاري</title>
-
 <!-- خط عربي -->
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic&display=swap" rel="stylesheet">
-
 <!-- مكتبة select2 -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
 <link rel="stylesheet" href="Style.css">
+<!-- مكتبة jquery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <!-- مكتبة select2 -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
 </head>
-
 <body>
-
 <div class="container">
 <div class="box">
-
 <h2>إنشاء حساب <span>مكتب استشاري</span></h2>
-
 <?php if($msg!=""){ ?>
-
 <div class="message <?php echo $type; ?>">
 <?php echo $msg; ?>
 </div>
 
 <?php } ?>
-
+<!-- بداية الفورم  -->
 <form method="post" onsubmit="return checkForm()">
-
+<!-- صف الحقول -->
 <div class="row">
-
+<!-- اسم المكتب -->
 <div class="field">
 <label><span class="star">*</span> اسم المكتب</label>
 <input type="text" id="office" name="office_name" placeholder="الرجاء إدخال الاسم الرسمي للمكتب">
@@ -145,6 +113,7 @@ $type = "error";
 <div class="field">
 <label><span class="star">*</span> رقم السجل التجاري</label>
 <input type="text" id="ccr" name="ccr_number" placeholder="مثل : 1010234567">
+<!-- مكان ظهور الخطأ -->
 <div class="errorText" id="ccrError"></div>
 </div>
 
@@ -280,16 +249,16 @@ $type = "error";
 </div>
 </div>
 <script>
-
+/* تشغيل مكتبة select2 للدول*/
 $(document).ready(function(){
 $('#country').select2({
 placeholder:"اختر الدول من القائمة أدناه",
 width:'100%'
 });
 });
-
+/*دالة للتحقق من صحة البيانات*/
 function checkForm(){
-
+/* تصفير جميع رسائل الأخطاء*/
 document.getElementById("officeError").innerText = "";
 document.getElementById("ccrError").innerText = "";
 document.getElementById("masterError").innerText = "";
@@ -301,7 +270,7 @@ document.getElementById("phoneError").innerText = "";
 document.getElementById("passError").innerText = "";
 document.getElementById("pass2Error").innerText = "";
 document.getElementById("countryError").innerText = "";
-
+/* أجيب القيم من الحقول */
 var office = document.getElementById("office").value;
 var ccr = document.getElementById("ccr").value;
 var master = document.getElementById("master").value;
@@ -312,69 +281,66 @@ var email = document.getElementById("email").value;
 var phone = document.getElementById("phone").value;
 var pass = document.getElementById("pass").value;
 var pass2 = document.getElementById("pass2").value;
+/*أجيب الدول المختارة */
 var country = $('#country').val();
 var ok = true;
-
+/*اتحقق من اسم المكتب */
 if(office == ""){
 document.getElementById("officeError").innerText = "يرجى إدخال اسم المكتب.";
 ok = false;
 }
-
+/*التحقق من السجل التجاري*/
 if(ccr == "" || ccr.length != 10 || isNaN(ccr)){
 document.getElementById("ccrError").innerText = "رقم السجل التجاري يجب أن يكون 10 أرقام.";
 ok = false;
 }
-
+/*التحقق من  رسوم الماستر*/
 if(master == "" || isNaN(master)){
 document.getElementById("masterError").innerText = "أدخل قيمة رقمية صحيحة.";
 ok = false;
 }
-
+/*التحقق من  رسوم الدكتوراه*/
 if(phd == "" || isNaN(phd)){
 document.getElementById("phdError").innerText = "أدخل قيمة رقمية صحيحة.";
 ok = false;
 }
-
+/*التحقق من  رسوم البكالوريوس*/
 if(bachelor == "" || isNaN(bachelor)){
 document.getElementById("bachelorError").innerText = "أدخل قيمة رقمية صحيحة.";
 ok = false;
 }
-
+/*التحقق من إدخال دول */
 if(country == null || country.length == 0){
 document.getElementById("countryError").innerText = "يرجى اختيار الدولة.";
 ok = false;
 }
-
+/*التحقق من  إدخال وصف للمكتب*/
 if(desc == ""){
 document.getElementById("descError").innerText = "يرجى إدخال وصف المكتب.";
 ok = false;
 }
-
+/*التحقق من  إدخال إيميل*/
 if(email == "" || email.indexOf("@") == -1){
 document.getElementById("emailError").innerText = "أدخل بريد إلكتروني صحيح.";
 ok = false;
 }
-
+/*التحقق من  إدخال رقم هاتف*/
 if(phone == "" || phone.length != 10 || isNaN(phone)){
 document.getElementById("phoneError").innerText = "رقم الهاتف يجب أن يكون 10 أرقام.";
 ok = false;
 }
-
+/*التحقق من  إدخال كلمة المرور*/
 if(pass == ""){
 document.getElementById("passError").innerText = "أدخل كلمة المرور.";
 ok = false;
 }
-
+/*التحقق من تطابق كلمتي المرور*/
 if(pass2 == "" || pass != pass2){
 document.getElementById("pass2Error").innerText = "كلمتا المرور غير متطابقتين.";
 ok = false;
 }
-
 return ok;
-
 }
-
 </script>
-
 </body>
 </html>

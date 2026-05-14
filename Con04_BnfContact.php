@@ -1,40 +1,38 @@
 <?php
 session_start();
-
-// 1. الاتصال بالقاعدة
+//  الاتصال بالقاعدة
 $con = new mysqli("localhost", "root", "", "noreen");
 if ($con->connect_error) { die("فشل الاتصال: " . $con->connect_error); }
 $con->set_charset("utf8mb4");
-
-// 2. المعرفات
+// جلب معرف المكتب الحالي
 $current_off_id = $_SESSION['office_id'] ?? 0; 
+// جلب معرف المستفيد من الرابط
 $target_bnf_id = (isset($_GET['bnf_id']) && intval($_GET['bnf_id']) > 0) ? intval($_GET['bnf_id']) : 0; 
-
-// 3. معالجة الإرسال
+// معالجة إرسال الرسالة
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send_msg'])) {
+ // تنظيف النص المدخل
     $text = trim($con->real_escape_string($_POST['message']));
+// التحقق أن الرسالة ليست فارغة
     if(!empty($text)) {
+        // إدخال الرسالة في قاعدة البيانات
         $sql_insert = "INSERT INTO bnf_off_msg (bnf_id, office_id, msg_text, sender_type) 
                        VALUES ('$target_bnf_id', '$current_off_id', '$text', 'office')";
-        
         if ($con->query($sql_insert)) {
+             // تحديث الصفحة بعد الإرسال
             header("Location: " . $_SERVER['PHP_SELF'] . "?bnf_id=" . $target_bnf_id);
             exit();
-        }
-    }
-}
-
-// 4. جلب اسم المستفيد
+        } }}
+// جلب اسم المستفيد
+// اسم افتراضي
 $bnf_name = "المستفيد المستفيد";
+// استعلام جلب الاسم
 $bnf_res = $con->query("SELECT f_name, l_name FROM beneficiary WHERE bnf_id = '$target_bnf_id'");
+// إذا تم العثور على بيانات
 if ($bnf_res && $row_bnf = $bnf_res->fetch_assoc()) {
-    $bnf_name = $row_bnf['f_name'] . " " . $row_bnf['l_name'];
-}
-
-// 5. جلب المحادثة
-$res_msgs = $con->query("SELECT * FROM bnf_off_msg WHERE bnf_id = '$target_bnf_id' AND office_id = '$current_off_id' ORDER BY msg_time ASC");
-?>
-
+        // دمج الاسم الأول والأخير
+    $bnf_name = $row_bnf['f_name'] . " " . $row_bnf['l_name'];}
+// جلب جميع رسائل المحادثة
+$res_msgs = $con->query("SELECT * FROM bnf_off_msg WHERE bnf_id = '$target_bnf_id' AND office_id = '$current_off_id' ORDER BY msg_time ASC");?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -43,24 +41,35 @@ $res_msgs = $con->query("SELECT * FROM bnf_off_msg WHERE bnf_id = '$target_bnf_i
     <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="CSS01Layout.css?v=6">
     <style>
+        /*   الألوان الرئيسية */
         :root { --main-purple: #3E2454; --chat-bg: #F5F5F5; }
+      /* تنسيق الصفحة */
         body { background-color: #FFFFFF; margin: 0; font-family: 'Noto Kufi Arabic', sans-serif; }
+        /* الهيكل الرئيسي */
         .layout { display: flex; min-height: 100vh; }
-        
+          /* صندوق المحادثة*/
         .chat-container { flex: 1; margin: 20px; padding: 25px; background-color: var(--chat-bg) !important; border-radius: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; height: 400px; }
+          /* شكل الرسالة*/
         .msg { max-width: 75%; padding: 15px 20px; background: #FFFFFF; box-shadow: 0 2px 5px rgba(0,0,0,0.05); line-height: 1.8; position: relative; font-size: 14px; border-radius: 15px; }
+        /*   رسائل المكتب*/
         .from-me { align-self: flex-start; border-right: 6px solid var(--main-purple); }
+          /* رسائل المستفيد*/
         .from-them { align-self: flex-end; border-left: 6px solid #999; background-color: #f9f9f9; }
+         /*  معلومات الرسالة*/
         .msg-meta { font-size: 10px; color: #888; display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; border-top: 1px solid #f0f0f0; padding-top: 5px; }
-        
+          /* منطقة إرسال الرسالة*/
         .send-area-form { padding: 20px; background: #fff; display: flex; gap: 15px; border-top: 1px solid #eee; align-items: center; }
+        /* حقل الكتابة */
         .msg-input { flex: 1; padding: 15px; border: 1px solid #ddd; border-radius: 30px; outline: none; }
+        /* أيقونة الإرسال */
         .send-icon { width: 50px; cursor: pointer; }
-
+        /* قائمة الإعدادات*/
         .settings-dropdown { position: relative; display: inline-block; }
+        /* القائمة المنسدلة */
         .dropdown-menu { display: none; position: absolute; left: 0; top: 100%; background: white; border: 1px solid #ddd; border-radius: 8px; width: 190px; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        /* روابط القائمة */
         .dropdown-menu a { display: block; padding: 12px 15px; text-decoration: none; color: #333; font-size: 13px; }
-      
+      /* إظهار القائمة عند المرور */
         .settings-dropdown:hover .dropdown-menu { display: block; }
     </style>
 </head>
@@ -110,18 +119,24 @@ $res_msgs = $con->query("SELECT * FROM bnf_off_msg WHERE bnf_id = '$target_bnf_i
 
       <div class="chat-container">
           <?php if($res_msgs && $res_msgs->num_rows > 0): 
-              while($row = $res_msgs->fetch_assoc()): 
+              while($row = $res_msgs->fetch_assoc()):
+                        // التحقق هل الرسالة من المكتب 
                   $is_me = ($row['sender_type'] == 'office'); ?>
+                  <!-- الرسالة -->
                   <div class="msg <?php echo $is_me ? 'from-me' : 'from-them'; ?>">
+                        <!-- نص الرسالة -->
                       <div class="text"><?php echo nl2br(htmlspecialchars($row['msg_text'])); ?></div>
+                          <!-- وقت الرسالة -->
                       <div class="msg-meta"><span><?php echo date("h:i A", strtotime($row['msg_time'])); ?></span></div>
                   </div>
               <?php endwhile; 
           endif; ?>
       </div>
-
+                          <!--  نموذج إرسال رسالة -->
       <form class="send-area-form" method="POST">
+                    <!-- حقل كتابة الرسالة -->
           <input type="text" name="message" class="msg-input" placeholder="اكتب الرد هنا..." required autocomplete="off">
+                      <!-- زر الإرسال -->
           <button type="submit" name="send_msg" style="background:none; border:none; padding:0;">
               <img src="select box.png" class="send-icon">
           </button>
@@ -130,4 +145,3 @@ $res_msgs = $con->query("SELECT * FROM bnf_off_msg WHERE bnf_id = '$target_bnf_i
   </div>
 </body>
 </html>
-
