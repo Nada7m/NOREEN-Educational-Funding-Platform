@@ -44,14 +44,12 @@ $res_msgs = $con->query("SELECT * FROM bnf_inv_msg WHERE bnf_id = '$target_bnf_i
         .show { display: block !important; }
         .status-header { background: #E9DFF1; padding: 12px 25px; margin: 20px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
         .student-name { color: var(--main-purple); font-weight: bold; }
-        
         .chat-container { flex: 1; margin: 0 20px; padding: 25px; background-color: #F5F5F5; border-radius: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; height: 450px; }
         .msg { max-width: 75%; padding: 15px 20px; background: #FFFFFF; box-shadow: 0 2px 5px rgba(0,0,0,0.05); line-height: 1.8; position: relative; font-size: 14px; border-radius: 15px; }
         
         /* منطق الاتجاهات للمستثمر */
         .from-me { align-self: flex-start; border-right: 6px solid var(--main-purple); } /* يمين */
         .from-them { align-self: flex-end; border-left: 6px solid #999; background-color: #f9f9f9; } /* يسار */
-        
         .msg-meta { font-size: 10px; color: #888; display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; border-top: 1px solid #f0f0f0; padding-top: 5px; }
         .sidebar-bottom { margin-top: auto; padding: 25px; text-align: center; }
         .logout-btn-custom { background-color: #F3E6DD; border: none; border-radius: 50px; padding: 8px 18px; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; flex-direction: row-reverse; gap: 8px; font-weight: bold; color: #000; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
