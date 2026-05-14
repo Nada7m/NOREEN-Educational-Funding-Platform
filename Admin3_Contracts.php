@@ -2,26 +2,26 @@
 $con = mysqli_connect("localhost","root","","noreen");
 mysqli_set_charset($con,"utf8mb4");
 
-/* إنهاء العقد */
+// إذا ضغط الأدمن زر إلغاء العقد
 if(isset($_POST['end_contract'])){
     $contract_id = $_POST['contract_id'];
     $request_id  = $_POST['request_id'];
-
+    // تحديث حالة العقد إلى ملغي
     mysqli_query($con,"UPDATE e_contract SET ctr_status='ملغي' WHERE contract_id='$contract_id'");
+    // تحديث حالة الطلب إلى منتهي
     mysqli_query($con,"UPDATE scholarship_requests SET request_status='منتهي' WHERE request_id='$request_id'");
-
+    // تحديث الصفحة بعد التنفيذ
     header("Location: Admin3_Contracts.php");
     exit();
 }
-
-/* جلب البيانات */
+/* اجيب بيانات العقود */
 $sql = "
 SELECT 
     c.contract_id,
     c.ctr_status,
     c.request_id,
     i.inv_name,
-    CONCAT(b.f_name,' ',b.l_name) AS beneficiary_name
+CONCAT(b.f_name,' ',b.l_name) AS beneficiary_name //عشان ادمج اسم المستخدم الأول و الثاني سوا
 FROM e_contract c
 JOIN scholarship_requests r ON c.request_id = r.request_id
 JOIN beneficiary b ON r.bnf_id = b.bnf_id
@@ -29,7 +29,7 @@ JOIN scholarship_opps s ON r.scholarship_id = s.scholarship_id
 JOIN investor i ON s.inv_id = i.inv_id
 ORDER BY c.contract_id DESC
 ";
-
+// تنفيذ الاستعلام
 $result = mysqli_query($con,$sql);
 ?>
 
@@ -37,7 +37,6 @@ $result = mysqli_query($con,$sql);
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>إدارة العقود</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -48,145 +47,74 @@ $result = mysqli_query($con,$sql);
 .page-wrapper{
   padding:40px;
 }
-
-.table-box{
-  width:100%;
-  max-width:1050px;
-  margin:0 auto;
-  background:#FFFFFF;
-  border:1px solid #E6E0E6;
-  border-radius:8px;
-  box-shadow:0 2px 10px rgba(0,0,0,0.05);
-  overflow:hidden;
+/*حاوية الجدول*/
+.table-box{width:100%;max-width:1050px; margin:0 auto;background:#FFFFFF;border:1px solid #E6E0E6;
+  border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.05);overflow:hidden;
 }
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  table-layout:fixed;
-  background:#FFFFFF;
+/*تنسيقات الجدول*/
+table{ width:100%; border-collapse:collapse; table-layout:fixed; background:#FFFFFF;
 }
-
-thead th{
-  padding:15px 12px;
-  background:#FAFAFA;
-  border-bottom:1px solid #DDDDDD;
-  font-size:15px;
-  font-weight:700;
-  color:#3E2454;
-  text-align:center;
+/* صف العناوين */
+thead th{ padding:15px 12px; background:#FAFAFA; border-bottom:1px solid #DDDDDD; font-size:15px;
+ font-weight:700; color:#3E2454; text-align:center;
 }
-
-tbody td{
-  padding:16px 12px;
-  border-bottom:1px solid #EEEEEE;
-  text-align:center;
-  vertical-align:middle;
-  font-size:14px;
-  font-weight:500;
-  color:#595959;
-  background:#FFFFFF;
+/* خلايا الجدول */
+tbody td{ padding:16px 12px; border-bottom:1px solid #EEEEEE; text-align:center;
+  vertical-align:middle;font-size:14px;font-weight:500;color:#595959;background:#FFFFFF;
 }
-
-.status{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  width:100px;
-  height:42px;
-  border-radius:12px;
-  color:#FFFFFF;
-  font-size:14px;
-  font-weight:600;
+/* شكل الحالة */
+.status{ display:inline-flex;align-items:center;justify-content:center;width:100px;height:42px;
+  border-radius:12px;color:#FFFFFF;font-size:14px;font-weight:600;
 }
-
+/* حالة نشط */
 .status-active{
   background:#2E8B57;
 }
-
+/* حالة ملغي */
 .status-cancel{
   background:#C4474F;
 }
-
+/* حالة منتهي */
 .status-ended{
   background:#9E9E9E;
 }
-
-.btn{
-  width:100px;
-  height:42px;
-  border:none;
-  border-radius:12px;
-  cursor:pointer;
-  font-size:14px;
-  font-family:"Noto Kufi Arabic",sans-serif;
-  font-weight:600;
+/* التنسيق العام للأزرار */
+.btn{width:100px;height:42px;border:none;border-radius:12px;cursor:pointer;font-size:14px;
+  font-family:"Noto Kufi Arabic",sans-serif; font-weight:600;
 }
-
+/* زر إنهاء العقد */
 .btn-delete{
-  background:#A53A3A;
-  color:#FFFFFF;
+  background:#A53A3A; color:#FFFFFF;
 }
 
-.empty-row td{
-  height:62px;
-  background:#FFFFFF;
-  border-bottom:1px solid #EEEEEE;
+.empty-row td{ height:62px;background:#FFFFFF;border-bottom:1px solid #EEEEEE;
 }
 
 /* نافذة التأكيد */
-.confirm-modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.35);
-  z-index:9999;
-  justify-content:center;
-  align-items:center;
+.confirm-modal{display:none;position:fixed;inset:0; z-index:9999;
+  justify-content:center; align-items:center;
 }
 
-.confirm-box{
-  width:420px;
-  max-width:92%;
-  background:#FFFFFF;
-  border-radius:10px;
-  padding:28px 24px;
-  text-align:center;
-  box-shadow:0 8px 25px rgba(0,0,0,0.15);
+.confirm-box{width:420px;max-width:92%;background:#FFFFFF;border-radius:10px;padding:28px 24px;
+text-align:center;box-shadow:0 8px 25px rgba(0,0,0,0.15);
 }
-
-.confirm-title{
-  color:#3E2454;
-  font-size:18px;
-  font-weight:700;
-  margin-bottom:25px;
+/* نص السؤال */
+.confirm-title{ color:#3E2454; font-size:18px; font-weight:700; margin-bottom:25px;
 }
-
-.confirm-actions{
-  display:flex;
-  justify-content:center;
-  gap:14px;
+/* ترتيب الأزرار */
+.confirm-actions{ display:flex; justify-content:center; gap:14px;
 }
-
-.confirm-btn{
-  min-width:110px;
-  height:42px;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-  font-size:14px;
-  font-family:"Noto Kufi Arabic",sans-serif;
-  font-weight:700;
+/* تصميم الأزرار */
+.confirm-btn{ min-width:110px; height:42px; border:none; border-radius:10px; cursor:pointer;
+  font-size:14px;font-family:"Noto Kufi Arabic",sans-serif;font-weight:700;
 }
 
 .confirm-yes{
-  background:#A53A3A;
-  color:#FFFFFF;
+  background:#A53A3A;color:#FFFFFF;
 }
 
 .confirm-no{
-  background:#ECECEC;
-  color:#3E2454;
+  background:#ECECEC;color:#3E2454;
 }
 
 </style>

@@ -34,7 +34,7 @@ if(isset($_POST['approve']) || isset($_POST['reject'])){
 /* اجيب بيانات المستثمرين والمكاتب */
 $result = mysqli_query($con,"
 SELECT inv_id AS entity_id, inv_name AS entity_name, ccr_number, approval_status, 'مستثمر' AS entity_type FROM investor
-UNION ALL //دمج نتائج أكثر من جدول مع بعض//
+UNION ALL
 SELECT office_id, office_name, ccr_number, approval_status, 'مكتب استشاري' FROM consulting_office
 ");
 ?>
