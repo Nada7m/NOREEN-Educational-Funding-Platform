@@ -18,6 +18,8 @@ if(!isset($_GET['id'])||$_GET['id']==""){
 }
 /* تحويل رقم المنحة إلى رقم صحيح */
 $scholarship_id=(int)$_GET['id'];
+function e($text){
+    return htmlspecialchars($text ?? "",ENT_QUOTES,"UTF-8");}
 /* قبول أو رفض الطلب */
 if($_SERVER["REQUEST_METHOD"]=="POST" && isset($_POST["action_type"]) && isset($_POST["request_id"])){
       /* رقم الطلب */
@@ -28,34 +30,38 @@ if($_SERVER["REQUEST_METHOD"]=="POST" && isset($_POST["action_type"]) && isset($
     $new_status="";
     /**  حالة الطلب تكون فقط مقبول أو مرفوض **/
     if($action_type=="accept"){   $new_status="مقبول";  }elseif($action_type=="reject"){  $new_status="مرفوض"; }
-
+    /**  لا يتم تحديث الطلب إلا إذا كانت الحالة صحيحة **/
     if($new_status!=""){
+              /* تحديث حالة الطلب */
         $update_stmt=mysqli_prepare($con,"
             UPDATE scholarship_requests sr
             INNER JOIN scholarship_opps so ON sr.scholarship_id=so.scholarship_id
             SET sr.request_status=?
             WHERE sr.request_id=? AND sr.scholarship_id=? AND so.inv_id=?
         ");
+                /* ربط البيانات */
         mysqli_stmt_bind_param($update_stmt,"siii",$new_status,$request_id,$scholarship_id,$inv_id);
    mysqli_stmt_execute($update_stmt);
     }
 }
 
-/* بيانات المنحة */
+/* بيانات المنحة اجيبها*/
 $stmt=mysqli_prepare($con,"
     SELECT scholarship_id,sch_name,sch_field,study_level,Specializations,requirements,app_deadline
     FROM scholarship_opps
     WHERE scholarship_id=? AND inv_id=?
 ");
 mysqli_stmt_bind_param($stmt,"ii",$scholarship_id,$inv_id);
+/* تنفيذ الاستعلام */
 mysqli_stmt_execute($stmt);
+/* جلب النتائج */
 $result=mysqli_stmt_get_result($stmt);
+/* تحويل البيانات إلى مصفوفة */
 $scholarship=mysqli_fetch_assoc($result);
-
+/**  لا يمكن عرض منحة غير موجودة **/
 if(!$scholarship){
     die("لم يتم العثور على بيانات هذه المنحة.");
 }
-
 /* جلب المتقدمين */
 $applicants=[];
 $app_stmt=mysqli_prepare($con,"
@@ -77,12 +83,12 @@ $app_stmt=mysqli_prepare($con,"
     WHERE scholarship_requests.scholarship_id=? AND scholarship_requests.request_status<>'مرفوض'
     ORDER BY scholarship_requests.request_id DESC
 ");
+/* ربط رقم المنحة */
 mysqli_stmt_bind_param($app_stmt,"i",$scholarship_id);
 mysqli_stmt_execute($app_stmt);
 $app_result=mysqli_stmt_get_result($app_stmt);
-
+/* المرور على جميع المتقدمين */
 while($row=mysqli_fetch_assoc($app_result)){
-
     /* ملفات هذا الطلب */
     $documents=[];
     $doc_stmt=mysqli_prepare($con,"
