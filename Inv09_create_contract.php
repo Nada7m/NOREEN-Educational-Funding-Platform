@@ -1,22 +1,35 @@
 <?php
 session_start();
 
+/* التحقق من تسجيل دخول المستثمر */
 if (!isset($_SESSION['inv_id'])) {
     header("Location: login.php");
     exit();
 }
 
+/* الاتصال بقاعدة البيانات */
 $con = mysqli_connect("localhost", "root", "", "noreen");
+
+/* التحقق من نجاح الاتصال */
 if (!$con) {
     die("فشل الاتصال بقاعدة البيانات");
 }
+
+/* ضبط الترميز لدعم اللغة العربية */
 mysqli_set_charset($con, "utf8mb4");
 
+/* الحصول على رقم المستثمر الحالي */
 $inv_id = (int) $_SESSION['inv_id'];
+
+/* الحصول على رقم الطلب */
 $request_id = isset($_GET['request_id']) ? (int)$_GET['request_id'] : 0;
+
+/** التحقق من صحة رقم الطلب **/
 if ($request_id <= 0) {
     die("رقم الطلب غير صحيح");
 }
+
+/* تجهيز رسائل النجاح والخطأ */
 $success_message = "";
 $error_message = "";
 
@@ -27,71 +40,115 @@ $sql = "SELECT b.f_name, b.l_name, sr.major_name, sr.univ_name, sr.bnf_id
         INNER JOIN beneficiary b ON sr.bnf_id = b.bnf_id
         WHERE sr.request_id = ? AND so.inv_id = ?";
 
+/* تجهيز الاستعلام */
 $stmt = mysqli_prepare($con, $sql);
+
+/* ربط المتغيرات بالاستعلام */
 mysqli_stmt_bind_param($stmt, "ii", $request_id, $inv_id);
+
+/* تنفيذ الاستعلام */
 mysqli_stmt_execute($stmt);
+
+/* جلب النتائج */
 $result = mysqli_stmt_get_result($stmt);
+
+/* تحويل البيانات إلى مصفوفة */
 $request_data = mysqli_fetch_assoc($result);
 
+/** التحقق من وجود بيانات الطلب **/
 if (!$request_data) {
-    die("لا يمكن الوصول إلى هذا الطلب");}
+    die("لا يمكن الوصول إلى هذا الطلب");
+}
 
 /* فحص هل العقد موجود مسبقاً لهذا المستثمر ولهذا الطلب */
 $contract_query = "SELECT * FROM e_contract WHERE request_id = ?";
+
+/* تجهيز استعلام العقد */
 $c_stmt = mysqli_prepare($con, $contract_query);
+
+/* ربط رقم الطلب */
 mysqli_stmt_bind_param($c_stmt, "i", $request_id);
+
+/* تنفيذ الاستعلام */
 mysqli_stmt_execute($c_stmt);
+
+/* جلب بيانات العقد */
 $contract_data = mysqli_fetch_assoc(mysqli_stmt_get_result($c_stmt));
+
+/* تحديد حالة وجود العقد */
 $has_contract = ($contract_data) ? true : false;
 
 /* معالجة حفظ العقد */
 if ($_SERVER["REQUEST_METHOD"] == "POST" && !$has_contract) {
 
+    /* الحصول على بيانات النموذج */
     $amount = isset($_POST['amount']) ? trim($_POST['amount']) : "";
     $funding_duration = isset($_POST['funding_duration']) ? trim($_POST['funding_duration']) : "";
     $payments_count = isset($_POST['payments_count']) ? trim($_POST['payments_count']) : "";
     $terms = isset($_POST['terms']) ? trim($_POST['terms']) : "";
     $agree = isset($_POST['agree']) ? 1 : 0;
+
+    /* تحديد حالة العقد */
     $ctr_status = "نشط";
 
+    /** التحقق من تعبئة جميع الحقول المطلوبة **/
     if ($amount === "" || $funding_duration === "" || $payments_count === "" || $terms === "") {
+
         $error_message = "يرجى تعبئة جميع الحقول المطلوبة";
+
+    /** التحقق من الإقرار بصحة البيانات **/
     } elseif ($agree != 1) {
+
         $error_message = "يجب الإقرار بصحة بيانات العقد قبل الحفظ";
+
+    /** التحقق من أن قيمة الدعم رقم **/
     } elseif (!is_numeric($amount)) {
+
         $error_message = "قيمة الدعم الإجمالية يجب أن تكون رقمًا";
+
     } else {
 
+        /* تحويل القيم إلى أنواع مناسبة */
         $amount = (float)$amount;
         $funding_duration = (int)$funding_duration;
         $payments_count = (int)$payments_count;
 
-      $insert_sql = "INSERT INTO e_contract
+        /* استعلام إدخال العقد */
+        $insert_sql = "INSERT INTO e_contract
 (request_id, payments_count, funding_duration, ctr_status, terms, amount, approval_status)
 VALUES (?, ?, ?, ?, ?, ?, 'في انتظار الموافقة')";
 
-$insert_stmt = mysqli_prepare($con, $insert_sql);
+        /* تجهيز الاستعلام */
+        $insert_stmt = mysqli_prepare($con, $insert_sql);
 
-mysqli_stmt_bind_param(
-    $insert_stmt,
-    "iiissd",
-    $request_id,
-    $payments_count,
-    $funding_duration,
-    $ctr_status,
-    $terms,
-    $amount
-);
+        /* ربط البيانات بالاستعلام */
+        mysqli_stmt_bind_param(
+            $insert_stmt,
+            "iiissd",
+            $request_id,
+            $payments_count,
+            $funding_duration,
+            $ctr_status,
+            $terms,
+            $amount
+        );
+
+        /** التحقق من نجاح حفظ العقد **/
         if (mysqli_stmt_execute($insert_stmt)) {
+
             header("Location: Inv09_create_contract.php?request_id=$request_id&success=1");
             exit();
+
         } else {
+
             $error_message = "حدث خطأ أثناء حفظ العقد: " . mysqli_error($con);
         }
     }
 }
 
+/** التحقق من وجود رسالة نجاح **/
 if (isset($_GET['success'])) {
+
     $success_message = "تم حفظ بيانات العقد بنجاح";
 }
 ?>

@@ -1,16 +1,27 @@
 <?php
 session_start();
+
+/* التحقق من تسجيل دخول المستثمر */
 if (!isset($_SESSION['inv_id'])) {
     header("Location: login.php");
     exit();
 }
 
+/* الاتصال بقاعدة البيانات */
 $con = mysqli_connect("localhost", "root", "", "noreen");
+
+/** التحقق من نجاح الاتصال **/
 if (!$con) {
     die("فشل الاتصال بقاعدة البيانات");
 }
+
+/* ضبط الترميز لدعم اللغة العربية */
 mysqli_set_charset($con, "utf8mb4");
+
+/* الحصول على رقم المستثمر الحالي */
 $inv_id = $_SESSION['inv_id'];
+
+/* تحديد التبويب الحالي */
 $tab = isset($_GET['tab']) ? $_GET['tab'] : 'active';
 
 /* النشطين */
@@ -29,12 +40,25 @@ WHERE scholarship_opps.inv_id = ?
   AND e_contract.approval_status = 'تمت الموافقة'
 ORDER BY scholarship_requests.request_id DESC";
 
+/* تجهيز استعلام النشطين */
 $active_stmt = mysqli_prepare($con, $active_sql);
+
+/* ربط رقم المستثمر */
 mysqli_stmt_bind_param($active_stmt, "i", $inv_id);
+
+/* تنفيذ الاستعلام */
 mysqli_stmt_execute($active_stmt);
+
+/* جلب النتائج */
 $active_result = mysqli_stmt_get_result($active_stmt);
+
+/* إنشاء مصفوفة النشطين */
 $active_rows = [];
-while ($row = mysqli_fetch_assoc($active_result)) {  $active_rows[] = $row;}
+
+/* تخزين النتائج داخل المصفوفة */
+while ($row = mysqli_fetch_assoc($active_result)) {
+    $active_rows[] = $row;
+}
 
 /* السابقين */
 $ended_sql = "SELECT
@@ -53,12 +77,24 @@ WHERE scholarship_opps.inv_id = ?
   AND e_contract.approval_status = 'تمت الموافقة'
 ORDER BY scholarship_requests.request_id DESC";
 
+/* تجهيز استعلام السابقين */
 $ended_stmt = mysqli_prepare($con, $ended_sql);
+
+/* ربط رقم المستثمر */
 mysqli_stmt_bind_param($ended_stmt, "i", $inv_id);
+
+/* تنفيذ الاستعلام */
 mysqli_stmt_execute($ended_stmt);
+
+/* جلب النتائج */
 $ended_result = mysqli_stmt_get_result($ended_stmt);
+
+/* إنشاء مصفوفة السابقين */
 $ended_rows = [];
+
+/* تخزين النتائج داخل المصفوفة */
 while ($row = mysqli_fetch_assoc($ended_result)) {
+
     $ended_rows[] = $row;
 }
 ?>

@@ -1,25 +1,47 @@
 <?php
 session_start();
+
+/* الاتصال بقاعدة البيانات */
 $con = new mysqli("localhost", "root", "", "noreen");
+
+/* ضبط الترميز لدعم اللغة العربية */
 $con->set_charset("utf8mb4");
 
+/* الحصول على رقم المستثمر الحالي */
 $current_inv_id = $_SESSION['user_id'] ?? 0; 
+
+/* الحصول على رقم المستفيد */
 $target_bnf_id = isset($_GET['bnf_id']) ? intval($_GET['bnf_id']) : 0; 
 
+/** التحقق من إرسال النموذج **/
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send_msg'])) {
+
+    /* تنظيف الرسالة */
     $text = trim($con->real_escape_string($_POST['message']));
+
+    /** التحقق من أن الرسالة غير فارغة **/
     if(!empty($text)) {
-        // إرسال كـ investor
+
+        /* إرسال الرسالة كمستثمر */
         $sql_insert = "INSERT INTO bnf_inv_msg (bnf_id, inv_id, msg_text, sender_type) 
                        VALUES ('$target_bnf_id', '$current_inv_id', '$text', 'investor')";
+
+        /* تنفيذ الاستعلام */
         $con->query($sql_insert);
+
+        /* إعادة التوجيه بعد الإرسال */
         header("Location: Inv08_ContactBeneficiary.php?bnf_id=" . $target_bnf_id);
         exit();
     }
 }
 
+/* جلب بيانات المستفيد */
 $user_data = $con->query("SELECT f_name, l_name FROM beneficiary WHERE bnf_id = '$target_bnf_id'")->fetch_assoc();
+
+/* تجهيز الاسم الكامل */
 $full_name = $user_data ? $user_data['f_name'] . " " . $user_data['l_name'] : "المستفيد";
+
+/* جلب جميع الرسائل */
 $res_msgs = $con->query("SELECT * FROM bnf_inv_msg WHERE bnf_id = '$target_bnf_id' AND inv_id = '$current_inv_id' ORDER BY msg_time ASC");
 ?>
 

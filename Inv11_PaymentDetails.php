@@ -1,25 +1,45 @@
 <?php
 session_start();
-/* التحقق من دخول المستثمر */
+
+/** التحقق من دخول المستثمر **/
 if (!isset($_SESSION['inv_id'])) {
     header("Location: login.php");
     exit();
 }
+
 /* الاتصال بقاعدة البيانات */
 $con = mysqli_connect("localhost", "root", "", "noreen");
-if (!$con) { die("فشل الاتصال بقاعدة البيانات"); }
+
+/** التحقق من نجاح الاتصال **/
+if (!$con) {
+    die("فشل الاتصال بقاعدة البيانات");
+}
+
+/* ضبط الترميز لدعم اللغة العربية */
 mysqli_set_charset($con, "utf8mb4");
+
 /* بيانات أساسية */
 $inv_id = $_SESSION['inv_id'];
+
+/** التحقق من وجود رقم الطلب **/
 if (!isset($_GET['request_id']) || $_GET['request_id'] == "") {
     die("رقم الطلب غير موجود.");
 }
+
+/* تحويل رقم الطلب إلى عدد صحيح */
 $request_id = (int)$_GET['request_id'];
+
+/* تجهيز رسائل النظام */
 $msg = "";
 $type = "";
+
 /* اعتماد التقرير */
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["approve_report"])) {
+
+    /* الحصول على رقم التقرير */
     $report_id = (int)$_POST["report_id"];
+
+    /* التحقق من صلاحية التقرير */
     $check_sql = "SELECT academic_report.report_id
                   FROM academic_report
                   INNER JOIN e_contract ON academic_report.contract_id = e_contract.contract_id
@@ -28,37 +48,93 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["approve_report"])) {
                   WHERE academic_report.report_id = ?
                   AND scholarship_requests.request_id = ?
                   AND scholarship_opps.inv_id = ?";
+
+    /* تجهيز الاستعلام */
     $check_stmt = mysqli_prepare($con, $check_sql);
+
+    /* ربط البيانات */
     mysqli_stmt_bind_param($check_stmt, "iii", $report_id, $request_id, $inv_id);
+
+    /* تنفيذ الاستعلام */
     mysqli_stmt_execute($check_stmt);
+
+    /* جلب النتائج */
     $check_result = mysqli_stmt_get_result($check_stmt);
+
+    /** التحقق من وجود التقرير **/
     if (mysqli_num_rows($check_result) > 0) {
+
+        /* تحديث حالة التقرير */
         $update_sql = "UPDATE academic_report SET report_appoval = 'معتمد' WHERE report_id = ?";
+
+        /* تجهيز الاستعلام */
         $update_stmt = mysqli_prepare($con, $update_sql);
+
+        /* ربط رقم التقرير */
         mysqli_stmt_bind_param($update_stmt, "i", $report_id);
+
+        /** التحقق من نجاح اعتماد التقرير **/
         if (mysqli_stmt_execute($update_stmt)) {
+
             $msg = "تم اعتماد التقرير بنجاح.";
-            $type = "success"; } else {  $msg = "حدث خطأ أثناء اعتماد التقرير.";  $type = "error";   }   } else {
+            $type = "success";
+
+        } else {
+
+            $msg = "حدث خطأ أثناء اعتماد التقرير.";
+            $type = "error";
+        }
+
+    } else {
+
         $msg = "لا يمكن اعتماد هذا التقرير.";
-        $type = "error";   }}
+        $type = "error";
+    }
+}
+
 /* دفع الدفعة */
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirm_payment"])) {
+
+    /* الحصول على بيانات الدفع */
     $payment_id  = (int)$_POST["payment_id"];
     $card_name   = trim($_POST["card_name"]);
     $card_number = preg_replace('/\D/', '', $_POST["card_number"]);
     $exp_date    = trim($_POST["exp_date"]);
     $cvv         = preg_replace('/\D/', '', $_POST["cvv"]);
+
+    /** التحقق من تعبئة جميع بيانات الدفع **/
     if ($card_name == "" || $card_number == "" || $exp_date == "" || $cvv == "") {
+
         $msg = "يرجى تعبئة جميع بيانات الدفع.";
-        $type = "error"; } elseif (!preg_match('/^[\p{Arabic}a-zA-Z\s]{3,100}$/u', $card_name)) {
+        $type = "error";
+
+    /** التحقق من صحة اسم حامل البطاقة **/
+    } elseif (!preg_match('/^[\p{Arabic}a-zA-Z\s]{3,100}$/u', $card_name)) {
+
         $msg = "اسم حامل البطاقة غير صحيح.";
-        $type = "error";  } elseif (!preg_match('/^\d{16}$/', $card_number)) {
+        $type = "error";
+
+    /** التحقق من صحة رقم البطاقة **/
+    } elseif (!preg_match('/^\d{16}$/', $card_number)) {
+
         $msg = "رقم البطاقة يجب أن يكون 16 رقم.";
-        $type = "error";  } elseif (!preg_match('/^(0[1-9]|1[0-2])\/\d{2}$/', $exp_date)) {
+        $type = "error";
+
+    /** التحقق من صحة تاريخ الانتهاء **/
+    } elseif (!preg_match('/^(0[1-9]|1[0-2])\/\d{2}$/', $exp_date)) {
+
         $msg = "تاريخ الانتهاء يجب أن يكون بالشكل MM/YY.";
-        $type = "error";  } elseif (!preg_match('/^\d{3}$/', $cvv)) {
+        $type = "error";
+
+    /** التحقق من صحة رمز الأمان **/
+    } elseif (!preg_match('/^\d{3}$/', $cvv)) {
+
         $msg = "رمز الأمان يجب أن يكون 3 أرقام.";
-        $type = "error";  } else {
+        $type = "error";
+
+    } else {
+
+        /* التحقق من إمكانية الدفع */
         $pay_check_sql = "SELECT payments.payment_id, payments.contract_id
                           FROM payments
                           INNER JOIN e_contract ON payments.contract_id = e_contract.contract_id
@@ -70,39 +146,105 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirm_payment"])) {
                           AND scholarship_opps.inv_id = ?
                           AND academic_report.report_appoval = 'معتمد'
                           AND payments.payment_status != 'تم الدفع'";
+
+        /* تجهيز الاستعلام */
         $pay_check_stmt = mysqli_prepare($con, $pay_check_sql);
+
+        /* ربط البيانات */
         mysqli_stmt_bind_param($pay_check_stmt, "iii", $payment_id, $request_id, $inv_id);
+
+        /* تنفيذ الاستعلام */
         mysqli_stmt_execute($pay_check_stmt);
+
+        /* جلب النتائج */
         $pay_check_result = mysqli_stmt_get_result($pay_check_stmt);
+
+        /* جلب بيانات الدفع */
         $pay_row = mysqli_fetch_assoc($pay_check_result);
+
+        /** التحقق من صلاحية الدفع **/
         if ($pay_row) {
+
+            /* الحصول على رقم العقد */
             $contract_id_for_payment = (int)$pay_row["contract_id"];
+
+            /* تحديث حالة الدفع */
             $pay_sql = "UPDATE payments SET payment_status = 'تم الدفع', payment_date = NOW() WHERE payment_id = ?";
+
+            /* تجهيز الاستعلام */
             $pay_stmt = mysqli_prepare($con, $pay_sql);
+
+            /* ربط رقم الدفعة */
             mysqli_stmt_bind_param($pay_stmt, "i", $payment_id);
+
+            /** التحقق من نجاح عملية الدفع **/
             if (mysqli_stmt_execute($pay_stmt)) {
+
+                /* التحقق من وجود دفعات متبقية */
                 $remaining_sql = "SELECT payment_id FROM payments WHERE contract_id = ? AND payment_status != 'تم الدفع' LIMIT 1";
+
+                /* تجهيز الاستعلام */
                 $remaining_stmt = mysqli_prepare($con, $remaining_sql);
+
+                /* ربط رقم العقد */
                 mysqli_stmt_bind_param($remaining_stmt, "i", $contract_id_for_payment);
+
+                /* تنفيذ الاستعلام */
                 mysqli_stmt_execute($remaining_stmt);
+
+                /* جلب النتائج */
                 $remaining_result = mysqli_stmt_get_result($remaining_stmt);
+
+                /** التحقق من انتهاء جميع الدفعات **/
                 if (mysqli_num_rows($remaining_result) == 0) {
+
+                    /* إنهاء العقد */
                     $finish_sql = "UPDATE e_contract SET ctr_status = 'منتهي' WHERE contract_id = ?";
+
+                    /* تجهيز الاستعلام */
                     $finish_stmt = mysqli_prepare($con, $finish_sql);
+
+                    /* ربط رقم العقد */
                     mysqli_stmt_bind_param($finish_stmt, "i", $contract_id_for_payment);
+
+                    /* تنفيذ الاستعلام */
                     mysqli_stmt_execute($finish_stmt);
+
+                    /* إنهاء الطلب */
                     $finish_request_sql = "UPDATE scholarship_requests SET request_status = 'منتهي' WHERE request_id = ?";
+
+                    /* تجهيز الاستعلام */
                     $finish_request_stmt = mysqli_prepare($con, $finish_request_sql);
+
+                    /* ربط رقم الطلب */
                     mysqli_stmt_bind_param($finish_request_stmt, "i", $request_id);
+
+                    /* تنفيذ الاستعلام */
                     mysqli_stmt_execute($finish_request_stmt);
+
                     $msg = "تم سداد الدفعة الأخيرة بنجاح وتم إنهاء العقد والطلب.";
-                    $type = "success"; } else {
+                    $type = "success";
+
+                } else {
+
                     $msg = "تم سداد الدفعة بنجاح.";
-                    $type = "success";   }  } else {
+                    $type = "success";
+                }
+
+            } else {
+
                 $msg = "حدث خطأ أثناء تسجيل الدفع.";
-                $type = "error";  }   } else {
+                $type = "error";
+            }
+
+        } else {
+
             $msg = "لا يمكن دفع هذه الدفعة قبل اعتماد تقريرها أو ربما تم سدادها مسبقًا.";
-            $type = "error"; } }}
+            $type = "error";
+        }
+    }
+}
+
 /* جلب بيانات العقد */
 $main_sql = "SELECT scholarship_requests.request_id,scholarship_requests.major_name,scholarship_requests.univ_name,beneficiary.f_name,beneficiary.l_name,scholarship_opps.sch_name,e_contract.contract_id,e_contract.payments_count,e_contract.amount,e_contract.ctr_status
              FROM e_contract
@@ -110,24 +252,52 @@ $main_sql = "SELECT scholarship_requests.request_id,scholarship_requests.major_n
              INNER JOIN scholarship_opps ON scholarship_requests.scholarship_id = scholarship_opps.scholarship_id
              INNER JOIN beneficiary ON scholarship_requests.bnf_id = beneficiary.bnf_id
              WHERE e_contract.request_id = ? AND scholarship_opps.inv_id = ?";
+
+/* تجهيز الاستعلام */
 $main_stmt = mysqli_prepare($con, $main_sql);
+
+/* ربط البيانات */
 mysqli_stmt_bind_param($main_stmt, "ii", $request_id, $inv_id);
+
+/* تنفيذ الاستعلام */
 mysqli_stmt_execute($main_stmt);
+
+/* جلب النتائج */
 $main_result = mysqli_stmt_get_result($main_stmt);
+
+/* تحويل البيانات إلى مصفوفة */
 $main_data = mysqli_fetch_assoc($main_result);
-if (!$main_data) { die("لا يمكن الوصول إلى هذه البيانات."); }
+
+/** التحقق من وجود بيانات العقد **/
+if (!$main_data) {
+
+    die("لا يمكن الوصول إلى هذه البيانات.");
+}
+
 /* جلب الدفعات */
 $rows = [];
+
 $details_sql = "SELECT payments.payment_id,payments.installment_number,payments.payment_amount,payments.payment_status,payments.payment_date,academic_report.report_id,academic_report.report_file,academic_report.report_appoval
                 FROM payments
                 LEFT JOIN academic_report ON payments.payment_id = academic_report.payment_id
                 WHERE payments.contract_id = ?
                 ORDER BY payments.installment_number ASC";
+
+/* تجهيز الاستعلام */
 $details_stmt = mysqli_prepare($con, $details_sql);
+
+/* ربط رقم العقد */
 mysqli_stmt_bind_param($details_stmt, "i", $main_data['contract_id']);
+
+/* تنفيذ الاستعلام */
 mysqli_stmt_execute($details_stmt);
+
+/* جلب النتائج */
 $details_result = mysqli_stmt_get_result($details_stmt);
+
+/* تخزين البيانات داخل المصفوفة */
 while ($row = mysqli_fetch_assoc($details_result)) {
+
     $rows[] = $row;
 }
 ?>

@@ -1,35 +1,51 @@
 <?php
 session_start();
+
 /* التحقق من تسجيل دخول المستثمر */
 if (!isset($_SESSION['inv_id'])) {
     header("Location: login.php");
     exit();
 }
+
 /* الاتصال بقاعدة البيانات */
 $con = mysqli_connect("localhost", "root", "", "noreen");
+
+/** التحقق من نجاح الاتصال **/
 if (!$con) {
     die("فشل الاتصال بقاعدة البيانات");
 }
+
 /* ضبط الترميز لدعم اللغة العربية */
 mysqli_set_charset($con, "utf8mb4");
+
 /* الحصول على رقم المستثمر الحالي */
 $inv_id = $_SESSION['inv_id'];
-/* التحقق من وجود رقم الطلب في الرابط */
+
+/** التحقق من وجود رقم الطلب في الرابط **/
 if (!isset($_GET['request_id']) || $_GET['request_id'] == "") {
     die("رقم الطلب غير موجود.");
 }
+
 /* تحويل رقم الطلب إلى عدد صحيح */
 $request_id = (int)$_GET['request_id'];
 
 /* دالة تجهيز رابط الملف */
 function file_link($file){
+
+    /* حذف الفراغات */
     $file = trim($file);
+
+    /** التحقق إذا كان الملف فارغ **/
     if($file == ""){
         return "";
     }
+
+    /** التحقق إذا كان الرابط جاهز **/
     if(strpos($file, 'uploads/') === 0 || strpos($file, 'http://') === 0 || strpos($file, 'https://') === 0){
         return $file;
     }
+
+    /* إضافة مسار uploads */
     return 'uploads/' . $file;
 }
 
@@ -54,38 +70,74 @@ INNER JOIN beneficiary ON scholarship_requests.bnf_id = beneficiary.bnf_id
 INNER JOIN scholarship_opps ON scholarship_requests.scholarship_id = scholarship_opps.scholarship_id
 WHERE scholarship_requests.request_id = ?
 AND scholarship_opps.inv_id = ?";
+
+/* تجهيز الاستعلام */
 $stmt = mysqli_prepare($con, $sql);
+
+/* ربط المتغيرات بالاستعلام */
 mysqli_stmt_bind_param($stmt, "ii", $request_id, $inv_id);
+
+/* تنفيذ الاستعلام */
 mysqli_stmt_execute($stmt);
+
+/* جلب النتيجة */
 $result = mysqli_stmt_get_result($stmt);
+
+/* تحويل البيانات إلى مصفوفة */
 $row = mysqli_fetch_assoc($result);
-/* إذا لم يتم العثور على الطلب */
+
+/** التحقق إذا كانت البيانات موجودة **/
 if (!$row) {
     die("لم يتم العثور على بيانات الطلب.");
 }
+
 /* جلب ملفات الطلب من جدول scholarship_request_documents */
 $documents = [];
+
+/* تجهيز استعلام الملفات */
 $doc_stmt = mysqli_prepare($con, "SELECT doc_type, file_name, file FROM scholarship_request_documents WHERE request_id = ? ORDER BY doc_id ASC");
+
+/* ربط رقم الطلب */
 mysqli_stmt_bind_param($doc_stmt, "i", $request_id);
+
+/* تنفيذ الاستعلام */
 mysqli_stmt_execute($doc_stmt);
+
+/* جلب النتائج */
 $doc_result = mysqli_stmt_get_result($doc_stmt);
+
+/* تخزين الملفات داخل المصفوفة */
 while ($doc_row = mysqli_fetch_assoc($doc_result)) {
     $documents[] = $doc_row;
 }
-/* تجهيز متغيرات للملفات حسب نوع المستند */
+
+/* تجهيز متغيرات الملفات */
 $cv_file = "";
 $certificate_file = "";
 $recommendation_file = "";
 $acceptance_file = "";
-/* توزيع الملفات حسب نوعها */
+
+/* توزيع الملفات حسب النوع */
 foreach ($documents as $doc) {
+
+    /** التحقق إذا كان الملف سيرة ذاتية **/
     if ($doc["doc_type"] == "CV") {
+
         $cv_file = $doc["file"];
+
+    /** التحقق إذا كان الملف شهادة **/
     } elseif ($doc["doc_type"] == "Certificate") {
+
         $certificate_file = $doc["file"];
+
+    /** التحقق إذا كان الملف توصية **/
     } elseif ($doc["doc_type"] == "Recommendation") {
+
         $recommendation_file = $doc["file"];
+
+    /** التحقق إذا كان الملف قبول **/
     } elseif ($doc["doc_type"] == "Acceptance") {
+
         $acceptance_file = $doc["file"];
     }
 }
