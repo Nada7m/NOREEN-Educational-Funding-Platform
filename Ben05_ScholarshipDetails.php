@@ -8,24 +8,27 @@ if ($conn->connect_error) {
     die("فشل الاتصال: " . $conn->connect_error);
 }
 
+/* دعم اللغة العربية */
 $conn->set_charset("utf8mb4");
 
-/* التحقق من تسجيل دخول المستفيد */
+/** التحقق من تسجيل دخول المستفيد قبل عرض تفاصيل المنحة **/
 if (!isset($_SESSION['bnf_id'])) {
     header("Location: login.php");
     exit();
 }
 
-/* جلب رقم المستفيد ورقم المنحة */
+/* جلب رقم المستفيد الحالي */
 $bnf_id = (int) $_SESSION['bnf_id'];
+
+/* جلب رقم المنحة من الرابط */
 $sch_id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
-/* التحقق من صحة رقم المنحة */
+/** التأكد من صحة رقم المنحة قبل تنفيذ الاستعلام **/
 if ($sch_id <= 0) {
     die("رقم المنحة غير صحيح");
 }
 
-/* جلب تفاصيل المنحة */
+/* استعلام جلب تفاصيل المنحة */
 $details_sql = "
     SELECT s.*, i.inv_name
     FROM scholarship_opps s
@@ -35,52 +38,103 @@ $details_sql = "
 ";
 
 $stmt = $conn->prepare($details_sql);
+
+/** ربط رقم المنحة بعلامة الاستفهام داخل الاستعلام **/
 $stmt->bind_param("i", $sch_id);
+
 $stmt->execute();
+
 $result = $stmt->get_result();
+
+/** تخزين بيانات المنحة داخل متغير لاستخدامها في الصفحة **/
 $opp = $result->fetch_assoc();
 
-/* التحقق من وجود المنحة */
+/** التأكد من وجود المنحة قبل عرض الصفحة **/
 if (!$opp) {
     die("المنحة غير موجودة");
 }
 
-/* جلب مؤهل المستفيد */
-$student_sql = "SELECT degree_level FROM beneficiary WHERE bnf_id = ? LIMIT 1";
+/* استعلام جلب مؤهل المستفيد */
+$student_sql = "
+    SELECT degree_level
+    FROM beneficiary
+    WHERE bnf_id = ?
+    LIMIT 1
+";
+
 $stmt_student = $conn->prepare($student_sql);
 $stmt_student->bind_param("i", $bnf_id);
 $stmt_student->execute();
 $student_result = $stmt_student->get_result();
+
+/** تخزين مؤهل المستفيد الحالي **/
 $student = $student_result->fetch_assoc();
+
 /* تحديد اسم الجهة المانحة */
 $provider_name = !empty($opp['inv_name']) ? $opp['inv_name'] : 'غير محدد';
-/* افتراض إمكانية التقديم */
+
+/* السماح بالتقديم بشكل افتراضي */
 $can_apply = true;
+
+/* رسالة حالة التقديم */
 $apply_message = "";
+
 /* التحقق من وجود طلب نشط للمستفيد */
 $active_sql = "
     SELECT request_id
     FROM scholarship_requests
     WHERE bnf_id = ?
-      AND request_status IN ('مقبول', 'تحت المراجعة')
-    LIMIT 1";
+    AND request_status IN ('مقبول', 'تحت المراجعة')
+    LIMIT 1
+";
+
 $stmt_active = $conn->prepare($active_sql);
 $stmt_active->bind_param("i", $bnf_id);
 $stmt_active->execute();
 $active_result = $stmt_active->get_result();
 
+/** منع التقديم عند وجود طلب نشط للمستفيد **/
 if ($active_result->num_rows > 0) {
     $can_apply = false;
-    $apply_message = "لا يمكنك التقديم لوجود طلب نشط لديك حاليًا";}
-/* التحقق من توافق المؤهل مع المنحة */
+    $apply_message = "لا يمكنك التقديم لوجود طلب نشط لديك حاليًا";
+}
+
+$stmt_active->close();
+
+/* التحقق من التقديم السابق على نفس المنحة */
+$duplicate_sql = "
+    SELECT request_id
+    FROM scholarship_requests
+    WHERE bnf_id = ?
+    AND scholarship_id = ?
+    LIMIT 1
+";
+
+$stmt_duplicate = $conn->prepare($duplicate_sql);
+$stmt_duplicate->bind_param("ii", $bnf_id, $sch_id);
+$stmt_duplicate->execute();
+$duplicate_result = $stmt_duplicate->get_result();
+
+/** منع التقديم على نفس المنحة أكثر من مرة **/
+if ($duplicate_result->num_rows > 0) {
+    $can_apply = false;
+    $apply_message = "لقد سبق لك التقديم على هذه المنحة";
+}
+
+$stmt_duplicate->close();
+
+/** التحقق من توافق مؤهل المستفيد مع الدرجة المطلوبة للمنحة **/
 if ($can_apply && $student) {
     $degree_level = trim($student['degree_level']);
     $study_level = trim($opp['study_level']);
 
+    /** منع خريج الثانوية من التقديم على الماجستير أو الدكتوراه **/
     if ($degree_level == 'ثانوي' && ($study_level == 'ماجستير' || $study_level == 'دكتوراه')) {
         $can_apply = false;
         $apply_message = "هذه المنحة غير متوافقة مع مؤهلك";
     }
+
+    /** منع خريج البكالوريوس من التقديم على الدكتوراه **/
     if ($degree_level == 'بكالوريوس' && $study_level == 'دكتوراه') {
         $can_apply = false;
         $apply_message = "هذه المنحة غير متوافقة مع مؤهلك";
@@ -88,9 +142,9 @@ if ($can_apply && $student) {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
 <meta charset="UTF-8">
 <title>تفاصيل المنحة</title>
@@ -107,20 +161,21 @@ if ($can_apply && $student) {
 .page-top{ display:flex; justify-content:flex-end; padding:0 0 10px 0; margin:0; }
 
 /* زر الرجوع */
-.back-btn-details{ display:inline-block; cursor:pointer; text-decoration:none; background:none; border:none;  margin-left:150px; }
+.back-btn-details{ display:inline-block; cursor:pointer; text-decoration:none; background:none; border:none; margin-left:150px; }
+
 /* أيقونة الرجوع */
 .back-btn-details img{ width:38px; height:38px; display:block; }
 
-/* صندوق التفاصيل */
+/* الحفاظ على حجم صندوق التفاصيل داخل الصفحة */
 .details-box{ background:#FFFFFF; border:1px solid #E5E5E5; border-radius:16px; padding:28px 30px; margin-top:5px; text-align:right; max-width:980px; margin-right:auto; margin-left:auto; }
 
 /* عنوان المنحة */
 .det-header-title{ color:#3E2454; font-size:20px; font-weight:700; text-align:center; margin-bottom:26px; line-height:1.8; }
 
-/* شبكة البوكسات */
+/* توزيع البوكسات داخل الصفحة */
 .det-top-grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:stretch; margin-bottom:20px; }
 
-/* بوكس البيانات */
+/* صندوق البيانات */
 .det-box{ background:#FAFAFA; border:1px solid #E8E8E8; border-radius:12px; padding:14px 16px; display:flex; flex-direction:column; gap:6px; min-height:86px; justify-content:center; }
 
 /* اسم الحقل */
@@ -148,13 +203,13 @@ if ($can_apply && $student) {
 .conditions-title{ margin:0 0 14px 0; color:#000000; font-size:15px; font-weight:700; }
 
 /* نص الشروط */
-.conditions-text{ font-size:13px; color:#555555; line-height:1.8; text-align:right; white-space:pre-wrap; }
+.conditions-text{ font-size:13px; color:#555555; line-height:1.8; text-align:right; white-space:normal; }
 
 /* حاوية زر التقديم */
 .apply-btn-wrap{ text-align:center; margin-top:34px; }
 
 /* زر التقديم */
-.btn-action{ width:250px; background:#70A0AF; color:#FFFFFF; border:none; padding:12px; border-radius:6px; cursor:pointer; font-weight:600; text-decoration:none; text-align:center; display:inline-flex; align-items:center; justify-content:center; font-family:"Noto Kufi Arabic",sans-serif; font-size:14px; }
+.btn-action{ width:250px; background:#70A0AF; color:#FFFFFF; border:none; padding:12px; border-radius:6px; cursor:pointer; font-weight:600; text-decoration:none; text-align:center; display:inline-flex; align-items:center; justify-content:center; font-family:"Noto Kufi Arabic", sans-serif; font-size:14px; }
 
 /* رسالة عدم إمكانية التقديم */
 .apply-note{ max-width:520px; margin:34px auto 0; background:#FFF4E5; color:#8A5A00; border:1px solid #F0D19B; border-radius:8px; padding:14px 18px; text-align:center; font-size:14px; font-weight:600; line-height:1.8; }
@@ -163,6 +218,7 @@ if ($can_apply && $student) {
 </head>
 
 <body>
+
 <div class="layout">
 
     <aside class="sidebar">
@@ -192,6 +248,7 @@ if ($can_apply && $student) {
     </aside>
 
     <div class="main-content">
+
         <header class="header">
             <div class="page-heading">
                 <div class="page-title">تفاصيل المنحة</div>
@@ -201,6 +258,7 @@ if ($can_apply && $student) {
             <div class="header-icons">
                 <div class="settings-dropdown">
                     <img src="ايقونة قائمة الاعدادات.png" class="menu-icon" alt="الإعدادات">
+
                     <div class="dropdown-menu">
                         <a href="Ben02_Profile.php">الملف الشخصي</a>
                         <a href="Ben03_MyScholarshipWallet.php">محفظة منحتي</a>
@@ -211,6 +269,7 @@ if ($can_apply && $student) {
         </header>
 
         <div class="page">
+
             <div class="page-top">
                 <a href="javascript:history.back()" class="back-btn-details">
                     <img src="سهم تراجع.svg" alt="رجوع">
@@ -219,9 +278,13 @@ if ($can_apply && $student) {
 
             <div class="details-box">
 
-                <div class="det-header-title">اسم المنحة: <?php echo htmlspecialchars($opp['sch_name']); ?></div>
+                <div class="det-header-title">
+                    اسم المنحة:
+                    <?php echo htmlspecialchars($opp['sch_name']); ?>
+                </div>
 
                 <div class="det-top-grid">
+
                     <div class="det-box">
                         <div class="det-label">الجهة المانحة:</div>
                         <div class="det-value"><?php echo htmlspecialchars($provider_name); ?></div>
@@ -231,9 +294,11 @@ if ($can_apply && $student) {
                         <div class="det-label">الدرجة المستهدفة:</div>
                         <div class="det-value"><?php echo htmlspecialchars($opp['study_level']); ?></div>
                     </div>
+
                 </div>
 
                 <div class="det-top-grid">
+
                     <div class="det-box">
                         <div class="det-label">التخصص الرئيسي:</div>
                         <div class="det-value"><?php echo htmlspecialchars($opp['sch_field']); ?></div>
@@ -243,31 +308,46 @@ if ($can_apply && $student) {
                         <div class="det-label">آخر موعد للتقديم:</div>
                         <div class="det-value"><?php echo date("Y-m-d", strtotime($opp['app_deadline'])); ?></div>
                     </div>
+
                 </div>
 
                 <div class="det-specialization-box">
                     <div class="det-specialization-title">التخصصات الدقيقة:</div>
-                    <div class="det-specialization-text"><?php echo htmlspecialchars($opp['Specializations']); ?></div>
+                    <div class="det-specialization-text"><?php echo htmlspecialchars(trim($opp['Specializations'])); ?></div>
                 </div>
 
                 <div class="section-divider"></div>
 
                 <div class="conditions-sec">
                     <div class="conditions-title">الشروط:</div>
-                    <div class="conditions-text"><?php echo nl2br(htmlspecialchars($opp['requirements'])); ?></div>
+                    <div class="conditions-text"><?php echo nl2br(htmlspecialchars(trim($opp['requirements']))); ?></div>
                 </div>
 
                 <div class="apply-btn-wrap">
+
                     <?php if ($can_apply) { ?>
-                    <a href="Ben06_ApplyScholarship.php?sch_id=<?php echo $opp['scholarship_id']; ?>" class="btn-action">التقديم الآن</a>
+
+                    <a href="Ben06_ApplyScholarship.php?sch_id=<?php echo $opp['scholarship_id']; ?>" class="btn-action">
+                        التقديم الآن
+                    </a>
+
                     <?php } else { ?>
-                    <div class="apply-note"><?php echo $apply_message; ?></div>
+
+                    <div class="apply-note">
+                        <?php echo $apply_message; ?>
+                    </div>
+
                     <?php } ?>
+
                 </div>
 
             </div>
+
         </div>
+
     </div>
+
 </div>
+
 </body>
 </html>

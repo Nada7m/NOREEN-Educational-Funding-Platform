@@ -16,49 +16,82 @@ if (!$con) {
 
 mysqli_set_charset($con, "utf8mb4");
 
-/* تنفيذ إنهاء العقد بعد وصول أرقام العقد والطلب */
+/* تحديث العقود المنتهية بعد دفع كل الدفعات */
+$sqlEndContracts = "
+    UPDATE e_contract c
+    INNER JOIN scholarship_requests sr
+        ON c.request_id = sr.request_id
+    SET c.ctr_status = 'منتهي', sr.request_status = 'منتهي'
+    WHERE c.ctr_status = 'نشط'
+    AND sr.request_status = 'مقبول'
+    AND (
+        SELECT COUNT(*)
+        FROM payments p
+        WHERE p.contract_id = c.contract_id
+    ) > 0
+    AND (
+        SELECT COUNT(*)
+        FROM payments p
+        WHERE p.contract_id = c.contract_id
+        AND p.payment_status = 'تم الدفع'
+    ) = (
+        SELECT COUNT(*)
+        FROM payments p
+        WHERE p.contract_id = c.contract_id
+    )
+";
+
+mysqli_query($con, $sqlEndContracts);
+
+/* تنفيذ إلغاء العقد */
 if (isset($_POST['end_contract'])) {
 
-    /* تحويل رقم العقد ورقم الطلب إلى أرقام صحيحة قبل استخدامها */
+    /* تحويل رقم العقد ورقم الطلب */
     $contract_id = (int) $_POST['contract_id'];
     $request_id = (int) $_POST['request_id'];
 
-    /* التأكد من صحة الأرقام قبل تنفيذ التحديث */
+    /** التأكد من صحة الأرقام **/
     if ($contract_id > 0 && $request_id > 0) {
 
-        /* تحديث حالة العقد إلى ملغي */
+        /* تحديث حالة العقد إلى ملغي إذا كان نشطًا فقط */
         $stmt_contract = mysqli_prepare($con, "
             UPDATE e_contract
             SET ctr_status = 'ملغي'
             WHERE contract_id = ?
+            AND ctr_status = 'نشط'
         ");
 
         if ($stmt_contract) {
             mysqli_stmt_bind_param($stmt_contract, "i", $contract_id);
             mysqli_stmt_execute($stmt_contract);
+
+            /* تحديث الطلب فقط إذا تم إلغاء العقد فعليًا */
+            if (mysqli_stmt_affected_rows($stmt_contract) > 0) {
+
+                /* تحديث حالة طلب المنحة إلى ملغى */
+                $stmt_request = mysqli_prepare($con, "
+                    UPDATE scholarship_requests
+                    SET request_status = 'ملغى'
+                    WHERE request_id = ?
+                ");
+
+                if ($stmt_request) {
+                    mysqli_stmt_bind_param($stmt_request, "i", $request_id);
+                    mysqli_stmt_execute($stmt_request);
+                    mysqli_stmt_close($stmt_request);
+                }
+            }
+
             mysqli_stmt_close($stmt_contract);
-        }
-
-        /* تحديث حالة طلب المنحة إلى منتهي */
-        $stmt_request = mysqli_prepare($con, "
-            UPDATE scholarship_requests
-            SET request_status = 'منتهي'
-            WHERE request_id = ?
-        ");
-
-        if ($stmt_request) {
-            mysqli_stmt_bind_param($stmt_request, "i", $request_id);
-            mysqli_stmt_execute($stmt_request);
-            mysqli_stmt_close($stmt_request);
         }
     }
 
-    /* إعادة تحميل الصفحة بعد تنفيذ الإجراء */
+    /* إعادة تحميل الصفحة */
     header("Location: Admin3_Contracts.php");
     exit();
 }
 
-/* جلب العقود مع بيانات المستثمر والمستفيد المرتبطين بكل عقد */
+/* جلب العقود */
 $sql = "
 SELECT 
     c.contract_id,
@@ -74,7 +107,7 @@ JOIN investor i ON s.inv_id = i.inv_id
 ORDER BY c.contract_id DESC
 ";
 
-/* تنفيذ استعلام عرض العقود */
+/* تنفيذ استعلام العقود */
 $result = mysqli_query($con, $sql);
 ?>
 
@@ -91,19 +124,19 @@ $result = mysqli_query($con, $sql);
 /* الحاوية العامة */
 .page-wrapper{ padding:40px; }
 
-/* الحفاظ على عرض الجدول بشكل مناسب داخل الصفحة */
+/* صندوق الجدول */
 .table-box{ width:100%; max-width:1050px; margin:0 auto; background:#FFFFFF; border:1px solid #E6E0E6; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,0.05); overflow:hidden; }
 
-/* تنسيق الجدول */
+/* الجدول */
 table{ width:100%; border-collapse:collapse; table-layout:fixed; background:#FFFFFF; }
 
-/* صف العناوين */
+/* رأس الجدول */
 thead th{ padding:15px 12px; background:#FAFAFA; border-bottom:1px solid #DDDDDD; font-size:15px; font-weight:700; color:#3E2454; text-align:center; }
 
 /* خلايا الجدول */
 tbody td{ padding:16px 12px; border-bottom:1px solid #EEEEEE; text-align:center; vertical-align:middle; font-size:14px; font-weight:500; color:#595959; background:#FFFFFF; }
 
-/* توحيد حجم مربع الحالة */
+/* مربع الحالة */
 .status{ display:inline-flex; align-items:center; justify-content:center; width:100px; height:42px; border-radius:12px; color:#FFFFFF; font-size:14px; font-weight:600; }
 
 /* حالة نشط */
@@ -115,28 +148,28 @@ tbody td{ padding:16px 12px; border-bottom:1px solid #EEEEEE; text-align:center;
 /* حالة منتهي */
 .status-ended{ background:#9E9E9E; }
 
-/* توحيد حجم أزرار الإجراءات */
+/* الأزرار */
 .btn{ width:100px; height:42px; border:none; border-radius:12px; cursor:pointer; font-size:14px; font-family:"Noto Kufi Arabic", sans-serif; font-weight:600; }
 
-/* زر إنهاء العقد */
+/* زر الإلغاء */
 .btn-delete{ background:#A53A3A; color:#FFFFFF; }
 
-/* الحفاظ على ارتفاع الجدول عند قلة البيانات */
+/* صف فارغ */
 .empty-row td{ height:62px; background:#FFFFFF; border-bottom:1px solid #EEEEEE; }
 
-/* خلفية نافذة التأكيد */
+/* خلفية التأكيد */
 .confirm-modal{ display:none; position:fixed; inset:0; z-index:9999; justify-content:center; align-items:center; }
 
-/* تحديد عرض نافذة التأكيد بما يناسب حجم الشاشة */
+/* صندوق التأكيد */
 .confirm-box{ width:420px; max-width:92%; background:#FFFFFF; border-radius:10px; padding:28px 24px; text-align:center; box-shadow:0 8px 25px rgba(0,0,0,0.15); }
 
-/* نص السؤال */
+/* نص التأكيد */
 .confirm-title{ color:#3E2454; font-size:18px; font-weight:700; margin-bottom:25px; }
 
-/* ترتيب أزرار التأكيد */
+/* أزرار التأكيد */
 .confirm-actions{ display:flex; justify-content:center; gap:14px; }
 
-/* توحيد حجم أزرار نافذة التأكيد */
+/* زر التأكيد */
 .confirm-btn{ min-width:110px; height:42px; border:none; border-radius:10px; cursor:pointer; font-size:14px; font-family:"Noto Kufi Arabic", sans-serif; font-weight:700; }
 
 /* زر نعم */
@@ -207,15 +240,14 @@ tbody td{ padding:16px 12px; border-bottom:1px solid #EEEEEE; text-align:center;
             <tbody>
 
             <?php
-            /* عرض بيانات العقود داخل الجدول */
+            /* عرض العقود */
             if ($result && mysqli_num_rows($result) > 0) {
                 while ($row = mysqli_fetch_assoc($result)) {
 
-                    /* تحديد حالة العقد لاختيار لون الحالة المناسب */
+                    /* حالة العقد */
                     $status = $row['ctr_status'];
                     $class = "status-active";
 
-                    /* تغيير لون الحالة إذا كان العقد ملغيًا أو منتهيًا */
                     if ($status == "ملغي") {
                         $class = "status-cancel";
                     } elseif ($status == "منتهي") {
@@ -237,13 +269,13 @@ tbody td{ padding:16px 12px; border-bottom:1px solid #EEEEEE; text-align:center;
 
                 <td>
                   <?php
-                  /* إخفاء زر الإنهاء إذا كان العقد ملغيًا أو منتهيًا */
-                  if ($status != "ملغي" && $status != "منتهي") {
+                  /* الإلغاء يظهر للعقد النشط فقط */
+                  if ($status == "نشط") {
                   ?>
                   <form method="POST" class="cancel-form">
                     <input type="hidden" name="contract_id" value="<?php echo htmlspecialchars($row['contract_id']); ?>">
                     <input type="hidden" name="request_id" value="<?php echo htmlspecialchars($row['request_id']); ?>">
-                    <button type="button" class="btn btn-delete open-confirm">إنهاء العقد</button>
+                    <button type="button" class="btn btn-delete open-confirm">إلغاء العقد</button>
                   </form>
                   <?php } ?>
                 </td>
@@ -288,7 +320,7 @@ tbody td{ padding:16px 12px; border-bottom:1px solid #EEEEEE; text-align:center;
 <script>
 let selectedForm = null;
 
-/* فتح نافذة التأكيد وحفظ النموذج المرتبط بالزر المضغوط */
+/* فتح نافذة التأكيد */
 document.querySelectorAll(".open-confirm").forEach(function(btn){
     btn.addEventListener("click", function(){
         selectedForm = this.closest("form");
@@ -296,7 +328,7 @@ document.querySelectorAll(".open-confirm").forEach(function(btn){
     });
 });
 
-/* تنفيذ الإرسال بعد موافقة الأدمن */
+/* تنفيذ الإلغاء */
 document.getElementById("confirmYes").addEventListener("click", function(){
     if(selectedForm){
         const hiddenBtn = document.createElement("button");
@@ -308,12 +340,12 @@ document.getElementById("confirmYes").addEventListener("click", function(){
     }
 });
 
-/* إغلاق نافذة التأكيد */
+/* إغلاق النافذة */
 function closeConfirm(){
     document.getElementById("confirmModal").style.display = "none";
 }
 
-/* إغلاق النافذة عند الضغط على الخلفية الخارجية */
+/* إغلاق عند الضغط خارج النافذة */
 window.onclick = function(e){
     if(e.target.id === "confirmModal"){
         closeConfirm();

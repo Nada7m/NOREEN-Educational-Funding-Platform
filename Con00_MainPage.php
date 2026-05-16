@@ -48,13 +48,14 @@ $stmt->close();
 
       </div>
 
-      <div class="sidebar-bottom">
-        <button class="logout-btn">
-          <img src="ايقونة تسجيل الخروج.png" class="logout-icon">
-          <b>تسجيل الخروج</b>
-        </button>
-      </div>
-
+<div class="sidebar-bottom">
+  <form action="logout.php" method="post">
+    <button type="submit" class="logout-btn">
+      <img src="ايقونة تسجيل الخروج.png" class="logout-icon">
+      <b>تسجيل الخروج</b>
+    </button>
+  </form>
+</div>
     </aside>
 
     <!-- المحتوى الرئيسي -->

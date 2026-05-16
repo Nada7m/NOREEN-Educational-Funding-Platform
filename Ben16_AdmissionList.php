@@ -1,7 +1,8 @@
 <?php
+/* بدء الجلسة */
 session_start();
 
-/* التحقق من تسجيل دخول المستفيد */
+/** التحقق من تسجيل دخول المستفيد **/
 if (!isset($_SESSION['bnf_id'])) {
     header("Location: login.php");
     exit();
@@ -9,20 +10,24 @@ if (!isset($_SESSION['bnf_id'])) {
 
 /* الاتصال بقاعدة البيانات */
 $conn = new mysqli("localhost", "root", "", "noreen");
+
 if ($conn->connect_error) {
     die("فشل الاتصال بقاعدة البيانات");
 }
+
 $conn->set_charset("utf8mb4");
 
+/* رقم المستفيد */
 $bnf_id = (int) $_SESSION['bnf_id'];
 
-/* تنفيذ الدفع داخل الصفحة */
+/* تنفيذ الدفع */
 if (isset($_POST['confirm_payment'])) {
 
     $request_id = isset($_POST['request_id']) ? (int) $_POST['request_id'] : 0;
 
     if ($request_id > 0) {
 
+        /* تحديث حالة الدفع */
         $sqlPay = "UPDATE admission_request 
                    SET payment_status = 'مدفوع' 
                    WHERE request_id = $request_id 
@@ -33,7 +38,7 @@ if (isset($_POST['confirm_payment'])) {
     }
 }
 
-/* جلب طلبات إصدار القبول الخاصة بالمستفيد */
+/* جلب الطلبات */
 $sql = "SELECT 
             ar.request_id,
             ar.Submit_date,
@@ -63,253 +68,114 @@ $result = $conn->query($sql);
 <link rel="stylesheet" href="CSS01Layout.css?v=3">
 
 <style>
-.page{
-    padding:30px;
-}
+/* الصفحة */
+.page{ padding:30px; }
 
-.content-box{
-    max-width:1250px;
-    margin:0 auto;
-    background:#fff;
-    border-radius:12px;
-    border:0.5px solid #c5c3c3;
-    overflow-x:auto;
-    padding:0;
-}
+/* الصندوق */
+.content-box{ max-width:1250px; margin:0 auto; background:#fff; border-radius:12px; border:0.5px solid #c5c3c3; overflow-x:auto; padding:0; }
 
-.requests-table-wrap{
-    width:100%;
-    overflow-x:auto;
-}
+/* تغليف الجدول */
+.requests-table-wrap{ width:100%; overflow-x:auto; }
 
-.requests-table{
-    width:100%;
-    min-width:1150px;
-    border-collapse:collapse;
-    text-align:center;
-    font-family:'Noto Kufi Arabic', sans-serif;
-}
+/* الجدول */
+.requests-table{ width:100%; min-width:1150px; border-collapse:collapse; text-align:center; font-family:'Noto Kufi Arabic',sans-serif; }
 
-.requests-table tr:first-child th{
-    background:#f8f8f8;
-    color:#3E2454;
-    font-size:15px;
-    font-weight:700;
-    padding:14px 10px;
-    border-bottom:1px solid #ddd;
-    font-family:'Noto Kufi Arabic', sans-serif;
-}
+/* رأس الجدول */
+.requests-table tr:first-child th{ background:#f8f8f8; color:#3E2454; font-size:15px; font-weight:700; padding:14px 10px; border-bottom:1px solid #ddd; font-family:'Noto Kufi Arabic',sans-serif; }
 
-.requests-table td{
-    padding:14px 10px;
-    border-bottom:1px solid #eee;
-    font-size:14px;
-    color:#333;
-    text-align:center;
-    font-family:'Noto Kufi Arabic', sans-serif;
-    vertical-align:middle;
-}
+/* خلايا الجدول */
+.requests-table td{ padding:14px 10px; border-bottom:1px solid #eee; font-size:14px; color:#333; text-align:center; font-family:'Noto Kufi Arabic',sans-serif; vertical-align:middle; }
 
-.requests-table tr:last-child td{
-    border-bottom:none;
-}
+/* آخر صف */
+.requests-table tr:last-child td{ border-bottom:none; }
 
-.req-code{
-    color:#333;
-    font-weight:600;
-}
+/* رقم الطلب */
+.req-code{ color:#333; font-weight:600; }
 
-.status-box{
-    display:inline-block;
-    min-width:120px;
-    padding:7px 14px;
-    border-radius:20px;
-    color:#fff;
-    font-size:13px;
-    font-weight:700;
-    font-family:'Noto Kufi Arabic', sans-serif;
-}
+/* الحالة */
+.status-box{ display:inline-block; min-width:120px; padding:7px 14px; border-radius:20px; color:#fff; font-size:13px; font-weight:700; font-family:'Noto Kufi Arabic',sans-serif; }
 
-.status-processing{
-    background:#E9BE66;
-}
+/* قيد المعالجة */
+.status-processing{ background:#E9BE66; }
 
-.status-done{
-    background:#63B68B;
-}
+/* مكتمل */
+.status-done{ background:#63B68B; }
 
-.status-rejected{
-    background:#D96C6C;
-}
+/* مرفوض */
+.status-rejected{ background:#D96C6C; }
 
-.status-plain{
-    background:#FFFFFF;
-    color:#444444;
-    border:1px solid #DDDDDD;
-}
+/* حالة عادية */
+.status-plain{ background:#FFFFFF; color:#444444; border:1px solid #DDDDDD; }
 
-.details-btn{
-    display:inline-block;
-    padding:8px 18px;
-    border:1px solid #999;
-    border-radius:10px;
-    background:#fff;
-    color:#3E2454;
-    text-decoration:none;
-    font-size:13px;
-    font-weight:600;
-    font-family:'Noto Kufi Arabic', sans-serif;
-    transition:0.3s;
-    cursor:pointer;
-}
+/* زر التفاصيل */
+.details-btn{ display:inline-block; padding:8px 18px; border:1px solid #999; border-radius:10px; background:#fff; color:#3E2454; text-decoration:none; font-size:13px; font-weight:600; font-family:'Noto Kufi Arabic',sans-serif; transition:0.3s; cursor:pointer; }
 
-.details-btn:hover{
-    background:#f4f0f7;
-}
+/* مرور على الزر */
+.details-btn:hover{ background:#f4f0f7; }
 
-.details-btn.disabled{
-    background:#E5E5E5;
-    color:#9A9A9A;
-    border:1px solid #D0D0D0;
-    cursor:not-allowed;
-    pointer-events:none;
-    opacity:0.7;
-}
+/* زر معطل */
+.details-btn.disabled{ background:#E5E5E5; color:#9A9A9A; border:1px solid #D0D0D0; cursor:not-allowed; pointer-events:none; opacity:0.7; }
 
-.empty-box{
-    text-align:center;
-    padding:50px 20px;
-    color:#777;
-    font-size:16px;
-    font-family:'Noto Kufi Arabic', sans-serif;
-}
+/* لا توجد بيانات */
+.empty-box{ text-align:center; padding:50px 20px; color:#777; font-size:16px; font-family:'Noto Kufi Arabic',sans-serif; }
 
-.modal{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.35);
-    justify-content:center;
-    align-items:center;
-    z-index:3000;
-}
+/* المودال */
+.modal{ display:none; position:fixed; inset:0; background:rgba(0,0,0,0.35); justify-content:center; align-items:center; z-index:3000; }
 
-.modal-content{
-    width:700px;
-    max-width:92%;
-    background:#FFFFFF;
-    border-radius:12px;
-    box-shadow:0 10px 25px rgba(0,0,0,0.18);
-    padding:28px 34px;
-}
+/* محتوى المودال */
+.modal-content{ width:700px; max-width:92%; background:#FFFFFF; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.18); padding:28px 34px; }
 
-.modal-title{
-    text-align:center;
-    font-size:20px;
-    font-weight:700;
-    color:#4a2b63;
-    margin-bottom:26px;
-}
+/* عنوان المودال */
+.modal-title{ text-align:center; font-size:20px; font-weight:700; color:#4a2b63; margin-bottom:26px; }
 
-.pay-form{
-    display:flex;
-    flex-direction:column;
-    gap:20px;
-}
+/* نموذج الدفع */
+.pay-form{ display:flex; flex-direction:column; gap:20px; }
 
-.pay-row{
-    display:flex;
-    gap:20px;
-}
+/* صف الدفع */
+.pay-row{ display:flex; gap:20px; }
 
-.pay-field{
-    flex:1;
-}
+/* الحقل */
+.pay-field{ flex:1; }
 
-.pay-field label{
-    display:block;
-    margin-bottom:8px;
-    font-size:15px;
-    font-weight:600;
-    color:#333333;
-}
+/* عنوان الحقل */
+.pay-field label{ display:block; margin-bottom:8px; font-size:15px; font-weight:600; color:#333333; }
 
-.pay-field input{
-    width:100%;
-    height:52px;
-    border:1px solid #cccccc;
-    border-radius:10px;
-    padding:10px 14px;
-    font-size:15px;
-    outline:none;
-    font-family:"Noto Kufi Arabic", sans-serif;
-    box-sizing:border-box;
-}
+/* الإدخال */
+.pay-field input{ width:100%; height:52px; border:1px solid #cccccc; border-radius:10px; padding:10px 14px; font-size:15px; outline:none; font-family:"Noto Kufi Arabic",sans-serif; box-sizing:border-box; }
 
-.confirm-pay-btn{
-    display:inline-block;
-    width:100%;
-    padding:12px 0;
-    border:1px solid #999;
-    border-radius:10px;
-    background:#fff;
-    color:#3E2454;
-    text-decoration:none;
-    font-size:15px;
-    font-weight:700;
-    font-family:'Noto Kufi Arabic', sans-serif;
-    transition:0.3s;
-    cursor:pointer;
-    text-align:center;
-}
+/* زر التأكيد */
+.confirm-pay-btn{ display:inline-block; width:100%; padding:12px 0; border:1px solid #999; border-radius:10px; background:#fff; color:#3E2454; text-decoration:none; font-size:15px; font-weight:700; font-family:'Noto Kufi Arabic',sans-serif; transition:0.3s; cursor:pointer; text-align:center; }
 
-.confirm-pay-btn:hover{
-    background:#f4f0f7;
-}
+/* مرور على زر التأكيد */
+.confirm-pay-btn:hover{ background:#f4f0f7; }
 
-.close-modal-btn{
-    display:inline-block;
-    width:100%;
-    padding:10px 0;
-    border:1px solid #999;
-    border-radius:10px;
-    background:#fff;
-    color:#3E2454;
-    text-decoration:none;
-    font-size:14px;
-    font-weight:600;
-    font-family:'Noto Kufi Arabic', sans-serif;
-    transition:0.3s;
-    cursor:pointer;
-    text-align:center;
-}
+/* زر الإلغاء */
+.close-modal-btn{ display:inline-block; width:100%; padding:10px 0; border:1px solid #999; border-radius:10px; background:#fff; color:#3E2454; text-decoration:none; font-size:14px; font-weight:600; font-family:'Noto Kufi Arabic',sans-serif; transition:0.3s; cursor:pointer; text-align:center; }
 
-.close-modal-btn:hover{
-    background:#f4f0f7;
-}
-.fee-box{
-    background:linear-gradient(to left, #3E2454, #A48BB5);
-    color:#FFFFFF;
-    border-radius:14px;
-    height:60px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:18px;
-    font-weight:700;
-}
+/* مرور على زر الإلغاء */
+.close-modal-btn:hover{ background:#f4f0f7; }
+
+/* صندوق الرسوم */
+.fee-box{ background:linear-gradient(to left, #3E2454, #A48BB5); color:#FFFFFF; border-radius:14px; height:60px; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; }
 </style>
 </head>
+
 <body>
 
+<!-- التخطيط -->
 <div class="layout">
 
+    <!-- القائمة الجانبية -->
     <aside class="sidebar">
+
         <div class="sidebar-top">
+
+            <!-- الشعار -->
             <div class="sidebar-logo">
                 <img src="شعار نورين.png" alt="نورين">
             </div>
 
+            <!-- روابط القائمة -->
             <ul class="sidebar-menu">
                 <li><a href="Ben00_MainPage.php">الرئيسية</a></li>
                 <li><a href="Ben04_BrowseScholarships.php">التقديم على المنح</a></li>
@@ -320,6 +186,7 @@ $result = $conn->query($sql);
             </ul>
         </div>
 
+        <!-- تسجيل الخروج -->
         <div class="sidebar-bottom">
             <form action="logout.php" method="post">
                 <button type="submit" class="logout-btn">
@@ -330,31 +197,43 @@ $result = $conn->query($sql);
         </div>
     </aside>
 
+    <!-- المحتوى -->
     <div class="main-content">
 
+        <!-- الهيدر -->
         <header class="header">
+
             <div class="page-heading">
                 <div class="page-title">طلبات إصدار القبول</div>
                 <div class="page-description">صفحة عرض ومتابعة طلبات إصدار القبول</div>
             </div>
 
+            <!-- الإعدادات -->
             <div class="header-icons">
                 <div class="settings-dropdown">
                     <img src="ايقونة قائمة الاعدادات.png" class="menu-icon">
+
                     <div class="dropdown-menu">
                         <a href="Ben02_Profile.php">الملف الشخصي</a>
                         <a href="Ben20_MyScholarshipWallet.php">محفظة منحتي</a>
                         <a href="support.php">تقديم شكوى او استفسار</a>
                     </div>
+
                 </div>
             </div>
         </header>
 
+        <!-- الصفحة -->
         <div class="page">
+
+            <!-- الصندوق -->
             <div class="content-box">
 
                 <?php if ($result && $result->num_rows > 0) { ?>
+
+                    <!-- الجدول -->
                     <div class="requests-table-wrap">
+
                         <table class="requests-table">
 
                             <tr>
@@ -370,6 +249,7 @@ $result = $conn->query($sql);
                             <?php while ($row = $result->fetch_assoc()) { ?>
 
                                 <?php
+                                /* حالة الطلب */
                                 $request_status = trim($row['request_status']);
 
                                 if ($request_status == "" || $request_status == "في الانتظار") {
@@ -382,6 +262,7 @@ $result = $conn->query($sql);
                                     $requestStatusText = "مقبول";
                                     $requestStatusClass = "status-done"; }
 
+                                /* حالة النتيجة */
                                 $result_status = trim($row['Result_status']);
 
                                 if ($request_status == "مرفوض") {
@@ -395,34 +276,49 @@ $result = $conn->query($sql);
                                     $resultStatusClass = "status-done";
                                 } else {
                                     $resultStatusText = $result_status;
-                                    $resultStatusClass = "status-done";                }
+                                    $resultStatusClass = "status-done"; }
 
+                                /* حالة الدفع */
                                 $payment_status = trim($row['payment_status']);
                                 $program_type = trim($row['program_type']);
 
+                                /* رسوم البرنامج */
                                 if ($program_type == "bachelor") {
                                     $feeAmount = $row['Bachelor_fee'];
                                 } elseif ($program_type == "master") {
                                     $feeAmount = $row['Masters_fee'];
                                 } else {
-                                    $feeAmount = $row['Phd_fee'];                  }
+                                    $feeAmount = $row['Phd_fee']; }
                                 ?>
+
                                 <tr>
+
+                                    <!-- رقم الطلب -->
                                     <td class="req-code">UA<?php echo $row['request_id']; ?></td>
+
+                                    <!-- المكتب -->
                                     <td><?php echo htmlspecialchars($row['office_name']); ?></td>
+
+                                    <!-- التاريخ -->
                                     <td><?php echo htmlspecialchars($row['Submit_date']); ?></td>
+
+                                    <!-- حالة الطلب -->
                                     <td>
                                         <div class="status-box <?php echo $requestStatusClass; ?>">
                                             <?php echo $requestStatusText; ?>
                                         </div>
                                     </td>
+
+                                    <!-- حالة النتيجة -->
                                     <td>
                                         <div class="status-box <?php echo $resultStatusClass; ?>">
                                             <?php echo $resultStatusText; ?>
                                         </div>
                                     </td>
 
+                                    <!-- حالة الدفع -->
                                     <td>
+
                                         <?php if ($payment_status == "مدفوع") { ?>
 
                                             <div class="status-box status-done">
@@ -446,24 +342,31 @@ $result = $conn->query($sql);
                                             <?php } ?>
 
                                         <?php } ?>
+
                                     </td>
 
+                                    <!-- الإجراءات -->
                                     <td>
                                         <a href="Ben17_AdmissionDetails.php?id=<?php echo $row['request_id']; ?>" class="details-btn">
                                             عرض تفاصيل الطلب
                                         </a>
                                     </td>
+
                                 </tr>
 
                             <?php } ?>
 
                         </table>
+
                     </div>
 
                 <?php } else { ?>
+
+                    <!-- لا توجد طلبات -->
                     <div class="empty-box">
                         لا توجد لديك طلبات إصدار قبول حتى الآن.
                     </div>
+
                 <?php } ?>
 
             </div>
@@ -472,83 +375,122 @@ $result = $conn->query($sql);
     </div>
 </div>
 
+<!-- المودال -->
 <div class="modal" id="paymentModal">
+
     <div class="modal-content">
+
         <div class="modal-title">رجاء قم بإدخال بيانات البطاقة لسداد رسوم البرنامج</div>
 
+        <!-- نموذج الدفع -->
         <form method="POST" class="pay-form" id="paymentForm">
+
             <input type="hidden" name="request_id" id="payment_request_id">
 
-        <div class="fee-box" id="payment_fee"></div>
+            <!-- الرسوم -->
+            <div class="fee-box" id="payment_fee"></div>
 
+            <!-- اسم البطاقة -->
             <div class="pay-field">
                 <label>الاسم على البطاقة</label>
                 <input type="text" id="cardName" maxlength="100">
             </div>
 
+            <!-- رقم البطاقة -->
             <div class="pay-field">
                 <label>رقم البطاقة</label>
                 <input type="text" id="cardNumber" maxlength="16" inputmode="numeric">
             </div>
 
             <div class="pay-row">
+
+                <!-- تاريخ الانتهاء -->
                 <div class="pay-field">
                     <label>تاريخ الانتهاء</label>
                     <input type="text" id="expDate" placeholder="MM/YY" maxlength="5" inputmode="numeric">
                 </div>
 
+                <!-- رمز الأمان -->
                 <div class="pay-field">
                     <label>رمز الأمان</label>
                     <input type="text" id="cvv" maxlength="3" inputmode="numeric">
                 </div>
+
             </div>
 
+            <!-- زر التأكيد -->
             <button type="button" class="confirm-pay-btn" onclick="confirmPayment()">تأكيد السداد</button>
+
+            <!-- زر الإلغاء -->
             <button type="button" class="close-modal-btn" onclick="closePaymentModal()">إلغاء</button>
+
+            <!-- زر الإرسال -->
             <button type="submit" name="confirm_payment" id="realPaySubmit" style="display:none;"></button>
+
         </form>
+
     </div>
 </div>
 
 <script>
+/* فتح المودال */
 function openPaymentModal(requestId, feeAmount){
     document.getElementById("payment_request_id").value = requestId;
     document.getElementById("payment_fee").innerText = "رسوم الطلب: " + feeAmount + " ريال";
     document.getElementById("paymentModal").style.display = "flex";}
 
+/* إغلاق المودال */
 function closePaymentModal(){
     document.getElementById("paymentModal").style.display = "none";}
+
+/* رقم البطاقة */
 document.getElementById("cardNumber").addEventListener("input", function(){
     this.value = this.value.replace(/\D/g, "").slice(0, 16);});
+
+/* رمز الأمان */
 document.getElementById("cvv").addEventListener("input", function(){
     this.value = this.value.replace(/\D/g, "").slice(0, 3);});
+
+/* تاريخ الانتهاء */
 document.getElementById("expDate").addEventListener("input", function(){
     let value = this.value.replace(/\D/g, "").slice(0, 4);
     this.value = value.length >= 3 ? value.slice(0, 2) + "/" + value.slice(2) : value;});
 
+/* التحقق من الدفع */
 function confirmPayment(){
     const cardName = document.getElementById("cardName").value.trim();
     const cardNumber = document.getElementById("cardNumber").value.trim();
     const expDate = document.getElementById("expDate").value.trim();
     const cvv = document.getElementById("cvv").value.trim();
 
+    /** التحقق من الحقول **/
     if(cardName === "" || cardNumber === "" || expDate === "" || cvv === ""){
         alert("يرجى تعبئة جميع بيانات الدفع.");
         return; }
+
+    /** التحقق من الاسم **/
     if(!/^[\u0600-\u06FFa-zA-Z\s]{3,100}$/.test(cardName)){
         alert("اسم حامل البطاقة غير صحيح.");
         return;}
+
+    /** التحقق من رقم البطاقة **/
     if(!/^\d{16}$/.test(cardNumber)){
         alert("رقم البطاقة يجب أن يكون 16 رقم.");
         return;}
+
+    /** التحقق من التاريخ **/
     if(!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expDate)){
         alert("تاريخ الانتهاء يجب أن يكون بالشكل MM/YY.");
         return; }
+
+    /** التحقق من CVV **/
     if(!/^\d{3}$/.test(cvv)){
         alert("رمز الأمان يجب أن يكون 3 أرقام.");
         return; }
+
     document.getElementById("realPaySubmit").click();}
 
+/* إغلاق عند الضغط بالخارج */
 window.addEventListener("click", function(e){
     const modal = document.getElementById("paymentModal");
       if(e.target === modal){ modal.style.display = "none";}});

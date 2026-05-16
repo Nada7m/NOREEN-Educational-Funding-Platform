@@ -148,7 +148,6 @@ table td{ padding:16px; border-bottom:1px solid #EEEEEE; text-align:center; colo
               <th>الحالة</th>
               <th>الإجراءات</th>
             </tr>
-            // عرض البيانات القادمة من قاعدة البيانات //
             <?php while($row = mysqli_fetch_assoc($result)) {
               $status = $row['approval_status'];
 
