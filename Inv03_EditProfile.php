@@ -238,7 +238,7 @@ $conn->close();
                                 <input type="password" id="confirmPass" name="confirmPassword" autocomplete="new-password">
                                 <span class="eye" onclick="showPass('confirmPass')">👁</span>
                             </div>
-                            <div class="note">اتركي حقول كلمة المرور فارغة إذا كنتِ لا تريدين تغييرها.</div>
+                            <div class="note">اترك حقول كلمة المرور فارغة إذا كنت لا تريد تغييرها.</div>
                         </div>
 
                         <div class="field"></div>
