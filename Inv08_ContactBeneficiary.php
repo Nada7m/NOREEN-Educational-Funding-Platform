@@ -8,8 +8,7 @@ $con = new mysqli("localhost", "root", "", "noreen");
 $con->set_charset("utf8mb4");
 
 /* الحصول على رقم المستثمر الحالي */
-$current_inv_id = $_SESSION['user_id'] ?? 0; 
-
+$current_inv_id = $_SESSION['inv_id'] ?? 0;
 /* الحصول على رقم المستفيد */
 $target_bnf_id = isset($_GET['bnf_id']) ? intval($_GET['bnf_id']) : 0; 
 
