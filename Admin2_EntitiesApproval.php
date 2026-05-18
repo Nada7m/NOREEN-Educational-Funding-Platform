@@ -170,13 +170,11 @@ table td{ padding:16px; border-bottom:1px solid #EEEEEE; text-align:center; colo
               <td>
                 <?php if($status == "بانتظار"){ ?>
                 <div class="actions">
-                  //فورم الاعتماد//
                   <form method="post">
                     <input type="hidden" name="entity_id" value="<?= $row['entity_id'] ?>">
                     <input type="hidden" name="entity_type" value="<?= $row['entity_type'] ?>">
                     <button type="submit" name="approve" class="btn accept">اعتماد</button>
                   </form>
-                  //فورم الرفض//
                   <form method="post">
                     <input type="hidden" name="entity_id" value="<?= $row['entity_id'] ?>">
                     <input type="hidden" name="entity_type" value="<?= $row['entity_type'] ?>">

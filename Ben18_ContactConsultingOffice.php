@@ -7,9 +7,14 @@ if ($con->connect_error) { die("فشل الاتصال: " . $con->connect_error);
 $con->set_charset("utf8mb4");
 
 // 2. المعرفات
-$current_bnf_id = $_SESSION['bnf_id'] ?? 0; 
+$current_bnf_id = $_SESSION['bnf_id'] ?? 0;
 
-$target_off_id = (isset($_GET['off_id']) && intval($_GET['off_id']) > 0) ? intval($_GET['off_id']) : 0; 
+if ($current_bnf_id == 0) {
+    header("Location: login.php");
+    exit();
+}
+
+$target_off_id = (isset($_GET['off_id']) && intval($_GET['off_id']) > 0) ? intval($_GET['off_id']) : 0;
 
 // 3. معالجة الإرسال
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send_msg'])) {
@@ -24,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send_msg'])) {
     }
 }
 
-// 4. جلب بيانات المكتب (اسم الجدول consulting_office)
+// 4. جلب بيانات المكتب
 $off_name = "المكتب الاستشاري";
 $off_res = $con->query("SELECT office_name FROM consulting_office WHERE office_id = '$target_off_id'");
 if ($off_res && $off_row = $off_res->fetch_assoc()) {
@@ -46,32 +51,21 @@ $res_msgs = $con->query("SELECT * FROM bnf_off_msg WHERE bnf_id = '$current_bnf_
         :root { --main-purple: #3E2454; --chat-bg: #F5F5F5; }
         body { background-color: #FFFFFF; margin: 0; font-family: 'Noto Kufi Arabic', sans-serif; }
         .layout { display: flex; min-height: 100vh; }
-        
-        .header { 
-            background-color: #FFFFFF !important; 
-            border-bottom: 1px solid #eee; 
-            display: flex; 
-            justify-content: space-between; 
-            padding: 15px 30px; 
-            align-items: center;
-        }
+
+        .header { background-color: #FFFFFF !important; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; padding: 15px 30px; align-items: center; }
 
         .chat-container { flex: 1; margin: 20px; padding: 25px; background-color: var(--chat-bg) !important; border-radius: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; height: 400px; }
         .msg { max-width: 75%; padding: 15px 20px; background: #FFFFFF; box-shadow: 0 2px 5px rgba(0,0,0,0.05); line-height: 1.8; position: relative; font-size: 14px; border-radius: 15px; }
         .from-me { align-self: flex-start; border-right: 6px solid var(--main-purple); }
         .from-them { align-self: flex-end; border-left: 6px solid #999; background-color: #f9f9f9; }
         .msg-meta { font-size: 10px; color: #888; display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; border-top: 1px solid #f0f0f0; padding-top: 5px; }
-        
+
         .send-area-form { padding: 20px; background: #fff; display: flex; gap: 15px; border-top: 1px solid #eee; align-items: center; }
         .msg-input { flex: 1; padding: 15px; border: 1px solid #ddd; border-radius: 30px; outline: none; }
         .send-icon { width: 50px; cursor: pointer; }
 
         .settings-dropdown { position: relative; display: inline-block; }
-        .dropdown-menu { 
-            display: none; position: absolute; left: 0; top: 100%; background: white; 
-            border: 1px solid #ddd; border-radius: 8px; width: 190px; z-index: 1000; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
-        }
+        .dropdown-menu { display: none; position: absolute; left: 0; top: 100%; background: white; border: 1px solid #ddd; border-radius: 8px; width: 190px; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .dropdown-menu a { display: block; padding: 12px 15px; text-decoration: none; color: #333; font-size: 13px; }
         .dropdown-menu a:hover { background-color: #f3f3f3; color: var(--main-purple); }
         .settings-dropdown:hover .dropdown-menu { display: block; }
@@ -112,7 +106,7 @@ $res_msgs = $con->query("SELECT * FROM bnf_off_msg WHERE bnf_id = '$current_bnf_
                     <img src="ايقونة قائمة الاعدادات.png" width="30" class="menu-icon" style="cursor:pointer;">
                     <div class="dropdown-menu">
                         <a href="Ben02_Profile.php">الملف الشخصي</a>
-                                      <a href="Ben20_MyScholarshipWallet.php">محفظة منحتي</a>
+                        <a href="Ben20_MyScholarshipWallet.php">محفظة منحتي</a>
                         <a href="support.php">تقديم شكوى أو استفسار</a>
                     </div>
                 </div>
@@ -121,9 +115,10 @@ $res_msgs = $con->query("SELECT * FROM bnf_off_msg WHERE bnf_id = '$current_bnf_
 
         <div style="background: #E9DFF1; padding: 12px 25px; margin: 20px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;">
             <div>التواصل مع مكتب : <span style="color: var(--main-purple); font-weight: bold;"><?php echo htmlspecialchars($off_name); ?></span></div>
-<a href="javascript:history.back()">
-    <img src="سهم تراجع.svg" width="40">
-</a>        </div>
+            <a href="javascript:history.back()">
+                <img src="سهم تراجع.svg" width="40">
+            </a>
+        </div>
 
         <div class="chat-container">
             <?php if($res_msgs && $res_msgs->num_rows > 0): 

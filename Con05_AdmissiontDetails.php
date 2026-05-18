@@ -16,27 +16,37 @@ $request_id = isset($_GET['request_id']) ? (int) $_GET['request_id'] : 0;
 // التحقق من صحة رقم الطلب
 if ($request_id <= 0) {
     die("رقم الطلب غير صحيح");}
+
 /* عند قبول الطلب */
 if (isset($_POST['accept_request'])) {
-    $sqlUpdate =     // تحديث حالة الطلب
-    "UPDATE admission_request SET request_status = 'مقبول',
- Result_status = 'قيد المعالجة' WHERE request_id = $request_id AND office_id = $office_id";
+    $sqlUpdate = "UPDATE admission_request 
+                  SET request_status = 'مقبول',
+                      Result_status = 'قيد المعالجة'
+                  WHERE request_id = $request_id 
+                  AND office_id = $office_id";
+
     // تنفيذ التحديث
     if (!mysqli_query($con, $sqlUpdate)) {
-        die("خطأ في تحديث حالة الطلب");}
+        die("خطأ في تحديث حالة الطلب: " . mysqli_error($con));}
+
     // تحديث الصفحة
     header("Location: Con05_AdmissiontDetails.php?request_id=" . $request_id);exit();}
 
    /* عند رفض الطلب */
 if (isset($_POST['reject_request'])) {
-    $sqlUpdate = "UPDATE admission_requestSET request_status = 'مرفوض',
-    Result_status = 'لم تُصدر' WHERE request_id = $request_id AND office_id = $office_id";
+    $sqlUpdate = "UPDATE admission_request 
+                  SET request_status = 'مرفوض',
+                      Result_status = 'لم تُصدر'
+                  WHERE request_id = $request_id 
+                  AND office_id = $office_id";
+
         // تنفيذ التحديث
     if (!mysqli_query($con, $sqlUpdate)) {
-     die("خطأ في تحديث حالة الطلب"); }
+     die("خطأ في تحديث حالة الطلب: " . mysqli_error($con)); }
          // تحديث الصفحة
     header("Location: Con05_AdmissiontDetails.php?request_id=" . $request_id);
     exit();}
+
 /*   جلب بيانات الطلب والمستفيد */
 $sql = "SELECT  ar.request_id, ar.program_type, ar.major_name, ar.univ_name, ar.Submit_date,
      ar.request_status,ar.Result_status,ar.payment_status,b.f_name,b.l_name,b.email,
