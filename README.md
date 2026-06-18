@@ -1,4 +1,4 @@
-# NOREEN Scholarship Management System
+# NOREEN Educational Funding Platform
 
 ## Project Overview
 
@@ -68,4 +68,4 @@ The project was developed using the Waterfall Software Development Life Cycle (S
 Developed as an academic capstone project to support educational funding accessibility through digital transformation and system integration.
 
 ## Documentation
-The complete project documentation, including system analysis, requirements engineering, DFDs, ERDs, use cases, and implementation details, is available in the Documentation folder.
+The complete project documentation, including system analysis, requirements engineering, DFDs, ERDs, use cases, and implementation details, is available here https://drive.google.com/file/d/1Jo1zqBLo9easiNAVSVMMkTvNyWwr_tIS/view?usp=drive_link
